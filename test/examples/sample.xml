@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (C) 2011 Takashi SUGA -->
+<!-- You may use and/or modify this file according to the license
+     described in the LICENSE.txt file included in this archive. -->
+<object xmlns="http://hosi.org/When/BasicTypes/"
+          xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+          xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+          type="http://hosi.org/When/Coordinates/Spatial">
+  <rdfs:label country='Japan'>Tokyo</rdfs:label>
+  <geo:lat>N35.412011</geo:lat>
+  <geo:long>E139.421322</geo:long>
+  <geo:alt>0</geo:alt>
+  <geo:datum>JGD2000</geo:datum>
+</object>

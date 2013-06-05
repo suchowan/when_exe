@@ -1,0 +1,39 @@
+BEGIN:B:M17n
+# Copyright (C) 2011 Takashi SUGA
+#
+# You may use and/or modify this file according to the license
+# described in the LICENSE.txt file included in this archive.
+  NAMESPACE:[en=http://en.wikipedia.org/wiki/,
+             ja=http://ja.wikipedia.org/wiki/]
+  LOCALE:[=en:, ja=ja:, alias]
+  NAMES:[CalendarTerms]
+
+  [Calendars_and_Eras=, 暦法と紀元=]
+
+  BEGIN:B:M17n
+    NAMES:[Month, 月=ja:%E6%9C%88_(%E6%9A%A6)]
+    B:M17N:[January,   1月]
+    B:M17N:[February,  2月]
+    B:M17N:[March,     3月]
+    B:M17N:[April,     4月]
+    B:M17N:[May,       5月]
+    B:M17N:[June,      6月]
+    B:M17N:[July,      7月]
+    B:M17N:[August,    8月]
+    B:M17N:[September, 9月]
+    B:M17N:[October,  10月]
+    B:M17N:[November, 11月]
+    B:M17N:[December, 12月]
+  END:B:M17n
+
+  BEGIN:B:M17n
+    NAMES:[Week, 週]
+    B:M17N:[Monday,    月曜日]
+    B:M17N:[Tuesday,   火曜日]
+    B:M17N:[Wednesday, 水曜日]
+    B:M17N:[Thursday,  木曜日]
+    B:M17N:[Friday,    金曜日]
+    B:M17N:[Saturday,  土曜日]
+    B:M17N:[Sunday,    日曜日]
+  END:B:M17n
+END:B:M17n

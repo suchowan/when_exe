@@ -1,0 +1,179 @@
+BEGIN:B:M17N
+# Copyright (C) 2011 Takashi SUGA
+#
+# You may use and/or modify this file according to the license
+# described in the LICENSE.txt file included in this archive.
+  NAMESPACE:[en=http://en.wikipedia.org/wiki/,
+             ja=http://ja.wikipedia.org/wiki/]
+  LOCALE:[=en:, ja=ja:, alias]
+  NAMES:[Locations]
+
+  BEGIN:CO:SPATIAL
+    LABEL:[CentralIndia, インド中部]
+    LONG: +82.5
+    LAT:  N23.11
+  END:CO:SPATIAL
+
+  BEGIN:CO:SPATIAL
+    LABEL:[NorthIndia, インド北部]
+    LONG: +82.5
+    LAT:  +29.0
+  END:CO:SPATIAL
+
+  BEGIN:CO:SPATIAL
+    LABEL:[Agra, アーグラ]
+    LONG: +78.0
+    LAT:  +27.2
+  END:CO:SPATIAL
+
+  BEGIN:CO:SPATIAL
+    LABEL:[Ahmedabad, アフマダーバード]
+    LONG: +72.6
+    LAT:  +23.0
+  END:CO:SPATIAL
+
+  BEGIN:CO:SPATIAL
+    LABEL:[Ajmer, アジメール]
+    LONG: +74.6
+    LAT:  +26.5
+  END:CO:SPATIAL
+
+  BEGIN:CO:SPATIAL
+    LABEL:[Aligarh, アリーガル]
+    LONG: +78.1
+    LAT:  +27.9
+  END:CO:SPATIAL
+
+  BEGIN:CO:SPATIAL
+    LABEL:[Amritsar, アムリトサル]
+    LONG: +74.9
+    LAT:  +31.6
+  END:CO:SPATIAL
+
+  BEGIN:CO:SPATIAL
+    LABEL:[Bangalore, バンガロール]
+    LONG: +77.6
+    LAT:  +13.0
+  END:CO:SPATIAL
+
+  BEGIN:CO:SPATIAL
+    LABEL:[Bhuvaneswar, ブヴァネーシュヴァル]
+    LONG: +85.8
+    LAT:  +20.2
+  END:CO:SPATIAL
+
+  BEGIN:CO:SPATIAL
+    LABEL:[Chennai, チェンナイ, Madras]
+    LONG: +80.3
+    LAT:  +13.1
+  END:CO:SPATIAL
+
+  BEGIN:CO:SPATIAL
+    LABEL:[Colombo, コロンボ]
+    LONG: +79.9
+    LAT:   +6.9
+  END:CO:SPATIAL
+
+  BEGIN:CO:SPATIAL
+    LABEL:[Dacca, ダッカ]
+    LONG: +90.4
+    LAT:  +23.7
+  END:CO:SPATIAL
+
+  BEGIN:CO:SPATIAL
+    LABEL:[Delhi, デリー]
+    LONG: +77.2
+    LAT:  +28.6
+  END:CO:SPATIAL
+
+  BEGIN:CO:SPATIAL
+    LABEL:[Hyderabad, ハイデラバード]
+    LONG: +78.5
+    LAT:  +17.4
+  END:CO:SPATIAL
+
+  BEGIN:CO:SPATIAL
+    LABEL:[Jaipur, ジャイプル]
+    LONG: +75.8
+    LAT:  +26.9
+  END:CO:SPATIAL
+
+  BEGIN:CO:SPATIAL
+    LABEL:[Kathmandu, カトマンズ]
+    LONG: +85.2
+    LAT:  +27.7
+  END:CO:SPATIAL
+
+  BEGIN:CO:SPATIAL
+    LABEL:[Kochi, コーチ, Cochin]
+    LONG: +76.2
+    LAT:  +10.0
+  END:CO:SPATIAL
+
+  BEGIN:CO:SPATIAL
+    LABEL:[Kolkata, コルカタ, Calcutta]
+    LONG: +88.4
+    LAT:  +22.6
+  END:CO:SPATIAL
+
+  BEGIN:CO:SPATIAL
+    LABEL:[Lahor, ラホール]
+    LONG: +74.3
+    LAT:  +31.6
+  END:CO:SPATIAL
+
+  BEGIN:CO:SPATIAL
+    LABEL:[Mathura, マトゥラー]
+    LONG: +77.7
+    LAT:  +27.5
+  END:CO:SPATIAL
+
+  BEGIN:CO:SPATIAL
+    LABEL:[Mumbai, ムンバイ, Bombay]
+    LONG: +72.8
+    LAT:  +19.0
+  END:CO:SPATIAL
+
+  BEGIN:CO:SPATIAL
+    LABEL:[Mysore, マイソール]
+    LONG: +76.6
+    LAT:  +12.3
+  END:CO:SPATIAL
+
+  BEGIN:CO:SPATIAL
+    LABEL:[Patna, パトナ]
+    LONG: +85.1
+    LAT:  +25.6
+  END:CO:SPATIAL
+
+  BEGIN:CO:SPATIAL
+    LABEL:[Pune, プネー]
+    LONG: +73.9
+    LAT:  +18.5
+  END:CO:SPATIAL
+
+  BEGIN:CO:SPATIAL
+    LABEL:[Srinagar, シュリーナガル]
+    LONG: +74.8
+    LAT:  +34.1
+  END:CO:SPATIAL
+
+  BEGIN:CO:SPATIAL
+    LABEL:[Thiruvananthapuram, ティルヴァナンタプラム, Trivandrum]
+    LONG: +77.0
+    LAT:   +8.5
+  END:CO:SPATIAL
+
+  BEGIN:CO:SPATIAL
+    LABEL:[Varanasi, ワーラーナシー]
+    LONG: +83.0
+    LAT:  +25.3
+  END:CO:SPATIAL
+
+  BEGIN:CO:SPATIAL
+    LABEL:[Ujjain, ウッジャイン]
+    LONG: +75.8
+    LAT:  +23.2
+  END:CO:SPATIAL
+
+END:B:M17N

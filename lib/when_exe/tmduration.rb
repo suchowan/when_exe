@@ -4,7 +4,7 @@
 
   Copyright (C) 2013 Takashi SUGA
 
-  You may use and/or modify this file according to the license described in the COPYING file included in this archive.
+  You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 
 =end
 
@@ -12,6 +12,8 @@ module When
 
   # 分解能定数
 
+  CENTURY = -4
+  DECADE  = -3
   YEAR    = -2
   MONTH   = -1
   WEEK    = -0.5
@@ -19,10 +21,8 @@ module When
   HOUR    =  1
   MINUTE  =  2
   SECOND  =  3
-# CENTURY = -4
-# DECADE  = -3
-# STRING  =  5
-# SYSTEM  =  (Float::MANT_DIG*0.3).to_i
+  STRING  =  5
+  SYSTEM  =  (Float::MANT_DIG*0.3).to_i
 
   #
   # (5.2) Temporal Objects Package

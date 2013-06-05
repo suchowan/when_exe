@@ -1,0 +1,135 @@
+BEGIN:B:M17N
+# Copyright (C) 2011 Takashi SUGA
+#
+# You may use and/or modify this file according to the license
+# described in the LICENSE.txt file included in this archive.
+  NAMESPACE:[en=http://en.wikipedia.org/wiki/,
+             ja=http://ja.wikipedia.org/wiki/]
+  LOCALE:[=en:, ja=ja:, alias]
+  NAMES:[ResidueTerms]
+
+  BEGIN:CO:RESIDUE
+    LABEL:[Week, 週]
+    DIVISOR:7
+    CO:RESIDUE:0,7,0,[Monday,    月曜日]
+    CO:RESIDUE:1,7,0,[Tuesday,   火曜日]
+    CO:RESIDUE:2,7,0,[Wednesday, 水曜日]
+    CO:RESIDUE:3,7,0,[Thursday,  木曜日]
+    CO:RESIDUE:4,7,0,[Friday,    金曜日]
+  # CO:RESIDUE:5,7,0,[Saturday,  土曜日]
+  # CO:RESIDUE:6,7,0,[Sunday,    日曜日]
+    BEGIN:CO:RESIDUE
+      LABEL:[Saturday,土曜日]
+      REMAINDER:5
+    END:CO:RESIDUE
+    BEGIN:CO:RESIDUE
+      LABEL:[Sunday,日曜日]
+      REMAINDER:6
+    END:CO:RESIDUE
+  END:CO:RESIDUE
+
+  BEGIN:CO:RESIDUE
+    LABEL:[Stem, *干]
+    DIVISOR:10
+    DAY:11
+    YEAR:4
+    CO:RESIDUE:0,10,0,[kinoe,      *甲]
+    CO:RESIDUE:1,10,0,[kinoto,     *乙]
+    CO:RESIDUE:2,10,0,[hinoe,      *丙]
+    CO:RESIDUE:3,10,0,[hinoto,     *丁]
+    CO:RESIDUE:4,10,0,[tsuchinoe,  *戊]
+    CO:RESIDUE:5,10,0,[tsuchinoto, *己]
+    CO:RESIDUE:6,10,0,[kanoe,      *庚]
+    CO:RESIDUE:7,10,0,[kanoto,     *辛]
+    CO:RESIDUE:8,10,0,[mizunoe,    *壬]
+    CO:RESIDUE:9,10,0,[mizunoto,   *癸]
+  END:CO:RESIDUE
+
+  BEGIN:CO:RESIDUE
+    LABEL:[Branch, *支]
+    DIVISOR:12
+    DAY:11
+    YEAR:4
+    CO:RESIDUE: 0,12,0,[ne,        *子]
+    CO:RESIDUE: 1,12,0,[ushi,      *丑]
+    CO:RESIDUE: 2,12,0,[tora,      *寅]
+    CO:RESIDUE: 3,12,0,[u,         *卯]
+    CO:RESIDUE: 4,12,0,[tatsu,     *辰]
+    CO:RESIDUE: 5,12,0,[mi,        *巳]
+    CO:RESIDUE: 6,12,0,[uma,       *午]
+    CO:RESIDUE: 7,12,0,[hitsuji,   *未]
+    CO:RESIDUE: 8,12,0,[saru,      *申]
+    CO:RESIDUE: 9,12,0,[tori,      *酉]
+    CO:RESIDUE:10,12,0,[inu,       *戌]
+    CO:RESIDUE:11,12,0,[i,         *亥]
+  END:CO:RESIDUE
+
+
+  BEGIN:CO:RESIDUE
+    LABEL:[Stem-Branch, *干支]
+    DIVISOR:60
+    DAY:11
+    YEAR:4
+    CO:RESIDUE: 0,60,0,[kinoe-ne,           *甲子]
+    CO:RESIDUE: 1,60,0,[kinoto-ushi,        *乙丑]
+    CO:RESIDUE: 2,60,0,[hinoe-tora,         *丙寅]
+    CO:RESIDUE: 3,60,0,[hinoto-u,           *丁卯]
+    CO:RESIDUE: 4,60,0,[tsuchinoe-tatsu,    *戊辰]
+    CO:RESIDUE: 5,60,0,[tsuchinoto-mi,      *己巳]
+    CO:RESIDUE: 6,60,0,[kanoe-uma,          *庚午]
+    CO:RESIDUE: 7,60,0,[kanoto-hitsuji,     *辛未]
+    CO:RESIDUE: 8,60,0,[mizunoe-saru,       *壬申]
+    CO:RESIDUE: 9,60,0,[mizunoto-tori,      *癸酉]
+    CO:RESIDUE:10,60,0,[kinoe-inu,          *甲戌]
+    CO:RESIDUE:11,60,0,[kinoto-i,           *乙亥]
+    CO:RESIDUE:12,60,0,[hinoe-ne,           *丙子]
+    CO:RESIDUE:13,60,0,[hinoto-ushi,        *丁丑]
+    CO:RESIDUE:14,60,0,[tsuchinoe-tora,     *戊寅]
+    CO:RESIDUE:15,60,0,[tsuchinoto-u,       *己卯]
+    CO:RESIDUE:16,60,0,[kanoe-tatsu,        *庚辰]
+    CO:RESIDUE:17,60,0,[kanoto-mi,          *辛巳]
+    CO:RESIDUE:18,60,0,[mizunoe-uma,        *壬午]
+    CO:RESIDUE:19,60,0,[mizunoto-hitsuji,   *癸未]
+    CO:RESIDUE:20,60,0,[kinoe-saru,         *甲申]
+    CO:RESIDUE:21,60,0,[kinoto-tori,        *乙酉]
+    CO:RESIDUE:22,60,0,[hinoe-inu,          *丙戌]
+    CO:RESIDUE:23,60,0,[hinoto-i,           *丁亥]
+    CO:RESIDUE:24,60,0,[tsuchinoe-ne,       *戊子]
+    CO:RESIDUE:25,60,0,[tsuchinoto-ushi,    *己丑]
+    CO:RESIDUE:26,60,0,[kanoe-tora,         *庚寅]
+    CO:RESIDUE:27,60,0,[kanoto-u,           *辛卯]
+    CO:RESIDUE:28,60,0,[mizunoe-tatsu,      *壬辰]
+    CO:RESIDUE:29,60,0,[mizunoto-mi,        *癸巳]
+    CO:RESIDUE:30,60,0,[kinoe-uma,          *甲午]
+    CO:RESIDUE:31,60,0,[kinoto-hitsuji,     *乙未]
+    CO:RESIDUE:32,60,0,[hinoe-saru,         *丙申]
+    CO:RESIDUE:33,60,0,[hinoto-tori,        *丁酉]
+    CO:RESIDUE:34,60,0,[tsuchinoe-inu,      *戊戌]
+    CO:RESIDUE:35,60,0,[tsuchinoto-i,       *己亥]
+    CO:RESIDUE:36,60,0,[kanoe-ne,           *庚子]
+    CO:RESIDUE:37,60,0,[kanoto-ushi,        *辛丑]
+    CO:RESIDUE:38,60,0,[mizunoe-tora,       *壬寅]
+    CO:RESIDUE:39,60,0,[mizunoto-u,         *癸卯]
+    CO:RESIDUE:40,60,0,[kinoe-tatsu,        *甲辰]
+    CO:RESIDUE:41,60,0,[kinoto-mi,          *乙巳]
+    CO:RESIDUE:42,60,0,[hinoe-uma,          *丙午]
+    CO:RESIDUE:43,60,0,[hinoto-hitsuji,     *丁未]
+    CO:RESIDUE:44,60,0,[tsuchinoe-saru,     *戊申]
+    CO:RESIDUE:45,60,0,[tsuchinoto-tori,    *己酉]
+    CO:RESIDUE:46,60,0,[kanoe-inu,          *庚戌]
+    CO:RESIDUE:47,60,0,[kanoto-i,           *辛亥]
+    CO:RESIDUE:48,60,0,[mizunoe-ne,         *壬子]
+    CO:RESIDUE:49,60,0,[mizunoto-ushi,      *癸丑]
+    CO:RESIDUE:50,60,0,[kinoe-tora,         *甲寅]
+    CO:RESIDUE:51,60,0,[kinoto-u,           *乙卯]
+    CO:RESIDUE:52,60,0,[hinoe-tatsu,        *丙辰]
+    CO:RESIDUE:53,60,0,[hinoto-mi,          *丁巳]
+    CO:RESIDUE:54,60,0,[tsuchinoe-uma,      *戊午]
+    CO:RESIDUE:55,60,0,[tsuchinoto-hitsuji, *己未]
+    CO:RESIDUE:56,60,0,[kanoe-saru,         *庚申]
+    CO:RESIDUE:57,60,0,[kanoto-tori,        *辛酉]
+    CO:RESIDUE:58,60,0,[mizunoe-inu,        *壬戌]
+    CO:RESIDUE:59,60,0,[mizunoto-i,         *癸亥]
+  END:CO:RESIDUE
+
+END:B:M17N

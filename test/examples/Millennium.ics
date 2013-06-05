@@ -1,0 +1,17 @@
+BEGIN:VCALENDAR
+# Copyright (C) 2011 Takashi SUGA
+#
+# You may use and/or modify this file according to the license
+# described in the LICENSE.txt file included in this archive.
+VERSION:2.0
+PRODID:-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN
+BEGIN:VTIMEZONE
+TZID:Oceania/Millennium_Island
+LAST-MODIFIED:20050809T050000Z
+BEGIN:DAYLIGHT
+DTSTART:19941231T000000
+TZOFFSETFROM:-1000
+TZOFFSETTO:+1400
+END:DAYLIGHT
+END:VTIMEZONE
+END:VCALENDAR

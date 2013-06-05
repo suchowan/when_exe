@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.email       = ["suchowan@box.email.ne.jp"]
   s.homepage    = "http://www2u.biglobe.ne.jp/~suchowan/u/wiki.cgi?Calendar%2FWhen%2FRuby%2F2%2EAPI%E3%81%AE%E4%BD%BF%E7%94%A8%E4%BE%8B%2F4%2E%E6%99%82%E9%96%93%E9%96%93%E9%9A%94%2F%E6%9C%80%E5%B0%8F%E3%82%BB%E3%83%83%E3%83%88"
   s.summary     = %q{A multicultural and multilingualized calendar library based on ISO 8601, ISO 19108 and RFC 5545}
-  s.description = %q{This version is minimum subset and only supports When::TM::Duration class.}
+  s.description = %q{This library supports ISO 8601, ISO 19108 and RFC 5545. This version is a beta version and in the evaluation stage. So, its APIs may be changed in future.}
 
   s.rubyforge_project = "when_exe"
 
