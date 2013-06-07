@@ -10,6 +10,43 @@
 #
 
 #
+# When::TM::Duration
+#
+# @private
+class When::TM::Duration
+  def rational_duration
+    unless @rational_duration
+      if ( duration == duration / When::TM::Duration::SECOND * When::TM::Duration::SECOND ) &&
+         ( duration != duration / When::TM::Duration::DAY    * When::TM::Duration::DAY    )
+        @rational_duration = Rational(@duration, When::TM::Duration::DAY.to_i)
+      else
+        @rational_duration = @duration / When::TM::Duration::DAY
+      end
+    end
+
+    @rational_duration
+  end
+end
+
+#
+# Extensions to Date class
+#
+# @private
+class Date
+
+  alias :_plus_  :+
+  def +(other)
+    other.kind_of?(When::TM::Duration) ? self + other.rational_duration : self._plus_(other)
+  end
+
+
+  alias :_minus_ :-
+  def -(other)
+    other.kind_of?(When::TM::Duration) ? self - other.rational_duration : self._minus_(other)
+  end
+end
+
+#
 # Extensions to Time class
 #
 # @private

@@ -242,9 +242,16 @@ module Test::TM
        duration = When::TM::Duration.dhms(1,2,3,4.4)
        stop  = start + duration
        assert_equal((RUBY_VERSION.to_f<1.9 ? 93784.4 : 93784), stop-start)
+       assert_raise(TypeError) {
+         ::Date.today + duration
+       }
        require 'when_exe/core/duration'
        stop  = start + duration
        assert_equal(93784.4, stop-start)
+
+       now_date = DateTime.now
+       duration = When::TM::Duration.hour(8)
+       assert_equal(Rational(1,1), (now_date + duration * 3) - now_date)
 
        stop  = start + When.Duration('P1DT2H3M4S')
        assert_equal(93784, stop-start)
