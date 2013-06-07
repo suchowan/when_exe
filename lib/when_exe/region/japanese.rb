@@ -439,7 +439,7 @@ module When
     Japanese = [self, [
       "namespace:[ja=http://ja.wikipedia.org/wiki/, en=http://en.wikipedia.org/wiki/]",
       "locale:[=ja:, en=en:, alias]",
-      "area:[日本,Japan]",
+      "area:[日本=ja:%E5%85%83%E5%8F%B7#.E6.97.A5.E6.9C.AC,Japan=en:Regnal_year#Japanese]",
       [self,
 	"period:[飛鳥時代]",
 	["[推古]1",	"[::_m:EpochEvents::Accession]",	"name=[推古];0593-01-01^Japanese"],

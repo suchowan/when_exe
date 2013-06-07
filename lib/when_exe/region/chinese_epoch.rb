@@ -17,7 +17,7 @@ module When
     Chinese = [self, [
       "namespace:[ja=http://ja.wikipedia.org/wiki/, en=http://en.wikipedia.org/wiki/]",
       "locale:[=ja:, en=en:]",
-      "area:[中国,China]",
+      "area:[中国=ja:%E5%85%83%E5%8F%B7#.E4.B8.AD.E5.9B.BD,China=en:Chinese_era_name]",
       [self,
 	"period:[秦]",
 	["[始皇帝]25*",		"[Foundation]"	,	"name=[始皇帝];-221*10-01^Chinese_221"],# 歳首は１０月
@@ -1237,8 +1237,9 @@ module When
 	]
       ],
       [self,
-	"period:[中華民国,ROC=en:Republic_of_China]",
-	["[民国,ROC=en:Republic_of_China]1",		"[Foundation]"	,	"name=;1912-01-01^Gregorian"]
+	"period:[中華民国=ja:%E6%B0%91%E5%9B%BD%E7%B4%80%E5%85%83,ROC=en:Chinese_era_name#The_Republic_of_China_Era]",
+	["[民国=ja:%E6%B0%91%E5%9B%BD%E7%B4%80%E5%85%83,ROC=en:Chinese_era_name#The_Republic_of_China_Era]1",
+				"[Foundation]",		"name=;1912-01-01^Gregorian"]
       ]
     ]]
   end

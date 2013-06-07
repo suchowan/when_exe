@@ -30,7 +30,7 @@ module When
     Korean = [self, [
       "namespace:[ja=http://ja.wikipedia.org/wiki/, en=http://en.wikipedia.org/wiki/]",
       "locale:[=ja:, en=en:, alias]",
-      "area:[朝鮮,Korea]",
+      "area:[朝鮮=ja:%E5%85%83%E5%8F%B7#.E6.9C.9D.E9.AE.AE.E5.8D.8A.E5.B3.B6,Korea=en:Regnal_year#Korean]",
       [self,
 	"period:[高句麗]",
 	["[東明王]1",	"[::_m:EpochEvents::Foundation]",	"name=[東明王];-36^Chinese_103"],

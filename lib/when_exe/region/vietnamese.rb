@@ -22,7 +22,7 @@ module When
     Vietnamese = [self, [
       "namespace:[ja=http://ja.wikipedia.org/wiki/, en=http://en.wikipedia.org/wiki/]",
       "locale:[=ja:, en=en:, alias]",
-      "area:[ベトナム,Vietnam]",
+      "area:[ベトナム=ja:%E5%85%83%E5%8F%B7#.E3.83.99.E3.83.88.E3.83.8A.E3.83.A0,Vietnam]",
       [self,
 	"period:[呉朝]",
 	["[呉権]1",	"[::_m:EpochEvents::Foundation]",	"name=[呉権];939^Chinese0939", "943="],
