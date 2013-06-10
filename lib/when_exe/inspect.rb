@@ -297,10 +297,18 @@ module When
             begun = self.floor(MONTH,DAY) + When::TM::PeriodDuration.new([0,i,0])
             ended = begun                 + DurationP1M
             ended = ended.prev until begun.cal_date[MONTH-1] == ended.cal_date[MONTH-1]
+            if ended.to_i <= begun.to_i
+              ended = begun
+              loop do
+                succ  = ended.succ
+                break unless succ.frame.equal?(begun.frame)
+                ended = succ
+              end
+            end
             dates = [begun]
             loop do
               current = dates[-1].week_included(wkst)
-              if ((current.first.to_i)...(current.last.to_i)).include?(ended.to_i)
+              if current.last.to_i > ended.to_i
                 dates[-1] = ended
                 break (dates.map {|date| date.week_included(wkst, {:Range=>begun.to_i..ended.to_i}, &block)}).
                       unshift(yield(begun, MONTH)).compact
