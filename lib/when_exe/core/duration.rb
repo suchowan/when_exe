@@ -16,11 +16,12 @@
 class When::TM::Duration
   def rational_duration
     unless @rational_duration
-      if ( duration == duration / When::TM::Duration::SECOND * When::TM::Duration::SECOND ) &&
-         ( duration != duration / When::TM::Duration::DAY    * When::TM::Duration::DAY    )
-        @rational_duration = Rational(@duration, When::TM::Duration::DAY.to_i)
-      else
+      sec = duration / When::TM::Duration::SECOND
+      mod = sec % When::TM::Duration::DAY.to_i
+      if mod == 0 || mod != mod.to_i
         @rational_duration = @duration / When::TM::Duration::DAY
+      else
+        @rational_duration = Rational(sec.to_i, 86400)
       end
     end
 

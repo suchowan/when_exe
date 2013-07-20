@@ -251,7 +251,9 @@ module Test::TM
 
        now_date = DateTime.now
        duration = When::TM::Duration.hour(8)
-       assert_equal(Rational(1,1), (now_date + duration * 3) - now_date)
+       assert_equal(Rational(1,128), (now_date + duration * 3 / 128   ) - now_date)
+       assert_equal(Rational(1,3),   (now_date + duration    ) - now_date)
+       assert_equal(Rational(1,1),   (now_date + duration * 3) - now_date)
 
        stop  = start + When.Duration('P1DT2H3M4S')
        assert_equal(93784, stop-start)
