@@ -212,7 +212,6 @@ module When::TM
     # @return [When::TM::ReferenceSystem]
     #
     attr_accessor :frame
-    alias :clock :frame
 
     # この時間位置と関連付けられたイベント - additional attribute
     #
@@ -224,6 +223,8 @@ module When::TM
     # この時間位置の分解能 - additional attribute
     #
     # @return [Numeric]
+    #
+    # @note precision より resolution の方が分解能の意味にふさわしいが ISO19108 で別の意味に用いられているため resolution とした。
     #
     attr_accessor :precision
 
@@ -261,8 +262,8 @@ module When::TM
       # @param [String] specification When.exe Standard Representation
       # @param [Hash] options 下記の通り
       # @option options [When::TM::ReferenceSystem] :frame 暦法の指定
-      # @option options [When::TM::Clock] :clock 時法の指定
-      # @option options [When::Parts::Timezone] :tz 時法の指定(時間帯を指定する場合 :clock の替わりに用いることができる)
+      # @option options [When::TM::Clock, When::V::Timezone, When::Parts::Timezone, String] :clock 時法の指定
+      # @option options [String] :tz 時法の指定(時間帯を指定する場合 :clock の替わりに用いることができる)
       # @option options [Array<Numeric>] :abbr ISO8601上位省略形式のためのデフォルト日付(省略時 指定なし)
       # @option options [String] :wkst ISO8601週日形式のための暦週開始曜日(省略時 'MO')
       # @option options [Integer] :precision 生成するオブジェクトの分解能
@@ -281,6 +282,12 @@ module When::TM
       #   - :area   => area による暦年代絞込み
       #   - :period => period による暦年代絞込み
       #   - :name   => name による暦年代絞込み(epoch の attribute使用可)
+      #
+      # @note options の中身は本メソッドによって更新されることがある。
+      #
+      # @note :tz は 'Asia/Tokyo'など時間帯を表す文字列をキーにして、登録済みのWhen::V::Timezone, When::Parts::Timezoneを検索して使用する。
+      #       :clock はWhen::TM::Clock, When::V::Timezone, When::Parts::Timezoneオブジェクトをそのまま使用するか '+09:00'などの文字列をWhen::TM::Clock化して使用する。
+      #       :tz の方が :clock よりも優先される。
       #
       # @return [When::TM::TemporalPosition]    ISO8601 time point
       # @return [When::TM::Duration]            ISO8601 duration 
@@ -426,6 +433,9 @@ module When::TM
          :era_name, :era, :abbr, :wkst, :time_standard, :location].each do |key|
           main[key] = query.delete(key) if (query.key?(key))
         end
+        long = query.delete(:long)
+        lat  = query.delete(:lat)
+        main[:location] ||= "_l:long=#{long}&lat=#{lat}" if long && lat
         trans = query.delete(:trans) || {}
         [:lower, :upper, :count].each do |key|
           trans[key] = query.delete(key) if (query.key?(key))
@@ -494,7 +504,6 @@ module When::TM
     def time_standard
       return @time_standard if @time_standard.kind_of?(When::TimeStandard)
       @time_standard = When.Resource(@time_standard ||
-                                (clock ? clock.time_standard : nil) ||
                                 (frame ? frame.time_standard : nil) ||
                                 'UniversalTime', '_t:')
     end
@@ -605,7 +614,7 @@ module When::TM
     # @return [::DateTime]
     #
     def to_date_time(option={:frame=>When.utc})
-      return JulianDate.dynamical_time(dynamical_time, option).to_date_time unless rate_of_clock == 1.0
+      return JulianDate.dynamical_time(dynamical_time, option).to_date_time unless time_standard.rate_of_clock == 1.0
       raise TypeError, "Clock not assigned" unless clock
       Rational
       offset   = Rational(-(clock.universal_time/Duration::SECOND).to_i, (Duration::DAY/Duration::SECOND).to_i)
@@ -621,7 +630,7 @@ module When::TM
     # @return [::Date]
     #
     def to_date(option={})
-      return JulianDate.dynamical_time(dynamical_time, option).to_date unless rate_of_clock == 1.0
+      return JulianDate.dynamical_time(dynamical_time, option).to_date unless time_standard.rate_of_clock == 1.0
       ::Date.jd(to_i, ::Date::GREGORIAN)
     end
 
@@ -671,7 +680,7 @@ module When::TM
     #
     def -(other)
       case other
-      when TimeValue      ; self.rate_of_clock == other.rate_of_clock && [@precision, other.precision].min <= When::DAY ?
+      when TimeValue      ; self.time_standard.rate_of_clock == other.time_standard.rate_of_clock && [@precision, other.precision].min <= When::DAY ?
                               PeriodDuration.new(self.to_i - other.to_i, When::DAY) :
                               IntervalLength.new((self.dynamical_time - other.dynamical_time) / Duration::SECOND, 'second')
       when Integer        ; self - PeriodDuration.new(other, When::DAY)
@@ -1033,6 +1042,14 @@ module When::TM
       end
     end
 
+    # この時間位置と関連付けられた時間参照系 (relation - Reference)
+    #
+    # The time reference system associated with the temporal position being described
+    #
+    # @return [When::TM::ReferenceSystem]
+    #
+    alias :clock :frame
+
     # 内部時間による時間座標値
     #
     # @return [Numeric]
@@ -1223,8 +1240,18 @@ module When::TM
     #
     # @return [Array<Numeric>]
     #
+    # @note ISO19108 では sequence<Integer> だが、閏時・閏秒などが表現可能なよう Numeric としている。
+    #
     attr_reader :clk_time
     alias :clkTime :clk_time
+
+    # この時間位置と関連付けられた時間参照系 (relation - Reference)
+    #
+    # The time reference system associated with the temporal position being described
+    #
+    # @return [When::TM::ReferenceSystem]
+    #
+    alias :clock :frame
 
     # 内部時間
     #
@@ -1346,8 +1373,18 @@ module When::TM
     #
     # @return [Array<Numeric>]
     #
+    # @note ISO19108 では sequence<Integer> だが、閏月などが表現可能なよう Numeric としている。
+    #
     attr_reader :cal_date
     alias :calDate :cal_date
+
+    # この時間位置と関連付けられた時間参照系 (relation - Reference)
+    #
+    # The time reference system associated with the temporal position being described
+    #
+    # @return [When::TM::ReferenceSystem]
+    #
+    alias :calendar :frame
 
     # 暦年代名
     #
@@ -1790,7 +1827,6 @@ module When::TM
 
     # 下位桁の切り上げ
     #
-    #   digit     : Integer
     # @param [Integer] digit 切り上げずに残す、最下位の桁
     #
     # @param [Integer] precision 切り上げ結果の分解能
@@ -1804,6 +1840,17 @@ module When::TM
       result  = floor(digit, precision) + period
       result += clock._tz_difference if (result.universal_time <= self.universal_time)
       return result
+    end
+
+    # 位置情報
+    #
+    # @return [When::Coordinates::Spatial]
+    #
+    def location
+      return @location if @location
+      timezone = @clk_time.frame.tz_prop
+      return nil unless timezone.kind_of?(When::Parts::Timezone)
+      @location = When.Resource("_l:long=#{timezone.longitude.to_f}&lat=#{timezone.latitude.to_f}")
     end
 
     # 時刻情報のない When::TM::CalDate を返す
@@ -1833,7 +1880,7 @@ module When::TM
       case options[:time]
       when Array
         if clock._need_validate
-          new_clock = clock._daylight { |c| self.class.new(options[:date], options[:time], {:frame=>@frame, :clock=>c}) } || clock
+          new_clock = clock._daylight { |c| self.class.new(options[:date], options[:time], {:frame=>@frame, :clock=>c}) }
           options[:time] = options[:time].map {|t| t * 1}
         else
           new_clock = clock
@@ -1911,7 +1958,13 @@ module When::TM
 
         # 夏時間の調整
         if clock._need_validate
-          clock = clock._daylight {|clock| self.class.new(@cal_date, time, {:frame=>@frame, :clock=>clock}) } || clock
+          if @calendar_era_name
+            cal_date     = @cal_date.dup
+            cal_date[0] += @calendar_era_name[1]
+          else
+            cal_date     = @cal_date
+          end
+          clock = clock._daylight {|clock| self.class.new(cal_date, time, {:frame=>@frame, :clock=>clock}) }
         end
         time = time.map {|t| t * 1}
         @clk_time = ClockTime.new(time, {:frame=>clock, :precision=>precision, :validate=>:done}) if clock_is_timezone

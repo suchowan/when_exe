@@ -20,7 +20,7 @@ module When
       "[Ethiopian=en:Ethiopian_calendar, エチオピア暦=en:Ethiopian_calendar]",
 
       [self,
-        "names:[EgyptianMonth, 月=ja:%E6%9C%88_(%E6%9A%A6)]",
+        "names:[EgyptianMonth, 月=ja:%%<月_(暦)>]",
         "[tut=,      トート=      ]",
         "[baba=,     バーバ=      ]",
         "[hatur=,    ハートール=  ]",
@@ -37,7 +37,7 @@ module When
       ],
 
       [self,
-        "names:[EthiopianMonth, 月=ja:%E6%9C%88_(%E6%9A%A6)]",
+        "names:[EthiopianMonth, 月=ja:%%<月_(暦)>]",
         "[Mäskäräm=, マスカラム=  ]",
         "[Ṭəqəmt=,   テケルト=    ]",
         "[Ḫədar=,    ヘダル=      ]",
@@ -60,7 +60,7 @@ module When
     Byzantine = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
-      "period:[Byzantine=en:Byzantine_calendar, ビザンティン暦=ja:%E4%B8%96%E7%95%8C%E5%89%B5%E9%80%A0%E7%B4%80%E5%85%83]",
+      "period:[Byzantine=en:Byzantine_calendar, ビザンティン暦=ja:%%<世界創造紀元>]",
       ["[AM=en:Anno_Mundi, 世界創造紀元, alias:Anno_Mundi]6497.9.1",
        "Calendar Epoch", "989-09-01^Julian?border=[-1,9,1]&note=RomanNote", "1453=5-29"]
     ]]
@@ -185,7 +185,7 @@ module When
            Index.new({:unit =>12,
                       :trunk=>m17n('[::_m:CalendarTerms::Month::*]')}),
 
-           Index.new
+           DefaultDayIndex
         ]
         super
       end
@@ -258,8 +258,8 @@ module When
       # @note 太陽暦日の補正も、本メソッドで行う
       #
       def _lunar_equation(year)
-        h = +year / 100
-        -h + h/4 + (8*(h+11))/25 - 3
+        h = +year.div(100)
+        -h + h.div(4) + (8*(h+11)).div(25) - 3
       end
 
       private

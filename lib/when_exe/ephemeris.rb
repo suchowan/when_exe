@@ -277,13 +277,15 @@ module When::Ephemeris
 
   # func の逆変換
   #
-  # @param [Numeric] t0   独立変数の初期近似値
-  # @param [Numeric] y0   逆変換される関数値(nil なら極値を求める)
-  # @param [Block]   func 逆変換される関数
+  # @param [Numeric] t0    独立変数の初期近似値
+  # @param [Numeric] y0    逆変換される関数値(nil なら極値を求める)
+  # @param [Numeric] count 収束までの最大繰り返し回数
+  # @param [Float]   error 収束と判断する誤差
+  # @param [Block]   func  逆変換される関数
   #
   # @return [Numeric] 逆変換結果
   #
-  def root(t0, y0=nil, &func)
+  def root(t0, y0=nil, count=10, error=1E-6, &func)
 
     # 近似値0,1
     # printf("y0=%20.7f\n",y0)
@@ -295,11 +297,11 @@ module When::Ephemeris
     t << (y0 ? (t[1]-t[0])/(y[1]-y[0])*(y0-y[0])+t[0] : t0-0.1)
 
     # 繰り返し
-    i = 10
-    while ((t[2]-t[1]).abs > 1E-6) && (i > 0)
+    i = count
+    while ((t[2]-t[1]).abs > error) && (i > 0)
       # 予備計算
       y << func.call(t[2])
-      break if y0 && (y[2]-y0).abs <= 1E-7
+      break if y0 && (y[2]-y0).abs <= error / 10
 
       # printf("t=%20.7f,L=%20.7f\n",t[2],y[2])
       t01     = t[0]-t[1]
@@ -329,7 +331,7 @@ module When::Ephemeris
       t.shift
       y.shift
     end
-    $stderr.puts "The result is not reliable" if i<=0
+    raise RangeError, "The result does not converge." if i<=0
     return t[2]
   end
 
@@ -1292,9 +1294,10 @@ module When::Ephemeris
     # @param [Numeric] t ユリウス日(Terrestrial Time)
     # @param [When::TM::TemporalPosition] t
     # @param [Integer] event
-    #   [ -1 - 出       ]
-    #   [  0 - 最大高度 ]
-    #   [ +1 - 没       ]
+    #   [ -1   - 出       ]
+    #   [  0   - 南中     ]
+    #   [ +1   - 没       ]
+    #   [  nil - 最大高度 ]
     # @param [When::Ephemeris::CelestialObject] target 対象星(デフォルトは太陽)
     # @param [Numeric] height 閾値高度/度
     # @param [String]  height
@@ -1311,13 +1314,14 @@ module When::Ephemeris
       dl  = @location.long / (360.0 * When::Coordinates::Spatial::DEGREE)
       t0  = (+t + 0.5 + dl).floor - dl
       dt  = _coords(t0, When::Coordinates::Spatial::EQUATORIAL, target).phi -
-            @location.local_sidereal_time(t0) / 24.0 + 0.25 * event
+            @location.local_sidereal_time(t0) / 24.0 + 0.25 * (event||0)
       t0 += dt - (dt+0.5).floor
 
-      # 天体の地平座標での高度
-      if event == 0
-        height = nil # 極値検索のため
-      else
+      # 天体の地平座標での高度または方位角
+      case event
+      when 0
+        meridian = _coords(t0, When::Coordinates::Spatial::HORIZONTAL, target).phi.round
+      when +1, -1
         height ||= target.instance_of?(When::Ephemeris::Sun) ? '0' : 'A'
         if height.kind_of?(String)
           height = @location.datum.zeros[height.upcase]
@@ -1325,10 +1329,15 @@ module When::Ephemeris
         end
         height = height / 360.0 - (0.25 - @location.horizon) +
                [@location.alt / (1000.0 * @location.datum.air[0]), 1].min * @location.datum.zeros['A'] / 360.0
+      else
+        height = nil # 極値検索のため
       end
 
       # イベントの時刻
-      _to_seed_type(root(t0, height) {|t1| _coords(t1, When::Coordinates::Spatial::HORIZONTAL, target).theta }, t)
+      _to_seed_type(
+        event == 0 ? (root(t0, meridian) {|t1| _coords(t1, When::Coordinates::Spatial::HORIZONTAL, target).phi   }) :
+                     (root(t0, height  ) {|t1| _coords(t1, When::Coordinates::Spatial::HORIZONTAL, target).theta }),
+       t)
     end
 
     # 日の出の日時
@@ -1369,6 +1378,17 @@ module When::Ephemeris
     # @return [Numeric, When::TM::TemporalPosotion] 太陽の最大高度の日時(ユリウス日(Terrestrial Time)またはWhen::TM::DateAndTime
     #
     def sun_noon(t)
+      day_event(t, nil, When.Resource('_ep:Sun'))
+    end
+
+    # 太陽の南中の日時
+    #
+    # @param [Numeric] t ユリウス日(Terrestrial Time)
+    # @param [When::TM::TemporalPosition] t
+    #
+    # @return [Numeric, When::TM::TemporalPosotion] 太陽の南中の日時(ユリウス日(Terrestrial Time)またはWhen::TM::DateAndTime
+    #
+    def meridian_passage_of_sun(t)
       day_event(t, 0, When.Resource('_ep:Sun'))
     end
 
@@ -1411,6 +1431,18 @@ module When::Ephemeris
     #             該当時刻がなければ nil
     #
     def moon_noon(t)
+      _day_event(t, nil, When.Resource('_ep:Moon'))
+    end
+
+    # 月の南中の日時
+    #
+    # @param [Numeric] t ユリウス日(Terrestrial Time)
+    # @param [When::TM::TemporalPosition] t
+    #
+    # @return [Numeric, When::TM::TemporalPosotion] 月の南中の日時(ユリウス日(Terrestrial Time)またはWhen::TM::DateAndTime
+    #             該当時刻がなければ nil
+    #
+    def meridian_passage_of_moon(t)
       _day_event(t, 0, When.Resource('_ep:Moon'))
     end
 

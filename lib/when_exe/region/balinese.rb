@@ -24,7 +24,7 @@ module When
       ],
 
       [self,
-        "names:[IntercalaryDay=en:Intercalation, 閏日=ja:%E9%96%8F]",
+        "names:[IntercalaryDay=en:Intercalation, 閏日=ja:%%<閏>]",
         "[Double %s=,           欠=       ]"
       ],
 
@@ -285,7 +285,7 @@ module When
       'origin_of_MSC' =>  1,
       'indices' => [
          When::Coordinates::Index.new({:trunk=>When.Resource('_m:BalineseTerms::TengananMonth::*')}),
-         When::Coordinates::Index.new
+         When::Coordinates::DefaultDayIndex
        ],
       'rule_table' => {
         'T'  => {'Rule'  =>[360, 379, 356]},

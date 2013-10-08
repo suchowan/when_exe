@@ -26,6 +26,11 @@ module When::TM
     # @return [When::EX::Extent]
     #
     # @note
+    #   domain の最小・最大から範囲を決定して domain_of_validity としている
+    #   domain_of_validity は ISO19108との互換性を確保するため提供しているが、
+    #   有効期間が複数に断片化していることがあるので、より正確な情報を含む
+    #   domain の使用を推奨する
+    #
     #   マルチスレッド動作時 CalendarEra の生成で Calendar の本属性が更新される
     #   参照・更新処理は synchronize { ... } の ... の部分に書く必要がある
     #
@@ -80,6 +85,11 @@ module When::TM
     #
     alias :component :child
 
+    private
+
+    # オブジェクトの正規化
+    def _normalize(args=[], options={})
+    end
   end
 
   # 暦
@@ -95,11 +105,13 @@ module When::TM
     #
     # @return [void]
     #
+    # @note
+    #   本メソッドでマルチスレッド対応の管理変数の初期化を行っている。
+    #   このため、本メソッド自体はスレッドセーフでない。
+    #
     def self._setup_
       @_lock_ = Mutex.new if When.multi_thread
-      @_lock_.lock if @_lock_
       @_pool  = {}
-      @_lock_.unlock if @_lock_
     end
 
     # この暦と関連付けられた暦年代 (relation - Basis)
@@ -172,7 +184,7 @@ module When::TM
       cal_options = jdt._attr
       cal_options.delete(:era_name)
       cal_options.delete(:era)
-      unless rate_of_clock == jdt.rate_of_clock
+      unless rate_of_clock == jdt.time_standard.rate_of_clock
         cal_options.delete(:time_standard)
         cal_options[:clock] = @time_basis || When.utc
         jdt = JulianDate.dynamical_time(jdt.dynamical_time, {:time_standard=>time_standard})
@@ -253,7 +265,7 @@ module When::TM
     # オブジェクトの正規化
     def _normalize(args=[], options={})
       @time_basis = When.Calendar(@time_basis) if @time_basis.kind_of?(String)
-      @indices  ||= DefaultDateIndex
+      @indices  ||= DefaultDateIndices
       _normalize_temporal
       @reference_frame ||= []
     end
@@ -292,12 +304,14 @@ module When::TM
       #
       # @return [void]
       #
+      # @note
+      #   本メソッドでマルチスレッド対応の管理変数の初期化を行っている。
+      #   このため、本メソッド自体はスレッドセーフでない。
+      #
       def _setup_(local=nil)
         @_lock_ = Mutex.new if When.multi_thread
-        @_lock_.lock if @_lock_
         @_pool  = {}
         @local_time = local
-        @_lock_.unlock if @_lock_
       end
 
       # @private
@@ -643,7 +657,7 @@ module When::TM
 
     # オブジェクトの正規化
     def _normalize(args=[], options={})
-      @indices ||= DefaultTimeIndex
+      @indices ||= DefaultTimeIndices
 
       # note
       @note    ||= 'JulianDayNotes'
@@ -868,12 +882,14 @@ module When::TM
       #
       # @return [void]
       #
+      # @note
+      #   本メソッドでマルチスレッド対応の管理変数の初期化を行っている。
+      #   このため、本メソッド自体はスレッドセーフでない。
+      #
       def _setup_(order=nil)
         @_lock_ = Mutex.new if When.multi_thread
-        @_lock_.lock if @_lock_
         @_pool  = {}
         @order  = order || DefaultEpochs
-        @_lock_.unlock if @_lock_
       end
 
       # When::TM::CalendarEra オブジェクトを検索し取得する
@@ -888,6 +904,9 @@ module When::TM
       #   @option options [Integer] :count  何件ヒットするまで検索するかを指定(デフォルトは 1件)
       #   @option options [String]  the_others 例えば When::TM::CalendarEra オブジェクトの epoch_of_use に 'name' などの
       #                                        指定がある場合、:name に指定しておけば、検索での絞り込みに使用できる。
+      #
+      # @note 検索用のインデクスはインスタンスの生成時に作成する。
+      #       作成後にキーワードとなる年号(M17nクラス)にローケールが追加されても反映されない。
       #
       def _instance(*args)
         # パラメータ
@@ -1030,6 +1049,7 @@ module When::TM
     # @note
     #   途中の改暦を指定するために要素が必要になることがあり、要素数が2を超えることがある。
     #   最初の要素が When::TimeValue::MIN(-Infinity)の場合、年数を降順にカウントする。
+    #   暦年代の分解能を“日”より細かくすることはできない。
     #
     attr_reader :epoch
 
@@ -1109,7 +1129,7 @@ module When::TM
     # @return [Numeric]
     #
     def rate_of_clock
-      _typical_epoch.rate_of_clock
+      _typical_epoch.time_standard.rate_of_clock
     end
 
     # 当該の暦年代の日付に変換する
@@ -1313,8 +1333,8 @@ module When::TM
           f.reference_frame << self
           f.reference_frame.uniq!
           f.reference_frame.sort!
-          first = f.domain.first(When.when?('-Infinity'))
-          last  = f.domain.last(When.when?('+Infinity'))
+          first = f.domain.first(When::MinusInfinity)
+          last  = f.domain.last(When::PlusInfinity)
           f.domain_of_validity = When::EX::Extent.new(
                                    When::TM::Period.new(
                                      When::TM::Instant.new(first),
@@ -1405,6 +1425,7 @@ module When::TM
       # reference_event
       @reference_event   = reference_event if reference_event
       @reference_event ||= ""
+      @reference_event   = DefaultEvents[@reference_event] if DefaultEvents[@reference_event]
       @reference_event   = m17n(@reference_event, nil, nil, term_options) if @reference_event.instance_of?(String)
       @reference_event._pool['..'] ||= self
       @_pool[@reference_event.to_s]  = @reference_event
@@ -1505,7 +1526,7 @@ module When::TM
     end
 
     def _trans_date(date, clock=nil)
-      unless rate_of_clock == date.rate_of_clock
+      unless rate_of_clock == date.time_standard.rate_of_clock
         date  = JulianDate.dynamical_time(date.dynamical_time, {:time_standard=>_typical_epoch.time_standard})
         clock = _typical_epoch.clock
       end

@@ -14,10 +14,10 @@ module When
                  "cal=http://en.wikipedia.org/wiki/Middle-earth_calendar]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[ShireTerms]",
-      "[Shire=en:The_Lord_of_the_Rings, ホビット庄暦=ja:%E6%8C%87%E8%BC%AA%E7%89%A9%E8%AA%9E]",
+      "[Shire=en:The_Lord_of_the_Rings, ホビット庄暦=ja:%%<指輪物語>]",
 
       [self,
-        "names:[Month, 月=ja:%E6%9C%88_(%E6%9A%A6)]",
+        "names:[Month, 月=ja:%%<月_(暦)>]",
         "[Yule=en:Yule,      ユール祭=          ]",
         "[Afteryule=en:Yule, ユール後月=        ]",
         "[Solmath=cal,       ソマス=            ]",
@@ -217,7 +217,7 @@ module When
       'label'   => When.Resource('_m:ShireTerms::Shire'),
       'indices' => [
          Coordinates::Index.new({:unit=>14, :trunk=>When.Resource('_m:ShireTerms::Month::*')}),
-         Coordinates::Index.new
+         Coordinates::DefaultDayIndex
        ],
       'border'       => '00-01-02',
       'day_offset'   => -183,           # the day 183 days before summer solstice
@@ -238,7 +238,7 @@ module When
       'origin_of_LSC' => 1721060-10,
       'indices' => [
         Coordinates::Index.new({:unit=>14, :trunk=>When.Resource('_m:ShireTerms::Month::*')}),
-        Coordinates::Index.new
+        Coordinates::DefaultDayIndex
       ],
       'border'     => '00-01-02',
       'rule_table' => {

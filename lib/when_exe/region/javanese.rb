@@ -158,7 +158,7 @@ module When
       'origin_of_MSC' =>     1555-512,
       'indices' => [
          When::Coordinates::Index.new({:unit =>12, :trunk=>When.Resource('_m:JavaneseTerms::IslamicMonth::*')}),
-         When::Coordinates::Index.new
+         When::Coordinates::DefaultDayIndex
       ],
       'rule_table'    => {
         'T'   => {'Rule'  =>[354, 355, 354, 354, 355, 354, 354, 355]*15, 'Days' => (354*8+3)*15-1},
@@ -176,7 +176,7 @@ module When
       'origin_of_MSC' =>     1675-512,
       'indices' => [
          When::Coordinates::Index.new({:unit =>12, :trunk=>When.Resource('_m:JavaneseTerms::IslamicMonth::*')}),
-         When::Coordinates::Index.new
+         When::Coordinates::DefaultDayIndex
        ],
       'rule_table'    => {
         'T'   => {'Rule'  =>[354, 355, 354, 355, 354, 354, 354, 355]*15, 'Days' => (354*8+3)*15-1},
@@ -194,7 +194,7 @@ module When
       'origin_of_MSC' =>     1747-512,
       'indices' => [
          When::Coordinates::Index.new({:unit =>12, :trunk=>When.Resource('_m:JavaneseTerms::IslamicMonth::*')}),
-         When::Coordinates::Index.new
+         When::Coordinates::DefaultDayIndex
        ],
       'rule_table'    => {
         'T'   => {'Rule'  =>[354, 355, 354, 355, 'D', 354, 354, 355]*15, 'Days' => (354*8+3)*15-1},
@@ -214,7 +214,7 @@ module When
       'origin_of_MSC' =>   -1854,
       'indices' => [
          Coordinates::Index.new({:unit =>12, :trunk=>When.Resource('_m:JavaneseTerms::HinduMonth::*'), :shift=>8}),
-         Coordinates::Index.new
+         Coordinates::DefaultDayIndex
        ],
       'rule_table'     => {
         'T'  => {'Rule'  =>['LC', 'SC', 'SC', 'SC']},

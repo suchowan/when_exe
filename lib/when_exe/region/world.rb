@@ -13,7 +13,7 @@ module When
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[WorldTerms]",
-      "[World=en:The_World_Calendar, 世界暦=ja:%E4%B8%96%E7%95%8C%E6%9A%A6]"
+      "[World=en:The_World_Calendar, 世界暦]"
     ]]
   end
 
@@ -182,7 +182,7 @@ module When
       'origin_of_LSC'  => 1721060,
       'indices' => [
          Coordinates::Index.new({:unit =>12, :trunk=>When.Resource('_m:CalendarTerms::Month::*')}),
-         Coordinates::Index.new
+         Coordinates::DefaultDayIndex
        ],
       'rule_table'      => {
         'T'  => {'Rule'  =>['LC', 'SC', 'SC', 'SC']},

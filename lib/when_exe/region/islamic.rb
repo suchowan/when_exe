@@ -16,7 +16,7 @@ module When
       "[EphemerisBasedIslamic=en:Islamic_calendar, イスラーム暦=ja:ヒジュラ暦]",
 
       [self,
-        "names:[Month, 月=ja:%E6%9C%88_(%E6%9A%A6)]",
+        "names:[Month, 月=ja:%%<月_(暦)>]",
         "[Muharram,                         ムハッラム=,                   محرم]",
         "[Safar,                            サファル=,                     صفر]",
         "[Rabi'_al-awwal,                   ラビーウ・アル＝アウワル=,     ربيع الأول]",
@@ -53,7 +53,7 @@ module When
       'origin_of_LSC'  =>  1948440-354,
       'indices' => [
          When::Coordinates::Index.new({:unit =>12, :trunk=>When.Resource('_m:IslamicTerms::Month::*')}),
-         When::Coordinates::Index.new
+         When::Coordinates::DefaultDayIndex
        ],
       'rule_table'     => {
         'T' => {'Rule'  =>[['L',2], 'S', ['L',3], 'S', ['L',2], 'S', 'L']},
@@ -96,7 +96,7 @@ module When
         @cycle_offset ||= 1671 * 12 + 4
         @indices      ||= [
          When::Coordinates::Index.new({:unit =>12, :trunk=>When.Resource('_m:IslamicTerms::Month::*')}),
-         When::Coordinates::Index.new
+         When::Coordinates::DefaultDayIndex
         ]
         super
       end

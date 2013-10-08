@@ -12,7 +12,7 @@ module When
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[ThaiTerms]",
-      "[ThaiLuniSolar=en:Thai_lunar_calendar, タイ太陰太陽暦=ja:%E3%83%81%E3%83%A3%E3%83%B3%E3%83%88%E3%83%A9%E3%82%AB%E3%83%86%E3%82%A3]"
+      "[ThaiLuniSolar=en:Thai_lunar_calendar, タイ太陰太陽暦=ja:%%<チャントラカティ>]"
     ]]
   end
 
@@ -62,7 +62,7 @@ module When
                                            -1.5 =>  intercalary_month[2],
                                            -1   =>  intercalary_month[3]},
                                   :trunk =>When.Resource('_m:IndianTerms::LunarMonth::*')}),
-          Coordinates::Index.new
+          Coordinates::DefaultDayIndex
         ]
         @rule_table  ||=  {
           354 => {'Length'=>[15,15,15,14]*6,                            'IDs' => NormalIDs},

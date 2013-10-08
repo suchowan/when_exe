@@ -13,12 +13,12 @@ module When
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=ja:, en=en:, alias]",
       "names:[ChineseTerms]",
-      "[中国太陽暦(節月)=ja:%E4%BA%8C%E5%8D%81%E5%9B%9B%E7%AF%80%E6%B0%97#.E6.9A.A6.E6.9C.88.E3.81.A8.E7.AF.80.E6.9C.88, *ChineseSolar=en:Solar_term]",
-      "[中国太陰太陽暦=ja:%E4%B8%AD%E5%9B%BD%E6%9A%A6, *ChineseLuniSolar=en:Chinese_calendar]",
-      "[彝暦=ja:%E3%82%A4%E6%97%8F, *Yi=en:Yi_people]",
+      "[中国太陽暦(節月)=ja:%%<二十四節気>#%.<暦月と節月>, *ChineseSolar=en:Solar_term]",
+      "[中国太陰太陽暦=ja:%%<中国暦>, *ChineseLuniSolar=en:Chinese_calendar]",
+      "[彝暦=ja:%%<イ族>, *Yi=en:Yi_people]",
 
       [self,
-        "names:[月=ja:%E6%9C%88_(%E6%9A%A6), *Month]",
+        "names:[月=ja:%%<月_(暦)>, *Month]",
         "[正月,   1st Month= ]",
         "[二月,   2nd Month= ]",
         "[三月,   3rd Month= ]",
@@ -34,7 +34,7 @@ module When
       ],
 
       [self,
-        "names:[月=ja:%E6%9C%88_(%E6%9A%A6), *MonthA]",
+        "names:[月=ja:%%<月_(暦)>, *MonthA]",
         "[一月,   1st Month= ]",
         "[二月,   2nd Month= ]",
         "[三月,   3rd Month= ]",
@@ -50,7 +50,7 @@ module When
       ],
 
       [self,
-        "names:[月=ja:%E6%9C%88_(%E6%9A%A6), *MonthB]",
+        "names:[月=ja:%%<月_(暦)>, *MonthB]",
         "[建寅月, 3rd Month= ]",
         "[建卯月, 4th Month= ]",
         "[建辰月, 5th Month= ]",
@@ -72,7 +72,7 @@ module When
       "names:[YiTerms]",
 
       [self,
-        "names:[月=ja:%E6%9C%88_(%E6%9A%A6), *Month]",
+        "names:[月=ja:%%<月_(暦)>, *Month]",
         "[木公月, 1st Month= ]",
         "[木母月, 2nd Month= ]",
         "[火公月, 3rd Month= ]",
@@ -245,7 +245,7 @@ module When
         @note             ||= When.CalendarNote('ChineseNotes')
         @indices          ||= [
             When::Coordinates::Index.new({:trunk=>When.Resource('_m:ChineseTerms::Month::*')}),
-            When::Coordinates::Index.new
+            When::Coordinates::DefaultDayIndex
           ]
         super
       end
@@ -282,7 +282,7 @@ module When
         @indices          ||= [
             When::Coordinates::Index.new({:branch=>{1=>When.Resource('_m:CalendarTerms::閏')},
                                           :trunk=>When.Resource('_m:ChineseTerms::Month::*')}),
-            When::Coordinates::Index.new
+            When::Coordinates::DefaultDayIndex
           ]
         super
       end
@@ -849,7 +849,7 @@ module When
       'origin_of_MSC'  =>  1852,
       'indices' => [
          When::Coordinates::Index.new({:unit =>12, :trunk=>When.Resource('_m:ChineseTerms::Month::*')}),
-         When::Coordinates::Index.new
+         When::Coordinates::DefaultDayIndex
        ],
       'rule_table'     => {
         'T' => {'Rule'  =>[365]},
@@ -883,7 +883,7 @@ module When
       'origin_of_MSC'  =>  1,
       'indices' => [
          When::Coordinates::Index.new({:unit  =>11, :trunk=>When.Resource('_m:YiTerms::Month::*')}),
-         When::Coordinates::Index.new
+         When::Coordinates::DefaultDayIndex
        ],
       'rule_table'     => {
         'T' => {'Rule'  =>[365, 365, 365, 366]},

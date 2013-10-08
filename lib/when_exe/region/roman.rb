@@ -15,7 +15,7 @@ module When
       "names:[RomanTerms]",
 
       [self, # ..CE-44 / ..BCE45
-        "names:[MonthA, 月=ja:%E6%9C%88_(%E6%9A%A6)]",
+        "names:[MonthA, 月=ja:%%<月_(暦)>]",
         "[Ianuarius,    1月]",
         "[Februarius,   2月]",
         "[Martius,      3月]",
@@ -31,7 +31,7 @@ module When
       ],
 
       [self, # CE-43..CE-8 / BCE44..BCE9
-        "names:[MonthB, 月=ja:%E6%9C%88_(%E6%9A%A6)]",
+        "names:[MonthB, 月=ja:%%<月_(暦)>]",
         "[Ianuarius,    1月]",
         "[Februarius,   2月]",
         "[Martius,      3月]",
@@ -47,7 +47,7 @@ module When
       ],
 
       [self, # CE-7..CE36, CE41.. / BCE8..CE36, CE41..
-        "names:[Month, 月=ja:%E6%9C%88_(%E6%9A%A6)]",
+        "names:[Month, 月=ja:%%<月_(暦)>]",
         "[Ianuarius,    1月]",
         "[Februarius,   2月]",
         "[Martius,      3月]",
@@ -63,7 +63,7 @@ module When
       ],
 
       [self, # CE37..CE40
-        "names:[MonthC, 月=ja:%E6%9C%88_(%E6%9A%A6)]",
+        "names:[MonthC, 月=ja:%%<月_(暦)>]",
         "[Ianuarius,    1月]",
         "[Februarius,   2月]",
         "[Martius,      3月]",
@@ -78,14 +78,15 @@ module When
         "[December,    12月]"
       ],
 
+      # %0s は“閏”の表記を抑制する指定となっている
       [self, # Intercalary Months
         "names:[IntercalaryMonth=en:Intercalation, 閏月]",
         "[%0sIntercalaris=en:Roman_calendar#Calendar_of_Numa,"      +
-         "閏月%0s=ja:%E3%83%AD%E3%83%BC%E3%83%9E%E6%9A%A6#.E6.9C.AB.E6.9C.9F.E3.81.AE.E3.83.AD.E3.83.BC.E3.83.9E.E6.9A.A6]",
+         "閏月%0s=ja:%%<ローマ暦>#%.<末期のローマ暦>]",
         "[%0sIntercalaris Prior=en:Julian_calendar#Realignment_of_the_year,"     +
-         "第１閏月%0s=ja:%E3%83%AD%E3%83%BC%E3%83%9E%E6%9A%A6#.E6.9C.AB.E6.9C.9F.E3.81.AE.E3.83.AD.E3.83.BC.E3.83.9E.E6.9A.A6]",
+         "第１閏月%0s=ja:%%<ローマ暦>#%.<末期のローマ暦>]",
         "[%0sIntercalaris Posterior=en:Julian_calendar#Realignment_of_the_year," +
-         "第２閏月%0s=ja:%E3%83%AD%E3%83%BC%E3%83%9E%E6%9A%A6#.E6.9C.AB.E6.9C.9F.E3.81.AE.E3.83.AD.E3.83.BC.E3.83.9E.E6.9A.A6]",
+         "第２閏月%0s=ja:%%<ローマ暦>#%.<末期のローマ暦>]",
       ]
     ]]
   end
@@ -96,8 +97,8 @@ module When
     Julian = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
-      "period:[Roman=en:Roman_calendar, ローマ暦=ja:%E3%83%AD%E3%83%BC%E3%83%9E%E6%9A%A6]",
-      ["[AUC=en:Ab_urbe_condita, 建国紀元=ja:%E3%83%AD%E3%83%BC%E3%83%9E%E5%BB%BA%E5%9B%BD%E7%B4%80%E5%85%83, alias:Ab_urbe_condita]709.1.1",
+      "period:[Roman=en:Roman_calendar, ローマ暦]",
+      ["[AUC=en:Ab_urbe_condita, 建国紀元=ja:%%<ローマ建国紀元>, alias:Ab_urbe_condita]709.1.1",
        "Calendar Epoch", "-44-01-01^JulianA",
                           "-7-03-01^JulianB",
                            "8-01-01^JulianC", "476-09-04"]
@@ -107,8 +108,8 @@ module When
     Roman = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
-      "period:[Roman=en:Roman_calendar, ローマ暦=ja:%E3%83%AD%E3%83%BC%E3%83%9E%E6%9A%A6]",
-      ["[AUC=en:Ab_urbe_condita, 建国紀元=ja:%E3%83%AD%E3%83%BC%E3%83%9E%E5%BB%BA%E5%9B%BD%E7%B4%80%E5%85%83, alias:Ab_urbe_condita]492.5.1",
+      "period:[Roman=en:Roman_calendar, ローマ暦]",
+      ["[AUC=en:Ab_urbe_condita, 建国紀元=ja:%%<ローマ建国紀元>, alias:Ab_urbe_condita]492.5.1",
        "Calendar Epoch", "-261-05-01^RomanA?border=0-5-1",
                          "-221-03-01^RomanA?border=0-3-1",
                          "-152-01-01^RomanA",
@@ -123,7 +124,7 @@ module When
   module CalendarTypes
 
     # From http://en.wikipedia.org/wiki/Julian_calendar#Sacrobosco.27s_theory_on_month_lengths
-    _Index0     = Coordinates::Index.new
+    _Index0     = Coordinates::DefaultDayIndex
     _IndicesB12 = [Coordinates::Index.new({:unit=>12, :trunk=>When.Resource('_m:RomanTerms::MonthB::*')}), _Index0]
     _Indices12  = [Coordinates::Index.new({:unit=>12, :trunk=>When.Resource('_m:RomanTerms::Month::*')}),  _Index0]
 

@@ -15,34 +15,6 @@ module When::Parts
   #
   module Resource
 
-    # 登録済み Prefix
-    Prefix = {'_w'   => When::SourceURI + '/',
-              '_p'   => When::SourceURI + 'Parts/',
-              '_b'   => When::SourceURI + 'BasicTypes/',
-              '_m'   => When::SourceURI + 'BasicTypes/M17n/',
-              '_co'  => When::SourceURI + 'Coordinates/',
-              '_l'   => When::SourceURI + 'Coordinates/Spatial?',
-              '_v'   => When::SourceURI + 'V/',
-              '_rs'  => When::SourceURI + 'RS/',
-              '_ex'  => When::SourceURI + 'EX/',
-              '_tm'  => When::SourceURI + 'TM/',
-              '_e'   => When::SourceURI + 'TM/CalendarEra/',
-              '_t'   => When::SourceURI + 'TimeStandard/',
-              '_ep'  => When::SourceURI + 'Ephemeris/',
-              '_c'   => When::SourceURI + 'CalendarTypes/',
-              '_n'   => When::SourceURI + 'CalendarTypes/CalendarNote/',
-              '_sc'  => When::SourceURI + 'Ephemeris/V50/'
-    }
-
-    # @private
-    PrefixKeys    = Prefix.keys.sort.reverse.map {|k| k.downcase}
-
-    # @private
-    PrefixValues  = Prefix.values.sort.reverse
-
-    # @private
-    PrefixIndex   = Prefix.invert
-
     # @private
     LabelProperty = nil
 
@@ -90,11 +62,14 @@ module When::Parts
 
       # 初期化
       # @return [void]
+      #
+      # @note
+      #   本メソッドでマルチスレッド対応の管理変数の初期化を行っている。
+      #   このため、本メソッド自体はスレッドセーフでない。
+      #
       def _setup_
         @_lock_ = Mutex.new if When.multi_thread
-        @_lock_.lock if @_lock_
         @_pool  = {}
-        @_lock_.unlock if @_lock_
       end
 
       # オブジェクト参照
@@ -152,6 +127,51 @@ module When::Parts
 
       include Pool
 
+      # Base URI for When_exe Resources
+      #
+      # @return [String]
+      #
+      attr_reader :base_uri
+
+      # @private
+      attr_reader :_prefix, :_prefix_values, :_prefix_index
+      private     :_prefix, :_prefix_values, :_prefix_index
+
+      # 初期化
+      #
+      # @param [String] base_uri Base URI for When_exe Resources
+      #
+      # @return [void]
+      #
+      # @note
+      #   本メソッドでマルチスレッド対応の管理変数の初期化を行っている。
+      #   このため、本メソッド自体はスレッドセーフでない。
+      #
+      def _setup_(base_uri=When::SourceURI)
+        super()
+        @_prefix = {
+          '_w'   => base_uri + '/',
+          '_p'   => base_uri + 'Parts/',
+          '_b'   => base_uri + 'BasicTypes/',
+          '_m'   => base_uri + 'BasicTypes/M17n/',
+          '_co'  => base_uri + 'Coordinates/',
+          '_l'   => base_uri + 'Coordinates/Spatial?',
+          '_v'   => base_uri + 'V/',
+          '_rs'  => base_uri + 'RS/',
+          '_ex'  => base_uri + 'EX/',
+          '_tm'  => base_uri + 'TM/',
+          '_e'   => base_uri + 'TM/CalendarEra/',
+          '_t'   => base_uri + 'TimeStandard/',
+          '_ep'  => base_uri + 'Ephemeris/',
+          '_c'   => base_uri + 'CalendarTypes/',
+          '_n'   => base_uri + 'CalendarTypes/CalendarNote/',
+          '_sc'  => base_uri + 'Ephemeris/V50/'
+        }
+        @base_uri       = base_uri
+        @_prefix_values = @_prefix.values.sort.reverse
+        @_prefix_index  = @_prefix.invert
+      end
+
       # オブジェクト生成&参照
       #
       # 指定した iri の When::Parts::Resource オブジェクトを取得する。
@@ -163,6 +183,8 @@ module When::Parts
       # @return [When::Parts::Resource]
       #
       def _instance(iri, namespace=nil)
+        _setup_ unless @_pool
+
         # 配列は個別に処理
         return iri.map {|e| _instance(e, namespace)} if iri.kind_of?(Array)
 
@@ -199,12 +221,13 @@ module When::Parts
 
       # @private
       def _path_with_prefix(obj, simple=true)
-        path = obj.kind_of?(Class) ? obj.to_s.sub(/^When::/, When::SourceURI).gsub(/::/, '/') :
+        _setup_ unless @_pool
+        path = obj.kind_of?(Class) ? obj.to_s.sub(/^When::/, base_uri).gsub(/::/, '/') :
                                      obj.iri
         return path unless simple
-        PrefixValues.each do |value|
+        _prefix_values.each do |value|
           index = path.index(value)
-          return PrefixIndex[value] + ':' + path[value.length..-1] if index
+          return _prefix_index[value] + ':' + path[value.length..-1] if index
         end
         return path
       end
@@ -238,11 +261,11 @@ module When::Parts
             prefix = '_' + prefix.downcase
             klass  = klass.capitalize if klass == klass.upcase
           end
-          path = Prefix[prefix] + klass if (Prefix[prefix])
+          path = _prefix[prefix] + klass if (_prefix[prefix])
         elsif capitalize && path =~ /^(v[^\/]+|daylight$|standard$)/i
           klass = path.sub(/^v/i, '').capitalize
-          path  = Prefix['_v'] + klass if When::V.const_defined?(klass) &&
-                                          When::V.const_get(klass).kind_of?(Class)
+          path  = _prefix['_v'] + klass if When::V.const_defined?(klass) &&
+                                           When::V.const_get(klass).kind_of?(Class)
         end
         return path
       end

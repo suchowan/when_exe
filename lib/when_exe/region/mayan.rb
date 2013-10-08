@@ -92,7 +92,7 @@ module When
     Mayan = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
-      "area:[MayanLongCount=en:Mesoamerican_Long_Count_calendar, マヤ長期暦=ja:%E9%95%B7%E6%9C%9F%E6%9A%A6]",
+      "area:[MayanLongCount=en:Mesoamerican_Long_Count_calendar, マヤ長期暦=ja:%%<長期暦>]",
      ["[PHLC=, 先史時代=, PreHistoricLongCount=]0.0.0.0.0", "[Pre Historic=]",	"-13.0.0.0.0^LongCount"],
      ["[HLC=,  歴史時代=, HistoricLongCount=]0.0.0.0.1",    "[Historic Age=]",	  "0.0.0.0.1"],
      ["[NLC=,  新時代=,   NewLongCount=]0.0.0.0.1",	    "[New Age=]",	 "13.0.0.0.1", "26.0.0.0.1"]

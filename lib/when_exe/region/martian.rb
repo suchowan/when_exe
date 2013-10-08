@@ -16,7 +16,7 @@ module When
       "[Darian=en:Darian_calendar, ダリアン暦]",
 
       [self,
-        "names:[DarianMonth=, 月=ja:%E6%9C%88_(%E6%9A%A6)]",
+        "names:[DarianMonth=, 月=ja:%%<月_(暦)>]",
         "[Sagittarius, いて=    ]",
         "[Dhanus=,     人馬=    ]",
         "[Capricornus, やぎ=    ]",
@@ -198,7 +198,7 @@ module When
       'origin_of_LSC' =>  -94798,
       'indices' => [
          When::Coordinates::Index.new({:unit =>24, :trunk=>When.Resource('_m:MartianTerms::DarianMonth::*')}),
-         When::Coordinates::Index.new
+         When::Coordinates::DefaultDayIndex
        ],
       'rule_table' => {
         'T'             => {'Rule' =>['LongCentury', ['ShortCentury', 4]]},

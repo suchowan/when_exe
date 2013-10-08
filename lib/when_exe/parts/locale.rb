@@ -19,7 +19,7 @@ module When::Parts
   module Locale
 
     # Locale 読み替えの初期設定
-    Alias = {'alias'=>'ja', '日本語'=>'ja', '英語'=>'en'}
+    DefaultAlias = {'alias'=>'ja', '日本語'=>'ja', '英語'=>'en'}
 
     # 漢字の包摂
     DefaultUnification = {
@@ -52,12 +52,17 @@ module When::Parts
 
       # When::Parts::Locale Module のグローバルな設定を行う
       #
-      # @param [Hash] aliases
-      #   Locale の読み替えパターンを Hash で指定する。
-      #   aliases の指定がない場合、aliases は Alias(モジュール定数)と解釈する。
+      # @param [Hash] options 下記の通り
+      # @option options [Hash] :alias       Locale の読み替えパターンを Hash で指定する。
+      # @option options [Hash] :unification 漢字の包摂パターンを Hash で指定する。
       #
-      def _setup_(aliases=nil)
-        @aliases = aliases || Alias
+      # @note
+      #   :alias の指定がない場合、aliases は DefaultAlias(モジュール定数)と解釈する。
+      #   :unification の指定がない場合、unifications は DefaultUnification(モジュール定数)と解釈する。
+      #
+      def _setup_(options={})
+        @aliases      = options[:alias]       || DefaultAlias
+        @unifications = options[:unification] || DefaultUnification
       end
 
       # 特定 locale に対応した文字列の取得
@@ -72,6 +77,7 @@ module When::Parts
       # @return [String] loc に対応した文字列
       #
       # @note source が Hash や Array の場合、その構成要素を変換して返す
+      # @note encode は通常大文字だが、大文字/小文字の変換は行わず指定されたまま使用している
       #
       def translate(source, loc='')
         return source unless loc
@@ -103,7 +109,7 @@ module When::Parts
       # @return [String] 文字を包摂した文字列
       # @return [Regexp] 文字を包摂した正規表現
       #
-      def ideographic_unification(source, pattern=DefaultUnification)
+      def ideographic_unification(source, pattern=_unification)
         case source
         when When::Parts::Locale
           source.ideographic_unification(pattern)
@@ -196,11 +202,15 @@ module When::Parts
         return hash[default]
       end
 
-      private
+      # @private
+      def _unification
+        @unifications || DefaultUnification
+      end
 
       def _alias
-        @aliases || Alias
+        @aliases || DefaultAlias
       end
+      private :_alias
     end
 
     # ローケール指定時の文字列
@@ -385,7 +395,7 @@ module When::Parts
     #
     # @return [When::Parts::Locale] self
     # @private
-    def ideographic_unification!(pattern=DefaultUnification)
+    def ideographic_unification!(pattern=_unification)
       names = {}
       @names.each_pair do |key, value|
         names[key] = Locale.ideographic_unification(value, pattern)
@@ -403,7 +413,7 @@ module When::Parts
     #
     # @return [When::Parts::Locale] 包摂結果
     #
-    def ideographic_unification(pattern=DefaultUnification)
+    def ideographic_unification(pattern=_unification)
       dup.ideographic_unification!(pattern)
     end
 
@@ -497,8 +507,8 @@ module When::Parts
             prefix = namespace[$1]
             ref.sub!(/^.+:/, prefix) if (prefix)
           end
-          ref += URI.encode(name) if (ref =~ /[\/#:]$/)
-          @link[locale] = ref
+          ref += '%%<' + name + '>' if (ref =~ /[\/#:]$/)
+          @link[locale] = _encode(ref)
         else ; raise ArgumentError, "Irregal locale format"
         end
       end
@@ -508,6 +518,13 @@ module When::Parts
       @values = @names.values.sort.reverse
 
       return @names[mark[0] || mark[1] || mark[2]]
+    end
+
+    # encode URI from patterns %%(...) or %.(...)
+    def _encode(source)
+      source.gsub(/%.<.+?>/) do |match|
+        URI.encode(match[3..-2].gsub(match[1], '%'))
+      end
     end
   end
 end

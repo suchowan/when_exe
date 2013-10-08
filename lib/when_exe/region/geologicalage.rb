@@ -10,31 +10,32 @@ module When::TM
   #
   # Geological Ages
   #
-  GeologicalAge = [OrdinalReferenceSystem, {'.'=>[
+  GeologicalAge = [OrdinalReferenceSystem, [
     "namespace:[ja=http://ja.wikipedia.org/wiki/, en=http://en.wikipedia.org/wiki/]",
     "locale:[=ja:, en=en:]",
+    "*area:[地球,Earth]",
+
     [OrdinalEra,
       "*eon:[冥王代,Hadean]",
       "begin:-4_600_000_000-"
     ],
     [OrdinalEra,
-      "namespace:[root=http://ja.wikipedia.org/wiki/%E5%A7%8B%E7%94%9F%E4%BB%A3#]",
+      "namespace:[root=http://ja.wikipedia.org/wiki/%%<始生代>#]",
       "*eon:[始生代,Archean]",
       [OrdinalEra,
-        "*era:[原始生代=root:.E3.82.A4.E3.82.AA.E3.82.A2.E3.83.BC.E3.82.AD.E3.82.A2.E3.83.B3_.28Eoarchean.29, \
-               Eoarchean]",
+        "*era:[原始生代=root:%.<原始生代_(Eoarchean)>,Eoarchean]",
         "begin:-4_000_000_000-"
       ],
       [OrdinalEra,
-        "*era:[古始生代=root:.E3.83.91.E3.83.AC.E3.82.AA.E3.82.A2.E3.83.BC.E3.82.AD.E3.82.A2.E3.83.B3_.28Paleoarchean.29,Paleoarchean]",
+        "*era:[古始生代=root:%.<古始生代_(Paleoarchean)>,Paleoarchean]",
         "begin:-3_600_000_000-"
       ],
       [OrdinalEra,
-        "*era:[中始生代=root:.E3.83.A1.E3.82.BE.E3.82.A2.E3.83.BC.E3.82.AD.E3.82.A2.E3.83.B3_.28Mesoarchean.29,Mesoarchean]",
+        "*era:[中始生代=root:%.<中始生代_(Mesoarchean)>,Mesoarchean]",
         "begin:-3_200_000_000-"
       ],
       [OrdinalEra,
-        "*era:[新始生代=root:.E3.83.8D.E3.82.AA.E3.82.A2.E3.83.BC.E3.82.AD.E3.82.A2.E3.83.B3_.28Neoarchean.29,Neoarchean]",
+        "*era:[新始生代=root:%.<新始生代_(Neoarchean)>,Neoarchean]",
         "begin:-2_800_000_000-"
       ]
     ],
@@ -635,5 +636,5 @@ module When::TM
         ]
       ]
     ]
-  ]}]
+  ]]
 end

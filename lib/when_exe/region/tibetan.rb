@@ -12,7 +12,7 @@ module When
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[TibetanTerms]",
-      "[Tibetan=en:Tibetan_calendar, 時輪暦=ja:%E3%83%81%E3%83%99%E3%83%83%E3%83%88%E6%9A%A6]",
+      "[Tibetan=en:Tibetan_calendar, 時輪暦=ja:%%<チベット暦>]",
 
       [self,
         "names:[IntercalaryMonth=en:Intercalation, 閏月]",
@@ -21,13 +21,13 @@ module When
       ],
 
       [self,
-        "names:[IntercalaryDay=en:Intercalation, 閏日=ja:%E9%96%8F]",
+        "names:[IntercalaryDay=en:Intercalation, 閏日=ja:%%<閏>]",
         "[Double %s=,      欠=]",
         "[Intercalary %s=, 重=]"
       ],
 
       [self,
-        "names:[Month, 月=ja:%E6%9C%88_(%E6%9A%A6)]",
+        "names:[Month, 月=ja:%%<月_(暦)>]",
         "[Margasirsa, 觜=]",
         "[Pausha,     鬼=]",
         "[Magha,      星=]",

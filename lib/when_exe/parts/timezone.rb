@@ -41,6 +41,7 @@ module When::Parts
       #   [ TZInfo::CountryTimezone - 時間帯オブジェクト(proxy for autoload) ]
       #
       def tz_info
+        return @tz_info if @tz_info
         zones = {}
         TZInfo::Country.all.each do |c|
           c.zone_info.each do |z|
@@ -49,17 +50,17 @@ module When::Parts
           end
         end
 
-        list  = {}
+        @tz_info = {}
         zones.each_pair do |id, hash|
           if hash.keys.size == 1
-            list[id] = hash[hash.keys[0]]
+            @tz_info[id] = hash[hash.keys[0]]
           else
             hash.each_pair do |c, z|
-              list["#{id}(#{c})"] = z
+              @tz_info["#{id}(#{c})"] = z
             end
           end
         end
-        list
+        @tz_info
       end
     end
 
@@ -83,6 +84,18 @@ module When::Parts
     # @return [String]
     def label
       @timezone.identifier
+    end
+
+    # 時間帯を代表する都市の経度 / 度
+    # @return [Rational]
+    def longitude
+      self.class.tz_info[label].longitude
+    end
+
+    # 時間帯を代表する都市の緯度 / 度
+    # @return [Rational]
+    def latitude
+      self.class.tz_info[label].latitude
     end
 
     # 時分秒のインデクス
@@ -127,7 +140,7 @@ module When::Parts
         @daylight   = When::TM::Clock.new({:zone=>dst, :tz_prop=>self})
         @difference = @standard.universal_time - @daylight.universal_time
       end
-      @indices = When::Coordinates::DefaultTimeIndex
+      @indices = When::Coordinates::DefaultTimeIndices
     end
 
     # @private
@@ -137,16 +150,9 @@ module When::Parts
         now    = zdate.to_time.to_i
         clocks = _offsets(now).map {|clock| When::TM::Clock.new({:zone=>clock, :tz_prop=>self})}
         flags  = clocks.map {|z| @timezone.period_for_utc(yield(z.dup.tap{|clock| clock.tz_prop = nil}).to_time.to_i).dst? }
-        return nil if flags[0] && !flags[1]
         (flags[0] || flags[1]) ? clocks[1] : clocks[0]
       else
-        now      = zdate.to_time.to_i
-        period   = @timezone.period_for_utc(now)
-        unless period.dst?
-          offset = _offsets(now)
-          period = @timezone.period_for_utc(now-(offset[1]-offset[0]))
-        end
-        When::TM::Clock.new({:zone=>period.utc_total_offset, :tz_prop=>self})
+        When::TM::Clock.new({:zone=>@timezone.period_for_utc(zdate.to_time.to_i).utc_total_offset, :tz_prop=>self})
       end
     end
 

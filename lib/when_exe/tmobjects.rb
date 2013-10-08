@@ -64,6 +64,8 @@ module When::TM
   #
   # Allen(1983) が分類した13種類の相対的な時間位置を定義している
   #
+  # ISO19108では値は Code クラスだが、本実装では値は Symbol である
+  #
   # see {http://schemas.opengis.net/gml/3.1.1/base/temporal.xsd#RelatedTimeType gml schema}
   #
   # see Allen,J.F., Maintaining Knowledge about Temporal Intervals, Communications of the ACM, 1983,vol.26 pp.832-843
@@ -591,6 +593,8 @@ module When::TM
     #   [ unit_name [String]  - 単位名 ]
     #   [ factor    [Numeric] - 冪乗 ]
     #   [ radix     [Numeric] - 冪乗の基数 ]
+    #
+    # @note value, factor, radix は Numeric
     #
     def self._to_array(interval)
       return nil unless interval =~ /^([-+]?[\d.]+)(?:(E|X|\((\d+)\))([-+]?\d+))?([A-Za-z]+|\*([\d.]+)S)$/

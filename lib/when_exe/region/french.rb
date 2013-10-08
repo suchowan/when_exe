@@ -14,7 +14,7 @@ module When
       "names:[FrenchTerms]",
 
       [self,
-        "names:[Month, 月=ja:%E6%9C%88_(%E6%9A%A6)]",
+        "names:[Month, 月=ja:%%<月_(暦)>]",
         "[Vendémiaire,    ヴァンデミエール=,       葡萄月=]",
         "[Brumaire,       ブリュメール=,           霧月=  ]",
         "[Frimaire,       フリメール=,             霜月=  ]",
@@ -38,8 +38,8 @@ module When
      French = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
-      "period:[FrenchRepublican=en:French_Republican_Calendar, フランス共和暦=ja:%E3%83%95%E3%83%A9%E3%83%B3%E3%82%B9%E5%85%B1%E5%92%8C%E6%9A%A6]",
-      ["[FRE=en:French_Republican_Calendar, 共和暦=ja:%E3%83%95%E3%83%A9%E3%83%B3%E3%82%B9%E5%85%B1%E5%92%8C%E6%9A%A6, alias:Republican_Era]1.1.1",
+      "period:[FrenchRepublican=en:French_Republican_Calendar, フランス共和暦=ja:%%<フランス革命暦>]",
+      ["[FRE=en:French_Republican_Calendar, 共和暦=ja:%%<フランス革命暦>, alias:Republican_Era]1.1.1",
        "Calendar Epoch", "1793-01-01^FrenchRepublican", "1806-04-11"],
     ]]
   end
@@ -52,7 +52,7 @@ module When
     FrenchRepublican =  [YearLengthTableBased, {
       'indices' => [
          When::Coordinates::Index.new({:unit =>13, :trunk=>When.Resource('_m:FrenchTerms::Month::*')}),
-         When::Coordinates::Index.new
+         When::Coordinates::DefaultDayIndex
        ],
        'origin_of_MSC' => +1,
        'cycle_offset'  => Rational(1,2),

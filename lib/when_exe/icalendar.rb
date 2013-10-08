@@ -22,10 +22,10 @@
 #     ただし、この指定は BYxxx とは共存できない。
 # * BYHOUR=h(,..)
 #     h に When.exe Standard Representation を使用できる
-#     example: 'BYHOUR=2,3'
-#       夏時間から標準時間への切り替え時に 夏時間の2時,標準時間の3時 を生成
-#     example: 'BYHOUR=2,2=,3'
-#       夏時間から標準時間への切り替え時に 夏時間の2時,標準時間の2時,標準時間の3時 を生成
+#     example: 'BYHOUR=1,2'
+#       夏時間から標準時間への切り替え時に 夏時間の1時,標準時間の2時 を生成
+#     example: 'BYHOUR=1,1=,2'
+#       夏時間から標準時間への切り替え時に 夏時間の1時,標準時間の1時,標準時間の2時 を生成
 #     他のソフトウェアとの互換性を損なう可能性があるが、本ライブラリは両方の動作の違いを
 #     記述できる必要があると判断。
 # * BYDAY/c=n*e±s(,..)
@@ -506,12 +506,14 @@ module When::V
       #   (When.now + default_until)を本メソッドで指定している。
       #   default_until の指定がない場合、default_until は 1000年と解釈する。
       #
+      # @note
+      #   本メソッドでマルチスレッド対応の管理変数の初期化を行っている。
+      #   このため、本メソッド自体はスレッドセーフでない。
+      #
       def _setup_(default_until=nil)
         @_lock_ = Mutex.new if When.multi_thread
-        @_lock_.lock if @_lock_
         @_pool = {}
         @default_until = default_until
-        @_lock_.unlock if @_lock_
       end
     end
 
@@ -614,13 +616,13 @@ module When::V
 
     # 順次実行
     #
-    # @overload initialize()
+    # @overload each()
     #
-    # @overload initialize(range, count_limit=nil)
+    # @overload each(range, count_limit=nil)
     #   @param [Range, When::Parts::GeometricComplex] range 始点-range.first, 終点-range.last
     #   @param [Integer] count_limit 繰り返し回数(デフォルトは指定なし)
     #
-    # @overload initialize(first, direction, count_limit)
+    # @overload each(first, direction, count_limit)
     #   @param [When::TM::TemporalPosition] first  始点
     #   @param [Symbol]  direction   :forward - 昇順, :reverse - 降順
     #   @param [Integer] count_limit 繰り返し回数(デフォルトは指定なし)
@@ -880,13 +882,8 @@ module When::V
         zdate = yield(nprop.tzoffsetfrom.dup.tap{|clock| clock.tz_prop = nil})
       end
       deltad = zdate.universal_time - ndate.universal_time
-      if nprop.instance_of?(Standard)
-        return nprop.tzoffsetto   if (deltad >= @difference)
-        return nprop.tzoffsetfrom
-      else
-        return nprop.tzoffsetto   if (deltad >= 0)
-        return nprop.tzoffsetfrom
-      end
+      return nprop.tzoffsetto   if (deltad >= 0)
+      return nprop.tzoffsetfrom
     end
 
     # @private
@@ -1365,8 +1362,13 @@ module When::V
             period = ord-bound[index] if (index>0)
             result = bound + When::TM::PeriodDuration.new(period, index)
             if period > 0 && result.universal_time < lower_bound.universal_time
+              clock  = result.clock
+              case clock.tz_prop
+              when When::V::TimezoneProperty ; clock = clock.tz_prop.tzoffsetto
+              when When::Parts::Timezone     ; clock = clock.tz_prop.standard
+              end
               result = result._copy({:date=>result.cal_date, :validate=>:done, :events=>nil,
-                                     :time=>result.clk_time._copy({:clock=>result.clock.tz_prop.tzoffsetto})})
+                                     :time=>result.clk_time._copy({:clock=>clock})})
             end
             result
           }

@@ -49,6 +49,7 @@ module When
     # @option options [When::TM::Clock, When::V::Timezone, When::Parts::Timezone] :local        デフォルトの地方時
     # @option options [When::TM::IntervalLength]    :until        V::Event::Enumerator の until
     # @option options [Hash{String=>String}]        :alias        Locale の読替パターン         ({ 読替前のlocale=>読替後のlocale })
+    # @option options [Hash{String=>String}]        :unification  漢字の包摂パターン            ({ 包摂前の文字列=>包摂後の文字列 })
     # @option options [Array<String>]               :order        CalendarEra の検索順序        ([ IRI of When::TM::CalendarEra ])
     # @option options [Hash{String=>Array, String}] :format       strftime で用いる記号の定義   ({ 記号=>[ 書式,項目名 ] or 記号列 })
     # @option options [Array<Array>]                :leap_seconds 閏秒の挿入記録                ([ [JD, TAI-UTC, (MJD, OFFSET)] ])
@@ -56,10 +57,14 @@ module When
     #
     # @return [void]
     #
+    # @note
+    #   本メソッドでマルチスレッド対応の管理変数の初期化を行っている。
+    #   このため、本メソッド自体および本メソッドから呼んでいる各クラスの _setup_ メソッドはスレッドセーフでない。
+    #
     def _setup_(options={})
       @multi_thread = options[:multi_thread]
       Parts::Resource._setup_
-      Parts::Locale._setup_(options[:alias])
+      Parts::Locale._setup_(options)
       TM::CalendarEra._setup_(options[:order])
       TM::Calendar._setup_
       TM::Clock._setup_(options[:local])
@@ -106,6 +111,9 @@ module When
   DurationP1M = TM::PeriodDuration.new([0,1,0])
   DurationP1Y = TM::PeriodDuration.new([1,0,0])
   TimeValue   = TM::IndeterminateValue
+
+  PlusInfinity  = TM::TemporalPosition.new({:indeterminated_position=>TimeValue::Max})
+  MinusInfinity = TM::TemporalPosition.new({:indeterminated_position=>TimeValue::Min})
 
   UTF8  = '.UTF-8'
   W31J  = '.Windows-31J'
@@ -161,7 +169,17 @@ module When
     autoload :Shire,                 'when_exe/region/shire'
     autoload :ShireG,                'when_exe/region/shire'
     autoload :Darian,                'when_exe/region/martian'
-    autoload :MTC,                   'when_exe/region/martian'
+
+    _time_systems = {
+      'LMT' => nil,                       # Local Mean Time
+      'LAT' => nil,                       # Local Apparent Time
+      'THS' => nil,                       # Temporal Hour System
+      'MTC' => 'when_exe/region/martian', # Martian Time, Coordinated
+    }
+    TimeSystems = _time_systems.keys.join('|')
+    _time_systems.each_pair do |key, required|
+      autoload key.to_sym, required if required
+    end
 
     class CalendarNote
       autoload :JapaneseNote,        'when_exe/region/japanese_notes'
@@ -189,76 +207,92 @@ module When
     autoload :Roman,                 'when_exe/region/roman'
     autoload :Mayan,                 'when_exe/region/mayan'
 
-    # default index for date coordinates
-    DefaultDateIndex = [
+    # default index for day coordinate
+    DefaultDayIndex = Coordinates::Index.new
+
+    # default indices for date coordinates
+    DefaultDateIndices = [
       Coordinates::Index.new({:unit=>12}),
-      Coordinates::Index.new
+      DefaultDayIndex
     ]
 
-    # default index for time coordinates
-    DefaultTimeIndex = [
+    # default indices for time coordinates
+    DefaultTimeIndices = [
       Coordinates::Index.new({:base=>0, :unit=>24}),
       Coordinates::Index.new({:base=>0, :unit=>60}),
       Coordinates::Index.new({:base=>0, :unit=>60})
     ]
   end
 
-  class TM::CalendarEra
-    autoload :GeologicalAge,         'when_exe/region/geologicalage'
-    autoload :Japanese,              'when_exe/region/japanese'
-    autoload :JapanesePrimeMinister, 'when_exe/region/japanese'
-    autoload :NihonKoki,             'when_exe/region/nihon_shoki'
-    autoload :NihonShoki,            'when_exe/region/nihon_shoki'
-    autoload :Chinese,               'when_exe/region/chinese_epoch'
-    autoload :Ryukyu,                'when_exe/region/ryukyu'
-    autoload :Korean,                'when_exe/region/korean'
-    autoload :Vietnamese,            'when_exe/region/vietnamese'
-    autoload :Manchurian,            'when_exe/region/far_east'
-    autoload :Rouran,                'when_exe/region/far_east'
-    autoload :Gaochang,              'when_exe/region/far_east'
-    autoload :Yunnan,                'when_exe/region/far_east'
-  # autoload :Tibetan,               'when_exe/region/tibetan'
-    autoload :Balinese,              'when_exe/region/balinese'
-    autoload :Javanese,              'when_exe/region/javanese'
-    autoload :Indian ,               'when_exe/region/indian'
-    autoload :Iranian,               'when_exe/region/iranian'
-    autoload :Hijra,                 'when_exe/region/islamic'
-    autoload :Jewish,                'when_exe/region/jewish'
-    autoload :Roman,                 'when_exe/region/roman'
-    autoload :Julian,                'when_exe/region/roman'
-    autoload :Pope,                  'when_exe/region/pope'
-    autoload :Byzantine,             'when_exe/region/christian'
-    autoload :French,                'when_exe/region/french'
-    autoload :World,                 'when_exe/region/world'
-    autoload :Mayan,                 'when_exe/region/mayan'
+  module TM
+    autoload :GeologicalAge,           'when_exe/region/geologicalage'
+    class CalendarEra
+      autoload :Japanese,              'when_exe/region/japanese'
+      autoload :JapanesePrimeMinister, 'when_exe/region/japanese'
+      autoload :NihonKoki,             'when_exe/region/nihon_shoki'
+      autoload :NihonShoki,            'when_exe/region/nihon_shoki'
+      autoload :Chinese,               'when_exe/region/chinese_epoch'
+      autoload :Ryukyu,                'when_exe/region/ryukyu'
+      autoload :Korean,                'when_exe/region/korean'
+      autoload :Vietnamese,            'when_exe/region/vietnamese'
+      autoload :Manchurian,            'when_exe/region/far_east'
+      autoload :Rouran,                'when_exe/region/far_east'
+      autoload :Gaochang,              'when_exe/region/far_east'
+      autoload :Yunnan,                'when_exe/region/far_east'
+    # autoload :Tibetan,               'when_exe/region/tibetan'
+      autoload :Balinese,              'when_exe/region/balinese'
+      autoload :Javanese,              'when_exe/region/javanese'
+      autoload :Indian ,               'when_exe/region/indian'
+      autoload :Iranian,               'when_exe/region/iranian'
+      autoload :Hijra,                 'when_exe/region/islamic'
+      autoload :Jewish,                'when_exe/region/jewish'
+      autoload :Roman,                 'when_exe/region/roman'
+      autoload :Julian,                'when_exe/region/roman'
+      autoload :Pope,                  'when_exe/region/pope'
+      autoload :Byzantine,             'when_exe/region/christian'
+      autoload :French,                'when_exe/region/french'
+      autoload :World,                 'when_exe/region/world'
+      autoload :Mayan,                 'when_exe/region/mayan'
 
-    # Defualt search path for Epochs and Eras
-    DefaultEpochs = ['Common',     'ModernJapanese',
-                     'Iranian',    'Hijra', 'Jewish', 'Roman', 'Byzantine',
-                     'French',     'World', 'Mayan',
-                     'Balinese',   'Javanese',
-                     'Japanese',   'JapanesePrimeMinister', 'NihonKoki', 'NihonShoki',
-                     'Chinese',    'Ryukyu',  'Vietnamese', 'Korean',
-                     'Manchurian', 'Rouran',  'Gaochang',   'Yunnan', # 'Tibetan',
-                     'Pope' ]
+      # Defualt search path for Epochs and Eras
+      DefaultEpochs = ['Common',     'ModernJapanese',
+                       'Indian',     'Iranian',   'Hijra',    'Jewish',
+                        'Roman',     'Byzantine', 'French',   'World', 'Mayan',
+                       'Balinese',   'Javanese',
+                       'Japanese',   'JapanesePrimeMinister', 'NihonKoki', 'NihonShoki',
+                       'Chinese',    'Ryukyu',  'Vietnamese', 'Korean',
+                       'Manchurian', 'Rouran',  'Gaochang',   'Yunnan', # 'Tibetan',
+                       'Pope' ]
 
-    # Common Era
-    Common = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/]",
-      "area:[Common]",
-      ["[BeforeCommonEra=en:BCE_(disambiguation),*alias:BCE]0.1.1"],
-      ["[CommonEra=en:Common_Era,*alias:CE]1.1.1", "Calendar Epoch", "01-01-01^Julian"],
-      ["[CommonEra=en:Common_Era,*alias:CE]1582.10.15", "Calendar Reform", "1582-10-15^Gregorian"]
-    ]]
+      # Defualt events for Epochs and Eras
+      DefaultEvents = Hash[*([['@A',  'Accession'       ],
+                              ['@FE', 'FelicitousEvent' ],
+                              ['@ND', 'NaturalDisaster' ],
+                              ['@IY', 'InauspiciousYear'],
+                              ['@F',  'Foundation'      ],
+                              ['@CR', 'CalendarReform'  ]].map {|e|
+        [e[0], When::Parts::Resource._instance('EpochEvents::'+e[1], '_m:')]
+      }.flatten)]
 
-    # Modern Japanese Eras after the calendar reform to the Gregorian Calendar
-    ModernJapanese = [self, [
-      "area:[Japan]",
-      ["M6.01.01", "Calendar Reform", "1873-01-01^Gregorian?note=DefaultNotes"],
-      ["T1.07.30", "Accession",       "1912-07-30"],
-      ["S1.12.25", "Accession",       "1926-12-25"],
-      ["H1.01.08", "Accession",       "1989-01-08"]
-    ]]
+      # Common Era
+      Common = [self, [
+        "namespace:[en=http://en.wikipedia.org/wiki/]",
+        "area:[Common]",
+        ["[BeforeCommonEra=en:BCE_(disambiguation),*alias:BCE]0.1.1"],
+        ["[CommonEra=en:Common_Era,*alias:CE]1.1.1", "Calendar Epoch", "01-01-01^Julian"],
+        ["[CommonEra=en:Common_Era,*alias:CE]1582.10.15", "Calendar Reform", "1582-10-15^Gregorian"]
+      ]]
+
+      # Modern Japanese Eras after the calendar reform to the Gregorian Calendar
+      ModernJapanese = [self, [
+        "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
+        "area:[Japan]",
+        ["[M=,alias:明=ja:明治]6.01.01", "Calendar Reform", "1873-01-01^Gregorian?note=DefaultNotes"],
+        ["[T=,alias:大=ja:大正]1.07.30", "Accession",       "1912-07-30"],
+        ["[S=,alias:昭=ja:昭和]1.12.25", "Accession",       "1926-12-25"],
+        ["[H=,alias:平=ja:平成]1.01.08", "Accession",       "1989-01-08"]
+      ]]
+    end
   end
 
   #
@@ -508,7 +542,7 @@ module When
     case clock
     when TM::Clock ; return clock
     when 'Z'       ; return utc
-    when /^LMT|LAT|THS|MTC/ ; return Parts::Resource._instance('_c:' + clock)
+    when /^#{CalendarTypes::TimeSystems}/ ; return Parts::Resource._instance('_c:' + clock)
     when Numeric   ; return utc if clock==0
     when String
       c = TM::Clock[clock] || V::Timezone[clock]

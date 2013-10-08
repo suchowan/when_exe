@@ -21,7 +21,7 @@ module When
       ],
 
       [self,
-        "names:[Month, 月=ja:%E6%9C%88_(%E6%9A%A6)]",
+        "names:[Month, 月=ja:%%<月_(暦)>]",
         "[Tishrei,  ティシュリー=]",
         "[Cheshvan, マルヘシュバン=]",
         "[Kislev,   キスレーヴ=]",
@@ -84,7 +84,7 @@ module When
           Coordinates::Index.new({:branch=>{-1=>When.Resource('_m:JewishTerms::IntercalaryMonth::*')[0],
                                              1=>When.Resource('_m:JewishTerms::IntercalaryMonth::*')[1]},
                                   :trunk=>m17n('[::_m:JewishTerms::Month::*]')}),
-          Coordinates::Index.new
+          Coordinates::DefaultDayIndex
         ]
 
         # Month & Day Arrangement

@@ -12,10 +12,11 @@ module When
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/, ar=http://ar.wikipedia.org/wiki/]",
       "locale:[=en:, ar=ar:, alias=en:]",
       "names:[BahaiTerms]",
-      "[Bahai=en:Bah%C3%A1%27%C3%AD_calendar, ja:バハーイー暦=ja:%E3%83%90%E3%83%8F%E3%83%BC%E3%82%A4%E3%83%BC%E6%95%99]",
+      "[Bahai=en:Bah%C3%A1%27%C3%AD_calendar, ja:バハーイー暦=ja:%%<バハーイー教>]",
 
+      # %0s は“閏”の表記を抑制する指定となっている
       [self,
-        "names:[Month, 月=ja:%E6%9C%88_(%E6%9A%A6)]",
+        "names:[Month, 月=ja:%%<月_(暦)>]",
         "[Bahá=,      بهاء=,    Splendour=  ]", #  1
         "[Jalál=,     جلال=,    Glory=      ]", #  2
         "[Jamál=,     جمال=,    Beauty=     ]", #  3
@@ -118,7 +119,7 @@ module When
           When::Coordinates::Index.new({:unit =>19}),
           When::Coordinates::Index.new({:trunk=>When.Resource('_m:BahaiTerms::Month::*'),
                                         :branch=>{+1=>When.Resource('_m:BahaiTerms::Month::*')[19]}}),
-          When::Coordinates::Index.new
+          When::Coordinates::DefaultDayIndex
         ]
         @index_of_MSC  ||= 2
         @origin_of_MSC ||= -1844 + 19*19

@@ -278,7 +278,7 @@ module When
           unless (time =~ /^(\d{2}(?:\.\d+)?|-)(\d{2}(?:\.\d+)?|-)?(\d{2}(\.\d+)?)?$/)
             raise ArgumentError, "Wrong time format: #{time}"
           end
-          indices = options[:frame] ? options[:frame].indices : Coordinates::DefaultDateIndex
+          indices = options[:frame] ? options[:frame].indices : Coordinates::DefaultDateIndices
           abbr = Array(options[:abbr]).dup
           abbr[0..indices.length] = []
           return [0, Coordinates::Pair._en_number($1=='-' ? abbr[0] : $1, nil),
@@ -290,7 +290,7 @@ module When
         def _to_array_extended(time, t, options={})
           return nil unless t
           return [0] unless time
-          indices = options[:frame] ? options[:frame].indices : Coordinates::DefaultDateIndex
+          indices = options[:frame] ? options[:frame].indices : Coordinates::DefaultDateIndices
           abbr = Array(options[:abbr]).dup
           abbr[0..indices.length] = []
           time.sub!(/,/, '.')

@@ -190,10 +190,10 @@ LIST
 
         obj4 = When.when?("1997-10-26T00:00:00", {:clock=>tz})
         [["PT1H", "1997-10-26T01:00:00-04:00"],
-         ["PT2H", "1997-10-26T02:00:00-04:00"],
+         ["PT2H", "1997-10-26T02:00:00-05:00"], # *
          ["PT3H", "1997-10-26T03:00:00-05:00"],
          [1 * When::TM::Duration::HOUR, "1997-10-26T01:00:00-04:00"],
-         [2 * When::TM::Duration::HOUR, "1997-10-26T02:00:00-04:00"],
+         [2 * When::TM::Duration::HOUR, "1997-10-26T01:00:00-05:00"], # *
          [3 * When::TM::Duration::HOUR, "1997-10-26T02:00:00-05:00"]].each do |sample|
           assert_equal(sample[1], (obj4 + When::Duration(sample[0])).to_s)
         end
@@ -208,7 +208,7 @@ LIST
          ["PT2H", "1997-10-26T02:00:00-05:00"], #  "1997-10-26T02:00:00-04:00" - TODO !!
          ["PT3H", "1997-10-26T03:00:00-05:00"],
          [1 * When::TM::Duration::HOUR, "1997-10-26T01:00:00-04:00"],
-         [2 * When::TM::Duration::HOUR, "1997-10-26T02:00:00-04:00"],
+         [2 * When::TM::Duration::HOUR, "1997-10-26T01:00:00-05:00"], # *
          [3 * When::TM::Duration::HOUR, "1997-10-26T02:00:00-05:00"]].each do |sample|
           assert_equal(sample[1], (obj4 + When::Duration(sample[0])).to_s)
         end

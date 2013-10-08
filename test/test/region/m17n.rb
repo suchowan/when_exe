@@ -136,17 +136,17 @@ module Test
 
        ['明治7.5.7',
          {:calendar=>["_e:Japanese::明治",1867], :sdn=>2405651, :cal_date=>[7, 5, 7],
-          :notes=>[[{:note=>"干支",  :value=>"庚午(6)", :position=>"共通"}],
+          :notes=>[[{:note=>"干支",  :value=>"甲戌(10)", :position=>"共通"}],
                    [{:note=>"月名",  :value=>"May",     :position=>"月建"}],
                    [{:note=>"干支",  :value=>"甲子(0)", :position=>"共通"},
-                    {:note=>"六曜",  :value=>"大安",    :position=>"民間"}]]}],
+                    {:note=>"六曜",  :value=>"赤口",    :position=>"民間"}]]}],
 
        ['明治17.5.7',
          {:calendar=>["_e:Japanese::明治",1867], :sdn=>2409304, :cal_date=>[17, 5, 7],
-          :notes=>[[{:note=>"干支",  :value=>"庚辰(16)", :position=>"共通"}],
+          :notes=>[[{:note=>"干支",  :value=>"甲申(20)", :position=>"共通"}],
                    [{:note=>"月名",  :value=>"May",      :position=>"月建"}],
                    [{:note=>"干支",  :value=>"丁巳(53)", :position=>"共通"},
-                    {:note=>"六曜",  :value=>"友引",     :position=>"民間"}]]}],
+                    {:note=>"六曜",  :value=>"先負",     :position=>"民間"}]]}],
 
        ['CE-2010.06.08T12:00:00+09:00',
          {:calendar=>["_e:Common::BCE", 1, true], :sdn=>987064, :cal_date=>[-2011, 6, 8],

@@ -10,15 +10,29 @@ require 'when_exe/region/chinese'
 module When
   module CalendarTypes
 
+    _IndicesM1 = [
+      Coordinates::Index.new({:branch=>{1=>When.Resource('_m:CalendarTerms::閏')},
+                              :trunk=>When.Resource('_m:ChineseTerms::Month::*')}),
+      Coordinates::DefaultDayIndex
+    ]
+
+    _IndicesM12 = [
+      Coordinates::Index.new({:branch=>{1=>When.Resource('_m:CalendarTerms::閏')},
+                              :trunk=>When.Resource('_m:ChineseTerms::Month::*'), :shift=>1}),
+      Coordinates::DefaultDayIndex
+    ]
+
+    _IndicesM11 = [
+      Coordinates::Index.new({:branch=>{1=>When.Resource('_m:CalendarTerms::閏')},
+                              :trunk=>When.Resource('_m:ChineseTerms::Month::*'), :shift=>2}),
+      Coordinates::DefaultDayIndex
+    ]
+
     # 秦・漢::      顓頊暦  -221 - -162 （冬至を１１月に固定） (歳首 建亥月)
     # 漢::          顓頊暦  -161 - -103 （雨水を１月に固定）   (歳首 建亥月)
     Chinese_221 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>-222, 'origin_of_LSC'=>1640021, 'border'=>'0*10-01',
-      'indices'=> [
-           Coordinates::Index.new({:branch=>{1=>When.Resource('_m:CalendarTerms::閏')},
-                                   :trunk=>When.Resource('_m:ChineseTerms::Month::*')}),
-           Coordinates::Index.new
-       ],
+      'indices'=> _IndicesM1,
       'rule_table'=> %w(
 					AbCdEfGhIjKl	ABcDeFgHiJkL	aBcDeFGhIiJkL
 	aBcDeFgHiJKl	AbCdEfGhIjKl	ABcDeFgHiIjKl	AbCdEFgHiJkL	aBcDeFgHIiJkL
@@ -55,11 +69,7 @@ module When
     # 蜀漢::         四分暦    221 -  264
     Chinese_103 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>-103, 'origin_of_LSC'=>1683490,
-      'indices'=> [
-           Coordinates::Index.new({:branch=>{1=>When.Resource('_m:CalendarTerms::閏')},
-                                   :trunk=>When.Resource('_m:ChineseTerms::Month::*')}),
-           Coordinates::Index.new
-       ],
+      'indices'=> _IndicesM1,
       'rule_table'=> %w(
 			ABcdeFgHiJkL	aBCdEfGhIjKl	AbCdEfFGhIjKl	AbCdEfGhIJkL
 
@@ -149,11 +159,7 @@ module When
     # 新::           太初暦      7 -   23 (歳首 建丑月)
     Chinese0008 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>7, 'origin_of_LSC'=>1723652, 'border'=>'0*12-01',
-      'indices'=> [
-           Coordinates::Index.new({:branch=>{1=>When.Resource('_m:CalendarTerms::閏')},
-                                   :trunk=>When.Resource('_m:ChineseTerms::Month::*'), :shift=>1}),
-           Coordinates::Index.new
-       ],
+      'indices'=> _IndicesM12,
       'rule_table'=> %w(
         		aBcDeFgHiJkL	aABcDeFgHiJkL	aBcDeFGhIjKl	AbCdEfGhIiJKl
 	AbCdEfGhIjKl	ABcDeFgHiJkL	aBcDeFGgHiJkL	aBcDeFgHIjKl	AbCdEfGhIjKl
@@ -166,11 +172,7 @@ module When
     # 呉::           乾象暦    223 - 280
     Chinese0223 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>222, 'origin_of_LSC'=>1802173,
-      'indices'=> [
-           Coordinates::Index.new({:branch=>{1=>When.Resource('_m:CalendarTerms::閏')},
-                                   :trunk=>When.Resource('_m:ChineseTerms::Month::*')}),
-           Coordinates::Index.new
-       ],
+      'indices'=> _IndicesM1,
       'rule_table'=> %w(
 			AbCdEfFGhIjKl	aBcDeFgHiJKl	AbCdEfGhIjKl	ABcDdEfGhIjKl
 	AbCdEFgHiJkL	aBcDeFgHiJKlL	aBcDeFgHiJkL	aBCdEfGhIjKl	AbCdEFgHhIjKl
@@ -192,11 +194,7 @@ module When
     # 魏::           景初暦    237 - 239 (歳首 建丑月)
     Chinese0237 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>236, 'origin_of_LSC'=>1807282, 'border'=>'0*12-01',
-      'indices'=> [
-           Coordinates::Index.new({:branch=>{1=>When.Resource('_m:CalendarTerms::閏')},
-                                   :trunk=>When.Resource('_m:ChineseTerms::Month::*'), :shift=>1}),
-           Coordinates::Index.new
-       ],
+      'indices'=> _IndicesM12,
       'rule_table'=> %w(AaBcDeFgHiJKl	AbCdeFgHiJkL	aBcDeFGhIjJkL	aBcDeFgHiJKl)
       }
     ]
@@ -206,13 +204,9 @@ module When
     # 北魏::         景初暦    386? - 451
     Chinese0239 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>239, 'origin_of_LSC'=>1808404,
-      'indices'=> [
-           Coordinates::Index.new({:branch=>{1=>When.Resource('_m:CalendarTerms::閏')},
-                                   :trunk=>When.Resource('_m:ChineseTerms::Month::*')}),
-           Coordinates::Index.new
-       ],
+      'indices'=> _IndicesM1,
       'rule_table'=> %w(
-        							aBcDeFgHiJKl	AbCdEfGhIjKl
+        						aBcDeFgHiJKl	AbCdEfGhIjKl
 	AbCDeFfGhIjKl	AbCdEFgHiJkL	aBcDeFgHiJKl	AbCcDeFgHiJkL	aBCdEfGhIjKl
 	AbCdEFgHiJkLl	AbCdEfGhIJkL	aBcDeFgHiJkL	aBCdEfGhIiJkL	aBcDeFGhIjKl
 
@@ -269,11 +263,7 @@ module When
     # 及び後梁
     Chinese0445 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>445, 'origin_of_LSC'=>1883618,
-      'indices'=> [
-           Coordinates::Index.new({:branch=>{1=>When.Resource('_m:CalendarTerms::閏')},
-                                   :trunk=>When.Resource('_m:ChineseTerms::Month::*')}),
-           Coordinates::Index.new
-       ],
+      'indices'=> _IndicesM1,
       'rule_table'=> %w(
 									AbCdEeFgHiJkL
 	AbCdEfGhIjKl	AbCDeFgHiJkL	aBbCdEfGHiJkL	aBcDeFgHiJkL	AbCdEfGhIjJkL
@@ -314,11 +304,7 @@ module When
     # 後秦::         三紀暦    384 - 417
     Chinese0384 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>384, 'origin_of_LSC'=>1861352,
-      'indices'=> [
-           Coordinates::Index.new({:branch=>{1=>When.Resource('_m:CalendarTerms::閏')},
-                                   :trunk=>When.Resource('_m:ChineseTerms::Month::*')}),
-           Coordinates::Index.new
-       ],
+      'indices'=> _IndicesM1,
       'rule_table'=> %w(
 							AbCdEfGhIjKl	AbCDeEfGhIjKl
 	AbCdEfGHiJkL	aBcDeFgHiJkL	AaBcDeFgHiJkL	aBCdEfGhIjKl	AbCdEfGHiJjKl
@@ -336,11 +322,7 @@ module When
     # 北魏::         玄始暦    452 - 522
     Chinese0412 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>412, 'origin_of_LSC'=>1871570,
-      'indices'=> [
-           Coordinates::Index.new({:branch=>{1=>When.Resource('_m:CalendarTerms::閏')},
-                                   :trunk=>When.Resource('_m:ChineseTerms::Month::*')}),
-           Coordinates::Index.new
-       ],
+      'indices'=> _IndicesM1,
       'rule_table'=> %w(
 			aBcDeFgHhIjKL	aBcDeFgHiJkL	aBcDEfGhIjKl	AbCdEeFgHIjKl
 	AbCdEfGhIjKL	aBcDeFgHiJkL	aBbCDeFgHiJkL	aBcDeFgHIjKl	AbCdEfGhIjKKl
@@ -374,11 +356,7 @@ module When
     # 北斉::         天保暦    551 - 577
     Chinese0540 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>540, 'origin_of_LSC'=>1918317,
-      'indices'=> [
-           Coordinates::Index.new({:branch=>{1=>When.Resource('_m:CalendarTerms::閏')},
-                                   :trunk=>When.Resource('_m:ChineseTerms::Month::*')}),
-           Coordinates::Index.new
-       ],
+      'indices'=> _IndicesM1,
       'rule_table'=> %w(
 									aBcDeEfGhIjKl
 	ABcDeFgHiJkL	aBcDeFGhIjKl	AaBcDeFgHIjKl	AbCdEfGhIjKl	ABcDeFgHiJjKl
@@ -412,13 +390,9 @@ module When
     # (後晋::        調元暦?   944 -  946)
     Chinese0523 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>523, 'origin_of_LSC'=>1912115,
-      'indices'=> [
-           Coordinates::Index.new({:branch=>{1=>When.Resource('_m:CalendarTerms::閏')},
-                                   :trunk=>When.Resource('_m:ChineseTerms::Month::*')}),
-           Coordinates::Index.new
-       ],
+      'indices'=> _IndicesM1,
       'rule_table'=> %w(
-        					AbCdEfGhIjKL	aBbCdEfGhIjKl	AbCDeFgHiJkL
+        				AbCdEfGhIjKL	aBbCdEfGhIjKl	AbCDeFgHiJkL
 	aBcDeFgHIjKkL	aBcDeFgHiJKl	AbCdEfGhIjKl	AbCDeFgGhIjKl	AbCdEfGHiJkL
 	aBcDeFgHiJKl	AbCcDeFgHiJkL	aBCdEfGhIjKl	AbCdEfGHiJkLl	AbCdEfGhIJkL
 	aBcDeFgHiJkL	aBCdEfGhIiJkL	aBcDeFGhIjKl	AbCdEfGhIJkL	aBcDeEfGhIjKl
@@ -521,7 +495,7 @@ module When
       'indices'=> [
            Coordinates::Index.new({:branch=>{1=>When.Resource('_m:CalendarTerms::閏')},
                                    :trunk=>When.Resource('_m:ChineseTerms::MonthA::*')}),
-           Coordinates::Index.new
+           Coordinates::DefaultDayIndex
        ],
       'rule_table'=> %w(
         				AbcDeFgHIJkL	aBcdEfGhIIJkL	aBcdEfgHIjKL
@@ -537,7 +511,7 @@ module When
       'indices'=> [
            Coordinates::Index.new({:branch=>{1=>When.Resource('_m:CalendarTerms::閏')},
                                    :trunk=>When.Resource('_m:ChineseTerms::MonthB::*')}),
-           Coordinates::Index.new
+           Coordinates::DefaultDayIndex
        ],
       'rule_table'=> %w(AbcDdeFgHIjKL	aBcDefGhIJkL	AbCdEfgHiJkL)
       }
@@ -554,11 +528,7 @@ module When
     # 南明::         大統暦   1645 - 1662
     Chinese0939 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>939, 'origin_of_LSC'=>2064050,
-      'indices'=> [
-           Coordinates::Index.new({:branch=>{1=>When.Resource('_m:CalendarTerms::閏')},
-                                   :trunk=>When.Resource('_m:ChineseTerms::Month::*')}),
-           Coordinates::Index.new
-       ],
+      'indices'=> _IndicesM1,
       'rule_table'=> %w(
 							ABcDefGgHiJkL	ABcDefGhIjKl
 	ABcDEfgHiJkL	aBcCDeFgHiJkL	aBcDeFGhIjKl	AbCdeFGhIJkLl	AbcDeFgHIJkL
@@ -748,11 +718,7 @@ module When
     # 南宋::         本天暦   1277 - 1279
     Chinese0956 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>947, 'origin_of_LSC'=>2066974,
-      'indices'=> [
-           Coordinates::Index.new({:branch=>{1=>When.Resource('_m:CalendarTerms::閏')},
-                                   :trunk=>When.Resource('_m:ChineseTerms::Month::*')}),
-           Coordinates::Index.new
-       ],
+      'indices'=> _IndicesM1,
       'rule_table'=> %w(
 			AbCdeFggHIjKL	AbCdeFghIJkL	AbCDefGhiJKl	AbCDeEfGhIjKl
 
@@ -834,11 +800,7 @@ module When
     # 方臘::         紀元暦   1118 - 1120 (歳首 建子月)
     Chinese1119 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>1118, 'origin_of_LSC'=>2129431, 'border'=>'0*11-01',
-      'indices'=> [
-           Coordinates::Index.new({:branch=>{1=>When.Resource('_m:CalendarTerms::閏')},
-                                   :trunk=>When.Resource('_m:ChineseTerms::Month::*'), :shift=>2}),
-           Coordinates::Index.new
-       ],
+      'indices'=> _IndicesM11,
       'rule_table'=> %w(		aBCdEfGhIiJkL	aBcDEfGhIjKl	AbCdEfGHiJkL)
       }
     ]
@@ -846,11 +808,7 @@ module When
     # 清::           時憲暦   1645 - 1911
     Chinese1645 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>1645, 'origin_of_LSC'=>2321912,
-      'indices'=> [
-           Coordinates::Index.new({:branch=>{1=>When.Resource('_m:CalendarTerms::閏')},
-                                   :trunk=>When.Resource('_m:ChineseTerms::Month::*')}),
-           Coordinates::Index.new
-       ],
+      'indices'=> _IndicesM1,
       'rule_table'=> %w(
 									aBcdEffGhIJKL
 	aBcdEfgHiJKL	aBCdeFghIjKL	aBCdDeFghIjKl	ABcDEfGhiJkL	aBCdEfGHijKl

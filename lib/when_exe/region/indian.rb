@@ -13,8 +13,8 @@ module When
       "locale:[=en:, ja=ja:, alias]",
       "names:[IndianTerms]",
       "[IndianNationalSolar=en:Indian_national_calendar, インド国定暦]",
-      "[HinduSolar=en:Hindu_calendar,     インド太陽暦=ja:%E3%83%92%E3%83%B3%E3%83%89%E3%82%A5%E3%83%BC%E6%9A%A6]",
-      "[HinduLuniSolar=en:Hindu_calendar, インド太陰太陽暦=ja:%E3%83%92%E3%83%B3%E3%83%89%E3%82%A5%E3%83%BC%E6%9A%A6]",
+      "[HinduSolar=en:Hindu_calendar,     インド太陽暦=ja:%%<ヒンドゥー暦>]",
+      "[HinduLuniSolar=en:Hindu_calendar, インド太陰太陽暦=ja:%%<ヒンドゥー暦>]",
 
       [self,
         "names:[IntercalaryMonth=en:Intercalation, 閏月]",
@@ -25,13 +25,13 @@ module When
       ],
 
       [self,
-        "names:[IntercalaryDay=en:Intercalation, 閏日=ja:%E9%96%8F]",
+        "names:[IntercalaryDay=en:Intercalation, 閏日=ja:%%<閏>]",
         "[Double %s=,           欠=       ]",
         "[Intercalary %s=,      重=       ]"
       ],
 
       [self,
-        "names:[LunarMonth=, 太陰月=ja:%E6%9C%88_(%E6%9A%A6)]",
+        "names:[LunarMonth=, 太陰月=ja:%%<月_(暦)>]",
         "[Mārgaśīra=en:Margashirsha,   マールガシールシャ=]",
         "[Pauṣa=en:Pausha,             パウシャ=          ]",
         "[Māgha=en:Maagha,             マーガ=            ]",
@@ -47,7 +47,7 @@ module When
       ],
 
       [self,
-        "names:[SolarMonth=, 太陽月=ja:%E6%9C%88_(%E6%9A%A6)]",
+        "names:[SolarMonth=, 太陽月=ja:%%<月_(暦)>]",
         "[Maysha=,                     白羊宮            ]",
         "[Vrushabha=,                  金牛宮            ]",
         "[Mithuna=,                    双児宮            ]",
@@ -543,7 +543,7 @@ module When
       'origin_of_LSC' => 1721140,
       'indices' => [
          When::Coordinates::Index.new({:unit =>12, :trunk=>When.Resource('_m:IndianTerms::LunarMonth::*'), :shift=>4}),
-         When::Coordinates::Index.new
+         When::Coordinates::DefaultDayIndex
        ],
       'rule_table'      => {
         'T'  => {'Rule'  =>['LC', 'SC', 'SC', 'SC']},
@@ -602,7 +602,7 @@ module When
         @indices        ||= [
           Coordinates::Index.new({:trunk=>When.Resource('_m:IndianTerms::SolarMonth::*'),
                                   :shift=>@start_month-1}),
-          Coordinates::Index.new
+          Coordinates::DefaultDayIndex
         ]
 
         super
@@ -733,12 +733,12 @@ module When
         @location      ||=  Location[$1]
         @cycle_offset  ||=  CycleOffset[$1]
         @origin_of_MSC ||= -YearEpoch[$2]
-        @hindu_style  ||=  HinduStyle[$3]
+        @hindu_style   ||=  HinduStyle[$3]
         @epoch_in_CE   ||=  0
         @start_month   ||=  5 # Chaitra
         @start_month     = @start_month.to_i
         @cycle_offset    = @cycle_offset.to_f + (@start_month - 5)
-        @hindu_style    = @hindu_style.to_i
+        @hindu_style     = @hindu_style.to_i
         @origin_of_MSC   = @origin_of_MSC.to_i
         formula  = @formula || Formula[$1]
         if formula.kind_of?(String)
@@ -795,7 +795,7 @@ module When
             "names:[day]",
 
             [When::BasicTypes::M17n,
-              "names:[tithi=, ティティ=ja:%E3%83%86%E3%82%A3%E3%83%86%E3%82%A3]",
+              "names:[tithi=, ティティ=ja:%%<ティティ>]",
               "[Amavasya                  ]", # 新月
               "[Pratipad=en:Prathama_(day)]", #  1
               "[Dwitiya                   ]", #  2

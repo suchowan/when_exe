@@ -63,7 +63,9 @@ module When
             start = Time.now
             puts start._log_('%FT%X.%L') + ': Query - ' + When::Parts::Locale.translate(query, config['!'])
             begin
-              client.puts JSON.generate(Array(free_conv(*query.split(/\s+/)))).to_s
+              result = free_conv(*query.split(/\s+/))
+              result = When::Parts::Locale.translate(result, config['!'])
+              client.puts JSON.generate(Array(_to_string(result))).to_s
               stop = Time.now
               puts stop._log_('%FT%X.%L') + ": Respond (%7.0f ms)" % (1000 * (stop.to_f - start.to_f))
             rescue => err
@@ -94,9 +96,45 @@ module When
     def client(server, port, query)
       TCPSocket.open(server, port.to_i) do |socket|
         socket.puts(query)
-        JSON.parse(socket.gets.force_encoding("UTF-8"))
+        results = JSON.parse(socket.gets.force_encoding("UTF-8"))
+        results = Hash[*results.flatten(1)] if results[0].kind_of?(Array)
+        _to_symbol(results)
       end
     end
+
+    # JSONで通信するために Symbol を String に変換する
+    def _to_string(source)
+      case source
+      when Array
+        source.map {|e| _to_string(e)}
+      when Hash
+        result = {}
+        source.each_pair {|k,v|
+          result[k.kind_of?(Symbol) ? '_sym_' + k.to_s : k] = _to_string(v)
+        }
+        result
+      else
+        source
+      end
+    end
+    private :_to_string
+
+    # JSONで通信するために String を Symbol に変換する
+    def _to_symbol(source)
+      case source
+      when Array
+        source.map {|e| _to_symbol(e)}
+      when Hash
+        result = {}
+        source.each_pair {|k,v|
+          result[k =~ /^_sym_(.+)$/ ? $1.to_sym : k] = _to_symbol(v)
+        }
+        result
+      else
+        source
+      end
+    end
+    private :_to_symbol
 
     # 日付の自由変換
     #
@@ -234,11 +272,11 @@ module When
           list.map {|calendar|
              calendar.kind_of?(Class) ?
              yield(calendar.new(date)) :
-             yield(calendar ^ (calendar.rate_of_clock == date.rate_of_clock ? date.to_i : date))
+             yield(calendar ^ (calendar.rate_of_clock == date.time_standard.rate_of_clock ? date.to_i : date))
           }
         else
           list.map {|calendar|
-            date_for_calendar = calendar ^ (calendar.rate_of_clock == date.rate_of_clock ? date.to_i : date)
+            date_for_calendar = calendar ^ (calendar.rate_of_clock == date.time_standard.rate_of_clock ? date.to_i : date)
             methods.map {|method|
               date_for_calendar.send(method[0].to_sym, method[1], &block)
             }

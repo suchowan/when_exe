@@ -51,7 +51,7 @@ module When
         "[Intercalary %s=, *閏]",
 
         [M17n,
-          "names:[Month, 月=ja:%E6%9C%88_(%E6%9A%A6), /datetime/prompts/month]",
+          "names:[Month, 月=ja:%%<月_(暦)>, /datetime/prompts/month]",
           "[January,   1月, /date/month_names/1] ",
           "[February,  2月, /date/month_names/2] ",
           "[March,     3月, /date/month_names/3] ",

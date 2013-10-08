@@ -92,7 +92,7 @@ module When
         when Numeric, FalseClass, TrueClass ; element
         else        ; element.to_s
         end
-      result = result.translate(options[:locale]) if options[:locale] && result.kind_of?(When::BasicTypes::M17n)
+      result = When::Parts::Locale.translate(result,options[:locale]) if options[:locale] && result.kind_of?(String)
       result
     end
   end
@@ -1115,6 +1115,10 @@ module When
 
       # event を 文字列化 - 日時で与えられた event を文字列化する
       #
+      # @param [When::TM::TemporalPosition] other 時系の歩度を比較する基準(nilは比較しない)
+      #
+      # @return [String]
+      #
       # @note
       #   events 配列なし          - 日時をそのまま文字列化
       #   日時の精度が日より細かい - イベント名(イベント時刻)
@@ -1125,7 +1129,7 @@ module When
         return events[0] + '(' + clk_time.to_s[/[:*=0-9]+/] + ')' if precision > When::DAY
         return events[0] unless other
         other = JulianDate.dynamical_time(other.dynamical_time,
-                  {:time_standard=>time_standard}) unless rate_of_clock == other.rate_of_clock
+                  {:time_standard=>time_standard}) unless time_standard.rate_of_clock == other.time_standard.rate_of_clock
         events[0] + '('  + (other.to_i - to_i).to_s + ')'
       end
 
@@ -1170,7 +1174,7 @@ module When
         date = Pair._format([format] + terms)
         date.sub!(/([^\d])\(([-+\d]+)\)/, '(\2)\1') if era
         date = date[0..-2] unless @frame.pair[precision-1] || date[-1..-1] != '.'
-        date.gsub!(/\./, '-') if (@frame.indices.length <= DefaultDateIndex.length) && !era
+        date.gsub!(/\./, '-') if (@frame.indices.length <= DefaultDateIndices.length) && !era
         return date
       end
     end

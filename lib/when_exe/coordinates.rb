@@ -855,6 +855,8 @@ module When::Coordinates
       #
       # @return [String]
       #
+      # @note %0s は文字列引数の表示を抑制するための指定となる。C言語のprintfと異なるので注意。
+      #
       def _format(m17ns)
         index = 1
         m17ns[0].scan(/(%(?:(\d)\$)?[-+0# ]?[*\d.$]*[cspdiuboxXfgeEG])([-.:])?|(%%|.)/).inject('') { |form, m17n|
@@ -1399,7 +1401,12 @@ module When::Coordinates
         if respond_to?(:timezone)
           @timezone ||= @location ? @location.long / (Spatial::DEGREE * 15) : 9.0
           @timezone   = @timezone.kind_of?(String) ? @timezone.split(/,/) : Array(@timezone)
-          @timezone   = @timezone.map {|v| v.to_f / 24}
+          @timezone   = @timezone.map {|v|
+            d  = v.split('/')[1] if v.kind_of?(String)
+            v  = v.to_f / 24
+            v /= d.to_f if d
+            v
+          }
           (1...@timezone.size).each do |i|
             @timezone[i] += @timezone[i-1]
           end
@@ -1486,6 +1493,9 @@ module When::Coordinates
     #   Ex. [nil, 1,  1],    [nil,  0,  0,  0]
     #
     #   初期化時に indices から自動生成する
+    #
+    # @note 日付/日時の外部表現の「下限」を指定する。内部表現の下限は常に 0 である。
+    # サブクラスが定義するメソッド _coordinates_to_number, _number_to_coordinates は内部表現を使用する。
     #
     attr_reader :base
 

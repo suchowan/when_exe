@@ -90,6 +90,17 @@ class Numeric
   end
   alias :month_name :to_month_name
 
+  # self を幹の要素と解釈してWhen::Coordinates::Pair を生成
+  #
+  # @see When::Coordinates::Pair._force_pair
+  #
+  # @return [When::Coordinates::Pair]
+  #
+  def to_pair(branch=nil)
+    Coordinates::Pair._force_pair(self, branch)
+  end
+  alias :pair :to_pair
+
   # メソッド名に相当する単位で表した When::TM::IntervalLength
   # @method unit_interval_length
   # @return [When::TM::IntervalLength]
@@ -163,7 +174,7 @@ class String
   #
   # @return [String] 包摂結果
   #
-  def ideographic_unification(pattern=When::Parts::Locale::DefaultUnification)
+  def ideographic_unification(pattern=When::Parts::Locale._unification)
     When::Parts::Locale.ideographic_unification(self, pattern)
   end
 
@@ -234,9 +245,10 @@ class String
   #
   # @return [When::Coordinates::Pair]
   #
-  def pair
+  def to_pair
     Coordinates::Pair._force_pair(self)
   end
+  alias :pair :to_pair
 
   #
   # self を検索する暦年代とみなして登録された When::TM::CalendarEraを検索
@@ -290,7 +302,8 @@ class String
   def to_residue
     When::Coordinates::Residue.to_residue(self)
   end
-  alias :residue :to_residue
+  alias :residue     :to_residue
+  alias :day_of_week :to_residue
 
   #
   # 月名
@@ -350,7 +363,7 @@ class Regexp
   #
   # @return [Regexp] 包摂結果
   #
-  def ideographic_unification(pattern=When::Parts::Locale::DefaultUnification)
+  def ideographic_unification(pattern=When::Parts::Locale._unification)
     When::Parts::Locale.ideographic_unification(self, pattern)
   end
 end

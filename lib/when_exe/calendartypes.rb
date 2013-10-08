@@ -57,7 +57,7 @@ module When::CalendarTypes
     # オブジェクトの正規化
     def _normalize(args=[], options={})
       @label   ||= m17n('Z')
-      @indices ||= When::Coordinates::DefaultTimeIndex
+      @indices ||= When::Coordinates::DefaultTimeIndices
       @note    ||= 'JulianDayNotes'
       _normalize_temporal
       @second    = (@second||128).to_f
@@ -1228,6 +1228,9 @@ module When::CalendarTypes
     # @option options [Hash]                 その他のキー date を When::TM::TemporalPosition に変換するために使用する
     #                                        see {When::TM::TemporalPosition._instance}
     #
+    # @note CalendarNoteオブジェクト生成時に _normalize メソッド内で @prime 変数を設定しておけば、
+    #       本メソッドの :prime オプションで参照される。(BalineseNote#_normalize等参照)
+    #
     # @note 暦注のビットアドレスは、暦注サブクラスのNoteObjects定数の中の定義順序による。
     #       When::CalendarTypes::CalendarNote クラスの場合 new の引数とした暦注要素リストの定義順序による。
     #       ビットアドレスの値が 1 の暦注が計算対象となる。
@@ -1327,7 +1330,7 @@ module When::CalendarTypes
     #
     def _normalize(args=[], options={})
       @_elements = (args.size == 0 && self.class.const_defined?(:NoteObjects)) ?
-        When::SourceURI + self.class.to_s.split(/::/)[1..-1].join('/') + '/NoteObjects' :
+        When::Parts::Resource.base_uri + self.class.to_s.split(/::/)[1..-1].join('/') + '/NoteObjects' :
         _to_iri(args, options[:prefix] || '_co:')
       if @_elements.kind_of?(Array)
         @_elements.each do |e|
