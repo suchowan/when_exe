@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.email       = ["suchowan@box.email.ne.jp"]
   s.homepage    = "http://www.asahi-net.or.jp/~dd6t-sg/"
   s.summary     = %q{A multicultural and multilingualized calendar library based on ISO 8601, ISO 19108 and RFC 5545}
-  s.description = %q{This library supports ISO 8601, ISO 19108 and RFC 5545. This version is a beta version and in the evaluation stage. So, its APIs may be changed in future. Please see also the differences of ticket files from http://www.asahi-net.or.jp/~dd6t-sg/date/when_exe_rev.0.3.1beta.zip to http://www.asahi-net.or.jp/~dd6t-sg/date/when_exe_rev.0.3.2beta.zip. }
+  s.description = %q{This library supports ISO 8601, ISO 19108 and RFC 5545. This version is a beta version and in the evaluation stage. So, its APIs may be changed in future. Please see also the differences of ticket files from http://www.asahi-net.or.jp/~dd6t-sg/date/when_exe_rev.0.3.1beta.zip to http://www.asahi-net.or.jp/~dd6t-sg/date/when_exe_rev.0.3.2beta.zip.}
 
   s.rubyforge_project = "when_exe"
 
