@@ -19,8 +19,10 @@ module Test
       assert_equal(["月曜です 1%", "It is Monday 1%"],
         ['ja_JP', 'en_US'].map {|c| (form % [term1, term2, When::Coordinates::Pair.new(1,-2)]).translate(c)})
 
-      assert_equal("2:", "%d:" % When::Coordinates::Pair.new(1,1))
-      assert_equal("1=", When.m17n("%d:") % When::Coordinates::Pair.new(1,1))
+      pair11 = When::Coordinates::Pair.new(1,1)
+      assert_equal("2:", "%d:" % pair11)
+      assert_equal("2=", "%d=" % pair11)
+      assert_equal("1=", When.m17n("%d:") % pair11)
 
       date = When.when?('2011-02-28T12:34:56+09:00')
       assert_equal(["February", {""=>"February", "ja"=>"2月"}], [date.name(-1).to_s, date.name(-1).names])
@@ -70,7 +72,7 @@ module Test
     end
 
     def test__coordinates
-      date = When.when?('2012.3=16T12:34:56', {:frame=>When::CalendarTypes::ChineseLuniSolar.new({'timezone'=>9})})
+      date = When.when?('2012.3=16T12:34:56', {:frame=>When::CalendarTypes::ChineseLuniSolar.new({'time_basis'=>'+09:00'})})
       assert_equal(2012, date.year  )
       assert_equal(When::Coordinates::Pair.new(3,1), date.month)
       assert_equal(  16, date.day   )

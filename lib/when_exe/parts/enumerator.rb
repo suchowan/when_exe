@@ -262,7 +262,7 @@ module When::Parts
     def _range(args)
       if (args[0].instance_of?(Range))
         range, @count_limit, others = args
-        raise ArgumentError, "Too many arguments" if (others)
+        raise ArgumentError, "Too many arguments" if others
         @first   = When.when?(range.first)
         @last    = When.when?(range.last)
         @exdate |= @last if (range.exclude_end?)
@@ -274,8 +274,8 @@ module When::Parts
         end
       else
         @first, @direction, @count_limit, others = args
-        raise ArgumentError, "Too many arguments" if (others)
-        raise ArgumentError, "Too few arguments"  unless (@first)
+        raise ArgumentError, "Too many arguments" if others
+        raise ArgumentError, "Too few arguments"  unless @first
         @direction ||= :forward
         @last        = nil
       end

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2013 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -86,7 +86,7 @@ module When::V
 
     #
     # iCalendar クラス群の属性
-    # @return [Hash] { String => When::Parts::Resource::Element }
+    # @return [Hash] { String => When::Parts::Resource::ContentLine }
     #
     attr_reader :property
 
@@ -128,9 +128,27 @@ module When::V
       raise ArgumentError, "No enumerator exists" if (enumerators.length==0)
 
       # Enumerator の生成
-      return enumerators[0] if (enumerators.length==1 && exdate.node.size==0)
-      options[:exdate] = exdate
-      return When::Parts::Enumerator::Integrated.new(self, enumerators, *args)
+      enumerator =
+        if (enumerators.length==1 && exdate.node.size==0)
+          enumerators[0]
+        else
+          options[:exdate] = exdate
+          When::Parts::Enumerator::Integrated.new(self, enumerators, *args)
+        end
+      if ::Object.const_defined?(:Date) && (args[0].kind_of?(Range) ? args[0].first : args[0]).kind_of?(::Date)
+        enumerator.instance_eval %Q{
+          alias :_succ_of_super :succ
+          def succ
+            result = _succ_of_super
+            case result
+            when When::TM::DateAndTime ; result.to_date_time
+            when When::TM::CalDate     ; result.to_date
+            else                       ; result
+            end
+          end
+        }
+      end
+      enumerator
     end
     alias :to_enum  :_enumerator
     alias :enum_for :_enumerator
@@ -147,7 +165,14 @@ module When::V
       @_pool['..'] = options['..']
 
       # parsed 部の属性化
-      _parsed(options)
+      @property  = {}
+      @namespace = @_pool['..'].respond_to?(:namespace) ? @_pool['..'].namespace : {}
+      if options['.']
+        _parse_from_file(options)
+      else
+        _parse_from_code(options)
+      end
+      _set_variables
 
       # 属性の存在チェック & 設定
       _initialize_attributes(_attribute_appearance(self.class::Properties)) # .const_get(:Properties)))
@@ -156,29 +181,47 @@ module When::V
       _child(options, self.class::Classes) #.const_get(:Classes))
     end
 
-    # parsed 部の属性化
-    def _parsed(options)
-      @property = {}
-      if options['.']
-        options['.'].each do |v|
-          v = When::Parts::Resource._parse(v)
-          next unless (v.kind_of?(Element))
-          key = v.predicate
-          case @property[key]
-          when nil   ; @property[key] =  v
-          when Array ; @property[key] << v
-          else       ; @property[key] = [@property[key], v]
-          end
-        end
-      else
-        options.each_pair do |key, value|
-          @property[key] = Element.new(key, value) if key.kind_of?(String)
-        end
-        @property['dtstamp'] ||= Element.new('dtstamp',
-                                             When.now.to_s.gsub(/[-:]/,'')) if self.class::Properties[0].index('dtstamp')
-        @property['uid']     ||= Element.new('uid',
-                                             @property['dtstamp'].object + '-auto') if self.class::Properties[0].index('uid')
+    # ファイルからの属性読み込み
+    def _parse_from_file(options)
+      options['.'].each do |v|
+        v = When::Parts::Resource._parse(v)
+        _parse_altid(@property, v) if v.kind_of?(ContentLine)
       end
+
+      keys = @property.keys
+      if keys.delete('namespace')
+        content = @property['namespace'][0]
+        @property['namespace'] = content if @property['namespace'].size == 1
+        if content.attribute['prefix']
+          begin
+            @namespace[content.attribute['prefix'].object] = content.object
+          end while (content = content.same_altid)
+        else
+          @namespace.update(When::Parts::Locale._namespace(content.object))
+        end
+      end
+
+      keys.each do |key|
+        @property[key].each do |content|
+          content.object = When::BasicTypes::M17n.new(content, @namespace, []) if content.same_altid
+        end
+        @property[key] = @property[key][0] if @property[key].size == 1
+      end
+    end
+
+    # コードからの属性読み込み
+    def _parse_from_code(options)
+      options.each_pair do |key, value|
+        @property[key] = ContentLine.new(key, value) if key.kind_of?(String)
+      end
+      @property['dtstamp'] ||= ContentLine.new('dtstamp',
+                                           When.now.to_s.gsub(/[-:]/,'')) if self.class::Properties[0].index('dtstamp')
+      @property['uid']     ||= ContentLine.new('uid',
+                                           @property['dtstamp'].object + '-auto') if self.class::Properties[0].index('uid')
+    end
+
+    # @propertyの個別属性化
+    def _set_variables
       @property.each_key do |key|
         next if respond_to?(key)
         instance_eval %Q{
@@ -220,7 +263,7 @@ module When::V
 
       # REQUIRED but MUST NOT occur more than once
       require_unique.each do |key|
-        unless @property[key].kind_of?(When::Parts::Resource::Element)
+        unless @property[key].kind_of?(When::Parts::Resource::ContentLine)
           raise ArgumentError, "The #{key.upcase.gsub(/_/,'-')} is REQUIRED but MUST NOT occur more than once"
         end
       end
@@ -230,7 +273,7 @@ module When::V
         unless @property[key]
           raise ArgumentError, "The #{key.upcase.gsub(/_/,'-')} is REQUIRED and MAY occur more than once"
         end
-        @property[key] = [@property[key]] if (@property[key].kind_of?(When::Parts::Resource::Element))
+        @property[key] = [@property[key]] if (@property[key].kind_of?(When::Parts::Resource::ContentLine))
       end
 
       # OPTIONAL but MUST NOT occur more than once
@@ -249,7 +292,7 @@ module When::V
 
       # OPTIONAL and MAY occur more than once
       (optional + DefaultOptional).each do |key|
-        @property[key] = [@property[key]] if (@property[key].kind_of?(When::Parts::Resource::Element))
+        @property[key] = [@property[key]] if (@property[key].kind_of?(When::Parts::Resource::ContentLine))
       end
 
       # Other Properties
@@ -268,10 +311,6 @@ module When::V
       @calscale = @_pool['..'].calscale if @_pool['..'].respond_to?(:calscale)
       @calscale = @property['calscale'].object if @property['calscale']
       @calscale = When.Resource((@calscale||'GREGORIAN').capitalize, '_c:') unless (@calscale.kind_of?(When::TM::Calendar))
-
-      # namespace の登録
-      @namespace = @_pool['..'].respond_to?(:namespace) ? @_pool['..'].namespace : {}
-      @namespace.update(When::Parts::Locale._namespace(@property['namespace'].object)) if @property['namespace']
 
       # locale の登録
       @locale = @_pool['..'].respond_to?(:locale) ? @_pool['..'].locale : []
@@ -367,7 +406,7 @@ module When::V
         @exdate  = When::Parts::GeometricComplex.new()
         if (@property['rdate'])
           @rdate = @property['rdate'].inject([]) do |sum, v|
-            if When::Parts::Resource::Element === v
+            if v.kind_of?(When::Parts::Resource::ContentLine)
               if new_zone == ''
                 sum += When.when?(v.attribute['.'].split(/,/), date_options)
               else
@@ -388,7 +427,7 @@ module When::V
       # exdate の登録
       if @property['exdate']
         dates  = @property['exdate'].inject([]) do |sum, v|
-          if When::Parts::Resource::Element === v
+          if v.kind_of?(When::Parts::Resource::ContentLine)
             sum += When.when?(v.attribute['.'].split(/,/), date_options)
           else
             sum << v
@@ -416,7 +455,7 @@ module When::V
         @freebusy  = []
         if (@property['freebusy'])
           @freebusy = @property['freebusy'].inject([]) do |sum, v|
-            if When::Parts::Resource::Element === v
+            if v.kind_of?(When::Parts::Resource::ContentLine)
               sum += When.when?((v.attribute['.']||v.object).split(/,/), date_options)
             else
               sum << v
@@ -454,8 +493,10 @@ module When::V
       copy.child = @child.select {|ev|
         if ev.kind_of?(Event)
           keys.each_pair do |key, value|
-            value = /#{value}/ if value.kind_of?(String)
-            break unless (value === ev.property[key].object)
+            case value
+            when String ; break unless ev.property[key].object.index(value)
+            when Regexp ; break unless (ev.property[key].object =~ value)
+            end
           end
         else
           true
@@ -467,7 +508,7 @@ module When::V
     # @private
     def _enumerator_list(args)
       (@child.reject {|el| !el.kind_of?(Event)}).inject([]) { |sum, ev|
-          sum += ev._enumerator_list(args)
+        sum += ev._enumerator_list(args)
       }
     end
   end
@@ -516,6 +557,12 @@ module When::V
         @default_until = default_until
       end
     end
+
+    # SUMMARY Property
+    #
+    # @return [String, When::BasicTypes::M17n]
+    #
+    attr_reader :summary
 
     # RRULE Property
     #
@@ -587,7 +634,7 @@ module When::V
     # @return [String]
     #
     def label
-      @property['uid'].object
+      @label ||= @property['uid'].object
     end
 
     # 最後のイベント
@@ -679,7 +726,7 @@ module When::V
     # ユニーク識別名 - ACTION Property をユニーク識別名とする。
     # @return [String]
     def label
-      @property['action'].object # TODO
+      @label ||= @property['action'].object # TODO
     end
 
     # @private
@@ -692,7 +739,7 @@ module When::V
       _parsed(options)
 
       # 属性の存在チェック
-      case (@property['action'].kind_of?(When::Parts::Resource::Element) && @property['action'].object)
+      case (@property['action'].kind_of?(When::Parts::Resource::ContentLine) && @property['action'].object)
       when 'AUDIO'
         aware = _attribute_appearance([
           ['action', 'trigger'], [],
@@ -808,7 +855,7 @@ module When::V
     # ユニーク識別名 - DTSTART Property をユニーク識別名とする
     # @return [String]
     def label
-      @property['dtstart'].attribute['.']
+      @label ||= @property['dtstart'].attribute['.']
     end
   end
 
@@ -838,22 +885,12 @@ module When::V
 
     class << self; include When::Parts::Resource::Pool; end
 
-    # 標準時間帯の時計
-    # @return [When::TM::Clock]
-    attr_reader :standard
-
-    # 夏時間帯の時計
-    # @return [When::TM::Clock]
-    attr_reader :daylight
-
-    # 夏時間帯と標準時間帯の時間差
-    # @return [When::TM:IntervalLength]
-    attr_reader :difference
+    include When::Parts::Timezone::Base
 
     # ユニーク識別名 - TZID Property をユニーク識別名とする
     # @return [String]
     def label
-      @property['tzid'].object
+      @label ||= @property['tzid'].object
     end
 
     # 同一の時間帯を用いた期間
@@ -866,24 +903,21 @@ module When::V
     #
     def current_period(current_date=Time.now)
       current_date = When.when?(current_date) unless current_date.kind_of?(When::TM::TemporalPosition)
-      period = _tz_period(current_date)
+      period = _tz_period(current_date.universal_time)
       range  = period[1]
       return range if range.kind_of?(Range)
       GeometricComplex.new([period], !range)
     end
 
     # @private
-    def _daylight(zdate=nil)
+    def _daylight(time)
       raise ArgumentError, "Needless daylight saving time evaluation" unless _need_validate
-      zdate = yield(@standard.dup.tap{|clock| clock.tz_prop = nil}) if block_given?
-      ndate = _neighbor_event_date(zdate)
-      nprop = ndate.clock.tz_prop
-      if block_given? && !@standard.equal?(nprop.tzoffsetfrom)
-        zdate = yield(nprop.tzoffsetfrom.dup.tap{|clock| clock.tz_prop = nil})
-      end
-      deltad = zdate.universal_time - ndate.universal_time
-      return nprop.tzoffsetto   if (deltad >= 0)
-      return nprop.tzoffsetfrom
+      frame, cal_date, clk_time = time
+      time   = frame.to_universal_time(cal_date, clk_time, @standard) if clk_time
+      ndate  = _neighbor_event_date(time)
+      nprop  = ndate.clock.tz_prop
+      time   = frame.to_universal_time(cal_date, clk_time, nprop.tzoffsetfrom) if clk_time && !@standard.equal?(nprop.tzoffsetfrom)
+      (time >= ndate.universal_time) ? nprop.tzoffsetto : nprop.tzoffsetfrom
     end
 
     # @private
@@ -922,43 +956,42 @@ module When::V
 
     # 指定の日時に最も近い、時間帯変更イベントの日時
     #
-    # @param [When::TM::TemporalPosition] current_date 捜索の基点の日時
+    # @param [Numeric] current_time 捜索の基点の日時の universal time
     #
     # @return [When::TM::TemporalPosition] 捜索の基点の日時に最も近い、時間帯変更イベントの日時
     #
-    def _neighbor_event_date(current_date)
-      _tz_period(current_date)[0]
+    def _neighbor_event_date(current_time)
+      _tz_period(current_time)[0]
     end
 
-    def _tz_period(current_date)
-      universal_time = current_date.universal_time
-      return [@dtstart, false] if  (universal_time <= @dtstart.universal_time)
+    def _tz_period(current_time)
+      return [@dtstart, false] if (current_time <= @dtstart.universal_time)
       return [@dtstop,  true ] if (@dtstop.kind_of?(When::TimeValue) &&
-                                    universal_time >= @dtstop.universal_time)
+                                    current_time >= @dtstop.universal_time)
 
       # Thread 要注意 - @range は生成後に更新
       synchronize do
         @range.each do |range|
-          from = universal_time - range.first.universal_time
-          to   = range.last.universal_time  - universal_time
+          from = current_time - range.first.universal_time
+          to   = range.last.universal_time  - current_time
           return [(from < to) ? range.first : range.last, range] if (from >= 0 && to > 0)
         end
-        early = _neighbor(current_date, :reverse)
-        late  = _neighbor(current_date, :forward)
-        from  = universal_time - early.universal_time
-        to    = late.universal_time  - universal_time
+        early = _neighbor(current_time, :reverse)
+        late  = _neighbor(current_time, :forward)
+        from  = current_time - early.universal_time
+        to    = late.universal_time  - current_time
         @range << (early...late)
         return [(from < to) ? early : late, @range[-1]]
       end
     end
 
-    def _neighbor(current_date, direction)
+    def _neighbor(current_time, direction)
       event   = nil
       minimum = nil
       @child.each do |prop|
-        date = prop.enum_for(current_date, direction, 1).succ
+        date = prop.enum_for(current_time, direction, 1).succ
         if (date)
-          diff = (date - current_date).duration.abs
+          diff = (date.universal_time - current_time).abs
           if (minimum == nil || minimum > diff)
             event   = date 
             minimum = diff
@@ -1020,14 +1053,14 @@ module When::V
 
       # オブジェクトの生成
       def initialize(*args)
-        @options  = When::Parts::Enumerator._options(args)
-        @exdate   = @options.delete(:exdate)
-        @exevent  = @options.delete(:exevent)
+        @options = When::Parts::Enumerator._options(args)
+        @exdate  = @options.delete(:exdate)
+        @exevent = @options.delete(:exevent)
         @parent, @rule, @dtstart, @duration, *args = args
-        @dtstart  = When.when?(@dtstart)
-        @rule     = self.class._decode_rule(@rule, @dtstart) if (@rule.kind_of?(String))
-        @logics   = @rule[:logics]
-        @tz_prop  = nil
+        @dtstart = When.when?(@dtstart)
+        @rule    = self.class._decode_rule(@rule, @dtstart) if (@rule.kind_of?(String))
+        @logics  = @rule[:logics]
+        @tz_prop = nil
         if (@dtstart.kind_of?(When::TM::DateAndTime))
           clock = @dtstart.clock
           if (clock.kind_of?(When::TM::Clock) && 
@@ -1054,10 +1087,11 @@ module When::V
         else
           @interval  = When::TM::PeriodDuration.new(@rule['INTERVAL'], FreqIndex[@rule['FREQ']])
         end
-        return dtstart if (target == dtstart)
+        return dtstart if (dtstart == target)
         interval_time = (dtstart + @interval) - dtstart
         return dtstart if (interval_time == 0)
-        div, mod = (target - dtstart).duration.divmod(interval_time.duration)
+        duration = target.kind_of?(Numeric) ? target - dtstart.universal_time : (target - dtstart).duration
+        div, mod = duration.divmod(interval_time.duration)
         seed = dtstart + (@interval * div)
         case @direction
         when :reverse ; seed += @interval while (seed <= target)

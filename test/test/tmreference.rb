@@ -73,7 +73,7 @@ module Test::TM
       [['BCE11.2.21', 'BCE11(-010).02.21', 1717457],
        ['CE-10.2.21', 'BCE11(-010).02.21', 1717457],
        ['-10.2.21',   '-00010-02-21',     1717459],
-       ['CE1.1.1',    'CE01.01.01',       1721424]
+       ['CE1.1.1',    'Common::CE01.01.01',       1721424]
       ].each do |sample|
         date = When::when?(sample.shift)
         assert_equal(sample, [date.to_s, date.to_i])
@@ -85,10 +85,72 @@ module Test::TM
     def test__era_trans
       common =When.Resource('_e:Common::CE')
       obj1 = When.when?("20100929T144512.33+0900^^Gregorian")
-      assert_equal("CE2010.09.29T14:45:12.33+09:00", (common ^ obj1).to_s)
-      assert_equal("CE2010.09.29T14:45:12.33Z", (common ^ Time.utc(2010,9,29,14,45,12,330000)).to_s)
+      assert_equal("Common::CE2010.09.29T14:45:12.33+09:00", (common ^ obj1).to_s)
+      assert_equal("Common::CE2010.09.29T14:45:12.33Z", (common ^ Time.utc(2010,9,29,14,45,12,330000)).to_s)
       if ::Object.const_defined?(:Date) && Date.respond_to?(:civil)
-        assert_equal("CE2010.09.29T14:45:12.00Z", (common ^ DateTime.new(2010,9,29,14,45,12)).to_s)
+        assert_equal("Common::CE2010.09.29T14:45:12.00Z", (common ^ DateTime.new(2010,9,29,14,45,12)).to_s)
+      end
+    end
+
+    def test__julian_gregorian_change
+      epoch = When.when?('CE1582.10.03') ^ When.Duration('1D')
+      sample = [
+        "Common::CE1582.10.03",
+        "Common::CE1582.10.04",
+        "Common::CE1582.10.15",
+        "Common::CE1582.10.16"
+      ]
+      4.times do
+        assert_equal(sample.shift, epoch.next.to_s)
+      end
+
+      sample = [
+        "Common::CE1582.10.16",
+        "Common::CE1582.10.15",
+        "Common::CE1582.10.04",
+        "Common::CE1582.10.03"
+      ]
+      epoch = When.when?('CE1582.10.16') ^ -When.Duration('P1D')
+      4.times do
+        assert_equal(sample.shift, epoch.next.to_s)
+      end
+
+     assert_equal(
+       [["October 1582",
+        ["-", 1, 2, 3, 4, 15, 16],
+        [17, 18, 19, 20, 21, 22, 23],
+        [24, 25, 26, 27, 28, 29, 30],
+        [31, "-", "-", "-", "-", "-", "-"]]],
+       When.when?('CE1582.10').month_included('SU') {|date, type|
+         case type
+         when When::YEAR,
+              When::MONTH ; date.strftime("%B %Y")
+         when When::WEEK  ; nil
+         when When::DAY   ; date[0]
+         else             ; '-'
+         end
+       })
+
+      epoch = When.when?('Common?Reform=1752.09.14::CE1752.09.01') ^ When.Duration('1D')
+      sample = [
+        "Common?Reform=1752.09.14::CE1752.09.01",
+        "Common?Reform=1752.09.14::CE1752.09.02",
+        "Common?Reform=1752.09.14::CE1752.09.14",
+        "Common?Reform=1752.09.14::CE1752.09.15"
+      ]
+      4.times do
+        assert_equal(sample.shift, epoch.next.to_s)
+      end
+
+      sample = [
+        "Common?Reform=1752.09.14::CE1752.09.15",
+        "Common?Reform=1752.09.14::CE1752.09.14",
+        "Common?Reform=1752.09.14::CE1752.09.02",
+        "Common?Reform=1752.09.14::CE1752.09.01"
+      ]
+      epoch = When.when?('Common?Reform=1752.09.14::CE1752.09.15') ^ -When.Duration('1D')
+      4.times do
+        assert_equal(sample.shift, epoch.next.to_s)
       end
     end
   end

@@ -42,6 +42,16 @@ class String
       end
     end
   end
+
+  unless "1".respond_to?(:ord)
+    # 文字列の先頭文字のコードを取得する
+    # (多バイト文字非対応)
+    #
+    # @return [Integer]
+    def ord
+      self[0]
+    end
+  end
 end
 
 #

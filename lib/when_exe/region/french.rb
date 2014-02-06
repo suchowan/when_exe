@@ -56,7 +56,7 @@ module When
        ],
        'origin_of_MSC' => +1,
        'cycle_offset'  => Rational(1,2),
-       'timezone'      => (2 + Rational(20,60)) / 15,
+       'time_basis'    => '+00:09:20',
        'rule_table'    => {
          365 => {'Length'=>[30] * 12 + [5]},
          366 => {'Length'=>[30] * 12 + [6]}

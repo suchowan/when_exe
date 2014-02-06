@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2013 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -514,6 +514,122 @@ module When
            Coordinates::DefaultDayIndex
        ],
       'rule_table'=> %w(AbcDdeFgHIjKL	aBcDefGhIJkL	AbCdEfgHiJkL)
+      }
+    ]
+
+    #
+    # 『唐・日本における進朔に関する研究』(2013-10版)を使用する場合の朔閏表(一部修正あり)
+    #
+    # 隋・唐::       大業暦    618
+    # 唐::           戊寅暦    619 -  664
+    # 唐・周::       麟徳暦    665 -  728 総法 1340(小余の分母)
+    # 唐::           大衍暦    729 -  761 通法 3040(    〃    )
+    # 唐::           五紀暦    762 -  783 通法 1340(    〃    )
+    # 唐::           正元暦    784 -  806
+    # 唐::           観象暦    807 -  821
+    # 唐::           宣明暦    822 -  892 統法 8400(    〃    )
+    # 唐～後梁::     崇玄暦    893 -  907
+    Chinese0618 = [PatternTableBasedLuniSolar, {
+      'origin_of_MSC'=>618, 'origin_of_LSC'=>1946814,
+      'indices'=> _IndicesM1,
+      'rule_table'=> %w(		aBcDeFgHiJkL	ABbcDefGhIJKl	AbCdeFgHiJkL
+	ABcDefGhIjJkL	AbCDefGhIjKl	AbCDeFgHiJkL	aBcDeFGgHiJkL	aBcdEFgHIjKl
+	AbCdeFgHIJkL	aBcCdeFgHIjKL	aBcdEfgHIjKL	AbCdeFghIJkLL	AbCdeFgHiJkL
+	AbCdEfGhIjKl	AbCDeFgHhIjKl	AbCdEFgHiJkL	aBcdEfGHIjKl	AbCddEfGHIjKl
+	AbCdeFghIJKL	aBcDefgHIjKL	AbBcDefgHiJKL	aBCdeFghIjKL	aBCdEfGhIjJkL
+	aBcDEfGhIjKl	AbcDEfGHiJkL	aBcdEfFGhIJkL	aBcdEfGhIJKl	aBcDeFGhIjKl
+	AbCcDeFgHiJKl	AbCdEfGhIjKl	AbCDeFgHiJkLl	AbCdEFgHiJkL	aBcDeFgHiJKl
+
+	AbCdEfGhIiJkL	aBCdEfGhIjKl	AbCdEFgHiJkL	aBcDeEfGhIJkL	aBcDeFgHiJkL
+	aBCdEfGhIjKl	AaBcDEfGhIjKl	AbCdEfGhIJkL	aBcDeFgHiJjKl	ABcDeFgHiJkL
+	aBcDEfGhIjKl	AbCdEfGgHIjKl	AbCdEfGhIjKl	ABcDeFgHiJkL	aBcCDeFgHiJkL
+	AbCdEfgHiJkL	AbCDeFghIjKlL	aBCdEfGhIjKl	AbCdEFgHiJKl	aBcDeFgHIiJKl
+	aBcdEfGHiJKL	abCdeFgHiJKL	aBcDeeFgHiJKL	aBcDefGhIjKL	aBCdEfgHiJkL
+	aBCcDeFgHiJkL	AbcDEfGhIjKL	AbcdEfGHiJkKl	AbcDeFGhIJkL	aBcdEfGhIJKl
+	AbCdeFgGhIJKl	AbCdeFgHiJKl	ABcDefGhIjKL	aBcDEefGhIjKl	AbCDeFgHiJkL
+	aBcDeFGhIjKl	AaBcDeFgHIjKl	AbcDeFgHIJkL	aBcdEfGhIIJkL	aBcdEfgHIjKL
+	AbCdeFghIJKL	aBcDeeFghIJKL	abCdEfGhIjkL	AbCDeFgHiJkL	aBbCdEFgHiJkL
+	abCdEFgHIjKl	AbcDeFgHIJJkl	AbcDeFgHiJKL	aBcdEfgHIJkL	AbCdeFggHiJKL
+
+	aBCdeFghIjKL	aBCdEfGhIjkL	AbCdDEfGhIjkL	aBCdEfGHiJkL	abCdEfGHiJKl
+	AabCdEfGHiJKl	AbcDefGHiJKL	aBcDefGhIiJKL	aBcDefGhIjKL	aBCdEfgHiJkL
+	aBCDeFfgHiJkL	aBCdEfGhIjKl	AbCdEfGHiJkL	AbbcDeFGHiJkL	aBcdEfGHiJKl
+	AbCdeFgHiJKLl	AbcDefGhIJkL	ABcdEfgHiJkL	ABcDeFggHiJkL	ABcDeFghIJkL
+	aBcDEfGhIjKl	AbCdEeFGhIjKl	AbcDeFGhIJkL	aBcdEfGhIJkLL	AbcdEfGhIJkL
+	AbCdeFghIJkL	ABcDefGhiIJkL	AbCDefGhiJkL	aBCdEfGHijKl	AbCdEFfGhIjKl
+	AbCdEfGHiJKl	aBcdEfGHIjKL	abCcdEfGHiJKl	AbCdeFgHiJKL	aBcDefGhIjKKl
+	ABCdeFghIjKL	aBCdEfGhiJkL	aBCdEFgHhiJkL	aBcDEfGHiJkl	AbCdEfGHiJKl
+	AbcDdEfGHiJKl	AbcDefGHiJKL	aBcdEfgHiJKL	aBBcdEfgHiJKl	ABcDeFghIjKl
+	ABCdEfGhiJjKl	ABcDeFGhiJkL	aBcDEfGhIjKl	AbCdEfFGhIJkL	abCdeFGhIJkL
+
+	AbcDefGhIJKl	ABccDefGhIJkL	AbCdEfgHiJkL	ABcDeFghIjKkL	AbCDeFghIjKl
+	AbCDeFGhiJkL	aBcDeFGhHiJkL	aBcDeFgHIjKL	abCdeFgHIJkL	AbcDdeFgHIjKL
+	aBcdeFGhIJkL	AbCdEFghiJkL	AaBCdEfgHiJkL	AbCdEfGhIjKl	AbCDeFgHiJjKl
+	AbCdEfGHiJkL	aBcdEfGHIjKl	AbCdeFfGHiJKl	AbCdefGHiJKL	aBcDefgHiJKL
+	AbCcDefgHiJKL	aBCdeFgHijKL	aBCdEfGhIjKkl	ABcDeFGhIjKl	aBcDEfGhIJkL
+	abCdEfGHhIJkL	abCdEfGhIJKl	AbCdefGhIJKl	ABcDeefGHiJKL	aBcdEfgHiJKl
+	ABcDeFgHijKL	aAbCDeFgHijKl	AbCDeFGhIjKl	AbcDeFGhIJjKl	aBcDeFgHIJkL
+	aBcdeFgHIJKl	AbCdeeFgHIjKL	AbCdefGhIJkL	AbCdEfGhiJkL	AbCDdEfgHiJkL
+	AbCdEFgHijKl	AbCDeFgHIjKll	AbCdEfGHIjKl	aBcDeFgHIjKL	aBcdEfgHHiJKL
+	aBcdeFgHiJKL	aBCdefGhIjKL	AbCdEefGhIjKL	aBCdEfgHiJkL	aBCdEfGhIjKl
+
+	AaBcDEfGhIjKl	AbCdEfGHiJKl	aBCdefGHiJJKl	aBcdEfGhIJKl	AbCdeFgHiJKL
+	aBcDeFfgHiJKl	ABcDefGhIjKl	ABcDEfGhiJkL	aBCcDeFgHiJkL	aBcDEfGhIJkl
+	AbCdEfGHiJKlL	abcDeFGhIJKl	AbcDefGhIJKl	ABcdeFgHhIJKl	AbCdEfgHiJkL
+	ABcDeFghIjKl	ABcDEefGhIjKl	AbCDeFgHiJkL	aBcDeFGhIjKl	AaBcDeFgHIjKL
+	abcDeFgHIJkL	AbcDefGhIJjKL	aBcDefGhIjKL	AbCdEfghIJkL	ABcDeFggHiJkL
+	AbCDefGhIjKl	AbCDeFgHiJkL	aBcCdEFgHiJkL	aBcdEFgHIjKl	AbCdeFgHIjKLl
+	AbCdeFgHiJKL	aBcDefGhIjKL	AbCdEfggHiJKL	aBCdeFgHijKL	aBCdEfGhIjKl
+	AbCdEeFGhIjKl	AbCdEfGHiJkL	aBcdEfGHiJKl	AaBcdEfGhIJKl	AbCdeFgHiJKL
+	aBcDefgHiIJKl	ABcDefgHiJKl	ABcDeFgHijKL	aBCdEfGgHijKL	aBcDeFGhIjKl
+	aBcDEfGhIJkL	aBccDeFGhIJkL	aBcdEfGhIJKl	AbCdefGhIJKkL	AbCdefGhIJkL
+
+	ABcDefgHiJkL	ABcDeFgHhiJkL	AbCDeFgHijKl	AbCDeFgHIjKl	aBcDdEFgHIjKl
+	AbcDeFgHIjKL	aBcdEfgHIJkL	AbBcdeFgHIjKL	AbCdefGhIjKL	AbCdEfgHiJjKL
+	aBCdEfGhiJkL	AbCdEFgHijKl	AbCdEFfGhIJkl	AbCdEfGHiJKl	AbcDeFgHIjKL
+	aBccdEfGHiJKL	aBcdeFgHiJKL	aBCdefGhIjKLl	ABcDeFghIjKL	aBCdEfGhiJkL
+	aBCdEfGhHiJkL	aBcDEfGhIjKl	AbCdEfGHiJKl	aBcDdeFGhIJkL	AbcdEfGhIJKl
+	ABcdeFgHiJKl	ABbCdeFgHiJkL	ABcDeFghIjKl	ABcDEfgHiJjKl	AbCDeFgHiJkL
+	aBcDeFGhIjKl	AbCdEfGgHIjKl	AbCdeFgHIJkL	aBcDefGhIJkL	AbCcDefGhIjKL
+	AbCdEfghIJkL	ABcDefGhIjKkL	AbCdEfGhIjKl	AbCDeFgHiJkL	aBcDeFgHIiJkL
+	aBcdEFghIJKl	AbCdeFgHIjKL	aBcDeeFgHiJKL	aBcDefgHIjKL	AbCdEfghIjKL
+	AaBCdeFgHijKL	aBCdEfGhIjKl	AbCdEFgHiJjKl	AbCdEfGHiJkL	abCdEFgHIjKL
+
+	abCdeFfGHiJKl	AbcDefGHiJKL	aBcDefgHiJKL	aBCdDefgHiJKl	ABcDeFgHijKL
+	aBcDEfGhIjkLl	ABcDeFGhIjKl)
+      }
+    ]
+
+    #
+    # 『唐・日本における進朔に関する研究』(2013-10版)を使用する場合の朔閏表(一部修正あり)
+    #
+    # 唐・周::       麟徳暦    688 -  700 (歳首 建子月)
+    Chinese0618B = [PatternTableBasedLuniSolar, {
+      'origin_of_MSC'=>688, 'origin_of_LSC'=>1972387, 'border'=>'0*11-01',
+      'indices'=> [
+           Coordinates::Index.new({:branch=>{1=>When.Resource('_m:CalendarTerms::閏')},
+                                   :trunk=>When.Resource('_m:ChineseTerms::MonthA::*')}),
+           Coordinates::DefaultDayIndex
+       ],
+      'rule_table'=> %w(		AbcDeFgHIJkL	aBcdEfGhIIJkL	aBcdEfgHIjKL 
+	AbCdeFghIJKL	aBcDeeFghIJKL	abCdEfGhIjkL	AbCDeFgHiJkL	aBbCdEFgHiJkL
+	abCdEFgHIjKl	AbcDeFgHIJJkl	AbcDeFgHiJKL	aBcdEfgHIJkL	AbCdeFggHiJKL)
+      }
+    ]
+
+    #
+    # 『唐・日本における進朔に関する研究』(2013-10版)を使用する場合の朔閏表(一部修正あり)
+    #
+    # 唐::           大衍暦    760-761 (歳首 建子月)
+    # 唐::           五紀暦    762     (歳首 建子月)
+    Chinese0618C = [PatternTableBasedLuniSolar, {
+      'origin_of_MSC'=>760, 'origin_of_LSC'=>1998670, 'border'=>'0*11-01',
+      'indices'=> [
+           Coordinates::Index.new({:branch=>{1=>When.Resource('_m:CalendarTerms::閏')},
+                                   :trunk=>When.Resource('_m:ChineseTerms::MonthB::*')}),
+           Coordinates::DefaultDayIndex
+       ],
+      'rule_table'=> %w(AbcDdeFgHIjKL	aBcdeFGhIJkL	AbCdEFghiJkL)
       }
     ]
 

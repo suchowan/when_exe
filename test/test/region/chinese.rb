@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2013 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license
   described in the LICENSE.txt file included in this archive.
@@ -11,7 +11,7 @@ module Test
   class Chinese < Test::Unit::TestCase
     def test_chinese_date
 
-      emd = When.Resource('_c:EphemerisBasedSolar')
+      emd = When.Resource('_c:EphemerisBasedSolar?time_basis=+09:00')
       date = When.when?('2009-01-01', {:frame=>emd})
       [
         ["2009-01-01", 2454867],
@@ -31,7 +31,7 @@ module Test
         date += When.Duration('P1M')
       end
 
-      cc   = When::CalendarTypes::ChineseLuniSolar.new({'timezone'=>9})
+      cc   = When::CalendarTypes::ChineseLuniSolar.new({'time_basis'=>'+09:00'})
       date = When.when?('2009-01-01', {:frame=>cc})
       [
         ["2009-01-01", 2454858],
@@ -91,7 +91,7 @@ module Test
         date += When.Duration('P1M')
       end
 
-      cc   = When::CalendarTypes::ChineseLuniSolar.new({'timezone'=>9, 'intercalary_span'=>3})
+      cc   = When::CalendarTypes::ChineseLuniSolar.new({'time_basis'=>'+09:00', 'intercalary_span'=>3})
       date = When.when?('2728-11-01', {:frame=>cc})
       [
         ["2728-11-01", 2717768],

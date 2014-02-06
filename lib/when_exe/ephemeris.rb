@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2013 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -279,28 +279,32 @@ module When::Ephemeris
   #
   # @param [Numeric] t0    独立変数の初期近似値
   # @param [Numeric] y0    逆変換される関数値(nil なら極値を求める)
+  # @param [Numeric] delta 戻り値が周期量である場合の周期
   # @param [Numeric] count 収束までの最大繰り返し回数
   # @param [Float]   error 収束と判断する誤差
   # @param [Block]   func  逆変換される関数
   #
   # @return [Numeric] 逆変換結果
   #
-  def root(t0, y0=nil, count=10, error=1E-6, &func)
+  def root(t0, y0=nil, delta=0, count=10, error=1E-6, &func)
 
     # 近似値0,1
     # printf("y0=%20.7f\n",y0)
-    t = [t0,              t0+0.1        ]
-    y = [func.call(t[0]), func.call(t[1])]
+    d     = [0.01, error * 10].max
+    t     = [t0-d,            t0+d           ]
+    y     = [func.call(t[0]), func.call(t[1])]
+    y.map! {|y1| _adjust(y1, y0, delta)} unless delta==0
     # printf("t=%20.7f,L=%20.7f\n",t[1],y[1])
 
     # 近似値2(1次関数による近似)
-    t << (y0 ? (t[1]-t[0])/(y[1]-y[0])*(y0-y[0])+t[0] : t0-0.1)
+    t << (y0 ? (t[1]-t[0])/(y[1]-y[0])*(y0-y[0])+t[0] : t0)
 
     # 繰り返し
     i = count
     while ((t[2]-t[1]).abs > error) && (i > 0)
       # 予備計算
       y << func.call(t[2])
+      y[2] = _adjust(y[2], y0, delta) unless delta==0
       break if y0 && (y[2]-y0).abs <= error / 10
 
       # printf("t=%20.7f,L=%20.7f\n",t[2],y[2])
@@ -330,10 +334,17 @@ module When::Ephemeris
 
       t.shift
       y.shift
+      i -= 1
     end
     raise RangeError, "The result does not converge." if i<=0
     return t[2]
   end
+
+  # y が周期量である場合の周期の補正
+  def _adjust(y1, y0, delta)
+    (-2..+2).to_a.map {|i| y1 + i * delta}.sort_by {|y| (y-y0).abs}[0]
+  end
+  private :_adjust
 
   #
   # 天体の座標
@@ -403,7 +414,7 @@ module When::Ephemeris
     def polar
       @phi, @theta, @radius = _to_p3(@x, @y, @z) unless @radius
       @c ||=  @phi
-      @phi -= (@phi - @c + 0.5).floor
+      @phi -= (@phi - @c).round
       return [@phi, @theta, @radius, @c]
     end
 
@@ -607,6 +618,30 @@ module When::Ephemeris
         rotate_z(-0.25 + n.radius)
     end
 
+    # 赤道座標 -> 赤道座標[時角]
+    #
+    # @param [Numeric] t ユリウス日(Terrestrial Time)
+    # @param [When::TM::TemporalPosition] t
+    # @param [When::Coordinates::Spatial] loc 観測地
+    #
+    # @return [When::Ephemeris::Coords]
+    #
+    def r_to_rh(t, loc)
+      rotate_z(-loc.local_sidereal_time(t) / 24)
+    end
+
+    # 赤道座標[時角] -> 地平座標
+    #
+    # @param [Numeric] t ユリウス日(Terrestrial Time)
+    # @param [When::TM::TemporalPosition] t
+    # @param [When::Coordinates::Spatial] loc 観測地
+    #
+    # @return [When::Ephemeris::Coords]
+    #
+    def rh_to_h(t, loc)
+      rotate_y(loc.lat / (360.0*When::Coordinates::Spatial::DEGREE) - 0.25)
+    end
+
     # 赤道座標 -> 地平座標
     #
     # @param [Numeric] t ユリウス日(Terrestrial Time)
@@ -698,7 +733,7 @@ module When::Ephemeris
         @theta  ||=  0.0  # 緯度
         @radius ||=  1.0  # 距離
         @c      ||=  @phi # 周期番号
-        @phi     -= (@phi - @c + 0.5).floor
+        @phi     -= (@phi - @c).round
       end
     end
   end
@@ -1150,8 +1185,10 @@ module When::Ephemeris
       def forwarded_formula(name, date)
         return nil unless When::Ephemeris::Formula.method_defined?(name)
         return @formula[0] if @formula && @formula[0].location
-        return When.Resource('_ep:Formula?location=' + date.location.iri.gsub('&', '%26')) if date.respond_to?(:location)
-        nil
+        location   = date.location if date.respond_to?(:location)
+        location ||= When::Coordinates::Spatial.default_location
+        return nil unless location
+        When.Resource('_ep:Formula?location=(' + location.iri + ')')
       end
     end
 
@@ -1170,6 +1207,10 @@ module When::Ephemeris
     # 観測地の基準緯度 / 度
     # @return [Numeric]
     attr_reader :lat
+
+    # 観測地の高度 / m
+    # @return [Numeric]
+    attr_reader :alt
 
     # 時刻系('universal' or 'dynamical')
     # @return [String]
@@ -1221,6 +1262,20 @@ module When::Ephemeris
       root(time0, cn) {|t| time_to_cn(t)}
     end
 
+    # 当該日付のthiti の変化範囲
+    #
+    # @param [When::TM::TemporalPosition] date 日付
+    #
+    # @return [Range] 当該日付のthiti の変化範囲(朔を含む場合 nil)
+    #
+    def thiti_range(date)
+      date   = date.floor
+      p0, p1 = [date, date.succ].map {|d|
+        (30.0 * time_to_cn(d)) % 30.0
+      }
+      p0 >= p1 ? nil : p0...p1
+    end
+
     # 指定の周期番号パターンになる最も近い過去の日時
     #
     # @param [Numeric] date ユリウス日(Terrestrial Time)
@@ -1244,9 +1299,10 @@ module When::Ephemeris
     # @param [When::TM::TemporalPosition] t
     # @param [Integer] system 座標系
     #
-    #   [ 0 - When::Coordinates::Spatial::ECLIPTIC   (黄道座標) ]
-    #   [ 1 - When::Coordinates::Spatial::EQUATORIAL (赤道座標) ]
-    #   [ 2 - When::Coordinates::Spatial::HORIZONTAL (地平座標) ]
+    #   [ 0 - 黄道座標       When::Coordinates::Spatial::ECLIPTIC      ]
+    #   [ 1 - 赤道座標       When::Coordinates::Spatial::EQUATORIAL    ]
+    #   [ 2 - 赤道座標[時角] When::Coordinates::Spatial::EQUATORIAL_HA ]
+    #   [ 3 - 地平座標       When::Coordinates::Spatial::HORIZONTAL    ]
     #
     # @param [When::Ephemeris::CelestialObject] target 対象星
     #
@@ -1254,8 +1310,9 @@ module When::Ephemeris
     #
     def _coords(t, system, target)
       pos = target.coords(t, @location)
-      pos = pos.y_to_r(t, @location) if system >= 1
-      pos = pos.r_to_h(t, @location) if system >= 2
+      pos = pos.y_to_r(t, @location)  if system >= When::Coordinates::Spatial::EQUATORIAL
+      pos = pos.r_to_rh(t, @location) if system >= When::Coordinates::Spatial::EQUATORIAL_HA
+      pos = pos.rh_to_h(t, @location) if system >= When::Coordinates::Spatial::HORIZONTAL
       return pos
     end
 
@@ -1312,15 +1369,15 @@ module When::Ephemeris
     def day_event(t, event, target=When.Resource('_ep:Sun'), height=nil)
       # 時刻の初期値
       dl  = @location.long / (360.0 * When::Coordinates::Spatial::DEGREE)
-      t0  = (+t + 0.5 + dl).floor - dl
+      t0  = (+t + dl).round - dl
       dt  = _coords(t0, When::Coordinates::Spatial::EQUATORIAL, target).phi -
             @location.local_sidereal_time(t0) / 24.0 + 0.25 * (event||0)
-      t0 += dt - (dt+0.5).floor
+      t0 += dt - dt.round
 
       # 天体の地平座標での高度または方位角
       case event
       when 0
-        meridian = _coords(t0, When::Coordinates::Spatial::HORIZONTAL, target).phi.round
+        meridian = _coords(t0, When::Coordinates::Spatial::EQUATORIAL_HA, target).phi.round
       when +1, -1
         height ||= target.instance_of?(When::Ephemeris::Sun) ? '0' : 'A'
         if height.kind_of?(String)
@@ -1335,8 +1392,8 @@ module When::Ephemeris
 
       # イベントの時刻
       _to_seed_type(
-        event == 0 ? (root(t0, meridian) {|t1| _coords(t1, When::Coordinates::Spatial::HORIZONTAL, target).phi   }) :
-                     (root(t0, height  ) {|t1| _coords(t1, When::Coordinates::Spatial::HORIZONTAL, target).theta }),
+        event == 0 ? (root(t0, meridian, 1) {|t1| _coords(t1, When::Coordinates::Spatial::EQUATORIAL_HA, target).phi}) :
+                     (root(t0, height     ) {|t1| _coords(t1, When::Coordinates::Spatial::HORIZONTAL, target).theta }),
        t)
     end
 
@@ -1351,7 +1408,7 @@ module When::Ephemeris
     #
     # @return [Numeric, When::TM::TemporalPosotion] 日の出の日時(ユリウス日(Terrestrial Time)またはWhen::TM::DateAndTime
     #
-    def sun_rise(t, height='0')
+    def sunrise(t, height='0')
       day_event(t, -1, When.Resource('_ep:Sun'), height)
     end
 
@@ -1366,7 +1423,7 @@ module When::Ephemeris
     #
     # @return [Numeric, When::TM::TemporalPosotion] 日の入りの日時(ユリウス日(Terrestrial Time)またはWhen::TM::DateAndTime
     #
-    def sun_set(t, height='0')
+    def sunset(t, height='0')
       day_event(t, +1, When.Resource('_ep:Sun'), height)
     end
 
@@ -1403,8 +1460,8 @@ module When::Ephemeris
     # @return [Numeric, When::TM::TemporalPosotion] 月の出の日時(ユリウス日(Terrestrial Time)またはWhen::TM::DateAndTime
     #             該当時刻がなければ nil
     #
-    def moon_rise(t, height='A')
-      _day_event(t, -1, When.Resource('_ep:Moon'), height)
+    def moonrise(t, height='A')
+      day_event_in_the_day(t, -1, When.Resource('_ep:Moon'), height)
     end
 
     # 月の入りの日時
@@ -1418,8 +1475,8 @@ module When::Ephemeris
     # @return [Numeric, When::TM::TemporalPosotion] 月の入りの日時(ユリウス日(Terrestrial Time)またはWhen::TM::DateAndTime
     #             該当時刻がなければ nil
     #
-    def moon_set(t, height='A')
-      _day_event(t, +1, When.Resource('_ep:Moon'), height)
+    def moonset(t, height='A')
+      day_event_in_the_day(t, +1, When.Resource('_ep:Moon'), height)
     end
 
     # 月の最大高度の日時
@@ -1431,7 +1488,7 @@ module When::Ephemeris
     #             該当時刻がなければ nil
     #
     def moon_noon(t)
-      _day_event(t, nil, When.Resource('_ep:Moon'))
+      day_event_in_the_day(t, nil, When.Resource('_ep:Moon'))
     end
 
     # 月の南中の日時
@@ -1443,7 +1500,7 @@ module When::Ephemeris
     #             該当時刻がなければ nil
     #
     def meridian_passage_of_moon(t)
-      _day_event(t, 0, When.Resource('_ep:Moon'))
+      day_event_in_the_day(t, 0, When.Resource('_ep:Moon'))
     end
 
     # 恒星の出没と太陽の位置関係に関するイベントの日時
@@ -1476,7 +1533,7 @@ module When::Ephemeris
       # The Sun's height when the event happens
       unless bs
         mag = target.luminosity
-        bs  = Bs[mag<-0.5 ?  0 : (mag<4.5 ? (mag+0.5).floor+1 : 6)][event]
+        bs  = Bs[mag<-0.5 ?  0 : (mag<4.5 ? mag.round+1 : 6)][event]
       end
 
       # イベントの時刻
@@ -1490,25 +1547,29 @@ module When::Ephemeris
         break if tt >= +t
         lam += 1
       end
-      _to_seed_type(day_event((tt+0.5+long/360.0).floor, Sgn[event][0], When.Resource('_ep:Sun'), bs), t)
+      _to_seed_type(day_event((tt+long/360.0).round, Sgn[event][0], When.Resource('_ep:Sun'), bs), t)
     end
 
     # ユリウス日(Numeric)を seed と同じ型に変換して返します。
     #
     # @param [Numeric] d ユリウス日(Terrestrial Time)
     # @param [Numeric] seed
+    # @param [Hash] seed
     # @param [When::TM::TemporalPosition] seed
     #
     # @return [Numeric, When::TM::TemporalPosotion]
     #
     def _to_seed_type(d, seed)
-      return d if seed.kind_of?(Numeric)
-      options = seed._attr
-      options[:precision] = nil
-      options[:clock]   ||= When::TM::Clock.local_time || When.utc
+      case seed
+      when Numeric         ; return d
+      when When::TimeValue ; seed = seed._attr
+      else                 ; seed = seed.dup
+      end
+      seed[:precision] = nil
+      seed[:clock]   ||= When::TM::Clock.local_time
       t = When::TM::JulianDate._d_to_t(d)
-      options[:frame].jul_trans(@is_dynamical ? When::TM::JulianDate.dynamical_time(t) :
-                                                When::TM::JulianDate.universal_time(t), options)
+      seed[:frame].jul_trans(@is_dynamical ? When::TM::JulianDate.dynamical_time(t) :
+                                             When::TM::JulianDate.universal_time(t), seed)
     end
 
     private
@@ -1527,16 +1588,17 @@ module When::Ephemeris
     #   @sun_0m          =  t = CYCLE_0M日 での太陽年番号
     #   @sun_1m          =  t = CYCLE_1M日 までの太陽年番号の比例定数
     def _normalize(args=[], options={})
-      @location        = When.Resource(@location.gsub('%26', '&'), '_l:') if @location.kind_of?(String)
-      @long, @lat      = [@location.long / When::Coordinates::Spatial::DEGREE,
-                          @location.lat  / When::Coordinates::Spatial::DEGREE] if @location
-      @formula       ||= '1L'
-      @time_standard ||= 'dynamical'
-      @is_dynamical    = (@time_standard[0..0].downcase == 'd')
+      @location         = When.Resource(@location, '_l:') if @location.kind_of?(String)
+      @long, @lat, @alt = [@location.long / When::Coordinates::Spatial::DEGREE,
+                           @location.lat  / When::Coordinates::Spatial::DEGREE,
+                           @location.alt] if @location
+      @formula        ||= '1L'
+      @time_standard  ||= 'dynamical'
+      @is_dynamical     = (@time_standard[0..0].downcase == 'd')
 
       _normalize_grahas
 
-      @proc          ||=
+      @proc           ||=
         case @formula
         when Hash
           @formula['Rem'] = (-@formula['Epoch']) % @formula['Period']
@@ -1599,7 +1661,7 @@ module When::Ephemeris
     #
     #   見つからなければ nil
     #
-    def _day_event(t, event, target=When.Resource('_ep:Sun'), height=nil)
+    def day_event_in_the_day(t, event, target=When.Resource('_ep:Sun'), height=nil)
       today = t.to_i
       3.times do
         r = day_event(t, event, target, height)
@@ -1725,12 +1787,12 @@ module When::Ephemeris
     attr_reader :month_epoch
 
     # 計算の元期(日)
-     # @return [Numeric]
-   attr_reader :day_epoch
+    # @return [Numeric]
+    attr_reader :day_epoch
 
     # 回帰年
-     # @return [Numeric]
-   attr_reader :year_length
+    # @return [Numeric]
+    attr_reader :year_length
 
     # 恒星月
     # @return [Numeric]
@@ -1767,7 +1829,7 @@ module When::Ephemeris
     #
     # @return [Numeric] 日の出の日時のユリウス日
     #
-    def sun_rise(sdn, height=nil)
+    def sunrise(sdn, height=nil)
       return sdn.to_i - @long / 360.0 - 0.25
     end
 
@@ -1799,8 +1861,8 @@ module When::Ephemeris
     def cn_to_time_(cn, time0=nil)
       time0 ||= (cn - @cycle_number_0m) / @cycle_number_1m
       case @formula
-      when /S/ ; (time0 + 1.0/256 - @day_epoch).divmod(@solar_terms)[0] * @solar_terms + @day_epoch
-      when /L/ ; (time0 + 1.0/256 - @day_epoch).divmod(@month_tithi)[0] * @month_tithi + @day_epoch
+      when /S/ ; ((time0 + 1.0/256 - @day_epoch) / @solar_terms).floor * @solar_terms + @day_epoch
+      when /L/ ; ((time0 + 1.0/256 - @day_epoch) / @month_tithi).floor * @month_tithi + @day_epoch
       end
     end
 

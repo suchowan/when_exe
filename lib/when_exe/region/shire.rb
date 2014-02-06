@@ -127,7 +127,7 @@ module When
         module_eval %Q{
           def #{name}(date, parameter=nil)
             event_name = 'from_#{name}'
-            date  = date.frame.jul_trans(date, {:events=>[event_name]})
+            date  = date.frame.jul_trans(date, {:events=>[event_name], :precision=>When::DAY})
             y,m,d = date.cal_date
             h,n   = (m+5).divmod(7)
             dow   = (182 * h[0] + 30 * n + d - #{k}) % 7
@@ -222,7 +222,7 @@ module When
       'border'       => '00-01-02',
       'day_offset'   => -183,           # the day 183 days before summer solstice
       'cycle_offset' => Rational(1,4),  # summer solstice
-      'timezone'     => 9,              # JST
+      'time_basis'   => '+09:00',       # JST
       'rule_table'   => {
         365 => {'Length'=>[2]+[30]*6+[3]+[30]*6},
         366 => {'Length'=>[2]+[30]*6+[4]+[30]*6}

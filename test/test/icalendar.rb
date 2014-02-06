@@ -81,6 +81,18 @@ module Test:V
       assert_equal(["2010-05-04T+09:00", 0], [date.to_s, date.precision])
       assert_equal([true,false], [d0504,d0505].map {|v| event.include?(v)})
     end
+
+    def test__rfc_update
+      sample = ["Children's_Day_(Japan)", 'Children"s_Day_(Japan)', "Children's_Day_(Japan)"]
+      When::TM::Clock.local_time = When.Clock("+0900")
+      ["JapanHolidays.ics", "JapanHolidays.ics?Escape=^'", "JapanHolidaysRFC6350.ics"].each do |ics|
+        cal = When.Resource('examples/' + ics)
+        cal = cal.intersection({'summary'=>/Children['"]s_Day_\(Japan\)/})
+        cal.each(When.when?('20100101')...When.when?('20110101')) do |date|
+          assert_equal(sample.shift, date.events[0].summary / 'en')
+        end
+      end
+    end
   end
 
   class Event < Test::Unit::TestCase
@@ -149,7 +161,7 @@ module Test:V
     end
 
     def test__ignored_invalid_date
-      When.Resource("examples/USA-DST.ics?!C=New_York&!Z=E&!D=04&!DZ=06&!S=05&!SZ=07")
+      When.Resource("examples/USA-DST.ics?C=New_York&Z=E&D=04&DZ=06&S=05&SZ=07")
       assert_equal("2007-03-30T09:00:00-04:00", When.when?('TZID=America/New_York:2007-03-30T09:00:00').to_s)
       sample = [
         "2007-01-15T09:00:00-05:00",
@@ -190,7 +202,7 @@ module Test:V
     end
 
     def test__multiple_BYxxx_rule  # See RFC 5545 [Page 45]
-      When.Resource("examples/USA-DST.ics?!C=New_York&!Z=E&!D=04&!DZ=06&!S=05&!SZ=07")
+      When.Resource("examples/USA-DST.ics?C=New_York&Z=E&D=04&DZ=06&S=05&SZ=07")
 
       sample = [
         "1997-04-13T01:30:00-04:00",
@@ -489,7 +501,7 @@ module Test:V
 
   class TimezoneProperty < Test::Unit::TestCase
     def test__tz_change
-      ic = When.Resource("examples/USA-DST.ics?!C=New_York&!Z=E&!D=04&!DZ=06&!S=05&!SZ=07")
+      ic = When.Resource("examples/USA-DST.ics?C=New_York&Z=E&D=04&DZ=06&S=05&SZ=07")
       tz = When::V::Timezone["America/New_York"]
       gc = When.Resource('_c:Gregorian')
       [
@@ -582,7 +594,7 @@ module Test:V
     end
 
     def test__tzname
-      ic   = When.Resource("examples/USA-DST.ics?!C=New_York&!Z=E&!D=04&!DZ=06&!S=05&!SZ=07")
+      ic   = When.Resource("examples/USA-DST.ics?C=New_York&Z=E&D=04&DZ=06&S=05&SZ=07")
       date = When.when?('20110126T250000EST')
       assert_equal(["2011-01-27T01:00:00-05:00", "Thu Jan 27 01:00:00 -0500 2011", "EST"],
                    [date.to_s, date.strftime('%+'), date.clk_time.frame.tzname[0]])
@@ -607,16 +619,14 @@ module Test:V
 
   class Timezone < Test::Unit::TestCase
     def test__neighbor_event_date
-      When.Resource("examples/USA-DST.ics?!C=New_York&!Z=E&!D=04&!DZ=06&!S=05&!SZ=07")
+      When.Resource("examples/USA-DST.ics?C=New_York&Z=E&D=04&DZ=06&S=05&SZ=07")
       tz = When::V::Timezone["America/New_York"]
-      eval('class When::V::Timezone ; public :_neighbor_event_date ; end')
-      assert_equal("1997-04-06T02:00:00-05:00", tz._neighbor_event_date(When.when?("19970510")).to_s)
-      assert_equal("1997-10-26T02:00:00-04:00", tz._neighbor_event_date(When.when?("19971010")).to_s)
-      eval('class When::V::Timezone ; private :_neighbor_event_date ; end')
+      assert_equal("1997-04-06T02:00:00-05:00", tz.send(:_neighbor_event_date, When.when?("19970510").universal_time).to_s)
+      assert_equal("1997-10-26T02:00:00-04:00", tz.send(:_neighbor_event_date, When.when?("19971010").universal_time).to_s)
     end
 
     def test__current_period
-      When.Resource("examples/USA-DST.ics?!C=New_York&!Z=E&!D=04&!DZ=06&!S=05&!SZ=07")
+      When.Resource("examples/USA-DST.ics?C=New_York&Z=E&D=04&DZ=06&S=05&SZ=07")
       tz = When::V::Timezone["America/New_York"]
       assert_equal("1997-04-06T02:00:00-05:00...1997-10-26T02:00:00-04:00", tz.current_period(When.when?("19970510")).to_s)
       assert_equal("1997-04-06T02:00:00-05:00...1997-10-26T02:00:00-04:00", tz.current_period(When.when?("19971010")).to_s)
@@ -634,7 +644,7 @@ module Test:V
   class Event
 
     def test__each_1
-      When.Resource("examples/USA-DST.ics?!C=New_York&!Z=E&!D=04&!DZ=06&!S=05&!SZ=07")
+      When.Resource("examples/USA-DST.ics?C=New_York&Z=E&D=04&DZ=06&S=05&SZ=07")
       cal = When.Resource("examples/Test.ics")
 
       event1 = When.Resource("examples/Test.ics::event1-ID")
@@ -667,7 +677,7 @@ module Test:V
     end
 
     def test__each_2
-      When.Resource("examples/USA-DST.ics?!C=New_York&!Z=E&!D=04&!DZ=06&!S=05&!SZ=07")
+      When.Resource("examples/USA-DST.ics?C=New_York&Z=E&D=04&DZ=06&S=05&SZ=07")
       cal = When.Resource("examples/Test.ics")
 
       event2 = cal["event2-ID"]
@@ -690,7 +700,7 @@ module Test:V
     end
 
     def test__each_3
-      When.Resource("examples/USA-DST.ics?!C=New_York&!Z=E&!D=04&!DZ=06&!S=05&!SZ=07")
+      When.Resource("examples/USA-DST.ics?C=New_York&Z=E&D=04&DZ=06&S=05&SZ=07")
       cal = When.Resource("examples/Test.ics")
 
       event3 = cal["event3-ID"]
@@ -760,7 +770,7 @@ module Test:V
     end
 
     def test__each_4
-      When.Resource("examples/USA-DST.ics?!C=New_York&!Z=E&!D=04&!DZ=06&!S=05&!SZ=07")
+      When.Resource("examples/USA-DST.ics?C=New_York&Z=E&D=04&DZ=06&S=05&SZ=07")
       cal = When.Resource("examples/Test.ics")
 
       event4 = cal["event4-ID"]

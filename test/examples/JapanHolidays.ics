@@ -8,7 +8,7 @@ BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//hacksw/handcal//NONSGML v1.0//EN
 LOCALE:[ja=ja:,*en=en:]
-NAMESPACE:[ja=http://ja.wikipedia.org/wiki/,en=http://en.wikipedia.org/]
+NAMESPACE:[ja=http://ja.wikipedia.org/wiki/,en=http://en.wikipedia.org/wiki/]
 BEGIN:VTIMEZONE
 TZID:Asia/Tokyo
 X-LIC-LOCATION:Asia/Tokyo
@@ -119,7 +119,7 @@ CREATED:20050809T050000Z
 LAST-MODIFIED:20050809T050000Z
 DTSTAMP:20050809T050000Z
 UID:Tennō_tanjōbi_3
-SUMMARY:[天皇誕生日,The_Emperor's_Birthday]
+SUMMARY:[天皇誕生日,The_Emperor#{Escape:'}s_Birthday]
 RRULE:FREQ=YEARLY;UNTIL=19880429T090000Z
 DTSTART;VALUE=DATE;TZID=Asia/Tokyo:19490429
 DTEND;VALUE=DATE;TZID=Asia/Tokyo:19490430
@@ -242,7 +242,7 @@ CREATED:20050809T050000Z
 LAST-MODIFIED:20050809T050000Z
 DTSTAMP:20050809T050000Z
 UID:Kodomo_no_hi
-SUMMARY:[こどもの日, Children's_Day_(Japan)]
+SUMMARY:[こどもの日, Children#{Escape:'}s_Day_(Japan)]
 RRULE:FREQ=YEARLY
 DTSTART;VALUE=DATE;TZID=Asia/Tokyo:19490505
 DTEND;VALUE=DATE;TZID=Asia/Tokyo:19490506

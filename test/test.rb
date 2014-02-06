@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2013 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license
   described in the LICENSE.txt file included in this archive.
@@ -40,9 +40,10 @@ require './test/tmreference'
 require './test/tmposition'
 require './test/calendartypes'
 require './test/inspect'
-require './test/googlecalendar'
+#require './test/googlecalendar'
 require './test/region/m17n'
 require './test/region/residue'
+require './test/region/civil'
 require './test/region/japanese'
 require './test/region/chinese'
 require './test/region/tibetan'
@@ -52,3 +53,4 @@ require './test/region/iran'
 require './test/region/mayan'
 require './test/region/jewish'
 require './test/region/french'
+require './test/region/geologicalage'

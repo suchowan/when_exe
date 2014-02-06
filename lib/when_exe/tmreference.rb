@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2013 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -49,16 +49,15 @@ module When::TM
     #
     # Range of time within which the temporal reference system is use
     #
-    # @return [When::Parts::GeomerticComplex]
+    # @return [Hash<String=>When::Parts::GeomerticComplex>]
     #
     # @note
     #   マルチスレッド動作時 CalendarEra の生成で Calendar の本属性が更新される
     #   参照・更新処理は synchronize { ... } の ... の部分に書く必要がある
     #
     def domain
-      @domain ||= When::Parts::GeometricComplex.new([])
+      @domain ||= Hash.new {|hash, key| hash[key] = When::Parts::GeometricComplex.new([])}
     end
-    attr_writer :domain
 
     # 時間参照系を識別する名称
     #
@@ -99,7 +98,9 @@ module When::TM
   class Calendar < ReferenceSystem
 
     include When::Coordinates
+    include Spatial::Normalize
     include Temporal
+    include When::TimeStandard::TimeBasis
 
     # 初期化
     #
@@ -177,6 +178,7 @@ module When::TM
     # @return [When::TM::CalDateAndTime] if (options[:clock or :tz] != nil)
     #
     def jul_trans(jdt, options={})
+      options = TemporalPosition._options(options)
       unless jdt.kind_of?(When::TimeValue)
         options[:clock] ||= @time_basis unless rate_of_clock == 1.0
         jdt = JulianDate.new(jdt, options)
@@ -189,42 +191,63 @@ module When::TM
         cal_options[:clock] = @time_basis || When.utc
         jdt = JulianDate.dynamical_time(jdt.dynamical_time, {:time_standard=>time_standard})
       end
+
       cal_options.update(options)
       cal_options[:frame] = self
-      cal_date     = to_cal_date(jdt.to_i)
-      cal_date[0] -= cal_options[:era_name][1] if cal_options[:era_name]
-      clock = @time_basis || Clock.get_clock_option(cal_options) || jdt.clock
-      return CalDate.new(cal_date, cal_options) unless clock
-      clock = When.Clock(clock)    if clock.kind_of?(String)
-      clock = clock._daylight(jdt) if clock._need_validate
-      frac  = clock.universal_time
-      sdn, time = (jdt.universal_time - frac).divmod(Duration::DAY)
-      cal_options[:clock] = clock
-      return DateAndTime.new(to_cal_date(sdn.to_i + JulianDate::JD19700101), time+frac, cal_options)
+      clock = Clock.get_clock_option(cal_options) || jdt.clock
+
+      if clock
+        clock = When.Clock(clock) if clock.kind_of?(String)
+        clock = clock._daylight(jdt.universal_time) if clock._need_validate
+        frac  = clock.universal_time
+        sdn, time = (jdt.universal_time - frac).divmod(Duration::DAY)
+        cal_options[:clock] = clock
+        cal_date = to_cal_date(sdn.to_i + JulianDate::JD19700101)
+        cal_date[0] -= cal_options[:era_name][1] if cal_options[:era_name]
+        DateAndTime.new(cal_date, time+frac, cal_options)
+      else
+        cal_date     = to_cal_date(jdt.to_i)
+        cal_date[0] -= cal_options[:era_name][1] if cal_options[:era_name]
+        CalDate.new(cal_date, cal_options)
+      end
     end
     alias :julTrans :jul_trans
     alias :^ :jul_trans
 
+    # ユリウス日(Numeric)を日付に変換する
+    #
+    # @param [Integer] jdn
+    #
+    # @return [Array<Numeric>]
+    #
+    def to_cal_date(jdn)
+      _encode(_number_to_coordinates(jdn))
+    end
+
     # 日付をユリウス日(Numeric)に変換する
     #
-    # @param [Numeric] cal_date
+    # @param [Array<Numeric>] cal_date
     #
     # @return [Integer] JulianDate
     #
     def to_julian_date(cal_date)
       date    = _decode(cal_date)
       date[0] = +date[0]
-      return _coordinates_to_number(*date)
+      _coordinates_to_number(*date)
     end
 
-    # ユリウス日(Numeric)を日付に変換する
+    # 日付・時刻をUniversal Time(Numeric)に変換する
     #
-    # @param [Integer] jdn
+    # @param [Array<Numeric>] cal_date 日付
+    # @param [Array<Numeric>] clk_time 時刻
+    # @param [When::TM::Clock] clock 時法
     #
-    # @return [Numeric]
+    # @return [Numeric] Universal Time
     #
-    def to_cal_date(jdn)
-      return _encode(_number_to_coordinates(jdn))
+    def to_universal_time(cal_date, clk_time, clock=When.utc)
+      time     = clk_time.dup
+      time[0] += _coordinates_to_number(*_decode(cal_date))
+      clock.to_universal_time(time) - When::TM::JulianDate::JD19700101 * When::TM::Duration::DAY
     end
 
     # 月初の通日
@@ -264,8 +287,9 @@ module When::TM
 
     # オブジェクトの正規化
     def _normalize(args=[], options={})
-      @time_basis = When.Calendar(@time_basis) if @time_basis.kind_of?(String)
       @indices  ||= DefaultDateIndices
+      _normalize_spatial
+      _normalize_time_basis
       _normalize_temporal
       @reference_frame ||= []
     end
@@ -278,29 +302,15 @@ module When::TM
   class Clock < ReferenceSystem
 
     include When::Coordinates
+    include Spatial::Normalize
     include Temporal
 
     class << self
       include When::Parts::Resource::Pool
 
-      # 地方時
-      #
-      # @return [When::TM::Clock, When::Parts::Timezone, When::V::Timezone]
-      #
-      # @note
-      #   本変数の write access はテスト用である。
-      #   本変数は、原則、ライブラリ立ち上げ時に _setup_ で初期化する。
-      #   以降、本変数に代入を行っても、すでに生成した When::TM::TemporalPosition には反映されない。
-      #
-      # @note
-      #   マルチスレッド動作時 CalendarEra の生成で Calendar の本属性が更新される
-      #   参照・更新処理は Clock.synchronize { ... } の ... の部分に書く必要がある
-      #
-      attr_accessor :local_time
-
       # When::TM::Clock Class のグローバルな設定を行う
       #
-      # @param [When::TM::Clock, When::Parts::Timezone, When::V::Timezone] local 地方時を使用する場合、指定する
+      # @param [When::TM::Clock, When::Parts::Timezone, When::V::Timezone, String] local 地方時を使用する場合、指定する
       #
       # @return [void]
       #
@@ -314,9 +324,56 @@ module When::TM
         @local_time = local
       end
 
+      # 地方時
+      #
+      # @param [When::TM::Clock, When::Parts::Timezone, When::V::Timezone, String] local 地方時
+      #
+      # @return [When::TM::Clock, When::Parts::Timezone, When::V::Timezone, String]
+      #
+      # @note
+      #   @local_timeは、原則、ライブラリ立ち上げ時に _setup_ で初期化する。
+      #   以降、@local_timeに代入を行っても、すでに生成した When::TM::TemporalPosition 等には反映されない。
+      #
+      def local_time=(local)
+        if @_pool
+          @local_time = local
+        else
+          _setup_(local)
+        end
+      end
+
+      # When::TM::Clock のローカルタイムを読みだす
+      #
+      # @return [When::TM::Clock, When::Parts::Timezone, When::V::Timezone]
+      #
+      def local_time
+        _local_time[1]
+      end
+
+      # When::TM::Clock のローカルタイムが設定されているか?
+      #
+      # @return [true, false]
+      #
+      def is_local_time_set?
+        _local_time[0]
+      end
+
+      # 共通処理
+      def _local_time
+        case @local_time
+        when Array  ; @local_time
+        when nil    ; @local_time = [false, When.utc]
+        when String ; @local_time = [true,  When::Parts::Timezone[@local_time] ||
+                                            When::V::Timezone[@local_time]     ||
+                                            When.Clock(@local_time)]
+        else        ; @local_time = [true,  @local_time]
+        end
+      end
+      private :_local_time
+
       # @private
       def get_clock(options)
-        get_clock_option(options) || @local_time || When.utc
+        get_clock_option(options) || local_time
       end
 
       # @private
@@ -443,15 +500,17 @@ module When::TM
       @time_standard.rate_of_clock
     end
 
-    # 日の小数による参照事象の時刻
+    # 128秒単位の実数による参照事象の時刻
     #
     # Fraction time of the reference event
+    #
+    # @param [Integer] sdn 参照事象の通し番号(ダミー)
     #
     # @return [Numeric]
     #
     #   T00:00:00Z からの参照事象の経過時間 / 128秒
     #
-    def universal_time
+    def universal_time(sdn=nil)
       return @utc_reference.universal_time
     end
 
@@ -477,9 +536,9 @@ module When::TM
     end
     alias :clkTrans :clk_trans
 
-    # この時法の時刻を日の小数に変換する
+    # この時法の時刻を128秒単位の実数に変換する
     #
-    # @param [Numeric] clk_time
+    # @param [Array<Numeric>] clk_time
     #
     # @return [Numeric]
     #
@@ -487,7 +546,7 @@ module When::TM
       return _coordinates_to_number(_decode(clk_time)) / @second
     end
 
-    # 日の小数をこの時法の時刻に変換する
+    # 128秒単位の実数をこの時法の時刻に変換する
     #
     # @param [Numeric] fod
     #
@@ -544,18 +603,19 @@ module When::TM
     def ^(date, options={})
       date = Position.any_other(date, options)
       my_options = (date.options||{}).merge(options)
-      frac       = self.universal_time
+      frac       = self.universal_time(date.to_i)
       sdn, time  = (date.universal_time - frac).divmod(Duration::DAY)
       my_options[:frame] ||= date.frame if date.kind_of?(CalDate)
       my_options[:clock]   = self
       case date
       when DateAndTime
-        return DateAndTime.new(my_options[:frame].to_cal_date(sdn + JulianDate::JD19700101), time+frac, my_options)
+        time += frac unless self.kind_of?(When::CalendarTypes::LocalTime)
+        DateAndTime.new(my_options[:frame].to_cal_date(sdn + JulianDate::JD19700101), time, my_options)
       when CalDate
-        return CalDate.new(my_options[:frame].to_cal_date(date.to_i), my_options)
+        CalDate.new(my_options[:frame].to_cal_date(date.to_i), my_options)
       when JulianDate
         my_options[:frame] = my_options.delete(:clock)
-        return JulianDate.universal_time(sdn * Duration::DAY, my_options)
+        JulianDate.universal_time(sdn * Duration::DAY, my_options)
       else
         raise TypeError, "Irregal (Temporal)Position"
       end
@@ -616,14 +676,14 @@ module When::TM
 
     # 夏時間
     # @private
-    def _daylight(zdate=nil, &block)
+    def _daylight(time)
       case @tz_prop
       when nil                       ; return self
       when When::V::TimezoneProperty ; timezone = @tz_prop._pool['..']
       else                           ; timezone = @tz_prop
       end
       return self unless timezone
-      return timezone._daylight(zdate, &block)
+      return timezone._daylight(time)
     end
 
     # この時法の夏時間-標準時間変化量
@@ -653,6 +713,16 @@ module When::TM
       When::Coordinates::Index.precision(default || precision)
     end
 
+    # 丸め量 / When::TM::Duration::SYSTEM
+    # @private
+    def _round_value(precision)
+      offset = When::TM::Duration::DAY / 2
+      precision.times do |i|
+        offset /= @unit[i+1] ? @unit[i+1] : 10
+      end
+      offset
+    end
+
     private
 
     # オブジェクトの正規化
@@ -662,10 +732,14 @@ module When::TM
       # note
       @note    ||= 'JulianDayNotes'
 
+      # normalize spatial module
+      _normalize_spatial
+
+      # normalize temporal module
       _normalize_temporal
 
       # second
-      @second = (@second||128).to_f
+      @second = (@second||1/When::TM::Duration::SECOND).to_f
 
       # zone
       @zone   = Clock.to_hms(@zone || @label || @reference_event)
@@ -674,7 +748,7 @@ module When::TM
       @time_standard   = When.Resource(@time_standard||'UniversalTime', '_t:') unless @time_standard.kind_of?(When::TimeStandard)
 
       # utc_reference
-      @utc_reference ||= @zone ? ClockTime.new(@zone.to_s, {:frame=>When.utc}) : (Clock.local_time || When.utc)
+      @utc_reference ||= @zone ? ClockTime.new(@zone.to_s, {:frame=>When.utc}) : Clock.local_time
 
       # reference_time & origin_of_LSC
       case @reference_time
@@ -860,7 +934,12 @@ module When::TM
     #   処理を @begin (type: When::TM::TemporalPosition) に委譲する
     #
     def method_missing(name, *args, &block)
-      @begin.send(name.to_sym, *args, &block)
+      self.class.module_eval %Q{
+        def #{name}(*args, &block)
+          @begin.send("#{name}", *args, &block)
+        end
+      } unless When::Parts::MethodCash.escape(name)
+      @begin.send(name, *args, &block)
     end
   end
 
@@ -974,7 +1053,7 @@ module When::TM
         pool.delete_if {|e|
           !parents.each do |parent|
             e = e.parent
-            break false if parent != e.name
+            break false unless parent == e.name
           end
         }
       end
@@ -1311,19 +1390,32 @@ module When::TM
 
       # dating_system
       @dating_system = (@epoch.map {|e| e.frame}).compact.uniq
+      ancestors     = hierarchy.inject(['']) {|list,era|
+        list << list[-1] + '::' + era.label.to_s
+        list
+      }
 
       if @epoch.length == 1
         epoch[0].frame.synchronize {
-          epoch[0].frame.domain   |= When::Parts::GeometricComplex.new([[epoch[0],true]])
+          range = When::Parts::GeometricComplex.new([[epoch[0],true]])
+          ancestors.each do |ancestor|
+            epoch[0].frame.domain[ancestor]   |= range
+          end
         } if epoch[0].frame
       elsif reverse?
         epoch[1].frame.synchronize {
-          epoch[1].frame.domain   |= When::Parts::GeometricComplex.new([[epoch[1],true]], true)
+          range = When::Parts::GeometricComplex.new([[epoch[1],true]], true)
+          ancestors.each do |ancestor|
+            epoch[1].frame.domain[ancestor]   |= range
+          end
         } if epoch[1].frame
       else
         (epoch.length-1).times do |i|
           epoch[i].frame.synchronize {
-            epoch[i].frame.domain |= When::Parts::GeometricComplex.new([[epoch[i],true], [epoch[i+1],false]])
+            range = When::Parts::GeometricComplex.new([[epoch[i],true], [epoch[i+1],false]])
+            ancestors.each do |ancestor|
+              epoch[i].frame.domain[ancestor] |= range
+            end
           } if epoch[i].frame
         end
       end
@@ -1333,8 +1425,8 @@ module When::TM
           f.reference_frame << self
           f.reference_frame.uniq!
           f.reference_frame.sort!
-          first = f.domain.first(When::MinusInfinity)
-          last  = f.domain.last(When::PlusInfinity)
+          first = f.domain[''].first(When::MinusInfinity)
+          last  = f.domain[''].last(When::PlusInfinity)
           f.domain_of_validity = When::EX::Extent.new(
                                    When::TM::Period.new(
                                      When::TM::Instant.new(first),
@@ -1562,7 +1654,12 @@ module When::TM
     #   処理を @reference_date (type: When::TM::TemporalPosition) に委譲する
     #
     def method_missing(name, *args, &block)
-      @reference_date.send(name.to_sym, *args, &block)
+      self.class.module_eval %Q{
+        def #{name}(*args, &block)
+          @reference_date.send("#{name}", *args, &block)
+        end
+      } unless When::Parts::MethodCash.escape(name)
+      @reference_date.send(name, *args, &block)
     end
   end
 end

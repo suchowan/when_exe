@@ -18,7 +18,7 @@ date = today
 pp [date.to_s, date.strftime('%D'), date.frame.iri, date.to_time.to_s]
 puts
 
-['Julian', 'ChineseLuniSolar?timezone=9&intercalary_span=3', 'TabularIslamic', 'Jewish', 'LongCount'].each do |calendar|
+['Julian', 'ChineseLuniSolar?time_basis=+09&intercalary_span=3', 'TabularIslamic', 'Jewish', 'LongCount'].each do |calendar|
   date = Calendar(calendar) ^ today
   pp [date.to_s,  date.frame.iri]
 end

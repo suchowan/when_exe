@@ -367,6 +367,7 @@ module When
       #   @past        = グレゴリオ暦への改暦前の暦法
       #   @reform_date = 改暦日付(月日は 1 オリジンで指定し、0 オリジンに直して保持)
       #   @reform_jdn  = 改暦日付のユリウス通日
+      #   @reform      = reform_date か reform_jdn を内容で判別し、どちらかに反映する
       #   @the_easter  = グレゴリオ暦の復活祭計算の適用を始める年
       #   @the_length  = 通常と異なる日付となる年月の情報({[年,月]=>[スキップした日数, スキップし始める日, 月の日数]})
       #
@@ -379,6 +380,13 @@ module When
         @indices   ||= @past.indices
 
         # 改暦日付 (0 オリジン)
+        @reform = When::Coordinates::Pair._en_pair_date_time(@reform) if @reform.kind_of?(String)
+        case @reform.length
+        when 0 ;
+        when 1 ; @reform_jdn  = @reform[0]
+        else   ; @reform_date = @reform
+        end if @reform.kind_of?(Array)
+
         if @reform_date
           @reform_date  = When::Coordinates::Pair._en_pair_date_time(@reform_date) if @reform_date.kind_of?(String)
           @reform_date  = @reform_date.map {|c| c.to_i}
@@ -479,10 +487,69 @@ module When
         # 日の暦注 ----------------------------
         [When::BasicTypes::M17n,
           "names:[day]",
-          [When::BasicTypes::M17n, "names:[Easter,    復活祭]"    ],
-          [When::BasicTypes::M17n, "names:[Christmas, クリスマス]"]
+          [When::BasicTypes::M17n, "names:[Easter,         復活祭]"    ],
+          [When::BasicTypes::M17n, "names:[Christmas,      クリスマス]"],
+          [When::BasicTypes::M17n, "names:[Fixed_feast=,   固定祝日=]" ],
+          [When::BasicTypes::M17n, "names:[Moveable_feast, 移動祝日]"  ]
         ]
       ]]
+
+      # 固定祝日
+      Fixed_feasts = {
+        [ 1,  6] => "Epiphany",
+        [ 3,  1] => "St.David's Day",
+        [ 3, 17] => "St.Patrick's Day",
+        [ 3, 25] => "Annunciation-Lady Day",
+        [ 4, 23] => "St.George's Day",
+        [ 6, 24] => "Midsummer Day",
+        [ 9, 14] => "Holy Cross Day",
+        [ 9, 29] => "Michaelmas Day",
+        [11, 30] => "St.Andrew's Day",
+        [12, 13] => "St.Lucia's Day",
+        [12, 21] => "St.Thomas's Day",
+      # [12, 25] => "Christmas Day"
+      }
+
+      # 移動祝日 (日付と曜日による)
+      moveable_feasts = {}
+      [[[ 9, 15, 2], "III Quatember"],
+       [[11, 27, 6], "Advent Sunday"],
+       [[12, 14, 2], "IV Quatember" ]].each do |pair|
+        date, name = pair
+        7.times do
+          moveable_feasts[date.dup] = name
+          date[1] += 1
+          if date[1] > 30
+            date[0] += 1
+            date[1]  = 1
+          end
+        end
+      end
+
+      # 移動祝日
+      Moveable_feasts = {
+        # 復活祭からの日数による
+        -63 => "Septuagesima Sunday",
+        -56 => "Sexagesima Sunday",
+        -49 => "Quinquagesima Sunday",
+        -46 => "Ash Wednesday",
+        -42 => "Quadragesima Sunday",
+        -40 => "I Quatember",
+        -35 => "Reminizer Sunday",
+        -28 => "Oculi Sunday",
+        -21 => "Laetare Sunday",
+        -14 => "Judica Sunday",
+         -7 => "Palmarum",
+         -2 => "Good Friday",
+      #   0 => "Easter Day",
+          7 => "Low Sunday",
+         35 => "Rogation Sunday",
+         39 => "Ascension Day",
+         49 => "Whitsunday",
+         53 => "II Quatember",
+         56 => "Trinity Sunday",
+         60 => "Corpus Christi",
+      }.update(moveable_feasts) 
 
       # 週日補正フラグ
       # @return [Integer]
@@ -571,6 +638,34 @@ module When
 
       # @private
       alias :easter_delta    :_delta
+
+      # 固定祝日
+      #
+      # @param [When::TM::TemporalPosition] date
+      # @param [When::TM::ReferenceSystem] frame 使用する暦法(デフォルトは When.Resource('_c:Gregorian'))
+      #
+      # @return [String] 祝日の名称
+      # @return [nil]    祝日に該当しない
+      #
+      def fixed_feast(date, frame=nil)
+        date = When.Calendar(frame||'Gregorian') ^ date unless date.frame.kind_of?(When::CalendarTypes::Julian)
+        Fixed_feasts[date.cal_date[-2..-1]]
+      end
+
+      # 移動祝日
+      #
+      # @param [When::TM::TemporalPosition] date
+      # @param [When::TM::ReferenceSystem] frame 使用する暦法(デフォルトは When.Resource('_c:Gregorian'))
+      #
+      # @return [String] 祝日の名称
+      # @return [nil]    祝日に該当しない
+      #
+      def moveable_feast(date, frame=nil)
+        result = Moveable_feasts[date.to_i - easter(date, frame).to_i]
+        return result if result
+        date = When.Calendar(frame||'Gregorian') ^ date unless date.frame.kind_of?(When::CalendarTypes::Julian)
+        Moveable_feasts[date.cal_date[-2..-1] + [date.to_i % 7]]
+      end
 
       private
 

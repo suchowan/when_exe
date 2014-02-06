@@ -44,6 +44,80 @@ module When
     ]]
   end
 
+module When::Coordinates
+
+  # 六十干支
+  Tibetan = [When::BasicTypes::M17n, [
+    "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
+    "locale:[=en:, ja=ja:, alias]",
+    "names:[Tibetan]",
+
+    [StemBranch,
+      "label:[Stem-Branch, *干支]", "divisor:60", "day:11", "year:4",
+      [StemBranch, "label:[Wood-Rat=,      *木男鼠=]", "remainder: 0"],
+      [StemBranch, "label:[Wood-Ox=,       *木女牛=]", "remainder: 1"],
+      [StemBranch, "label:[Fire-Tiger=,    *火男虎=]", "remainder: 2"],
+      [StemBranch, "label:[Fire-Rabbit=,   *火女兎=]", "remainder: 3"],
+      [StemBranch, "label:[Earth-Dragon=,  *土男龍=]", "remainder: 4"],
+      [StemBranch, "label:[Earth-Snake=,   *土女蛇=]", "remainder: 5"],
+      [StemBranch, "label:[Iron-Horse=,    *金男馬=]", "remainder: 6"],
+      [StemBranch, "label:[Iron-Goat=,     *金女羊=]", "remainder: 7"],
+      [StemBranch, "label:[Water-Monkey=,  *水男猴=]", "remainder: 8"],
+      [StemBranch, "label:[Water-Rooster=, *水女鷄=]", "remainder: 9"],
+      [StemBranch, "label:[Wood-Dog=,      *木男狗=]", "remainder:10"],
+      [StemBranch, "label:[Wood-Pig=,      *木女猪=]", "remainder:11"],
+      [StemBranch, "label:[Fire-Rat=,      *火男鼠=]", "remainder:12"],
+      [StemBranch, "label:[Fire-Ox=,       *火女牛=]", "remainder:13"],
+      [StemBranch, "label:[Earth-Tiger=,   *土男虎=]", "remainder:14"],
+      [StemBranch, "label:[Earth-Rabbit=,  *土女兎=]", "remainder:15"],
+      [StemBranch, "label:[Iron-Dragon=,   *金男龍=]", "remainder:16"],
+      [StemBranch, "label:[Iron-Snake=,    *金女蛇=]", "remainder:17"],
+      [StemBranch, "label:[Water-Horse=,   *水男馬=]", "remainder:18"],
+      [StemBranch, "label:[Water-Goat=,    *水女羊=]", "remainder:19"],
+      [StemBranch, "label:[Wood-Monkey=,   *木男猴=]", "remainder:20"],
+      [StemBranch, "label:[Wood-Rooster=,  *木女鷄=]", "remainder:21"],
+      [StemBranch, "label:[Fire-Dog=,      *火男狗=]", "remainder:22"],
+      [StemBranch, "label:[Fire-Pig=,      *火女猪=]", "remainder:23"],
+      [StemBranch, "label:[Earth-Rat=,     *土男鼠=]", "remainder:24"],
+      [StemBranch, "label:[Earth-Ox=,      *土女牛=]", "remainder:25"],
+      [StemBranch, "label:[Iron-Tiger=,    *金男虎=]", "remainder:26"],
+      [StemBranch, "label:[Iron-Rabbit=,   *金女兎=]", "remainder:27"],
+      [StemBranch, "label:[Water-Dragon=,  *水男龍=]", "remainder:28"],
+      [StemBranch, "label:[Water-Snake=,   *水女蛇=]", "remainder:29"],
+      [StemBranch, "label:[Wood-Horse=,    *木男馬=]", "remainder:30"],
+      [StemBranch, "label:[Wood-Goat=,     *木女羊=]", "remainder:31"],
+      [StemBranch, "label:[Fire-Monkey=,   *火男猴=]", "remainder:32"],
+      [StemBranch, "label:[Fire-Rooster=,  *火女鷄=]", "remainder:33"],
+      [StemBranch, "label:[Earth-Dog=,     *土男狗=]", "remainder:34"],
+      [StemBranch, "label:[Earth-Pig=,     *土女猪=]", "remainder:35"],
+      [StemBranch, "label:[Iron-Rat=,      *金男鼠=]", "remainder:36"],
+      [StemBranch, "label:[Iron-Ox=,       *金女牛=]", "remainder:37"],
+      [StemBranch, "label:[Water-Tiger=,   *水男虎=]", "remainder:38"],
+      [StemBranch, "label:[Water-Rabbit=,  *水女兎=]", "remainder:39"],
+      [StemBranch, "label:[Wood-Dragon=,   *木男龍=]", "remainder:40"],
+      [StemBranch, "label:[Wood-Snake=,    *木女蛇=]", "remainder:41"],
+      [StemBranch, "label:[Fire-Horse=,    *火男馬=]", "remainder:42"],
+      [StemBranch, "label:[Fire-Goat=,     *火女羊=]", "remainder:43"],
+      [StemBranch, "label:[Earth-Monkey=,  *土男猴=]", "remainder:44"],
+      [StemBranch, "label:[Earth-Rooster=, *土女鷄=]", "remainder:45"],
+      [StemBranch, "label:[Iron-Dog=,      *金男狗=]", "remainder:46"],
+      [StemBranch, "label:[Iron-Pig=,      *金女猪=]", "remainder:47"],
+      [StemBranch, "label:[Water-Rat=,     *水男鼠=]", "remainder:48"],
+      [StemBranch, "label:[Water-Ox=,      *水女牛=]", "remainder:49"],
+      [StemBranch, "label:[Wood-Tiger=,    *木男虎=]", "remainder:50"],
+      [StemBranch, "label:[Wood-Rabbit=,   *木女兎=]", "remainder:51"],
+      [StemBranch, "label:[Fire-Dragon=,   *火男龍=]", "remainder:52"],
+      [StemBranch, "label:[Fire-Snake=,    *火女蛇=]", "remainder:53"],
+      [StemBranch, "label:[Earth-Horse=,   *土男馬=]", "remainder:54"],
+      [StemBranch, "label:[Earth-Goat=,    *土女羊=]", "remainder:55"],
+      [StemBranch, "label:[Iron-Monkey=,   *金男猴=]", "remainder:56"],
+      [StemBranch, "label:[Iron-Rooster=,  *金女鷄=]", "remainder:57"],
+      [StemBranch, "label:[Water-Dog=,     *水男狗=]", "remainder:58"],
+      [StemBranch, "label:[Water-Pig=,     *水女猪=]", "remainder:59"]
+    ]
+  ]]
+end
+
   module CalendarTypes
 
     #
@@ -83,11 +157,18 @@ module When
       def _normalize(args=[], options={})
         intercalary_month = When.Resource('_m:TibetanTerms::IntercalaryMonth::*')
         intercalary_day   = When.Resource('_m:TibetanTerms::IntercalaryDay::*')
-        @indices ||= [
-          Coordinates::Index.new({:branch=>{0=>intercalary_month[0], 1=>intercalary_month[1]},
-                                  :trunk=>When.Resource('_m:TibetanTerms::Month::*'), :shift=>2}),
-          Coordinates::Index.new({:branch=>{-2=>intercalary_day[0], -1=>intercalary_day[1]}})
-        ]
+        @indices ||= @index_of_MSC && @index_of_MSC.to_i == 1 ? 
+          [
+            Coordinates::Index.new({:unit=>60}),
+            Coordinates::Index.new({:branch=>{0=>intercalary_month[0], 1=>intercalary_month[1]},
+                                    :trunk=>When.Resource('_m:TibetanTerms::Month::*'), :shift=>2}),
+            Coordinates::Index.new({:branch=>{-2=>intercalary_day[0], -1=>intercalary_day[1]}})
+          ] :
+          [
+            Coordinates::Index.new({:branch=>{0=>intercalary_month[0], 1=>intercalary_month[1]},
+                                    :trunk=>When.Resource('_m:TibetanTerms::Month::*'), :shift=>2}),
+            Coordinates::Index.new({:branch=>{-2=>intercalary_day[0], -1=>intercalary_day[1]}})
+          ]
         @label       ||= When.Resource('_m:TibetanTerms::Tibetan')
         @epoch_in_CE ||= 0
         @type        ||= 1
@@ -113,6 +194,7 @@ module When
              'A0'=>(22.0+28.0/126)
             }
           end
+        @note = 'TibetanNotes'
         super
       end
 

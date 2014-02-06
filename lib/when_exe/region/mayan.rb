@@ -10,13 +10,14 @@ module When
   module Coordinates
 
     # Mayan Residue
-    Mayan = [BasicTypes::M17n, [
+    Mayan = [{'Epoch' => {'0D'=>{'Haab'=>'-65', 'Trecena'=> '8', 'Tzolkin'=>'4', 'LoN'=>'3'},
+                          '2D'=>{'Haab'=>'-63', 'Trecena'=>'10', 'Tzolkin'=>'6', 'LoN'=>'5'}}}, BasicTypes::M17n, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[Mayan]",
 
       [Residue,
-        "label:[Haab', ハアブ, Haab]", "divisor:365", "day:-65", "format:[%2$d%1$s/365]",
+        "label:[Haab', ハアブ, Haab]", "divisor:365", 'day:#{Haab:-65}', "format:[%2$d%1$s/365]",
         "namespace:[glyph=http://en.wikipedia.org/wiki/File:Maya-]",
         [Residue, "label:[Pop     =glyph:Pop.jpg,            ポプ,       Pop   ]", "remainder:  0"],
         [Residue, "label:[Wo'     =glyph:Dresden-wo.jpg,     ウオ,       Wo    ]", "remainder: 20"],
@@ -40,12 +41,12 @@ module When
       ],
 
       [Residue,
-        "label:[Trecena, トレセナ=, Trecena]", "divisor:13", "day:8", "format:[%1$s(%3$d/13)]"
+        "label:[Trecena, トレセナ=, Trecena]", "divisor:13", 'day:#{Trecena:8}', "format:[%1$s(%3$d/13)]"
       ],
 
       [Residue,
         "namespace:[glyph=http://en.wikipedia.org/wiki/File:MAYA-g-log-cal-]",
-        "label:[Tzolk'in, ツォルキン, Tzolkin]", "divisor:20", "day:4", "format:[%s(%d/20)]",
+        "label:[Tzolk'in, ツォルキン, Tzolkin]", "divisor:20", 'day:#{Tzolkin:4}', "format:[%s(%d/20)]",
         [Residue, "label:[Imix'   =glyph:D01-Imix.png,     イミシュ,   Imix    =glyph:D01-Imix-cdxW.png    ]", "remainder: 0"],
         [Residue, "label:[Ik'     =glyph:D02-Ik.png,       イック,     Ik      =glyph:D02-Ik-cdxW.png      ]", "remainder: 1"],
         [Residue, "label:[Ak'b'al =glyph:D03-Akbal.png,    アクバル,   Akbal   =glyph:D03-Akbal-cdxW.png   ]", "remainder: 2"],
@@ -70,7 +71,7 @@ module When
 
       [Residue,
         "namespace:[glyph=http://www.pauahtun.org/G/G]",
-        "label:[Lords_of_the_Night, 夜の九王]", "divisor:9", "day:3", "format:[%s(%d/9)]",
+        "label:[Lords_of_the_Night, 夜の九王]", "divisor:9", 'day:#{LoN:3}', "format:[%s(%d/9)]",
         [Residue, "label:[G9=glyph:9_m.png]", "remainder: 0"],
         [Residue, "label:[G1=glyph:1_m.png]", "remainder: 1"],
         [Residue, "label:[G2=glyph:2_m.png]", "remainder: 2"],
@@ -89,11 +90,12 @@ module When
     #
     # Mayan Long Count
     #
-    Mayan = [self, [
+    LongCount = [{'Epoch'=>{'0D' => {'Base' => '?Epoch=0D'},
+                            '2D' => {'Base' => '?Epoch=2D'}}}, self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
-      "area:[MayanLongCount=en:Mesoamerican_Long_Count_calendar, マヤ長期暦=ja:%%<長期暦>]",
-     ["[PHLC=, 先史時代=, PreHistoricLongCount=]0.0.0.0.0", "[Pre Historic=]",	"-13.0.0.0.0^LongCount"],
+      'area:[LongCount#{Base}=en:Mesoamerican_Long_Count_calendar, マヤ長期暦=ja:%%<長期暦>]',
+     ["[PHLC=, 先史時代=, PreHistoricLongCount=]0.0.0.0.0", "[Pre Historic=]",	'-13.0.0.0.0^LongCount#{Base}'],
      ["[HLC=,  歴史時代=, HistoricLongCount=]0.0.0.0.1",    "[Historic Age=]",	  "0.0.0.0.1"],
      ["[NLC=,  新時代=,   NewLongCount=]0.0.0.0.1",	    "[New Age=]",	 "13.0.0.0.1", "26.0.0.0.1"]
     ]]
@@ -101,22 +103,22 @@ module When
 
   module CalendarTypes
 
+    _c20 = Coordinates::Index.new({:base=>0, :unit=>20})
+    _c18 = Coordinates::Index.new({:base=>0, :unit=>18})
+
     #
     # Mayan Long Count
     #
-    LongCount =  [CyclicTableBased, {
+    LongCount =  [{'Epoch'=>{'0D' => {'origin_of_LSC' => 584283, 'Base'=>'?Epoch=0D'},
+                             '2D' => {'origin_of_LSC' => 584285, 'Base'=>'?Epoch=2D'}}}, CyclicTableBased, {
       'origin_of_LSC' => 584283,
       'rule_table'    => {
         'T' => {'Rule'  =>[360]},
-        360 => {'Length'=>[20] * 18}},
+        360 => {'Length'=>[20] * 18}
+      },
       'index_of_MSC' => 2,
-      'indices'=> [
-         Coordinates::Index.new({:base=>0, :unit=>20}),
-         Coordinates::Index.new({:base=>0, :unit=>20}),
-         Coordinates::Index.new({:base=>0, :unit=>18}),
-         Coordinates::Index.new({:base=>0, :unit=>20}),
-       ],
-      'note'   => 'MayanNotes'
+      'indices'=> [_c20, _c20, _c18, _c20],
+      'note'   => 'MayanNotes#{Base}'
     }]
   end
 end

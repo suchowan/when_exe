@@ -111,7 +111,7 @@ module When
         module_eval %Q{
           def #{name}(date, parameter=nil)
             event_name = 'from_#{name}'
-            date  = When.Calendar('World').jul_trans(date, {:events=>[event_name]})
+            date  = When.Calendar('World').jul_trans(date, {:events=>[event_name], :precision=>When::DAY})
             y,m,d = date.cal_date
             dow   = (m % 6 == 0 && d == 31) ? 7-#{k} : ([4,6,2][m % 3] + d - #{k}) % 7
             return date if dow == 0

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2013 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -59,8 +59,9 @@ module When::CalendarTypes
       @label   ||= m17n('Z')
       @indices ||= When::Coordinates::DefaultTimeIndices
       @note    ||= 'JulianDayNotes'
+      _normalize_spatial
       _normalize_temporal
-      @second    = (@second||128).to_f
+      @second    = (@second||1/When::TM::Duration::SECOND).to_f
       @zone      = '+00:00'
       @time_standard ||= When.Resource('_t:UniversalTime')
       @utc_reference   = When::TM::ClockTime.new([0,0,0,0], {:frame=>self})
@@ -68,16 +69,38 @@ module When::CalendarTypes
   end
 
   #
+  # Abstract Local Time
+  #
+  class LocalTime < UTC
+
+    # 128秒単位の実数による参照事象の時刻
+    #
+    # Fraction time of the reference event
+    #
+    # @param [Integer] sdn 参照事象の通し番号
+    #
+    # @return [Numeric]
+    #
+    #   T00:00:00Z からの参照事象の経過時間 / 128秒
+    #
+    def universal_time(sdn=nil)
+      return super unless sdn
+      time = When::TM::JulianDate._d_to_t(sdn-0.5)
+      @time_standard.to_dynamical_time(time) - When::TimeStandard.to_dynamical_time(time)
+    end
+  end
+
+  #
   # Local Mean Time
   #
-  class LMT < UTC
+  class LMT < LocalTime
 
     private
 
     # オブジェクトの正規化
     def _normalize(args=[], options={})
       @label         = m17n('LMT')
-      @time_standard = When.Resource("_t:LocalMeanTime?location=_l:long=#{@long||0}%26lat=0")
+      @time_standard = When.Resource("_t:LocalMeanTime?location=_l:long=#{@long||0}")
       super
     end
   end
@@ -85,14 +108,14 @@ module When::CalendarTypes
   #
   # Local Apparent Time
   #
-  class LAT < UTC
+  class LAT < LocalTime
 
     private
 
     # オブジェクトの正規化
     def _normalize(args=[], options={})
       @label         = m17n('LAT')
-      @time_standard = When.Resource("_t:LocalApparentTime?location=_l:long=#{@long||0}%26lat=0")
+      @time_standard = When.Resource("_t:LocalApparentTime?location=_l:long=#{@long||0}")
       super
     end
   end
@@ -100,14 +123,14 @@ module When::CalendarTypes
   #
   # Temporal Hour System
   #
-  class THS < UTC
+  class THS < LocalTime
 
     private
 
     # オブジェクトの正規化
     def _normalize(args=[], options={})
       @label         = m17n('THS')
-      @time_standard = When.Resource("_t:TemporalHourSystem?location=_l:long=#{@long||0}%26lat=#{@lat||0}")
+      @time_standard = When.Resource("_t:TemporalHourSystem?location=(_l:long=#{@long||0}&lat=#{@lat||0}&alt=#{@alt||0})")
       super
     end
   end
@@ -572,12 +595,6 @@ module When::CalendarTypes
   #
   class YearLengthTableBased < TableBased
 
-    # 時間帯
-    #
-    # @return [Array<Numeric>]
-    #
-    attr_reader :timezone
-
     # 天体暦アルゴリズム
     #
     # @return [Array<When::Ephemeris::Formula>]
@@ -599,7 +616,7 @@ module When::CalendarTypes
     def _sdn_(date)
       y = +date[0]
       t = @formula[0].cn_to_time(y.to_f + @cycle_offset)
-      return (t + 0.5 + @day_offset + @timezone[0]).floor
+      return solar_sdn(t + @day_offset)
     end
 
     # オブジェクトの正規化
@@ -611,7 +628,6 @@ module When::CalendarTypes
       Rational
       @cycle_offset = (@cycle_offset||0).to_r
       @day_offset   = (@day_offset||0).to_r
-      @timezone     = (@timezone||0).to_r
       @formula      = 'Formula?formula=1S'
 
       super
@@ -721,12 +737,6 @@ module When::CalendarTypes
   #
   class EphemerisBasedSolar < EphemerisBased
 
-    # 時間帯
-    #
-    # @return [Array<Numeric>]
-    #
-    attr_reader :timezone
-
     #protected
 
     # 月初の通日
@@ -736,7 +746,7 @@ module When::CalendarTypes
     # @return [Integer] 月初の通日
     #
     def _new_month_(m)
-      return (@formula[0].cn_to_time(m + @cycle_offset) + 0.5 + @timezone[0]).floor
+      return solar_sdn(@formula[0].cn_to_time(m + @cycle_offset))
     end
 
     private
@@ -758,12 +768,6 @@ module When::CalendarTypes
   #
   class EphemerisBasedLunar < EphemerisBased
 
-    # 時間帯
-    #
-    # @return [Array<Numeric, (Numeric)>]
-    #
-    attr_reader :timezone
-
     #protected
 
     # 月初の通日
@@ -773,7 +777,7 @@ module When::CalendarTypes
     # @return [Integer] 月初の通日
     #
     def _new_month_(m)
-      return (@formula[-1].cn_to_time(m + @cycle_offset) + 0.5 + @timezone[-1]).floor
+      return lunar_sdn(@formula[-1].cn_to_time(m + @cycle_offset))
     end
 
     private
@@ -876,7 +880,7 @@ module When::CalendarTypes
     # @return [Integer] 月初の通日
     #
     def _new_month_(m)
-      (@formula[-1].cn_to_time(m) + 0.5 + @timezone[-1]).floor
+      lunar_sdn(@formula[-1].cn_to_time(m))
     end
 
     # 年初の通月
@@ -893,7 +897,6 @@ module When::CalendarTypes
     #
     # @cycle_offset = 雨水の場合 -1
     # @formula      = 位相の計算に用いる太陽と月の Formula
-    # @timezone[1]  = 進朔量
     # @notes        = to_a でデフォルトとして用いる暦注
     #
     def _normalize(args=[], options={})
@@ -1248,7 +1251,7 @@ module When::CalendarTypes
     #   暦注サブクラスの場合、暦注要素が増えたり、:note の暦注要素の型が変わったりすることがある。
     #
     def notes(date, options={})
-      dates, indices, notes, conditions, options = _parse(date, options)
+      dates, indices, notes, conditions, options = _parse_note(date, options)
       _result(indices.map {|i|
         next [] unless i <= date.precision
         _note_values(dates, notes[i-1], _all_keys[i-1], _elements[i-1]) do |dates, focused_notes, notes_hash|
@@ -1256,6 +1259,7 @@ module When::CalendarTypes
             unless notes_hash[note]
               void, event, *parameter = note.split(/^([^\d]+)/)
               method = event.downcase
+              parameter << conditions unless conditions.empty?
               notes_hash[note] = 
                 if respond_to?(method)
                   send(method, dates, *parameter)
@@ -1375,7 +1379,7 @@ module When::CalendarTypes
     #
     # @return [Array] dates, indices, notes
     #
-    def _parse(date, options)
+    def _parse_note(date, options)
       options = 
         case options
         when Hash    ; options
@@ -1452,13 +1456,14 @@ module When::CalendarTypes
       # prepare focused notes
       case focused_notes
       when Integer
-        bits = focused_notes << 1
+        bits = ~focused_notes << 1
         focused_notes = all_notes.dup.delete_if { (bits>>=1)[0] == 1 }
       when []
         focused_notes = all_notes
       when nil
         focused_notes = []
       end
+      focused_notes = focused_notes.dup
       not_focused_notes = all_notes - focused_notes
       notes = {}
       not_focused_notes.each do |note|
@@ -1554,149 +1559,6 @@ module When::CalendarTypes
           date   = event_eval(first + @delta) if first.to_i > date.to_i
         end
         super(@parent, date, direction, count_limit)
-      end
-    end
-  end
-
-  class CalendarNote
-    #
-    # 太陽と月の位置によるイベント
-    #
-    class LuniSolarPositions < self
-
-      # 座標の分子
-      #
-      # @return [Numeric]
-      #
-      attr_reader :num
-
-      # 座標の分母
-      #
-      # @return [Numeric]
-      #
-      attr_reader :den
-
-      # 計算アルゴリズム
-      #
-      # @return [When::Ephemeris::Formula]
-      #
-      attr_reader :formula
-
-      # enumerator の周期
-      #
-      # @return [Numeric]
-      #
-      attr_reader :delta
-
-      # 没滅計算用の補正
-      #
-      # @return [Numeric]
-      #
-      attr_reader :margin
-
-      # イベントの日時
-      #
-      # @param [When::TM::TemporalPosition] date イベントを探す基準とする日時
-      # @param [Array<Numeric>] parameter 座標の分子と分母( num, den)
-      #
-      #   num 座標の分子 (デフォルト @num)
-      #
-      #   den 座標の分母 (デフォルト @den)
-      #
-      # @param [String] parameter  座標の分子と分母("#{ num }/#{ den }" の形式)
-      # @param [Integer] precision 取得したい時間位置の分解能(デフォルト date の分解能)
-      #
-      # @return [When::TM::CalDate] date またはその直後のイベントの日時
-      #
-      def term(date, parameter=nil, precision=date.precision)
-        precision = nil if precision == When::SYSTEM
-        num, den  = parameter.kind_of?(String) ? parameter.split(/\//, 2) : parameter
-        num = (num || @num).to_f
-        den = (den || @den).to_f
-        date      = date.floor(precision) if precision
-        options   = date._attr
-        quot, mod = (@formula.time_to_cn(date)*30.0).divmod(den)
-        cycle     = quot * den + num
-        cycle    += den if mod > num
-        time      = When::TM::JulianDate._d_to_t(@formula.cn_to_time(cycle/30.0))
-        time      = date.time_standard.from_dynamical_time(time) if @formula.is_dynamical
-        date      = date.frame.jul_trans(When::TM::JulianDate.universal_time(time), options)
-        precision ? date.floor(precision) : date
-      end
-
-      # 日付に対応する座標
-      #
-      # @param [When::TM::TemporalPosition] date 日付
-      # @param [Numeric] delta 周期の補正(下弦,上弦の場合 0.5, その他は0(デフォルト))
-      #
-      # @return [Array<Integer>] Array< Integer, 0 or 1 or 2 >
-      #
-      #   [Integer]     対応する座標
-      #
-      #   [0 or 1 or 2] 座標の進み(0 なら 没日, 2 なら滅)
-      #
-      def position(date, delta=0)
-        date = date.floor
-        p0, p1 = [date, date.succ].map {|d| (@formula.time_to_cn(d)*30.0-@margin+delta).floor}
-        [p1 % @den, p1-p0]
-      end
-
-      #
-      # イベントの標準的な間隔を返す
-      #
-      # @param [String] parameter 座標の分子と分母("#{ num }/#{ den }" の形式)
-      #
-      # @return [When::TM::IntervalLength]
-      def term_delta(parameter=nil)
-        return @delta unless parameter
-        num, den = parameter.split(/\//, 2)
-        When::TM::IntervalLength.new([(den || @den).to_f-1,1].max, 'day')
-      end
-    end
-
-    #
-    # 二十四節気
-    #
-    class SolarTerms < LuniSolarPositions
-
-      private
-
-      # オブジェクトの正規化
-      #   num     - 太陽黄経/度の分子 (デフォルト   0 - 春分)
-      #   den     - 太陽黄経/度の分母 (デフォルト 360 - 1年)
-      #   formula - 計算アルゴリズム(デフォルト '_ep:Formula?formula=12S')
-      #   delta   - enumerator の周期 (デフォルト (den/360)年)
-      #   margin  - 没滅計算用の補正  (デフォルト 1E-8)
-      def _normalize(args=[], options={})
-        num, den, formula, delta, margin = args
-        @num     = (num || @num  ||   0).to_f
-        @den     = (den || @den  || 360).to_f
-        @formula = When.Resource(formula || @formula ||'Formula?formula=12S', '_ep:')
-        @delta   = When.Duration(delta   || @delta   || When::TM::IntervalLength.new(@den/360, 'year'))
-        @margin  = (margin || @margin    || 1E-8).to_f
-      end
-    end
-
-    #
-    # 月の位相
-    #
-    class LunarPhases < LuniSolarPositions
-
-      private
-
-      # オブジェクトの正規化
-      #   num     - 月の位相/12度の分子 (デフォルト  0 - 朔)
-      #   den     - 月の位相/12度の分母 (デフォルト 30 - 1月)
-      #   formula - 計算アルゴリズム(デフォルト '_ep:Formula?formula=1L')
-      #   delta   - enumerator の周期 (デフォルト (den/30)月)
-      #   margin  - 没滅計算用の補正  (デフォルト 1E-8)
-      def _normalize(args=[], options={})
-        num, den, formula, delta, margin = args
-        @num     = (num || @num  ||  0).to_f
-        @den     = (den || @den  || 30).to_f
-        @formula = When.Resource(formula || @formula ||'Formula?formula=1L', '_ep:')
-        @delta   = When.Duration(delta   || @delta   || When::TM::IntervalLength.new(@den/30, 'month'))
-        @margin  = (margin || @margin    || 1E-8).to_f
       end
     end
   end

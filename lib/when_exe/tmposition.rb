@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2013 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -136,6 +136,8 @@ module When::TM
 
     private
 
+    alias :_method_missing :method_missing
+
     # その他のメソッド
     #
     # @note
@@ -145,8 +147,15 @@ module When::TM
     #   (両方ともに有効なメソッドは@any_otherを優先する)
     #
     def method_missing(name, *args, &block)
-      union = @any_other.respond_to?(name.to_sym) ? @any_other : @date_time8601
-      union.send(name.to_sym, *args, &block)
+      return _method_missing(name, *args, &block) if When::Parts::MethodCash::Escape.key?(name)
+      self.class.module_eval %Q{
+        def #{name}(*args, &block)
+          union = @any_other.respond_to?("#{name}") ? @any_other : @date_time8601
+          union.send("#{name}", *args, &block)
+        end
+      } unless When::Parts::MethodCash.escape(name)
+      union = @any_other.respond_to?(name) ? @any_other : @date_time8601
+      union.send(name, *args, &block)
     end
   end
 
@@ -265,6 +274,7 @@ module When::TM
       # @option options [When::TM::Clock, When::V::Timezone, When::Parts::Timezone, String] :clock 時法の指定
       # @option options [String] :tz 時法の指定(時間帯を指定する場合 :clock の替わりに用いることができる)
       # @option options [Array<Numeric>] :abbr ISO8601上位省略形式のためのデフォルト日付(省略時 指定なし)
+      # @option options [Integer] :extra_year_digits ISO8601拡大表記のための年の構成要素拡大桁数(省略時 1桁)
       # @option options [String] :wkst ISO8601週日形式のための暦週開始曜日(省略時 'MO')
       # @option options [Integer] :precision 生成するオブジェクトの分解能
       # @option options [When::TimeStandard::TimeStandard] :time_standard 時刻系の指定(省略時 When::TimeStandard::UnversalTime)
@@ -430,12 +440,13 @@ module When::TM
         clock = Clock.get_clock_option(query)
         main[:clock] = clock if clock
         [:indeterminated_position, :frame, :events, :precision,
-         :era_name, :era, :abbr, :wkst, :time_standard, :location].each do |key|
+         :era_name, :era, :abbr, :extra_year_digits, :wkst, :time_standard, :location].each do |key|
           main[key] = query.delete(key) if (query.key?(key))
         end
         long = query.delete(:long)
         lat  = query.delete(:lat)
-        main[:location] ||= "_l:long=#{long}&lat=#{lat}" if long && lat
+        alt  = query.delete(:alt)
+        main[:location] ||= "_l:long=#{long||0}&lat=#{lat||0}&alt=#{alt||0}" if long && lat
         trans = query.delete(:trans) || {}
         [:lower, :upper, :count].each do |key|
           trans[key] = query.delete(key) if (query.key?(key))
@@ -444,6 +455,13 @@ module When::TM
         main[:query] = query if (query.size > 0)
         main[:trans] = trans if (trans.size > 0)
         return main
+      end
+
+      # 比較
+      # @private
+      def _verify(source, target)
+        return source.universal_time <=> target.universal_time if source.time_standard.equal?(target.time_standard)
+        return source.dynamical_time <=> target.dynamical_time
       end
 
       private
@@ -503,9 +521,10 @@ module When::TM
     #
     def time_standard
       return @time_standard if @time_standard.kind_of?(When::TimeStandard)
-      @time_standard = When.Resource(@time_standard ||
-                                (frame ? frame.time_standard : nil) ||
-                                'UniversalTime', '_t:')
+      @time_standard ||= clock.time_standard if respond_to?(:clock) && clock
+      @time_standard ||= frame.time_standard if frame
+      @time_standard ||= 'UniversalTime'
+      @time_standard   = When.Resource(@time_standard, '_t:')
     end
 
     # 時間の歩度
@@ -664,7 +683,8 @@ module When::TM
       when Integer        ; self + PeriodDuration.new(other, When::DAY)
       when Numeric        ; self + IntervalLength.new(other, 'day')
       when PeriodDuration ; _plus(other)
-      when Duration       ; @frame.jul_trans(JulianDate.dynamical_time(dynamical_time + other.duration), self._attr)
+      when Duration       ; @frame.kind_of?(Calendar) ? @frame.jul_trans(JulianDate.dynamical_time(dynamical_time + other.duration), self._attr) :
+                                                                         JulianDate.dynamical_time(dynamical_time + other.duration,  self._attr)
       else                ; raise TypeError, "The right operand should be Numeric or Duration"
       end
     rescue RangeError
@@ -686,7 +706,8 @@ module When::TM
       when Integer        ; self - PeriodDuration.new(other, When::DAY)
       when Numeric        ; self - IntervalLength.new(other, 'day')
       when PeriodDuration ; _plus(-other)
-      when Duration       ; @frame.jul_trans(JulianDate.dynamical_time(dynamical_time - other.duration), self._attr)
+      when Duration       ; @frame.kind_of?(Calendar) ? @frame.jul_trans(JulianDate.dynamical_time(dynamical_time - other.duration), self._attr) :
+                                                                         JulianDate.dynamical_time(dynamical_time - other.duration,  self._attr)
       else                ; raise TypeError, "The right operand should be Numeric, Duration or TemporalPosition"
       end
     rescue RangeError
@@ -711,7 +732,7 @@ module When::TM
     #   分解能に対応する Duration だけ,日時を戻す
     #
     def prev
-    @precision==When::DAY ? _force_euqal_day(-1) : self-period
+      @precision==When::DAY ? _force_euqal_day(-1) : self-period
     rescue RangeError
       (When.Calendar('Gregorian') ^ self) - period
     end
@@ -723,7 +744,7 @@ module When::TM
     #   分解能に対応する Duration だけ,日時を進める
     #
     def succ
-    @precision==When::DAY ? _force_euqal_day(+1) : self+period
+      @precision==When::DAY ? _force_euqal_day(+1) : self+period
     rescue RangeError
       (When.Calendar('Gregorian') ^ self) + period
     end
@@ -773,7 +794,24 @@ module When::TM
       return self == date
     end
 
+    # オブジェクトの同値
+    #
+    # @param [比較先] other
+    #
+    # @return [Boolean]
+    #   [ true  - 同値   ]
+    #   [ false - 非同値 ]
+    #
+    def ==(other)
+      (self <=> other) == 0
+    rescue
+      false
+    end
+
     # 大小比較
+    #
+    # @param [When::TM::TemporalPosition] other チェックされる日時
+    # @param [Numeric] other チェックされる日時の universal time(self と同じtime_standardとみなす)
     #
     # @return [Integer] (-1, 0, 1)
     #
@@ -782,32 +820,34 @@ module When::TM
     #     Ex. when?('2011-03') <=> when?('2011-03-10') -> 0
     #
     def <=>(other)
-      other  = other.first if other.kind_of?(When::Parts::GeometricComplex)
+      other = other.first if other.kind_of?(Range)
+      return universal_time <=> other if other.kind_of?(Numeric)
+
       [self.indeterminated_position, other.indeterminated_position].each do |position|
         prec = SYSTEM if [TimeValue::Min, TimeValue::Max].include?(position)
       end
       prec   = [self.precision, other.precision].min unless prec
+
       case prec
       when DAY    ; return self.to_i <=> other.to_i
-      when SYSTEM ; src, dst = self, other
-      else
-        if prec < DAY && respond_to?(:most_significant_coordinate) &&
-                   other.respond_to?(:most_significant_coordinate) && @frame.equal?(other.frame)
-          result = most_significant_coordinate <=> other.most_significant_coordinate
-          return result unless result == 0 && @cal_date.length + prec > 1
-          (@cal_date.length + prec - 2).times do |i|
-            result = @cal_date[i+1] <=> other.cal_date[i+1]
-            return result unless result == 0
-          end
-          return @cal_date[prec - 1] <=> other.cal_date[prec - 1]
-        end
-        src, dst =
-          [(prec >= self.precision ) ? self  : self.floor(prec),
-           (prec >= other.precision) ? other : other.floor(prec)]
+      when SYSTEM ; return TemporalPosition._verify(self, other)
       end
-      return src.to_i <=> dst.to_i if prec <= DAY
-      return src.universal_time <=> dst.universal_time if src.time_standard.equal?(dst.time_standard)
-      return src.dynamical_time <=> dst.dynamical_time
+
+      if prec < DAY && respond_to?(:most_significant_coordinate) &&
+                 other.respond_to?(:most_significant_coordinate) && @frame.equal?(other.frame)
+        result = most_significant_coordinate <=> other.most_significant_coordinate
+        return result unless result == 0 && @cal_date.length + prec > 1
+        (@cal_date.length + prec - 2).times do |i|
+          result = @cal_date[i+1] <=> other.cal_date[i+1]
+          return result unless result == 0
+        end
+        @cal_date[prec - 1] <=> other.cal_date[prec - 1]
+      else
+        source = (prec >= self.precision ) ? self  : self.floor(prec)
+        target = (prec >= other.precision) ? other : other.floor(prec)
+        return source.to_i <=> target.to_i if prec <= DAY
+        TemporalPosition._verify(source, target)
+      end
     end
 
     # 条件を満たすオブジェクトの抽出
@@ -891,10 +931,12 @@ module When::TM
     # @private
     def _attr
       attributes = {}
-      ['frame', 'events', 'precision', 'options', 'trans', 'query', 'time_standard'].each do |key|
-        attributes[key.to_sym] = instance_variable_get("@#{key}")
+      [:frame, :events, :precision, :options, :trans, :query].each do |key|
+        attributes[key] = instance_variable_get("@#{key}")
       end
-      return attributes
+      attributes[:location]      = location
+      attributes[:time_standard] = time_standard
+      return attributes.delete_if {|k,v| !v}
     end
 
     protected
@@ -965,6 +1007,8 @@ module When::TM
       end
     end
 
+    alias :_method_missing :method_missing
+
     # その他のメソッド
     #
     # @note
@@ -972,7 +1016,14 @@ module When::TM
     #   処理を @frame (type: When::TM::Calendar or When::TM::Clock) に委譲する
     #
     def method_missing(name, *args, &block)
-      @frame.send(name.to_sym, self, *args, &block)
+      
+      return _method_missing(name, *args, &block) if When::Parts::MethodCash::Escape.key?(name)
+      self.class.module_eval %Q{
+        def #{name}(*args, &block)
+          @frame.send("#{name}", self, *args, &block)
+        end
+      } unless When::Parts::MethodCash.escape(name)
+      @frame.send(name, self, *args, &block)
     end
   end
 
@@ -1016,29 +1067,29 @@ module When::TM
         case time
         when Numeric
           options[:frame] ||= When.utc unless time.kind_of?(Integer)
-          external_time     = (2*time - (2*JulianDate::JD19700101-1)) * Duration::DAY.to_i / 2.0
+          universal_time     = (2*time - (2*JulianDate::JD19700101-1)) * Duration::DAY.to_i / 2.0
         when ClockTime
           options[:frame] ||= time.clock
-          external_time     = time.clk_time[0] + time.universal_time
+          universal_time     = time.clk_time[0] + time.universal_time
         when ::Time
           options[:frame] ||= When.Clock(time.gmtoff)
-          external_time     = When.Resource('_t:UniversalTime').from_time_object(time)
+          universal_time     = When.Resource('_t:UniversalTime').from_time_object(time)
         when TimeValue
           options[:frame] ||= time.clock
-          external_time     = time.universal_time
+          universal_time     = time.universal_time
         else
           if ::Object.const_defined?(:Date) && time.respond_to?(:ajd)
             case time
             when ::DateTime
               options[:frame] ||= When.Clock((time.offset * 86400).to_i)
-              external_time    = (2*time.ajd - (2*JulianDate::JD19700101-1)) * Duration::DAY.to_i / 2.0
+              universal_time    = (2*time.ajd - (2*JulianDate::JD19700101-1)) * Duration::DAY.to_i / 2.0
             when ::Date
-              external_time    = JulianDate._d_to_t(time.jd)
+              universal_time    = JulianDate._d_to_t(time.jd)
             end
           end
         end
-        raise TypeError, "Can't create #{self} from #{time.class}" unless external_time
-        universal_time(external_time, options)
+        raise TypeError, "Can't create #{self} from #{time.class}" unless universal_time
+        universal_time(universal_time, options)
       end
     end
 
@@ -1073,8 +1124,8 @@ module When::TM
     # @return [When::TM::TemporalPosition]
     #
     def +(other)
-      raise TypeError,"The right operand should be IntervalLength" if other.kind_of?(PeriodDuration)
-      super
+      other = other.to_interval_length if other.kind_of?(PeriodDuration)
+      super(other)
     end
 
     # 減算
@@ -1085,8 +1136,8 @@ module When::TM
     # @return [When::TM::IntervalLength]   if other is a When::TM::TemporalPosition
     #
     def -(other)
-      raise TypeError,"The right operand should be IntervalLength or (Temporal)Position" if other.kind_of?(PeriodDuration)
-      super
+      other = other.to_interval_length if other.kind_of?(PeriodDuration)
+      super(other)
     end
 
     # オブジェクトの生成
@@ -1148,9 +1199,7 @@ module When::TM
     #
     def +(other)
       new_date = super
-      if new_date.frame && new_date.frame._need_validate
-        new_date.frame = new_date.frame._daylight(self.class.dynamical_time(new_date.dynamical_time, {:frame=>When.utc}))
-      end
+      new_date.frame = new_date.frame._daylight(new_date.universal_time) if new_date.frame && new_date.frame._need_validate
       return new_date
     end
 
@@ -1194,7 +1243,7 @@ module When::TM
     def initialize(universal_time, options={})
       @frame = options.delete(:frame)
       @frame = When.Clock(@frame) if (@frame.kind_of?(String))
-      @frame = @frame._daylight(self.class.universal_time(universal_time, {:frame=>When.utc})) if @frame && @frame._need_validate
+      @frame = @frame._daylight(universal_time) if @frame && @frame._need_validate
       precision    = options.delete(:precision)
       precision  ||= DAY unless @frame.kind_of?(Clock)
       @precision   = Index.precision(precision)
@@ -1311,7 +1360,7 @@ module When::TM
     #
     def initialize(time, options={})
       # 参照系の取得
-      @frame = (options[:frame] || Clock.local_time || When.utc)
+      @frame = options[:frame] || Clock.local_time
       @frame = When.Clock(@frame) if (@frame.kind_of?(String))
       options.delete(:frame)
 
@@ -1850,7 +1899,7 @@ module When::TM
       return @location if @location
       timezone = @clk_time.frame.tz_prop
       return nil unless timezone.kind_of?(When::Parts::Timezone)
-      @location = When.Resource("_l:long=#{timezone.longitude.to_f}&lat=#{timezone.latitude.to_f}")
+      @location = timezone.location
     end
 
     # 時刻情報のない When::TM::CalDate を返す
@@ -1880,7 +1929,7 @@ module When::TM
       case options[:time]
       when Array
         if clock._need_validate
-          new_clock = clock._daylight { |c| self.class.new(options[:date], options[:time], {:frame=>@frame, :clock=>c}) }
+          new_clock = clock._daylight([@frame, options[:date], options[:time]])
           options[:time] = options[:time].map {|t| t * 1}
         else
           new_clock = clock
@@ -1918,7 +1967,7 @@ module When::TM
       unless options[:validate]
         clock   = Clock.get_clock_option(options)
         clock ||= options[:time].frame if options[:time].kind_of?(ClockTime)
-        clock ||= Clock.local_time || When.utc 
+        clock ||= Clock.local_time
       end
       clock = When.Clock(clock) if (clock.kind_of?(String))
       clock_is_timezone = clock.respond_to?(:daylight)
@@ -1964,7 +2013,7 @@ module When::TM
           else
             cal_date     = @cal_date
           end
-          clock = clock._daylight {|clock| self.class.new(cal_date, time, {:frame=>@frame, :clock=>clock}) }
+          clock = clock._daylight([@frame, cal_date, time])
         end
         time = time.map {|t| t * 1}
         @clk_time = ClockTime.new(time, {:frame=>clock, :precision=>precision, :validate=>:done}) if clock_is_timezone

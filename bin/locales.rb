@@ -54,7 +54,8 @@ site.get('/svenfuchs/rails-i18n/tree/master/rails/locale').body.scan(/>([^> ]+?)
   end
   yaml = YAML.load(locale)
   next unless yaml
-  yaml[code]['time']['formats']['time'] ||= yaml[code]['time']['formats']['default'][/%H.*$/].sub(/\s*%Y.*$/,'')
+  time_format = yaml[code]['time']['formats']['default'][/%H.*$/]
+  yaml[code]['time']['formats']['time'] ||= time_format.sub(/\s*%Y.*$/,'') if time_format
   yamls[code.sub(/-/,'_')] = {'date'=>yaml[code]['date'], 'time'=>yaml[code]['time'], 'datetime'=>yaml[code]['datetime']}
 end
 

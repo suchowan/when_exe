@@ -54,9 +54,9 @@ module When::TimeStandard
      [2454832.5, 34.0],
      [2456109.5, 35.0]]
 
-  DeltaT  = [                                                       63.47, # 1999
-     63.83, 64.09, 64.30, 64.47, 64.57, 64.69, 64.85, 65.15, 65.46, 65.78, # 2000-
-     66.07, 66.32, 66.60                                                   # 2010-
+  DeltaT  = [                                                                63.467, # 1999
+     63.827, 64.092, 64.300, 64.473, 64.573, 64.689, 64.846, 65.145, 65.456, 65.779, # 2000-
+     66.070, 66.324, 66.603, 66.909                                                  # 2010-
   ]
 
   class << self
@@ -305,6 +305,83 @@ module When::TimeStandard
   DeltaThreshold = DeltaT[-2] - delta_t_observed_poly(YearThreshold)
 
   #
+  # When::TM::Calendar のための TimeBasis の初期化
+  #
+  # @private
+  module TimeBasis
+
+    module FixedTimeBasis
+
+      private
+
+      # 太陽黄経のための日付境界のオフセットを反映した通日
+      #
+      # @param [Numeric] t ユリウス日(Terrestrial Time)
+      #
+      # @return [Integer]
+      #
+      def solar_sdn(t)
+        (t + 0.5 + @_time_basis_offset[0]).floor
+      end
+
+      # 月の位相のための日付境界のオフセットを反映した通日
+      #
+      # @param [Numeric] t ユリウス日(Terrestrial Time)
+      #
+      # @return [Integer]
+      #
+      def lunar_sdn(t)
+        (t + 0.5 + @_time_basis_offset[-1]).floor
+      end
+    end
+
+    module ApparentTimeBasis
+
+      private
+
+      # 太陽黄経のための日付境界のオフセットを反映した通日
+      #
+      # @param [Numeric] t ユリウス日(Terrestrial Time)
+      #
+      # @return [Integer]
+      #
+      def solar_sdn(t)
+        time_basis.time_standard.from_dynamical_date(t + 0.5 + @_time_basis_offset[0]).floor
+      end
+
+      # 月の位相のための日付境界のオフセットを反映した通日
+      #
+      # @param [Numeric] t ユリウス日(Terrestrial Time)
+      #
+      # @return [Integer]
+      #
+      def lunar_sdn(t)
+        time_basis.time_standard.from_dynamical_date(t + 0.5 + @_time_basis_offset[-1]).floor
+      end
+    end
+
+    #
+    # When::TM::Calendar のための TimeBasis の初期化
+    #
+    def _normalize_time_basis
+
+      @_time_basis ||= @time_basis || (@location ? @location.long / When::Coordinates::Spatial::DEGREE * 240 : When.utc)
+      @_time_basis   = When::Parts::Locale._split(@_time_basis) if @_time_basis.kind_of?(String)
+      @_time_basis   = [@_time_basis] unless @_time_basis.kind_of?(Array)
+      @_time_basis   = @_time_basis.map {|clock| When.Clock(clock)}
+      @_time_basis_offset = @_time_basis.map {|clock| -clock.universal_time / When::TM::Duration::DAY}
+
+      @time_basis = @_time_basis[0] if @time_basis
+
+      if @_time_basis[0].time_standard.kind_of?(LocalApparentTime)
+        class << self; include ApparentTimeBasis ; end
+      else
+        class << self; include FixedTimeBasis    ; end
+      end
+    end
+  end
+
+  #
   # 時刻系のひながた
   #
   class TimeStandard < When::BasicTypes::Object
@@ -497,7 +574,8 @@ module When::TimeStandard
     # @return [Numeric] local apparent time
     #
     def from_dynamical_time(time)
-      super(time) + When::TM::Duration::DAY * @datum.equation_of_time(When::TM::JulianDate._t_to_d(time))
+      super(time) + When::TM::Duration::DAY * (@location.long  / (360.0 * When::Coordinates::Spatial::DEGREE) +
+                                               @datum.equation_of_time(When::TM::JulianDate._t_to_d(time)))
     end
 
     private
@@ -505,7 +583,7 @@ module When::TimeStandard
     # オブジェクトの正規化
     def _normalize(args=[], options={})
       @location ||= '_l:long=0&lat=0'
-      @location   = When.Resource(@location.gsub(/%26/, '&')) if @location.kind_of?(String)
+      @location   = When.Resource(@location) if @location.kind_of?(String)
       @datum      = When.Resource(@datum    || '_ep:Earth'       )
       super
     end
@@ -556,11 +634,11 @@ module When::TimeStandard
       d, t = [-1, +1].map {|v| @formula.day_event(date, v, When.Resource('_ep:Sun'), @height)}
 
       if    date < d # after midnight
-        t = @formula.sun_set(date-1, @height)
+        t = @formula.sunset(date-1, @height)
         f = (date - t) / (d - t) / 2 - 0.25
 
       elsif date > t # before midnight
-        d = @formula.sun_rise(date+1, @height)
+        d = @formula.sunrise(date+1, @height)
         f = (date - t) / (d - t) / 2 - 0.25
 
       else           # day time

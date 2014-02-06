@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2013 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license
   described in the LICENSE.txt file included in this archive.
@@ -53,8 +53,8 @@ module Test
         date += When.Duration('P1Y')
       end
 
-      assert_equal("BCE3761(-3760).10.07",
-                   (When.era('BCE')[0] ^ When.Calendar('Jewish').domain.first).to_s)
+      assert_equal("Common::BCE3761(-3760).10.07",
+                   (When.era('BCE')[0] ^ When.Calendar('Jewish').domain[''].first).to_s)
 
     end
   end

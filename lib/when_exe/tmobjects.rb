@@ -255,7 +255,14 @@ module When::TM
     #   処理を @position (type: When::TM::Position) に委譲する
     #
     def method_missing(name, *args, &block)
-      @position.send(name.to_sym, *args, &block)
+      self.class.module_eval %Q{
+        def #{name}(*args, &block)
+          list = args.map {|arg| arg.kind_of?(self.class) ? arg.position : arg}
+          @position.send("#{name}", *list, &block)
+        end
+      } unless When::Parts::MethodCash.escape(name)
+      list = args.map {|arg| arg.kind_of?(self.class) ? arg.position : arg}
+      @position.send(name, *list, &block)
     end
   end
 
@@ -385,7 +392,12 @@ module When::TM
     #   処理を @begin (type: When::TM::Instant) に委譲する
     #
     def method_missing(name, *args, &block)
-      @begin.send(name.to_sym, *args, &block)
+      self.class.module_eval %Q{
+        def #{name}(*args, &block)
+          @begin.send("#{name}", *args, &block)
+        end
+      } unless When::Parts::MethodCash.escape(name)
+      @begin.send(name, *args, &block)
     end
   end
 
@@ -410,6 +422,8 @@ module When::TM
 
     private
 
+    alias :_method_missing :method_missing
+
     # その他のメソッド
     #
     # @note
@@ -417,7 +431,16 @@ module When::TM
     #   処理を @geometry (type: When::TM::Instant) に委譲する
     #
     def method_missing(name, *args, &block)
-      @geometry.send(name.to_sym, *args, &block)
+      return _method_missing(name, *args, &block) if When::Parts::MethodCash::Escape.key?(name) ||
+                                                     !respond_to?(:geometry)
+      self.class.module_eval %Q{
+        def #{name}(*args, &block)
+          list = args.map {|arg| arg.respond_to?(:geometry) ? arg.geometry : arg}
+          geometry.send("#{name}", *list, &block)
+        end
+      } unless When::Parts::MethodCash.escape(name)
+      list = args.map {|arg| arg.respond_to?(:geometry) ? arg.geometry : arg}
+      geometry.send(name, *list, &block)
     end
   end
 
@@ -828,7 +851,12 @@ module When::TM
     #   処理を @duration (type:Numeric) に委譲する
     #
     def method_missing(name, *args, &block)
-      @duration.send(name.to_sym, *args, &block)
+      self.class.module_eval %Q{
+        def #{name}(*args, &block)
+          @duration.send("#{name}", *args, &block)
+        end
+      } unless When::Parts::MethodCash.escape(name)
+      @duration.send(name, *args, &block)
     end
   end
 

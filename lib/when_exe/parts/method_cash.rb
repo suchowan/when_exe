@@ -51,6 +51,66 @@ module When::Parts
   #
   module MethodCash
 
+    # @private
+    Escape = {:to_str  => true,
+              :to_ary  => true,
+              :to_hash => true}
+
+    class << self
+
+      # '_' で終わるメソッドをキャッシュせずに毎回計算するか否か
+      #
+      # @return [Boolean] キャッシュしない true, キャッシュする false/nil
+      #
+      attr_accessor :direct
+
+      # When::Parts::MethodCash のグローバルな設定を行う
+      #
+      # @param [Boolean] direct '_' で終わるメソッドをキャッシュせずに毎回計算する場合 true, キャッシュする場合 false/nil
+      # @param [Hash{Symbol=>boolean}] escape 毎回 method_missing を発生させるメソッドを true にして指定
+      # @param [false, nil] escape to_str, to_ary, to_hash のみ毎回 method_missing を発生させる
+      # @param [true] escape すべて毎回 method_missing を発生させる
+      #
+      # @return [void]
+      #
+      # @note When::TM::Calendar クラスの一部はキャッシュ使用を前提としているため direct=true では動作しません
+      #
+      def _setup_(direct=false, escape=false)
+        @direct = direct
+        case escape
+        when true
+          instance_eval %Q{
+            def escape(method)
+              true
+            end
+          }
+        when Hash
+          @escape = Escape.merge(escape)
+          instance_eval %Q{
+            def escape(method)
+              @escape[method]
+            end
+          }
+        else
+          instance_eval %Q{
+            def escape(method)
+              Escape.key?(method)
+            end
+          }
+        end
+      end
+
+      # method_missing メソッドを forward するか否か
+      #
+      # @param [Symbol] method メソッドシンボル
+      #
+      # @return [boolean] true - しない, false/nil - する
+      #
+      def escape(method)
+        Escape.key?(method)
+      end
+    end
+
     alias :method_missing_ :method_missing
 
     #
@@ -65,6 +125,7 @@ module When::Parts
     def method_missing(name, *args, &block)
 
       return method_missing_(name, *args, &block) unless respond_to?("#{name}_", true)
+      return send("#{name}_",  *args, &block) if MethodCash.direct
 
       if ((name.to_s =~ /^(_*)(.+?)_to_(.+)$/) && respond_to?("#{$1}#{$3}_to_#{$2}_", true))
         prefix, from, to = $~[1..3]
