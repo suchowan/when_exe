@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2013 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -130,8 +130,36 @@ module When
       attr_reader :anomalistic_month_length
 
       # 元期の近点離隔
-       # @return [Numeric]
-     attr_reader :anomalistic_month_shift
+      # @return [Numeric]
+      attr_reader :anomalistic_month_shift
+
+      # 当該日付のthiti の変化範囲(唐代の定朔の暦法用 cn_to_time(1L) を使用する)
+      #
+      # @param [When::TM::TemporalPosition] date 日付
+      #
+      # @return [Range] 当該日付のthiti の変化範囲(朔を含む場合 nil)
+      #
+      def thiti_range(date)
+        date = date.floor
+        p0, p1 = [date, date.succ].map {|d|
+          t  = d.to_f
+          c  = (30.0 * ((t - CYCLE_0M) * @cycle_number_1m + @cycle_number_0m)).floor
+          t0 = t1 = nil
+          loop do
+            t0 = cn_to_time( c   / 30.0)
+            t1 = cn_to_time((c+1)/ 30.0)
+            if t0 > t
+              c -= 1
+            elsif t1 <= t
+              c += 1
+            else
+              break
+            end
+          end
+          (c + (t-t0) / (t1-t0)) % 30.0
+        }
+        p0 >= p1 ? nil : p0...p1
+      end
 
       private
 
@@ -156,8 +184,6 @@ module When
       # @return [Numeric] 補正量 / @denominator
       #
       def delta_s(t)
-
-        tt = t
 
         t0, a, b, c = nil
         @s.each do |v|
@@ -189,8 +215,6 @@ module When
       #
       def delta_m(t)
 
-        tt = t
-
         t *= @denominator
         a0 = b0 = t0 = 0
         @m.each do |v|
@@ -210,6 +234,7 @@ module When
         if @formula == '1L'
           @anomalistic_month_length =  @anomalistic_month_length.to_r
           @anomalistic_month_shift  = (@anomalistic_month_shift||0).to_r
+          @s = @s.map {|item| item.dup}
           (0...@s.size).each do |i|
             @s[i-1][1,0] = @year_length / @s.size + (@s[i][0]-@s[i-1][0]) / @denominator
           end
@@ -228,6 +253,14 @@ module When
     #
     class ChineseSolar < EphemerisBasedSolar
 
+      #
+      # @return [When::CalendarTypes::ChineseLuniSolar] 対で用いる太陰太陽暦の名前
+      #
+      attr_reader :twin
+
+      # @private
+      attr_reader :doyo
+
       private
 
       # オブジェクトの正規化
@@ -241,7 +274,6 @@ module When
         @formula           *= 2 if @formula.length == 1
         @formula[0]        += (@formula[0] =~ /\?/ ? '&' : '?') + 'formula=12S' if @formula[0].kind_of?(String)
         @formula[1]        += (@formula[1] =~ /\?/ ? '&' : '?') + 'formula=1L'  if @formula[1].kind_of?(String)
-        @timezone         ||=  0
         @note             ||= When.CalendarNote('ChineseNotes')
         @indices          ||= [
             When::Coordinates::Index.new({:trunk=>When.Resource('_m:ChineseTerms::Month::*')}),
@@ -256,13 +288,29 @@ module When
     #
     class ChineseLuniSolar < EphemerisBasedLuniSolar
 
+      #
+      # @return [When::CalendarTypes::ChineseSolar] 対で用いる太陽暦の名前
+      #
+      attr_reader :twin
+
+      # 指定の年の天正冬至を含む月以降１年分の閏月のパターン
+      #
+      # @param [Numeric] y 年
+      #
+      # @return [Array<Numeric:月番号>, Array<Numeric:中気のない月の月番号>]
+      #
+      def intercalary_pattern(y)
+        m = _base_month(y)
+        l = _base_ids(y)
+        [l, (0...l.size).to_a.map {|i| _intercalary?(m+i) ? l[i] : nil}.compact]
+      end
+
       private
 
       # オブジェクトの正規化
       #
       #   @cycle_offset = 雨水の場合 -1
       #   @formula      = 太陽黄経および月の位相の計算に用いるEphemeris
-      #   @timezone[1]  = 進朔量
       #
       def _normalize(args=[], options={})
         @label            ||= When.Resource('_m:ChineseTerms::ChineseLuniSolar')
@@ -277,7 +325,6 @@ module When
         @intercalary_span ||= 12
         @intercalary_span   =  @intercalary_span.to_i
         @intercalary_month  = (@intercalary_month.to_i - @base_month) % 12 + 1 if @intercalary_month
-        @timezone         ||= 0
         @note             ||= When.CalendarNote('ChineseNotes')
         @indices          ||= [
             When::Coordinates::Index.new({:branch=>{1=>When.Resource('_m:CalendarTerms::閏')},
@@ -312,10 +359,7 @@ module When
       # @return [Numeric] 天正冬至月の通月
       #
       def _base_month_(y)
-        (Residue.mod((@formula[0].cn_to_time(12*(y-1) + @base_month - @vernal_month) +
-          0.5 + @timezone[0]).floor) {|m|
-          _new_month(m)
-        })[0]
+        (Residue.mod(solar_sdn(@formula[0].cn_to_time(12*(y-1) + @base_month - @vernal_month))) {|m| _new_month(m)})[0]
       end
 
       # 暦年の翻訳表の取得
@@ -383,7 +427,7 @@ module When
       end
     end
 
-    Chinese = [When::BasicTypes::M17n, [
+    Chinese = [{}, When::BasicTypes::M17n, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=ja:, en=en:, alias]",
       "area:[中国,China]",
@@ -397,7 +441,7 @@ module When
       [ChineseLuniSolar,
         'name:[顓頊暦]',
         'formula:MeanLunation?year_length=1461/4&lunation_length=27759/940&day_epoch=1171396&longitude_shift=-1/8',
-        'timezone:0,+12',
+        'time_basis:+00,+#{P:12}',
         'intercalary_month:9'
       ],
 
@@ -501,12 +545,13 @@ module When
       ],
 
       [ChineseLuniSolar,
-        'name:[儀鳳暦]',
+        'name:[平朔儀鳳暦]',
         'formula:MeanLunation?year_length=122357/335&lunation_length=39571/1340&day_epoch=-96608689'
       ],
 
       [ChineseLuniSolar,
         'name:[麟徳暦]',
+        'time_basis:+00,+#{P:00}',
         {'formula'=>['12S', '1L'].map {|f|
           Ephemeris::ChineseTrueLunation.new({
             'formula'                  => f,
@@ -573,13 +618,15 @@ module When
               [1340.0,   -125],                    #   27日
               [ 743.0+1.0/12, -71]                 #   28日
             ]
-          })
-        }}
+         })
+        },
+        'doyo'   => (Rational( 4,15) +  244) / 1340
+       }
       ],
 
       [ChineseLuniSolar,
         'name:[大衍暦]',
-        'timezone:0,+6',
+        'time_basis:+00,+#{P:03}',
         {'formula'=>['12S', '1L'].map {|f|
           Ephemeris::ChineseTrueLunation.new({
             'formula'                  => f,
@@ -647,13 +694,15 @@ module When
               [3040.0,   +276],                    #   27日
               [1686.0,   +165]                     #   28日
             ]
-          })
-        }}
+         })
+        },
+        'doyo'   => (Rational(13,30) +  531) / 3040
+       }
       ],
 
       [ChineseLuniSolar,
         'name:[五紀暦]',
-        'timezone:0,+6',
+        'time_basis:+00,+#{P:06}',
         {'formula'=>['12S', '1L'].map {|f|
           Ephemeris::ChineseTrueLunation.new({
             'formula'                  => f,
@@ -720,13 +769,20 @@ module When
               [1340.0,   -125],                    #   27日
               [ 743.0+5.0/37, -75]                 #   28日
             ]
-          })
-        }}
+         })
+        },
+        'doyo'   => (Rational( 4,15) +  244) / 1340
+       }
+      ],
+
+      [ChineseSolar,
+        'name:[正元暦(節月)]',
+        'formula:MeanLunation?year_length=399943/1095&lunation_length=32336/1095&day_epoch=-145149709'
       ],
 
       [ChineseLuniSolar,
         'name:[宣明暦]',
-        'timezone:0,+6',
+        'time_basis:+00,+#{P:06}',
         {'formula'=>['12S', '1L'].map {|f|
           Ephemeris::ChineseTrueLunation.new({
             'formula'                  => f,
@@ -793,8 +849,10 @@ module When
               [ 8400.0,   +740],                    #   13日
               [ 6529.095, +646]                     #   14日
             ]
-          })
-        }}
+         })
+        },
+        'doyo'   => (Rational( 1, 2) + 1468) / 8400
+       }
       ],
 
       [ChineseSolar,
@@ -808,12 +866,12 @@ module When
       ],
 
       [ChineseSolar,
-        'name:[前々宝暦暦(節月)]',
+        'name:[貞享補暦A(節月)]',
         'formula:VariableYearLengthMethod?day_epoch=2336118.903800&year_epoch=1684&year_length=365.241696&year_delta=1'
       ],
 
       [ChineseSolar,
-        'name:[前宝暦暦(節月)]',
+        'name:[貞享補暦B(節月)]',
         'formula:VariableYearLengthMethod?day_epoch=2336118.622300&year_epoch=1684&year_length=365.241696&year_delta=1'
       ],
 
@@ -833,9 +891,11 @@ module When
       ]
     ].inject([]) {|list, cal|
       if cal.kind_of?(Array) && cal[0] == ChineseLuniSolar
-        twin       = cal.dup
-        twin[0..1] = [ChineseSolar, cal[1].sub(/\]/, '(節月)]')]
-        list << cal << twin
+        solar_name  = cal[1].sub(/\]/, '(節月)]')
+        lunisolar   = cal.dup << 'twin:Chinese::' + solar_name.gsub(/(name:\[|\])/,'')
+        solar       = cal.dup << 'twin:Chinese::' + cal[1].gsub(/(name:\[|\])/,'')
+        solar[0..1] = [ChineseSolar, solar_name]
+        list << lunisolar << solar
       else
         list << cal
       end

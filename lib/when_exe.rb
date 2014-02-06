@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2013 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -22,6 +22,7 @@ end
 
 autoload :URI,     'uri'
 autoload :OpenURI, 'open-uri'
+autoload :OpenSSL, 'openssl'
 autoload :JSON,    'json'
 autoload :REXML,   'rexml/document'
 autoload :Mutex,   'thread' unless Object.const_defined?(:Mutex)
@@ -47,6 +48,7 @@ module When
     #
     # @param [Hash] options
     # @option options [When::TM::Clock, When::V::Timezone, When::Parts::Timezone] :local        デフォルトの地方時
+    # @option options [When::Coordinates::Spatial]  :location     デフォルトの空間位置
     # @option options [When::TM::IntervalLength]    :until        V::Event::Enumerator の until
     # @option options [Hash{String=>String}]        :alias        Locale の読替パターン         ({ 読替前のlocale=>読替後のlocale })
     # @option options [Hash{String=>String}]        :unification  漢字の包摂パターン            ({ 包摂前の文字列=>包摂後の文字列 })
@@ -54,6 +56,8 @@ module When
     # @option options [Hash{String=>Array, String}] :format       strftime で用いる記号の定義   ({ 記号=>[ 書式,項目名 ] or 記号列 })
     # @option options [Array<Array>]                :leap_seconds 閏秒の挿入記録                ([ [JD, TAI-UTC, (MJD, OFFSET)] ])
     # @option options [Boolean]                     :multi_thread マルチスレッド対応            (true: 対応, false/nil: 非対応)
+    # @option options [Boolean]                     :direct       '_' で終わるメソッドをキャッシュせずに毎回計算するか否か
+    # @option options [Hash{Symbol=>boolean}]       :escape       毎回 method_missing を発生させるメソッドを true にする
     #
     # @return [void]
     #
@@ -63,8 +67,10 @@ module When
     #
     def _setup_(options={})
       @multi_thread = options[:multi_thread]
+      Parts::MethodCash._setup_(options[:direct], options[:escape])
       Parts::Resource._setup_
       Parts::Locale._setup_(options)
+      Coordinates::Spatial._setup_(options[:location])
       TM::CalendarEra._setup_(options[:order])
       TM::Calendar._setup_
       TM::Clock._setup_(options[:local])
@@ -182,6 +188,9 @@ module When
     end
 
     class CalendarNote
+      autoload :SolarTerms,          'when_exe/region/ephemeric_notes'
+      autoload :LunarPhases,         'when_exe/region/ephemeric_notes'
+      autoload :EphemericNote,       'when_exe/region/ephemeric_notes'
       autoload :JapaneseNote,        'when_exe/region/japanese_notes'
       autoload :BalineseNote,        'when_exe/region/balinese'
       autoload :RomanNote,           'when_exe/region/roman'
@@ -194,12 +203,15 @@ module When
       JavaneseNotes  = [['Javanese::Windu'], ['_m:CalendarTerms::Month'],
                         ['Javanese::Pasaran', 'Javanese::Paringkelan', 'Javanese::Week', 'Javanese::Wuku']]
       ChineseNotes   = [['CommonResidue::干支'], ['_m:CalendarTerms::Month'], ['CommonResidue::干支']]
+      TibetanNotes   = [['Tibetan::干支'], ['_m:CalendarTerms::Month'], []]
       YiNotes        = [['Yi::YearName'], ['_m:CalendarTerms::Month'], []]
-      MayanNotes     = [["Mayan::Trecena", "Mayan::Tzolk'in", "Mayan::Lords_of_the_Night", "Mayan::Haab'"]]
+      MayanNotes     = [{'0B'=>{'Base'=>'?Epoch=0D'}, '2B'=>{'Base'=>'?Epoch=2D'}},
+                        ['Mayan#{Base:}::Trecena', 'Mayan#{Base:}::Tzolk\'in', 'Mayan#{Base:}::Lords_of_the_Night', 'Mayan#{Base:}::Haab\'']]
     end
   end
 
   module Coordinates
+    autoload :Tibetan,               'when_exe/region/tibetan'
     autoload :Yi,                    'when_exe/region/chinese'
     autoload :Javanese,              'when_exe/region/javanese'
     autoload :IndianCities,          'when_exe/region/indian'
@@ -225,42 +237,52 @@ module When
   end
 
   module TM
-    autoload :GeologicalAge,           'when_exe/region/geologicalage'
+    class OrdinalReferenceSystem
+      autoload :GeologicalAge,           'when_exe/region/geologicalage'
+    end
+
     class CalendarEra
-      autoload :Japanese,              'when_exe/region/japanese'
-      autoload :JapanesePrimeMinister, 'when_exe/region/japanese'
-      autoload :NihonKoki,             'when_exe/region/nihon_shoki'
-      autoload :NihonShoki,            'when_exe/region/nihon_shoki'
-      autoload :Chinese,               'when_exe/region/chinese_epoch'
-      autoload :Ryukyu,                'when_exe/region/ryukyu'
-      autoload :Korean,                'when_exe/region/korean'
-      autoload :Vietnamese,            'when_exe/region/vietnamese'
-      autoload :Manchurian,            'when_exe/region/far_east'
-      autoload :Rouran,                'when_exe/region/far_east'
-      autoload :Gaochang,              'when_exe/region/far_east'
-      autoload :Yunnan,                'when_exe/region/far_east'
-    # autoload :Tibetan,               'when_exe/region/tibetan'
-      autoload :Balinese,              'when_exe/region/balinese'
-      autoload :Javanese,              'when_exe/region/javanese'
-      autoload :Indian ,               'when_exe/region/indian'
-      autoload :Iranian,               'when_exe/region/iranian'
-      autoload :Hijra,                 'when_exe/region/islamic'
-      autoload :Jewish,                'when_exe/region/jewish'
-      autoload :Roman,                 'when_exe/region/roman'
-      autoload :Julian,                'when_exe/region/roman'
-      autoload :Pope,                  'when_exe/region/pope'
-      autoload :Byzantine,             'when_exe/region/christian'
-      autoload :French,                'when_exe/region/french'
-      autoload :World,                 'when_exe/region/world'
-      autoload :Mayan,                 'when_exe/region/mayan'
+      autoload :Japanese,                'when_exe/region/japanese'
+      autoload :JapanesePrimeMinister,   'when_exe/region/japanese'
+      autoload :NihonKoki,               'when_exe/region/nihon_shoki'
+      autoload :NihonShoki,              'when_exe/region/nihon_shoki'
+      autoload :JapaneseSolarSeries,     'when_exe/region/japanese_notes'
+      autoload :JapaneseLuniSolarSeries, 'when_exe/region/japanese_notes'
+      autoload :Chinese,                 'when_exe/region/chinese_epoch'
+      autoload :ChineseSolarSeries,      'when_exe/region/chinese_epoch'
+      autoload :ChineseLuniSolarSeries,  'when_exe/region/chinese_epoch'
+      autoload :Ryukyu,                  'when_exe/region/ryukyu'
+      autoload :Korean,                  'when_exe/region/korean'
+      autoload :Vietnamese,              'when_exe/region/vietnamese'
+      autoload :Manchurian,              'when_exe/region/far_east'
+      autoload :Rouran,                  'when_exe/region/far_east'
+      autoload :Gaochang,                'when_exe/region/far_east'
+      autoload :Yunnan,                  'when_exe/region/far_east'
+    # autoload :Tibetan,                 'when_exe/region/tibetan'
+      autoload :BalineseLuniSolar,       'when_exe/region/balinese'
+      autoload :JavaneseLunar,           'when_exe/region/javanese'
+      autoload :IndianNationalSolar,     'when_exe/region/indian'
+      autoload :Iranian,                 'when_exe/region/iranian'
+      autoload :Hijra,                   'when_exe/region/islamic'
+      autoload :Jewish,                  'when_exe/region/jewish'
+      autoload :Roman,                   'when_exe/region/roman'
+      autoload :Julian,                  'when_exe/region/roman'
+      autoload :Pope,                    'when_exe/region/pope'
+      autoload :Byzantine,               'when_exe/region/christian'
+      autoload :French,                  'when_exe/region/french'
+      autoload :World,                   'when_exe/region/world'
+      autoload :LongCount,               'when_exe/region/mayan'
 
       # Defualt search path for Epochs and Eras
-      DefaultEpochs = ['Common',     'ModernJapanese',
-                       'Indian',     'Iranian',   'Hijra',    'Jewish',
-                        'Roman',     'Byzantine', 'French',   'World', 'Mayan',
-                       'Balinese',   'Javanese',
+      DefaultEpochs = ['Common',     'Common?Reform=1752.09.14', 'ModernJapanese',
+                       'IndianNationalSolar',  'Iranian',   'Hijra',    'Jewish',
+                       'Roman',      'Byzantine', 'French',   'World',
+                       'LongCount',  'LongCount?Epoch=0D', 'LongCount?Epoch=2D',
+                       'BalineseLuniSolar',  'JavaneseLunar',
                        'Japanese',   'JapanesePrimeMinister', 'NihonKoki', 'NihonShoki',
                        'Chinese',    'Ryukyu',  'Vietnamese', 'Korean',
+                       'JapaneseSolarSeries', 'JapaneseLuniSolarSeries',
+                       'ChineseSolarSeries',  'ChineseLuniSolarSeries',
                        'Manchurian', 'Rouran',  'Gaochang',   'Yunnan', # 'Tibetan',
                        'Pope' ]
 
@@ -275,22 +297,22 @@ module When
       }.flatten)]
 
       # Common Era
-      Common = [self, [
-        "namespace:[en=http://en.wikipedia.org/wiki/]",
-        "area:[Common]",
-        ["[BeforeCommonEra=en:BCE_(disambiguation),*alias:BCE]0.1.1"],
-        ["[CommonEra=en:Common_Era,*alias:CE]1.1.1", "Calendar Epoch", "01-01-01^Julian"],
-        ["[CommonEra=en:Common_Era,*alias:CE]1582.10.15", "Calendar Reform", "1582-10-15^Gregorian"]
+      Common = [{}, self, [
+        'namespace:[en=http://en.wikipedia.org/wiki/]',
+        'area:Common#{?Reform=Reform}',
+        ['[BeforeCommonEra=en:BCE_(disambiguation),*alias:BCE]0.1.1'],
+        ['[CommonEra=en:Common_Era,*alias:CE]1.1.1', 'Calendar Epoch', '01-01-01^Julian'],
+        ['[CommonEra=en:Common_Era,*alias:CE]#{Reform:1582.10.15}', 'Calendar Reform', '#{Reform:1582.10.15}^Gregorian']
       ]]
 
       # Modern Japanese Eras after the calendar reform to the Gregorian Calendar
       ModernJapanese = [self, [
-        "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
-        "area:[Japan]",
-        ["[M=,alias:明=ja:明治]6.01.01", "Calendar Reform", "1873-01-01^Gregorian?note=DefaultNotes"],
-        ["[T=,alias:大=ja:大正]1.07.30", "Accession",       "1912-07-30"],
-        ["[S=,alias:昭=ja:昭和]1.12.25", "Accession",       "1926-12-25"],
-        ["[H=,alias:平=ja:平成]1.01.08", "Accession",       "1989-01-08"]
+        'namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]',
+        'area:[ModernJapanese]',
+        ['[M=,alias:明=ja:明治]6.01.01', '@CR', '1873-01-01^Gregorian?note=DefaultNotes'],
+        ['[T=,alias:大=ja:大正]1.07.30', '@A',  '1912-07-30'],
+        ['[S=,alias:昭=ja:昭和]1.12.25', '@A',  '1926-12-25'],
+        ['[H=,alias:平=ja:平成]1.01.08', '@A',  '1989-01-08']
       ]]
     end
   end
@@ -358,7 +380,7 @@ module When
     # 時間位置の生成
     date = Array.new(options[:frame].indices.length+1) {args.shift}
     if (args.length > 0)
-      options[:clock] ||= TM::Clock.local_time || utc
+      options[:clock] ||= TM::Clock.local_time
       time = Array.new(options[:clock].indices.length) {args.shift}
       position = TM::DateAndTime.new(date, time.unshift(0), options)
     else
@@ -398,8 +420,8 @@ module When
     options = options._attr if options.kind_of?(TM::TemporalPosition)
     options[:frame] ||= 'Gregorian'
     options[:frame]   = Resource(options[:frame], '_c:') if options[:frame].kind_of?(String)
-    clock = TM::Clock.get_clock(options)
-    jdt  = TM::JulianDate.universal_time(time.to_f * TM::IntervalLength::SECOND, {:frame=>clock})
+    options[:clock] ||= Clock(time.utc_offset) if time.kind_of?(::Time)
+    jdt  = TM::JulianDate.universal_time(time.to_f * TM::IntervalLength::SECOND, {:frame=>TM::Clock.get_clock(options)})
     options[:clock]   = jdt.frame
     date = options[:frame].jul_trans(jdt, options)
     date = TM::CalDate.new(date.cal_date, options) if options[:precision] &&

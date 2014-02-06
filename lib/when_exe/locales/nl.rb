@@ -12,7 +12,7 @@ module When::BasicTypes
 
     Locale_nl =
 {"date"=>
-  {"abbr_day_names"=>["zon", "maa", "din", "woe", "don", "vri", "zat"],
+  {"abbr_day_names"=>["zo", "ma", "di", "wo", "do", "vr", "za"],
    "abbr_month_names"=>
     [nil,
      "jan",
@@ -35,7 +35,7 @@ module When::BasicTypes
      "donderdag",
      "vrijdag",
      "zaterdag"],
-   "formats"=>{"default"=>"%d/%m/%Y", "long"=>"%e %B %Y", "short"=>"%e %b"},
+   "formats"=>{"default"=>"%d-%m-%Y", "long"=>"%e %B %Y", "short"=>"%e %b"},
    "month_names"=>
     [nil,
      "januari",

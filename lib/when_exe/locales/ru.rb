@@ -35,7 +35,7 @@ module When::BasicTypes
      "четверг",
      "пятница",
      "суббота"],
-   "formats"=>{"default"=>"%d.%m.%Y", "long"=>"%d %B %Y", "short"=>"%d %b"},
+   "formats"=>{"default"=>"%d.%m.%Y", "long"=>"%-d %B %Y", "short"=>"%-d %b"},
    "month_names"=>
     [nil,
      "января",

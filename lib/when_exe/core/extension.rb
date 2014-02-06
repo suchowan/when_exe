@@ -5,6 +5,7 @@
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
 
+require 'date'
 require 'when_exe/core/duration'
 
 #
@@ -27,6 +28,7 @@ class Time
   # @note core/extension
   #
   def julian_date(options={})
+    options[:clock] ||= Clock(self.utc_offset)
     When::TM::JulianDate.universal_time(self.to_f * When::TM::IntervalLength::SECOND, options)
   end
   alias :to_julian_date :julian_date
@@ -55,6 +57,33 @@ class Date
 
   include When::TM::TemporalPosition::Conversion if When::TM.const_defined?(:TemporalPosition)
 
+  alias :__method_missing :method_missing
+
+  # その他のメソッド
+  #
+  # @note
+  #   self で定義されていないメソッドは
+  #   tm_position で変換して処理する
+  #
+  def method_missing(name, *args, &block)
+    return __method_missing(name, *args, &block) if When::Parts::MethodCash::Escape.key?(name)
+    self.class.module_eval %Q{
+      def #{name}(*args, &block)
+        result = tm_position.send("#{name}", *args, &block)
+        case result
+        when When::TM::DateAndTime ; result.to_date_time
+        when When::TM::CalDate     ; result.to_date
+        else                       ; result
+        end
+      end
+    } unless When::Parts::MethodCash.escape(name)
+    result = tm_position.send(name, *args, &block)
+    case result
+    when When::TM::DateAndTime ; result.to_date_time
+    when When::TM::CalDate     ; result.to_date
+    else                       ; result
+    end
+  end
 end
 
 #
@@ -392,4 +421,15 @@ class Array
     When.TemporalPosition(*(self.dup << options))
   end
   alias :to_tm_position :tm_position
+
+  # self を[幹,枝]と解釈してWhen::Coordinates::Pair を生成
+  #
+  # @see When::Coordinates::Pair._force_pair
+  #
+  # @return [When::Coordinates::Pair]
+  #
+  def to_pair
+    Coordinates::Pair._force_pair(*self)
+  end
+  alias :pair :to_pair
 end

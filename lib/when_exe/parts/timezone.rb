@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2013 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -14,6 +14,36 @@ module When::Parts
   # TZInfo::Timezone クラスを本ライブラリから使用するためのラッパークラス
   #
   class Timezone
+
+    #
+    # When::V::Timezone と Qhwn::Parts::Timezone の抽象基底
+    # 
+    module Base
+      # 標準時間帯の時計
+      # @return [When::TM::Clock]
+      attr_reader :standard
+
+      # 夏時間帯の時計
+      # @return [When::TM::Clock]
+      attr_reader :daylight
+
+      # 夏時間帯と標準時間帯の時間差
+      # @return [When::TM:IntervalLength]
+      attr_reader :difference
+
+      # When::TM::TemporalPosition の時間帯を変更して複製する
+      #
+      # @param [When::TM::CalDate, When::TM::DateAndTime, When::TM::JulianDate] date
+      # @param [Hash] options see {When::TM::TemporalPosition._instance}
+      #
+      # @return [When::TM::DateAndTime, When::TM::JulianDate]
+      #
+      def ^(date, options={})
+        options = date._attr.merge({:clock=>self}).merge(options)
+        return When::TM::JulianDate.dynamical_time(date.dynamical_time, options) unless date.frame.kind_of?(When::TM::Calendar)
+        date.frame.jul_trans(When::TM::JulianDate.dynamical_time(date.dynamical_time), options)
+      end
+    end
 
     class << self
       include Resource::Pool
@@ -64,21 +94,11 @@ module When::Parts
       end
     end
 
+    include Base
+
     # ラップしている TZInfo::Timezone インスタンス
     # @return [TZInfo::Timezone]
     attr_reader :timezone
-
-    # 標準時間帯の時計
-    # @return [When::TM::Clock]
-    attr_reader :standard
-
-    # 夏時間帯の時計
-    # @return [When::TM::Clock]
-    attr_reader :daylight
-
-    # 夏時間帯と標準時間帯の時間差
-    # @return [When::TM:IntervalLength]
-    attr_reader :difference
 
     # ユニーク識別名
     # @return [String]
@@ -96,6 +116,14 @@ module When::Parts
     # @return [Rational]
     def latitude
       self.class.tz_info[label].latitude
+    end
+
+    # 時間帯を代表する都市の空間位置
+    # @return [When::Coordinates::Spatial]
+    def location
+      return @location if @location
+      tzinfo = self.class.tz_info[label]
+      @location = When.Resource("_l:long=#{tzinfo.longitude.to_f}&lat=#{tzinfo.latitude.to_f}&label=#{label}")
     end
 
     # 時分秒のインデクス
@@ -131,8 +159,8 @@ module When::Parts
           }
         end
       end
-      std, dst    = _offsets(Time.now.to_i)
-      @standard   = When::TM::Clock.new({:zone=>std, :tz_prop=>self})
+      dst, std  = _offsets(Time.now.to_i)
+      @standard = When::TM::Clock.new({:zone=>std, :tz_prop=>self})
       if std == dst
         @daylight   = @standard
         @difference = 0
@@ -144,16 +172,20 @@ module When::Parts
     end
 
     # @private
-    def _daylight(zdate=nil)
-      if block_given?
-        zdate  = yield(@standard.dup.tap{|clock| clock.tz_prop = nil})
-        now    = zdate.to_time.to_i
-        clocks = _offsets(now).map {|clock| When::TM::Clock.new({:zone=>clock, :tz_prop=>self})}
-        flags  = clocks.map {|z| @timezone.period_for_utc(yield(z.dup.tap{|clock| clock.tz_prop = nil}).to_time.to_i).dst? }
-        (flags[0] || flags[1]) ? clocks[1] : clocks[0]
-      else
-        When::TM::Clock.new({:zone=>@timezone.period_for_utc(zdate.to_time.to_i).utc_total_offset, :tz_prop=>self})
+    def _daylight(time)
+      frame, cal_date, clk_time = time
+      clocks = {}
+      if clk_time
+        time    = frame.to_universal_time(cal_date, clk_time, @standard)
+        offsets = _offsets((time/When::TM::Duration::SECOND).floor)
+        offsets.each do |offset|
+          clocks[offset] ||= When::TM::Clock.new({:zone=>offset, :tz_prop=>self})
+          return clocks[offsets[0]] if @timezone.period_for_utc(
+            (frame.to_universal_time(cal_date, clk_time, clocks[offset])/When::TM::Duration::SECOND).floor).dst?
+        end
       end
+      offset = @timezone.period_for_utc((time/When::TM::Duration::SECOND).floor).utc_total_offset
+      clocks[offset] || When::TM::Clock.new({:zone=>offset, :tz_prop=>self})
     end
 
     # @private
@@ -164,17 +196,17 @@ module When::Parts
     private
 
     def _offsets(time)
-      now         = @timezone.period_for_utc(time)
-      past        = @timezone.period_for_utc(now.utc_start-1) if now.utc_start
-      future      = @timezone.period_for_utc(now.utc_end)     if now.utc_end
-      std         = now.utc_offset
-      dst         = now.utc_total_offset
+      now    = @timezone.period_for_utc(time)
+      past   = @timezone.period_for_utc(now.utc_start-1) if now.utc_start
+      future = @timezone.period_for_utc(now.utc_end)     if now.utc_end
+      std    = now.utc_offset
+      dst    = now.utc_total_offset
       [past, future].each do |period|
         next unless period
-        std = period.utc_offset       if std > period.utc_offset
-        dst = period.utc_total_offset if dst < period.utc_total_offset
+        std  = period.utc_offset       if std > period.utc_offset
+        dst  = period.utc_total_offset if dst < period.utc_total_offset
       end
-      [std, dst]
+      [dst, std]
     end
 
     # その他のメソッド
@@ -182,7 +214,12 @@ module When::Parts
     #   処理を first (type: When::TM::(Temporal)Position) に委譲する
     #
     def method_missing(name, *args, &block)
-      timezone.send(name.to_sym, *args, &block)
+      self.class.module_eval %Q{
+        def #{name}(*args, &block)
+          timezone.send("#{name}", *args, &block)
+        end
+      } unless When::Parts::MethodCash.escape(name)
+      timezone.send(name, *args, &block)
     end
   end
 end

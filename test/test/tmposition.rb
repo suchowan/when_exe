@@ -19,7 +19,9 @@ module Test::TM
   end
 
   class Position < Test::Unit::TestCase
-    def test_nothing
+    def test__forward
+       pos = When::TM::Position.new('2013-11-12')
+       assert_equal(2456609, pos.to_i)
     end
   end
 
@@ -200,7 +202,52 @@ LIST
       end
     end
 
+    def test__trans
+      ic = When.Resource("examples/NewYork.ics")
+      tz = When::V::Timezone["America/New_York"]
+
+      sample = %w(1997-04-06T00:00:00-05:00 1997-04-06T01:00:00-05:00
+                  1997-04-06T03:00:00-04:00 1997-04-06T04:00:00-04:00
+                  1997-04-05T23:00:00-05:00 1997-04-06T00:00:00-05:00
+                  1997-04-06T01:00:00-05:00 1997-04-06T03:00:00-04:00
+                  1997-10-26T00:00:00-04:00 1997-10-26T01:00:00-04:00
+                  1997-10-26T01:00:00-05:00 1997-10-26T02:00:00-05:00
+                  1997-10-26T01:00:00-04:00 1997-10-26T01:00:00-05:00
+                  1997-10-26T02:00:00-05:00 1997-10-26T03:00:00-05:00)
+
+      %w(1997-04-06T00:00:00-05:00 1997-04-06T00:00:00-04:00
+         1997-10-26T00:00:00-04:00 1997-10-26T00:00:00-05:00).each do |time|
+        date = When.when?(time)
+        4.times do
+          assert_equal(sample.shift,  (tz ^ date).to_s)
+          date += When::Duration('PT1H')
+        end
+      end
+    end
+
     if Object.const_defined?(:TZInfo)
+      def test__trans_tzinfo
+        tz = When::Parts::Timezone["America/New_York"]
+
+        sample = %w(1997-04-06T00:00:00-05:00 1997-04-06T01:00:00-05:00
+                    1997-04-06T03:00:00-04:00 1997-04-06T04:00:00-04:00
+                    1997-04-05T23:00:00-05:00 1997-04-06T00:00:00-05:00
+                    1997-04-06T01:00:00-05:00 1997-04-06T03:00:00-04:00
+                    1997-10-26T00:00:00-04:00 1997-10-26T01:00:00-04:00
+                    1997-10-26T01:00:00-05:00 1997-10-26T02:00:00-05:00
+                    1997-10-26T01:00:00-04:00 1997-10-26T01:00:00-05:00
+                    1997-10-26T02:00:00-05:00 1997-10-26T03:00:00-05:00)
+
+        %w(1997-04-06T00:00:00-05:00 1997-04-06T00:00:00-04:00
+           1997-10-26T00:00:00-04:00 1997-10-26T00:00:00-05:00).each do |time|
+          date = When.when?(time)
+          4.times do
+            assert_equal(sample.shift,  (tz ^ date).to_s)
+            date += When::Duration('PT1H')
+          end
+        end
+      end
+
       def test__plus_tzinfo
         obj4 = When.when?("1997-10-26T00:00:00", {:clock=>When::Parts::Timezone["America/New_York"]})
         [["PT59M","1997-10-26T00:59:00-04:00"],

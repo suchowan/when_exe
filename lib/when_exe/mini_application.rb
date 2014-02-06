@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2013 Takashi SUGA
+  Copyright (C) 2013-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -102,40 +102,6 @@ module When
       end
     end
 
-    # JSONで通信するために Symbol を String に変換する
-    def _to_string(source)
-      case source
-      when Array
-        source.map {|e| _to_string(e)}
-      when Hash
-        result = {}
-        source.each_pair {|k,v|
-          result[k.kind_of?(Symbol) ? '_sym_' + k.to_s : k] = _to_string(v)
-        }
-        result
-      else
-        source
-      end
-    end
-    private :_to_string
-
-    # JSONで通信するために String を Symbol に変換する
-    def _to_symbol(source)
-      case source
-      when Array
-        source.map {|e| _to_symbol(e)}
-      when Hash
-        result = {}
-        source.each_pair {|k,v|
-          result[k =~ /^_sym_(.+)$/ ? $1.to_sym : k] = _to_symbol(v)
-        }
-        result
-      else
-        source
-      end
-    end
-    private :_to_symbol
-
     # 日付の自由変換
     #
     # @param [Array<String>] args コマンドライン入力
@@ -148,7 +114,7 @@ module When
     # @note mini_application
     #
     def free_conv(*args, &block)
-      calendars, dates, numbers, methods, output, options = _parse(args)
+      calendars, dates, numbers, methods, output, options = _parse_command(args)
 
       if numbers.size >= 2 && calendars.size == 0
         result = []
@@ -173,6 +139,8 @@ module When
       _free_conv(calendars, dates, methods, output, options, &block)
     end
 
+    private
+
     # 引数読み込み
     #
     # args [String] コマンドライン入力
@@ -185,8 +153,7 @@ module When
     #   [ output    [Array<Symbol, String>] 出力処理に使うメソッドのシンボルと引数  ]
     #   [ options   [Hash{ :extent=>Boolean, :go_back=><:All || :Before(nil) || :After> }]
     #
-    # @private
-    def _parse(args)
+    def _parse_command(args)
       calendars = []
       dates     = []
       numbers   = []
@@ -244,16 +211,18 @@ module When
     #
     # @return [Array] 変換結果
     #
-    # @private
     def _free_conv(calendars, dates, methods, output, options, &block)
       dates[0]     ||= When.now
       calendars[0] ||= When.Calendar('Gregorian')
       result = dates.map {|date|
         date = When.when?(date)
+        opts = {}
+        opts[:location] = date.location if date.location
+        opts[:clock   ] = date.clock    if date.respond_to?(:clock) && date.clock
         list = calendars.dup
         (0...calendars.size).to_a.reverse.each do |i|
           case list[i]
-          when When::TM::Calendar ; list.slice!(i) if options[:extent] && !list[i].domain.include?(date)
+          when When::TM::Calendar ; list.slice!(i) if options[:extent] && !list[i].domain[''].include?(date)
           when Class              ; 
           else
              eras = (date ^ list[i]).delete_if {|e| !e.leaf?}
@@ -271,12 +240,12 @@ module When
         if methods.size == 0
           list.map {|calendar|
              calendar.kind_of?(Class) ?
-             yield(calendar.new(date)) :
-             yield(calendar ^ (calendar.rate_of_clock == date.time_standard.rate_of_clock ? date.to_i : date))
+             yield(calendar.new(date, opts.dup)) :
+             yield(calendar.^(calendar.rate_of_clock == date.time_standard.rate_of_clock ? date.to_i : date, opts))
           }
         else
           list.map {|calendar|
-            date_for_calendar = calendar ^ (calendar.rate_of_clock == date.time_standard.rate_of_clock ? date.to_i : date)
+            date_for_calendar = calendar.^(calendar.rate_of_clock == date.time_standard.rate_of_clock ? date.to_i : date, opts)
             methods.map {|method|
               date_for_calendar.send(method[0].to_sym, method[1], &block)
             }
@@ -285,6 +254,38 @@ module When
       }
       result = result[0] while result.kind_of?(Array) && result.size == 1
       return result
+    end
+
+    # JSONで通信するために Symbol を String に変換する
+    def _to_string(source)
+      case source
+      when Array
+        source.map {|e| _to_string(e)}
+      when Hash
+        result = {}
+        source.each_pair {|k,v|
+          result[k.kind_of?(Symbol) ? '_sym_' + k.to_s : k] = _to_string(v)
+        }
+        result
+      else
+        source
+      end
+    end
+
+    # JSONで通信するために String を Symbol に変換する
+    def _to_symbol(source)
+      case source
+      when Array
+        source.map {|e| _to_symbol(e)}
+      when Hash
+        result = {}
+        source.each_pair {|k,v|
+          result[k =~ /^_sym_(.+)$/ ? $1.to_sym : k] = _to_symbol(v)
+        }
+        result
+      else
+        source
+      end
     end
   end
 end

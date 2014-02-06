@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2013 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -449,12 +449,21 @@ module When::Coordinates
 
     private
 
+    alias :_method_missing :method_missing
+
     # その他のメソッド
     #
     #   When::Coordinate::Residue で定義されていないメソッドは
     #   指定の桁での剰余算とみなす
     #
     def method_missing(name, *args, &block)
+      return _method_missing(name, *args, &block) if When::Parts::MethodCash::Escape.key?(name) ||
+                                                    !@units.key?(name.to_s.downcase)
+      instance_eval %Q{
+        def #{name}(*args, &block)
+          self[args[0] % self.to("#{name.to_s.downcase}")]
+        end
+      } unless When::Parts::MethodCash.escape(name)
       self[args[0] % self.to(name.to_s.downcase)]
     end
 
@@ -948,7 +957,7 @@ module When::Coordinates
     # @return [When::Coordinates::Pair] Pair.new(-@trunk, @branch)
     #
     def -@
-      return self.class.new(-(@trunk||0), @branch)
+      return self.class.new(-@trunk, @branch)
     end
 
     # @trunk, @branch を取得する
@@ -983,8 +992,8 @@ module When::Coordinates
     #   other が When::Coordinates::Pair でない場合、trunk に対する加算となる
     #
     def +(other)
-      return self.class.new((@trunk||0) + other, @branch) unless other.kind_of?(self.class)
-      return self.class.new((@trunk||0) + (other.trunk||0), (@branch||0) + (other.branch||0))
+      return self.class.new(@trunk + other, @branch) unless other.kind_of?(self.class)
+      return self.class.new(@trunk + other.trunk, @branch + other.branch)
     end
 
     # 減算
@@ -995,8 +1004,8 @@ module When::Coordinates
     #   other が When::Coordinates::Pair でない場合、trunk に対する減算となる
     #
     def -(other)
-      return self.class.new((@trunk||0) - other, @branch) unless other.kind_of?(self.class)
-      return self.class.new((@trunk||0) - (other.trunk||0), (@branch||0) - (other.branch||0))
+      return self.class.new(@trunk - other, @branch) unless other.kind_of?(self.class)
+      return self.class.new(@trunk - other.trunk, @branch - other.branch)
     end
 
     # 商と剰余
@@ -1007,7 +1016,7 @@ module When::Coordinates
     #     trunk に対する divmod となる
     #
     def divmod(other)
-      div, mod = (@trunk||0).divmod(other)
+      div, mod = @trunk.divmod(other)
       return div, self.class.new(mod, @branch)
     end
 
@@ -1019,7 +1028,7 @@ module When::Coordinates
     #     trunk に対する % となる
     #
     def %(other)
-      self.class.new((@trunk||0) % other, @branch)
+      self.class.new(@trunk % other, @branch)
     end
 
     # 比較
@@ -1031,7 +1040,7 @@ module When::Coordinates
     #
     def <=>(other)
       other = self.class._force_pair(other)
-      (@trunk <=> other.trunk).nonzero? || ((@branch||0) <=> (other.branch||0))
+      (@trunk <=> other.trunk).nonzero? || (@branch <=> other.branch)
     end
 
     # 文字列化
@@ -1041,7 +1050,7 @@ module When::Coordinates
     # @return [String]
     #
     def to_s(zero='')
-      return @trunk.to_s + (((@branch||0)==0) ? zero : DL2[@branch])
+      return @trunk.to_s + (@branch==0 ? zero : DL2[@branch])
     end
 
     # 強制型変換
@@ -1058,8 +1067,8 @@ module When::Coordinates
     # @param [Numeric] branch 枝
     #
     def initialize(trunk, branch=nil)
-      @trunk  = trunk
-      @branch = branch
+      @trunk  = trunk  || 0
+      @branch = branch || 0
       _normalize
     end
 
@@ -1077,7 +1086,12 @@ module When::Coordinates
     #   処理を @sum (type:Numeric) に委譲する
     #
     def method_missing(name, *args, &block)
-      @sum.send(name.to_sym, *args, &block)
+      self.class.module_eval %Q{
+        def #{name}(*args, &block)
+          @sum.send("#{name}", *args, &block)
+        end
+      } unless When::Parts::MethodCash.escape(name)
+      @sum.send(name, *args, &block)
     end
   end
 
@@ -1195,6 +1209,74 @@ module When::Coordinates
 
     include When::Ephemeris
 
+    class << self
+      # When::Coordinates::Spatial のグローバルな設定を行う
+      #
+      # @param [When::Coordinates::Spatial, String] location デフォルトの空間位置を使用する場合、指定する
+      #
+      # @return [void]
+      #
+      # @note
+      #   本メソッドでマルチスレッド対応の管理変数の初期化を行っている。
+      #   このため、本メソッド自体はスレッドセーフでない。
+      #
+      def _setup_(location=nil)
+        @_lock_ = Mutex.new if When.multi_thread
+        @_pool  = {}
+        @default_location = location
+      end
+
+      # デフォルトの空間位置
+      #
+      # @param [When::Coordinates::Spatial, String] default_location デフォルトの空間位置
+      #
+      # @return [When::Coordinates::Spatial, String]
+      #
+      # @note
+      #   @default_locationは、原則、ライブラリ立ち上げ時に _setup_ で初期化する。
+      #   以降、@default_locationに代入を行っても、すでに生成した When::TM::TemporalPosition 等には反映されない。
+      #
+      def default_location=(local)
+        if @_pool
+          @default_location = local
+        else
+          _setup_(local)
+        end
+      end
+
+      # デフォルトの空間位置を読みだす
+      #
+      # @return [When::Coordinates::Spatial]
+      #
+      def default_location
+        _default_location[1]
+      end
+
+      # デフォルトの空間位置が When::TM::Clock のローカルタイムから生成されたか?
+      #
+      # @return [true, false]
+      #
+      def is_default_location_derived?
+        location = _default_location
+        location[0] && location[1]
+      end
+
+      private
+
+      # 共通処理
+      def _default_location
+        case @default_location
+        when nil    ;
+        when Array  ; return  @default_location unless @default_location[0]
+        when String ; return (@default_location = [false, When.Resource(@default_location)])
+        else        ; return (@default_location = [false, @default_location])
+        end
+        timezone = When::TM::Clock.local_time
+        location = timezone.location if timezone.kind_of?(When::Parts::Timezone)
+        return [true, location]
+      end
+    end
+
     # Degree / Internal Location Unit(16")
     #
     #   (3600 を 2 の因数で割りつくした値を単位とする)
@@ -1206,8 +1288,11 @@ module When::Coordinates
     # 赤道座標 (equatorial coordinate system)
     EQUATORIAL = 1
 
+    # 赤道座標[時角] (equatorial coordinate system with hour angle)
+    EQUATORIAL_HA = 2
+
     # 地平座標 (horizontal coordinate system)
-    HORIZONTAL = 2
+    HORIZONTAL = 3
 
     # 惑星中心の高度
     CENTER = :center
@@ -1310,20 +1395,25 @@ module When::Coordinates
 
     # 要素の正規化
     def _normalize(args=[], options={})
-      @lat   = When::Coordinates.to_deg(@lat,  'NS') * DEGREE if @lat
       @long  = When::Coordinates.to_deg(@long, 'EW') * DEGREE if @long
-      @alt   = (@alt) ? @alt.to_f : 0.0
+      @lat   = When::Coordinates.to_deg(@lat,  'NS') * DEGREE if @lat
       @datum = When.Resource(@datum || 'Earth', '_ep:')
       if @tz.kind_of?(String)
         @label ||= @tz
         @tz      = When::Parts::Timezone.tz_info[@tz]
       end
       if @tz
-        @lat   ||= @tz.latitude  * DEGREE
         @long  ||= @tz.longitude * DEGREE
+        @lat   ||= @tz.latitude  * DEGREE
       end
-      @lat  ||= 0.0
       @long ||= 0.0
+      @lat  ||= 0.0
+      @alt    =
+        case @alt
+        when String  ; @alt.gsub(/@/, '.').to_f
+        when Numeric ; @alt.to_f
+        else         ; 0.0
+        end
     end
 
     # 観測地の惑星中心を原点とする三次元座標
@@ -1331,9 +1421,10 @@ module When::Coordinates
     # @param [Numeric] t ユリウス日(Terrestrial Time)
     # @param [When::TM::TemporalPosition] t
     # @param [Integer] system : 座標系
-    #   [ ECLIPTIC   = 黄道座標 ]
-    #   [ EQUATORIAL = 赤道座標 ]
-    #   [ HORIZONTAL = 地平座標 ]
+    #   [ ECLIPTIC      = 黄道座標 ]
+    #   [ EQUATORIAL    = 赤道座標 ]
+    #   [ EQUATORIAL_HA = 赤道座標[時角] ]
+    #   [ HORIZONTAL    = 地平座標 ]
     #
     def _coords_diff(t, system=ECLIPTIC)
       return Coords.polar(0,0,0) if alt == :Center
@@ -1342,11 +1433,12 @@ module When::Coordinates
       coords = Coords.polar(
                         local_sidereal_time(t) /  24.0,
          (lat + @datum.shape[3] * sind(2*lat)) / 360.0,
-                    (obserber_distance + @alt) /   AU)
+             (obserber_distance + @alt/1000.0) /   AU)
       case system
-      when ECLIPTIC   ; coords.r_to_y(t, @datum)
-      when EQUATORIAL ; coords
-      when HORIZONTAL ; coords.r_to_h(t, self)
+      when ECLIPTIC      ; coords.r_to_y(t, @datum)
+      when EQUATORIAL    ; coords
+      when EQUATORIAL_HA ; coords.r_to_rh(t, self)
+      when HORIZONTAL    ; coords.r_to_h(t, self)
       end
     end
 
@@ -1355,9 +1447,15 @@ module When::Coordinates
     #   処理を @datum (type: When::Ephemeris::Datum) に委譲する
     #
     def method_missing(name, *args, &block)
-      @datum.send(name.to_sym, self, *args, &block)
+      self.class.module_eval %Q{
+        def #{name}(*args, &block)
+          @datum.send("#{name}", *args, &block)
+        end
+      } unless When::Parts::MethodCash.escape(name)
+      @datum.send(name, *args, &block)
     end
 
+    # @private
     module Normalize
 
       private
@@ -1366,25 +1464,19 @@ module When::Coordinates
       #
       # @return [When::Coordinates::Spatial]
       #
-      attr_reader :location
-
-      # 時差情報
-      #
-      # @return [Array<Numeric>]
-      #
-      attr_reader :timezone
+      #attr_reader :location
 
       # 日時要素の境界オブジェクト
       #
       # @return [When::CalendarTypes::Border]
       #
-      attr_reader :border
+      #attr_reader :border
 
       # 境界計算用の計算オブジェクト
       #
       # @return [When::Ephemeris::Formula]
       #
-      attr_reader :formula
+      #attr_reader :formula
 
       #
       # Temporal Module の Spatial Parts の初期化
@@ -1392,24 +1484,9 @@ module When::Coordinates
       def _normalize_spatial
 
         # Location
-        if ((@location||@long||@lat).kind_of?(String))
-          @location ||= "_l:long=#{@long||0}&lat=#{@lat||0}"
+        if ((@location||@long||@lat||@alt).kind_of?(String))
+          @location ||= "_l:long=#{@long||0}&lat=#{@lat||0}&alt=#{@alt||0}"
           @location   = When.Resource(@location)
-        end
-
-        # Timezone
-        if respond_to?(:timezone)
-          @timezone ||= @location ? @location.long / (Spatial::DEGREE * 15) : 9.0
-          @timezone   = @timezone.kind_of?(String) ? @timezone.split(/,/) : Array(@timezone)
-          @timezone   = @timezone.map {|v|
-            d  = v.split('/')[1] if v.kind_of?(String)
-            v  = v.to_f / 24
-            v /= d.to_f if d
-            v
-          }
-          (1...@timezone.size).each do |i|
-            @timezone[i] += @timezone[i-1]
-          end
         end
 
         # Border
@@ -1423,7 +1500,7 @@ module When::Coordinates
         end
 
         # Formula
-        instance_eval('class << self; attr_reader :formula; end') # if @location && @border
+        instance_eval('class << self; attr_reader :formula; end') if @location && @border
         if respond_to?(:formula)
           instance_eval('class << self; include When::Ephemeris::Formula::Methods; end')
           @formula ||= When::Ephemeris::Formula.new({:location=>@location})
@@ -1444,13 +1521,12 @@ module When::Coordinates
   module Temporal
 
     include When::Parts::MethodCash
-    include When::Coordinates::Spatial::Normalize
 
     # @private
     HashProperty =
       [[:origin_of_MSC, 0], [:origin_of_LSC, 0], [:index_of_MSC, 0], [:_diff_to_CE, 0], 
        :unit, :base, :pair, :note,
-       :location, :timezone, :border, :formula]
+       :location, :time_basis, :border, :formula]
 
     # 年/日の原点(origin of most significant coordinate)
     #
@@ -1676,7 +1752,7 @@ module When::Coordinates
             if ((0...len) === digit)
               # 要素が範囲内
               date[i] = digit
-            elsif other && other[i] == 0
+            elsif other && period[i] == 0
               # 要素が範囲外で、加算自体はあるが“日”の加算なし
               date[i] = len-1
             else
@@ -1778,9 +1854,6 @@ module When::Coordinates
       # method cash
       @_m_cash_lock_ = Mutex.new if When.multi_thread
 
-      # Spatial Parts
-      _normalize_spatial
-
       # Origin and Upper Digits
       @origin_of_MSC  ||= - +@border.behavior if @border
       @origin_of_MSC    = Pair._en_number(@origin_of_MSC)
@@ -1840,6 +1913,8 @@ module When::Coordinates
         m   = ids[date[-1]] if (ids)
         return Pair._force_pair(m) if (ids && m)
         return Pair.new(+date[-1]+@base[date.length-1], 0)
+      rescue ArgumentError
+        nil
       end
 
       #
@@ -1862,6 +1937,8 @@ module When::Coordinates
           return i + date[-1].branch - digit.branch if i
         end
         return nil
+      rescue ArgumentError
+        nil
       end
     end
 
@@ -1872,9 +1949,26 @@ module When::Coordinates
     #   処理を @note or @formula[0] (When::Ephemeris::Formula) に委譲する
     #
     def method_missing(name, *args, &block)
-      return @note.send(name.to_sym, *(args + [self]), &block) if note.respond_to?(name)
-      forward = forwarded_formula(name, args[0]) if self.respond_to?(:forwarded_formula, true)
-      return forward.send(name.to_sym, *args, &block) if forward
+      unless When::Parts::MethodCash::Escape.key?(name)
+        if note.respond_to?(name)
+          instance_eval %Q{
+            def #{name}(*args, &block)
+              @note.send("#{name}", *(args + [self]), &block)
+            end
+          } unless When::Parts::MethodCash.escape(name)
+          return @note.send(name, *(args + [self]), &block)
+        elsif respond_to?(:forwarded_formula, true)
+          instance_eval %Q{
+            def #{name}(*args, &block)
+              forward = forwarded_formula("#{name}", args[0])
+              return forward.send("#{name}", *args, &block) if forward
+              _method_missing("#{name}", *args, &block)
+            end
+          } unless When::Parts::MethodCash.escape(name)
+          forward = forwarded_formula(name, args[0])
+          return forward.send(name, *args, &block) if forward
+        end
+      end
       _method_missing(name, *args, &block)
     end
 

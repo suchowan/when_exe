@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2013 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -427,8 +427,45 @@ module When
 	aBCdEfGhIjkL	AbCDeFgHhIjKl	aBCdEfGHiJkL	abCdEfGHIjKl	AbcDeEfGHiJKl
 	AbCdefGHiJKL	aBcDefgHiJKL	aBCddEfgHiJKl	ABCdeFghIjKL	aBCdEfGhIjjKl
 	ABcDEfGhIjkL	aBcDEfGHiJkL	)
-     }
-   ]
+      }
+    ]
+
+    #
+    # 『唐・日本における進朔に関する研究』(2013-10版)を使用する場合の朔閏表
+    #
+    Japanese0764 = [PatternTableBasedLuniSolar, {
+      'origin_of_MSC'=>764, 'origin_of_LSC'=>2000146,
+      'indices'=> [
+           Coordinates::Index.new({:branch=>{1=>When.Resource('_m:CalendarTerms::閏')},
+                                   :trunk=>When.Resource('_m:JapaneseTerms::Month::*')}),
+           Coordinates::DefaultDayIndex
+       ],
+      'note'      => 'JapaneseNote',
+      'rule_table'=> %w(				aBCdEfGhiJkL	aBCdEFgHiJjkL
+	aBCdEfGHiJkL	abCdEfGHiJKl	AbcDeFfGHiJKl	AbCdeFghIJKL	aBcdEfgHiJKL
+	aBCcDefgHiJKl	ABCdeFgHijKL	aBcDEfGhIjkKL	aBcDEfGhIjkL	AbcDEfGHiJkL
+	aBcdEfGHhIJkL	aBcdEfgHIJkL	AbCDefghIJKl	ABcDeefGhIJKL	aBcDefgHiJKL
+	aBcDeFgHijKl	AAbCDeFghIjKl	ABcDeFGhIjkL	aBcDeFGhIiJKl	aBcDeFgHIJkL
+	aBcdEfgHIjKL	AbCdeeFgHiJKL	aBCdefGhIjKL	AbCdEfgHiJkL	ABcCdEfGhiJkL
+	AbCDeFgHijKl	ABcDeFgHIjKkl	AbCdEfGHiJkL	aBcdEfGHiJKL	abCdeFgGHiJKL
+	abCdeFgHiJKL	aBcDefGhIjKL	AbCdEefGhiJKL	aBCdEfgHiJkL	aBCdEfGhIjKl
+
+	AaBcDeFGhIjKl	AbcDEfGHiJkL	aBcdEfGHiJJkL	aBcdEfGhIJKl	AbCdeFghIJKL
+	aBcDefFghIJKL	aBcDefGhIjKl	ABcDEfgHijKL	aBbCDeFgHiJkL	aBcDeFGhIJkl
+	AbcDeFGhIJkLl	AbcDeFgHIJkL	aBcdEfGhIJKl	AbCdeFggHIjKL	AbCdeFghIjKL
+	ABcDefGhiJKl	AbCDdEfGhIjkL	AbCDeFgHiJkL	aBcDeFgHIjKl	AabCdEFgHIjKl
+	AbcDeFgHIjKL	aBcdEfgHIiJKL	aBcdEfgHIjKL	aBCdeFghIjKL	AbCdEfGghIjKl
+	ABCdEfGhiJkL	aBCdEfGHiJkL	AbccDEfGHiJkL	abCdEfGHiJKl	AbcDEfgHiJKLl
+	AbcDefGHiJKL	AbcdEfgHiJKL	aBCdeFggHiJKl	ABcDeFghIjKL	aBCdEfGhiJkL
+	aBCdEeFGhIjkL	aBcDeFGhIJkL	abCdEfGHiJKl	AabCdeFGhIJKl	AbcDefGhIJKl
+	ABcdEfgHiIJkL	ABcdEfgHiJKl	ABcDeFghIjKl	ABcDEfGgHijKl	AbCDeFgHIjKl
+	aBcDeFGhIJkL	abCcDeFgHIJkL	abCdeFgHIJkL	AbcDefGhIJkLL	AbcDefGhIjKL
+
+	AbCdEfgHiJkL	AbCDeFghHiJkL	AbCdEFghIjKl	AbCdEFgHiJKL	abcDdEfGHiJKl
+	aBcdEfGHIjKL	abCdeFgHIjKL	AbbCdeFgHiJKL	aBcDefGhIjKL	AbCdEfgHiJJkL
+	aBCdEfgHiJkL)
+      }
+    ]
   end
 
   class TM::CalendarEra
@@ -436,10 +473,10 @@ module When
     #
     # 日本の年号
     #
-    Japanese = [self, [
+    Japanese = [{}, self, [
       "namespace:[ja=http://ja.wikipedia.org/wiki/, en=http://en.wikipedia.org/wiki/]",
       "locale:[=ja:, en=en:, alias]",
-      "area:[日本=ja:%%<元号>#%.<日本>,Japan=en:Regnal_year#Japanese]",
+      'area:[日本#{?V=V}=ja:%%<元号>#%.<日本>,Japan#{?V=V}=en:Regnal_year#Japanese]',
       [self,
 	"period:[飛鳥時代]",
 	["[推古]1",	"@A",	"name=[推古];0593-01-01^Japanese"],
@@ -468,7 +505,7 @@ module When
 	["[天平感宝]1",	"@FE",	"	     0749-04-14"],
 	["[天平勝宝]1",	"@A",	"name=[孝謙];0749-07-02"],
 	["[天平宝字]1",	"@FE",	"	     0757-08-18",
-				"name=[淳仁];0758-08-01", ""],
+				"name=[淳仁];0758-08-01", '0764-01-01^Japanese#{V}', ""],
 	["[天平神護]1",	"@A",	"name=[称徳];0765-01-07"],
 	["[神護景雲]1",	"@FE",	"	     0767-08-16"],
 	["[宝亀]1",	"[代始・祥瑞]",	"name=[光仁];0770-10-01"],
@@ -477,7 +514,7 @@ module When
       ],
       [self,
 	"period:[平安時代]",
-	["[延暦]13",	"",	"name=[桓武];0794-10-22^Japanese"],
+	["[延暦]13",	"",	'name=[桓武];0794-10-22^Japanese#{V}'],
 	["[大同]1",	"@A",	"name=[平城];0806-05-18"],
 	["[弘仁]1",	"@A",	"name=[嵯峨];0810-09-19"],
 	["[天長]1",	"@A",	"name=[淳和];0824-01-05"],
@@ -486,7 +523,7 @@ module When
 	["[仁寿]1",	"[代始・祥瑞]",	"name=[文徳];0851-04-28"],
 	["[斉衡]1",	"@FE",	"	     0854-11-30"],
 	["[天安]1",	"@FE",	"	     0857-02-21"],
-	["[貞観]1",	"@A",	"name=[清和];0859-04-15"],
+	["[貞観]1",	"@A",	"name=[清和];0859-04-15", "0862-01-01^Japanese", ""],
 	["[元慶]1",	"[代始・祥瑞]",	"name=[陽成];0877-04-16"],
 	["[仁和]1",	"@A",	"name=[光孝];0885-02-21"],
 	["[寛平]1",	"@A",	"name=[宇多];0889-04-27"],
@@ -497,8 +534,8 @@ module When
 	["[天慶]1",	"@ND",	"	     0938-05-22"],
 	["[天暦]1",	"@A",	"name=[村上];0947-04-22"],
 	["[天徳]1",	"@ND",	"	     0957-10-27"],
-	["[応和]1",	"[災異・革年]",	"	     0961-02-16"],
-	["[康保]1",	"[災異・革年]",	"	     0964-07-10"],
+	["[応和]1",	"[災異・革年]",	"    0961-02-16"],
+	["[康保]1",	"[災異・革年]",	"    0964-07-10"],
 	["[安和]1",	"@A",	"name=[冷泉];0968-08-13"],
 	["[天禄]1",	"@A",	"name=[円融];0970-03-25"],
 	["[天延]1",	"@ND",	"	     0973-12-20"],
@@ -647,7 +684,7 @@ module When
       ],
       [self,
 	"period:[持明院統]",
-	["[元徳]3",	"",	"name=;1331-08-09^Japanese",
+	["[元徳]3",	"",	"      name=;1331-08-09^Japanese",
 				"name=[光厳];1331-09-20", ""],
 	["[正慶]1",	"@A",	"	     1332-04-28", "1333-05-18"]
       ],
@@ -714,7 +751,7 @@ module When
 	"period:[江戸時代]",
 	["[慶長]8",	"",	"name=[後陽成];1603-02-12^Japanese",
 				"name=[後水尾];1611-03-27", ""],
-	["[元和]1",	"[代始・災異]","	     1615-07-13"],
+	["[元和]1",	"[代始・災異]","     1615-07-13"],
 	["[寛永]1",	"@IY",	"	     1624-02-30",
 				"name=[明正];1629-11-08", ""],
 	["[正保]1",	"@A",	"name=[後光明];1644-12-16"],

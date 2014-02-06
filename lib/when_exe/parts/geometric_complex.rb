@@ -373,7 +373,12 @@ module When::Parts
     #   処理を first (type: When::TM::(Temporal)Position) に委譲する
     #
     def method_missing(name, *args, &block)
-      first.send(name.to_sym, *args, &block)
+      self.class.module_eval %Q{
+        def #{name}(*args, &block)
+          first.send("#{name}", *args, &block)
+        end
+      } unless When::Parts::MethodCash.escape(name)
+      first.send(name, *args, &block)
     end
   end
 end

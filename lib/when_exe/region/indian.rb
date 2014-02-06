@@ -448,7 +448,7 @@ module When
       #
       # @return [Integer, When::TM::DateAndTime] 日の出の日時
       #
-      def sun_rise(sdn, height=nil)
+      def sunrise(sdn, height=nil)
         t   = sdn.to_i - @long / 360.0 - 0.25
         p   = _mean_sun(t) +  P * (t - Ep) / @civil_days
         _to_seed_type(t - asin(tand(@lat)*tan(asin(sinc(p)*sinc(Ob)))) / CIRCLE, sdn)
@@ -462,7 +462,7 @@ module When
       #
       # @return [Integer, When::TM::DateAndTime] 日の入りの日時
       #
-      def sun_set(sdn, height=nil)
+      def sunset(sdn, height=nil)
         t   = sdn.to_i - @long / 360.0 + 0.25
         p   = _mean_sun(t) +  P * (t - Ep) / @civil_days
         _to_seed_type(t + asin(tand(@lat)*tan(asin(sinc(p)*sinc(Ob)))) / CIRCLE, sdn)
@@ -525,7 +525,7 @@ module When
 
   class TM::CalendarEra
 
-    Indian = [self, [
+    IndianNationalSolar = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "area:[IndianNationalSolar=en:Indian_national_calendar, インド国定暦]",
@@ -570,8 +570,8 @@ module When
       def _new_month_(m)
         new_month_time = @formula[0].cn_to_time(m + @cycle_offset)
         new_month_date = (new_month_time + 0.5 + @formula[0].long/360.0).floor
-        sun_rise_time = @formula[0].sun_rise(new_month_date)
-        (sun_rise_time <= new_month_time) ? new_month_date : new_month_date-1
+        sunrise_time = @formula[0].sunrise(new_month_date)
+        (sunrise_time <= new_month_time) ? new_month_date : new_month_date-1
       end
 
       private
@@ -597,7 +597,7 @@ module When
         formula  = @formula || HinduLuniSolar::Formula[$1]
         if formula.kind_of?(String)
           formula += (formula =~ /\?/) ? '&' : '?'
-          @formula = [When.Resource("_ep:#{formula}location=#{@location}&formula=12S")]
+          @formula = [When.Resource("_ep:#{formula}location=(#{@location})&formula=12S")]
         end
         @indices        ||= [
           Coordinates::Index.new({:trunk=>When.Resource('_m:IndianTerms::SolarMonth::*'),
@@ -640,8 +640,8 @@ module When
       def _new_month_(m)
         new_moon_time = @formula[-1].cn_to_time(m)
         new_moon_date = (new_moon_time + 0.5 + @formula[-1].long/360.0).floor
-        sun_rise_time = @formula[-1].sun_rise(new_moon_date)
-        (sun_rise_time >= new_moon_time) ? new_moon_date : new_moon_date+1
+        sunrise_time = @formula[-1].sunrise(new_moon_date)
+        (sunrise_time >= new_moon_time) ? new_moon_date : new_moon_date+1
       end
 
       # 年初の通月
@@ -745,7 +745,7 @@ module When
           formula += (formula =~ /\?/) ? '&' : '?'
           @formula = When.Resource(["_ep:#{formula}formula=12S",
                                "_ep:#{formula}formula=30L->12S",
-                               "_ep:#{formula}location=#{@location}&formula=2L"])
+                               "_ep:#{formula}location=(#{@location})&formula=2L"])
         end
         intercalary_month = When.Resource('_m:IndianTerms::IntercalaryMonth::*')
         intercalary_day   = When.Resource('_m:IndianTerms::IntercalaryDay::*')
@@ -942,17 +942,21 @@ module When
             @o_date  = date
             clock    = date.clock
             frame    = date.frame if date.frame.kind_of?(When::CalendarTypes::HinduLuniSolar)
-            @l_date  = (clock && frame) ? date :
-              (frame || When.Calendar('HinduLuniSolar?note=HinduNote')).jul_trans(date, {:clock=>clock||'+05:30'})
+            @l_date  = (frame || When.Calendar('HinduLuniSolar?note=HinduNote')).jul_trans(date.to_i, {:clock=>'+05:30'})
             @root    = When.CalendarNote('HinduNote/NoteObjects')['day']
             @formula = @l_date.frame.formula[-1]
-            @iri     = @formula.iri.gsub(/%3A%3A/, '::')
-            @rises   = [@formula.sun_rise(@l_date), @formula.sun_rise(@l_date+When.Duration('P1D'))]
+            @iri     = @formula.iri
+            @rises   = [@formula.sunrise(@l_date), @formula.sunrise(@l_date+When.Duration('P1D'))]
           end
 
           # その他のメソッドは @l_date に移譲する
           def method_missing(name, *args, &block)
-            @l_date.send(name.to_sym, *args, &block)
+            self.class.module_eval %Q{
+              def #{name}(*args, &block)
+                @l_date.send("#{name}", *args, &block)
+              end
+            } unless When::Parts::MethodCash.escape(name)
+            @l_date.send(name, *args, &block)
           end
         end
 

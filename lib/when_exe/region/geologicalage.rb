@@ -1,634 +1,634 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011 Takashi SUGA
+  Copyright (C) 2011-2013 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
 
-module When::TM
+class When::TM::OrdinalReferenceSystem
 
   #
   # Geological Ages
   #
-  GeologicalAge = [OrdinalReferenceSystem, [
+  GeologicalAge = [self, [
     "namespace:[ja=http://ja.wikipedia.org/wiki/, en=http://en.wikipedia.org/wiki/]",
     "locale:[=ja:, en=en:]",
     "*area:[地球,Earth]",
 
-    [OrdinalEra,
+    [When::TM::OrdinalEra,
       "*eon:[冥王代,Hadean]",
       "begin:-4_600_000_000-"
     ],
-    [OrdinalEra,
+    [When::TM::OrdinalEra,
       "namespace:[root=http://ja.wikipedia.org/wiki/%%<始生代>#]",
       "*eon:[始生代,Archean]",
-      [OrdinalEra,
+      [When::TM::OrdinalEra,
         "*era:[原始生代=root:%.<原始生代_(Eoarchean)>,Eoarchean]",
         "begin:-4_000_000_000-"
       ],
-      [OrdinalEra,
+      [When::TM::OrdinalEra,
         "*era:[古始生代=root:%.<古始生代_(Paleoarchean)>,Paleoarchean]",
         "begin:-3_600_000_000-"
       ],
-      [OrdinalEra,
+      [When::TM::OrdinalEra,
         "*era:[中始生代=root:%.<中始生代_(Mesoarchean)>,Mesoarchean]",
         "begin:-3_200_000_000-"
       ],
-      [OrdinalEra,
+      [When::TM::OrdinalEra,
         "*era:[新始生代=root:%.<新始生代_(Neoarchean)>,Neoarchean]",
         "begin:-2_800_000_000-"
       ]
     ],
-    [OrdinalEra,
+    [When::TM::OrdinalEra,
       "*eon:[原生代,Proterozoic]",
-      [OrdinalEra,
+      [When::TM::OrdinalEra,
         "*era:[前期=,Paleoproterozoic]",
-        [OrdinalEra,
+        [When::TM::OrdinalEra,
           "*period:[シデリアン,Siderian]",
           "begin:-2_500_000_000-"
         ],
-        [OrdinalEra,
+        [When::TM::OrdinalEra,
           "*period:[リアキアン,Rhyacian]",
           "begin:-2_300_000_000-"
         ],
-        [OrdinalEra,
+        [When::TM::OrdinalEra,
           "*period:[オロシリアン,Orosirian]",
           "begin:-2_050_000_000-"
         ],
-        [OrdinalEra,
+        [When::TM::OrdinalEra,
           "*period:[スタテリアン,Statherian]",
           "begin:-1_800_000_000-"
         ],
       ],
-      [OrdinalEra,
+      [When::TM::OrdinalEra,
         "*era:[中期=,Mesoproterozoic]",
-        [OrdinalEra,
+        [When::TM::OrdinalEra,
           "*period:[カリミアン,Calymmian]",
           "begin:-1_600_000_000-"
         ],
-        [OrdinalEra,
+        [When::TM::OrdinalEra,
           "*period:[エクタシアン,Ectasian]",
           "begin:-1_400_000_000-"
         ],
-        [OrdinalEra,
+        [When::TM::OrdinalEra,
           "*period:[ステニアン,Stenian]",
           "begin:-1_200_000_000-"
         ],
       ],
-      [OrdinalEra,
+      [When::TM::OrdinalEra,
         "*era:[後期=,Neoproterozoic]",
-        [OrdinalEra,
+        [When::TM::OrdinalEra,
           "*period:[トニアン,Tonian]",
           "begin:-1_000_000_000-"
         ],
-        [OrdinalEra,
+        [When::TM::OrdinalEra,
           "*period:[クリオジェニアン,Cryogenian]",
           "begin:-850_000_000-"
         ],
-        [OrdinalEra,
+        [When::TM::OrdinalEra,
           "*period:[エディアカラ紀,Ediacaran]",
           "begin:-635_000_000-"
         ]
       ]
     ],
-    [OrdinalEra,
+    [When::TM::OrdinalEra,
       "*eon:[顕生代,Phanerozoic]",
-      [OrdinalEra,
+      [When::TM::OrdinalEra,
         "*era:[古生代,Paleozoic]",
-        [OrdinalEra,
+        [When::TM::OrdinalEra,
           "*period:[カンブリア紀,Cambrian]",
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[テレニュービアン=,Terreneuvian=]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[フォルツニアン=,Fortunian=]",
               "begin:-542_000_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[第2期=,Age_2=]",
               "begin:-528_000_000-"
             ]
           ],
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[第2世=,Epoch_2=]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[第3期=,Age_3=]",
               "begin:-521_000_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[第4期=,Age_4=]",
               "begin:-515_000_000-"
             ],
           ],
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[第3世=,Epoch_3=]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[第5期=,Age_5=]",
               "begin:-510_000_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[ドルミアン=,Drumian=]",
               "begin:-506_500_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[グザンギアン=,Guzhangian=]",
               "begin:-500_300_000-"
             ]
           ],
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[フロンギアン=,Furongian]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[パイビアン=,Paibian]",
               "begin:-499_000_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[第9期=,Age_9=]",
               "begin:-496_000_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[第10期=,Age_10=]",
               "begin:-492_000_000-"
             ]
           ]
         ],
-        [OrdinalEra,
+        [When::TM::OrdinalEra,
           "*period:[オルドビス紀,Ordovician]",
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[前期=,Early_Ordovician]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[トレマドック=,Tremadocian]",
               "begin:-488_300_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[フロイアン=,Floian]",
               "begin:-478_600_000-"
             ]
           ],
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[中期=,Middle_Ordovician]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[ダピンギアン=,Dapingian]",
               "begin:-471_800_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[ダーリウィリアン=,Darriwilian]",
               "begin:-468_100_000-"
             ]
           ],
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[後期=,Late_Ordovician]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[サンドビアン=,Sandbian]",
               "begin:-460_900_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[カティアン=,Katian]",
               "begin:-455_800_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[ヒルナンティアン=,Hirnantian]",
               "begin:-445_600_000-"
             ]
           ]
         ],
-        [OrdinalEra,
+        [When::TM::OrdinalEra,
           "*period:[シルル紀,Silurian]",
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[ランドベリ=,Llandovery]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[ルダニアン=,Rhuddanian]",
               "begin:-443_700_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[アエロニアン=,Aeronian]",
               "begin:-439_000_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[テリチアン=,Telychian]",
               "begin:-436_000_000-"
             ]
           ],
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[ウェンロック=,Wenlock]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[シェインウッディアン=,Sheinwoodian]",
               "begin:-428_200_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[ホメリアン=,Homerian]",
               "begin:-432_620_000-"
             ]
           ],
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[ラドロウ=,Ludlow]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[ゴースティアン=,Gorstian]",
               "begin:-422_900_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[ルドフォーディアン=,Ludfordian]",
               "begin:-421_300_000-"
             ]
           ],
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[プリドリ=,Pridoli=en_wiki:Pridoli_epoch#Pridoli]",
             "begin:-418_700_000-"
           ]
         ],
-        [OrdinalEra,
+        [When::TM::OrdinalEra,
           "*period:[デボン紀,Devonian]",
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[前期=,Early_Devonian]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[ロホコビアン=,Lochkovian]",
               "begin:-416_000_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[プラーギアン=,Pragian]",
               "begin:-411_200_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[エムシアン=,Emsian]",
               "begin:-407_000_000-"
             ]
           ],
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[中期=,Middle_Devonian]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[アイフェリアン=,Eifelian]",
               "begin:-397_500_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[ジベーティアン=,Givetian]",
               "begin:-391_800_000-"
             ]
           ],
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[後期=,Late_Devonian]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[フラスニアン=,Frasnian]",
               "begin:-385_300_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[ファメニアン=,Famennian]",
               "begin:-374_500_000-"
             ]
           ]
         ],
-        [OrdinalEra,
+        [When::TM::OrdinalEra,
           "*period:[石炭紀,Carboniferous]",
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*subperiod:[ミシシッピ紀=,Mississippian]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[トゥルネージアン=,Tournaisian]",
               "begin:-359_200_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[ヴィゼアン=,Visean]",
               "begin:-345_300_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[サープコビアン=,Serpukhovian]",
               "begin:-328_300_000-"
             ]
           ],
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*subperiod:[ペンシルバニア紀=,Pennsylvanian]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[バシュキーリアン=,Bashkirian]",
               "begin:-318_100_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[モスコビアン=,Moscovian]",
               "begin:-311_700_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[カシモービアン=,Kasimovian]",
               "begin:-307_200_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[グゼーリアン=,Gzhelian]",
               "begin:-303_400_000-"
             ]
           ]
         ],
-        [OrdinalEra,
+        [When::TM::OrdinalEra,
           "*period:[ペルム紀,Permian]",
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[キスラリアン=,Cisuralian]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[アッセリアン=,Asselian]",
               "begin:-299_000_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[サクマーリアン=,Sakmarian]",
               "begin:-294_600_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[アルチンスキアン=,Artinskian]",
               "begin:-284_400_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[クングーリアン=,Kungurian]",
               "begin:-275_600_000-"
             ]
           ],
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[ガダリューピアン=,Guadalupian]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[ローディアン=,Roadian]",
               "begin:-270_600_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[ワーディアン=,Wordian]",
               "begin:-268_000_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[カピタニアン=,Capitanian]",
               "begin:-265_800_000-"
             ]
           ],
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[ロピンギアン=,Lopingian]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[ウキアピンギアン=,Wuchiapingian]",
               "begin:-260_400_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[チャンシンギアン=,Changhsingian]",
               "begin:-253_800_000-"
             ]
           ]
         ]
       ],
-      [OrdinalEra,
+      [When::TM::OrdinalEra,
         "*era:[中生代,Mesozoic]",
-        [OrdinalEra,
+        [When::TM::OrdinalEra,
           "*period:[三畳紀,Triassic]",
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[前期=,Early_Triassic]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[インドゥアン=,Induan]",
               "begin:-251_000_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[オレネキアン=,Olenekian]",
               "begin:-249_500_000-"
             ]
           ],
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[中期=,Middle_Triassic]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[アニシアン=,Anisian]",
               "begin:-245_900_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[ラディニアン=,Ladinian]",
               "begin:-237_000_000-"
             ]
           ],
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[後期=,Late_Triassic]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[カーニアン=,Carnian]",
               "begin:-228_700_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[ノーリアン=,Norian]",
               "begin:-216_500_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[レーティアン=,Rhaetian]",
               "begin:-203_600_000-"
             ]
           ]
         ],
-        [OrdinalEra,
+        [When::TM::OrdinalEra,
           "*period:[ジュラ紀,Jurassic]",
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[前期=,Early_Jurassic]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[ヘッタンジアン=,Hettangian]",
               "begin:-199_600_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[シネムーリアン=,Sinemurian]",
               "begin:-196_500_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[プリンスバッキアン=,Pliensbachian]",
               "begin:-189_600_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[トアルシアン=,Toarcian]",
               "begin:-183_000_000-"
             ]
           ],
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[中期=,Middle_Jurassic]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[アーレニアン=,Aalenian]",
               "begin:-175_600_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[バジョシアン=,Bajocian]",
               "begin:-171_600_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[バトニアン=,Bathonian]",
               "begin:-167_700_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[カロビアン=,Callovian]",
               "begin:-164_700_000-"
             ]
           ],
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[後期=,Late_Jurassic]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[オクスフォーディアン=,Oxfordian]",
               "begin:-161_200_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[キンメリッジアン=,Kimmeridgian]",
               "begin:-155_600_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[チトニアン=,Tithonian]",
               "begin:-150_800_000-"
             ]
           ]
         ],
-        [OrdinalEra,
+        [When::TM::OrdinalEra,
           "*period:[白亜紀,Cretaceous]",
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[前期= ,Early_Cretaceous]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[ベリアシアン=,Berriasian]",
               "begin:-145_500_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[バランギニアン=,Valanginian]",
               "begin:-140_200_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[オーテリビアン=,Hauterivian]",
               "begin:-133_900_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[バレミアン=,Barremian]",
               "begin:-130_000_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[アプチアン=,Aptian]",
               "begin:-125_000_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[アルビアン=,Albian]",
               "begin:-112_000_000-"
             ]
           ],
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[後期=,Late_Cretaceous]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[セノマニアン=,Cenomanian]",
               "begin:-99_600_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[チューロニアン=,Turonian]",
               "begin:-93_600_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[コニアシアン=,Coniacian]",
               "begin:-88_600_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[サントニアン=,Santonian]",
               "begin:-85_800_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[カンパニアン,Campanian]",
               "begin:-83_500_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[マストリヒシアン,Maastrichtian]",
               "begin:-70_600_000-"
             ]
           ]
         ]
       ],
-      [OrdinalEra,
+      [When::TM::OrdinalEra,
         "*era:[新生代,Cenozoic]",
-        [OrdinalEra,
+        [When::TM::OrdinalEra,
           "*period:[古第三紀,Paleogene]",
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[暁新世,Paleocene]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[ダニアン,Danian]",
               "begin:-65_500_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[セランディアン,Selandian]",
               "begin:-61_100_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[サネティアン,Thanetian]",
               "begin:-58_700_000-"
             ]
           ],
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[始新世,Eocene]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[ヤプレシアン,Ypresian]",
               "begin:-55_800_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[ルテシアン,Lutetian]",
               "begin:-48_600_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[バートニアン,Bartonian]",
               "begin:-40_400_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[プリアボニアン,Priabonian]",
               "begin:-37_200_000-"
             ]
           ],
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[漸新世,Oligocene]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[ルペリアン,Rupelian]",
               "begin:-33_900_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[チャッティアン,Chattian]",
               "begin:-28_400_000-"
             ]
           ]
         ],
-        [OrdinalEra,
+        [When::TM::OrdinalEra,
           "*period:[新第三紀,Neogene]",
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[中新世,Miocene]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[アキタニアン,Aquitanian]",
               "begin:-23_030_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[バーディガリアン,Burdigalian]",
               "begin:-20_430_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[ランギアン,Langhian]",
               "begin:-15_970_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[サーラバリアン,Serravallian]",
               "begin:-13_820_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[トートニアン,Tortonian]",
               "begin:-11_606_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[メッシニアン,Messinian]",
               "begin:-7_244_000-"
             ]
           ],
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[鮮新世,Pliocene]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[ザンクリアン,Zanclean]",
               "begin:-5_330_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[ピアセンジアン,Piacenzian]",
               "begin:-3_598_000-"
             ]
           ]
         ],
-        [OrdinalEra,
+        [When::TM::OrdinalEra,
           "*period:[第四紀,Quaternary]",
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[更新世,Pleistocene]",
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[ゲラシアン,Gelasian]",
               "begin:-2_586_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[カラブリアン=,Calabrian]",
               "begin:-1_804_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[イオニアン=,Ionian=en_wiki:Middle_Pleistocene]",
               "begin:-779_000-"
             ],
-            [OrdinalEra,
+            [When::TM::OrdinalEra,
               "*age:[タランティアン=,Tarantian=en_wiki:Late_Pleistocene]",
               "begin:-124_000-"
             ]
           ],
-          [OrdinalEra,
+          [When::TM::OrdinalEra,
             "*epoch:[完新世,Holocene]",
             "begin:-9_700-",
             "end:+Infinity"

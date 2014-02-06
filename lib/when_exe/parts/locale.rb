@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2012 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -45,8 +45,14 @@ module When::Parts
       '竜' => '龍',
     }
 
+    # Escape
     # @private
-    Escape = '__!_ESCAPE_%2C_!__'
+    Escape = {
+      "\\\\" => "\\",
+      "\\n"  => "\n",
+      "\\r"  => "\r",
+      "\\,"  => ","
+    }
 
     class << self
 
@@ -128,8 +134,8 @@ module When::Parts
       # @private
       def _namespace(source=nil)
         case source
-        when Hash ; return source
-        when nil  ; return {}
+        when Hash ; source
+        when nil  ; {}
         when String
           namespace = {}
           source = $1 if (source=~/\A\s*\[?(.+?)\]?\s*\z/m)
@@ -139,8 +145,10 @@ module When::Parts
             pair = [''] + v.split(/\s*=\s*/, 2)
             namespace[pair[-2]] = pair[-1]
           end
-          return namespace
-        else ; raise TypeError, "Irregal Namespace Type"
+          namespace
+        when When::Parts::Resource::ContentLine
+          source.object.names
+        else ; raise TypeError, "Irregal Namespace Type: #{source.class}"
         end
       end
 
@@ -153,7 +161,9 @@ module When::Parts
         # source の配列化
         if source.kind_of?(String)
           source = $1 if (source=~/\A\s*\[?(.+?)\]?\s*\z/m)
-          source = source.split(/[\n\r,]+/)
+          source = source.scan(/((?:[^\\\n\r,]|\\.)+)(?:[\n\r,]+(?!\z))?|[\n\r,]+/m).flatten.map {|token|
+            (token||'').gsub(/\\./) {|escape| Escape[escape] || escape}
+          }
         end
 
         # 各Localeの展開
@@ -170,10 +180,12 @@ module When::Parts
 
       # 文字列 [.., .., ..] を分割する
       # @private
-      def _split(line)
-        line  = line.dup
+      def _split(source)
+        line  = source.dup
+        return [line] unless line =~ /,/
+        list  = []
         b = d = s = 0
-        (line.length-1).downto(0) do |i|
+        (source.length-1).downto(0) do |i|
           bs = 0
           (i-1).downto(0) do |k|
             break unless (line[k,1] == '\\')
@@ -181,14 +193,18 @@ module When::Parts
           end
           next if (bs[0] == 1)
           case line[i,1]
-          when "'" ; s  = 1-s  if (d == 0)
-          when '"' ; d  = 1-d  if (s == 0)
-          when ']' ; b += 1 if  (d+s == 0)
-          when '[' ; b -= 1 if  (d+s == 0 && b > 0)
-          when ',' ; line[i,1] = Escape if (b+d+s == 0)
+          when "'"         ; s  = 1-s  if (d == 0)
+          when '"'         ; d  = 1-d  if (s == 0)
+          when ']','}',')' ; b += 1 if  (d+s == 0)
+          when '[','{','(' ; b -= 1 if  (d+s == 0 && b > 0)
+          when ','
+            if (b+d+s == 0)
+              list.unshift(line[i+1..-1])
+              line = i > 0 ? line[0..i-1] : ''
+            end
           end
         end
-        return (line =='') ? [''] : line.split(Escape, -1)
+        list.unshift(line)
       end
 
       # locale 指定を解析して Hash の値を取り出す
@@ -294,6 +310,21 @@ module When::Parts
     def =~(regexp)
       @keys.each do |key|
         index = (@names[key] =~ regexp)
+        return index if index
+      end
+      return nil
+    end
+
+    # 部分文字列の位置
+    #
+    # @param [String] other 部分文字列
+    #
+    # @return [Integer] 部分文字列の先頭のindex(いずれかの locale で部分文字列を含んだ場合)
+    # @return [nil]     すべての locale で部分文字列を含まない場合
+    #
+    def index(other)
+      @keys.each do |key|
+        index = @names[key].index(Locale.translate(other, key))
         return index if index
       end
       return nil
@@ -493,7 +524,7 @@ module When::Parts
         case v
         when '', /^#/ ;
         when /^\/(.+)/; @access_key = $1
-        when /^(\*)?(?:([^=%]*?)\s*:)?\s*(.+?)\s*(=\s*(.+?)?)?$/
+        when /^(\*)?(?:([^=%]*?)\s*:)?\s*(.+?)\s*(=\s*([^=]+?)?)?$/
           asterisk[0], locale, name, assignment, ref = $~[1..5]
           asterisk[1], locale, default_ref = default_locale.shift unless locale
           locale ||= ''
@@ -523,7 +554,7 @@ module When::Parts
     # encode URI from patterns %%(...) or %.(...)
     def _encode(source)
       source.gsub(/%.<.+?>/) do |match|
-        URI.encode(match[3..-2].gsub(match[1], '%'))
+        URI.encode(match[3..-2]).gsub('%', match[1..1])
       end
     end
   end

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2012 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -20,7 +20,8 @@ module When::Coordinates
   class Kyusei     < Residue; end
 
   # Common Residue
-  CommonResidue = [When::BasicTypes::M17n, [
+  CommonResidue = [{'V'=>{'0618'=>{'A'=>'awakening_of_insects=,*啓蟄',
+                                   'B'=>'rain_water=,*雨水'}}}, When::BasicTypes::M17n, [
     "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
     "locale:[=en:, ja=ja:, tenreki, tibetan, yi, alias]",
     "names:[CommonResidue]",
@@ -49,7 +50,7 @@ module When::Coordinates
 
     [Residue,
       "locale:[=en:, ja=ja:, alias]",
-      "label:[StarMansion, *宿]", "divisor:28", "day:17",
+      "label:[StarMansion, *宿]", "divisor:28", "day:17",   "format:[%s(%02d)]",
       [Residue, "label:[Horn=,            *角宿,  Jiăo= ]", "remainder:0"],  #  1 α Vir 
       [Residue, "label:[Neck=,            *亢宿,  Kàng= ]", "remainder:1"],  #  2 κ Vir 
       [Residue, "label:[Root=,            *氐宿,  Dĭ=   ]", "remainder:2"],  #  3 α Lib 
@@ -111,7 +112,7 @@ module When::Coordinates
     ],
 
     [StemBranch,
-      "label:[Stem-Branch, *干支]", "divisor:60", "day:11", "year:4",
+      "label:[Stem-Branch, *干支]", "divisor:60", "day:11", "year:4", "format:[%s(%02d)]",
       [StemBranch, "label:[kinoe-ne=,           *甲子, 甲子, 木男鼠, 木公鼠]", "remainder: 0"],
       [StemBranch, "label:[kinoto-ushi=,        *乙丑, 乙好, 木女牛, 木母牛]", "remainder: 1"],
       [StemBranch, "label:[hinoe-tora=,         *丙寅, 丙寅, 火男虎, 火公虎]", "remainder: 2"],
@@ -191,30 +192,30 @@ module When::Coordinates
     [Residue,
       "locale:[=en:, ja=ja:, alias]",
       "label:[SolarTerm=en:Solar_term, *二十四節気]", "divisor:360",
-      [Residue, "label:[vernal_equinox=,       *春分, 二月中=]  ", "remainder:0"  ],
-      [Residue, "label:[clear_and_bright=,     *清明, 三月節=]  ", "remainder:15" ],
-      [Residue, "label:[grain_rain=,           *穀雨, 三月中=]  ", "remainder:30" ],
-      [Residue, "label:[start_of_summer=,      *立夏, 四月節=]  ", "remainder:45" ],
-      [Residue, "label:[grain_full=,           *小満, 四月中=]  ", "remainder:60" ],
-      [Residue, "label:[grain_in_ear=,         *芒種, 五月節=]  ", "remainder:75" ],
-      [Residue, "label:[summer_solstice=,      *夏至, 五月中=]  ", "remainder:90" ],
-      [Residue, "label:[minor_heat=,           *小暑, 六月節=]  ", "remainder:105"],
-      [Residue, "label:[major_heat=,           *大暑, 六月中=]  ", "remainder:120"],
-      [Residue, "label:[start_of_autumn=,      *立秋, 七月節=]  ", "remainder:135"],
-      [Residue, "label:[limit_of_heat=,        *処暑, 七月中=]  ", "remainder:150"],
-      [Residue, "label:[white_dew=,            *白露, 八月節=]  ", "remainder:165"],
-      [Residue, "label:[autumnal_equinox=,     *秋分, 八月中=]  ", "remainder:180"],
-      [Residue, "label:[cold_dew=,             *寒露, 九月節=]  ", "remainder:195"],
-      [Residue, "label:[frost_descent=,        *霜降, 九月中=]  ", "remainder:210"],
-      [Residue, "label:[start_of_winter=,      *立冬, 十月節=]  ", "remainder:225"],
-      [Residue, "label:[minor_snow=,           *小雪, 十月中=]  ", "remainder:240"],
-      [Residue, "label:[major_snow=,           *大雪, 十一月節=]", "remainder:255"],
-      [Residue, "label:[winter_solstice=,      *冬至, 十一月中=]", "remainder:270"],
-      [Residue, "label:[minor_cold=,           *小寒, 十二月節=]", "remainder:285"],
-      [Residue, "label:[major_cold=,           *大寒, 十二月中=]", "remainder:300"],
-      [Residue, "label:[start_of_spring=,      *立春, 正月節=]  ", "remainder:315"],
-      [Residue, "label:[rain_water=,           *雨水, 正月中=]  ", "remainder:330"], # 儀鳳暦では啓蟄
-      [Residue, "label:[awakening_of_insects=, *啓蟄, 二月節=]  ", "remainder:345"]  # 儀鳳暦では雨水
+      [Residue, "label:[vernal_equinox=,          *春分, 二月中=]  ", "remainder:0"  ],
+      [Residue, "label:[clear_and_bright=,        *清明, 三月節=]  ", "remainder:15" ],
+      [Residue, "label:[grain_rain=,              *穀雨, 三月中=]  ", "remainder:30" ],
+      [Residue, "label:[start_of_summer=,         *立夏, 四月節=]  ", "remainder:45" ],
+      [Residue, "label:[grain_full=,              *小満, 四月中=]  ", "remainder:60" ],
+      [Residue, "label:[grain_in_ear=,            *芒種, 五月節=]  ", "remainder:75" ],
+      [Residue, "label:[summer_solstice=,         *夏至, 五月中=]  ", "remainder:90" ],
+      [Residue, "label:[minor_heat=,              *小暑, 六月節=]  ", "remainder:105"],
+      [Residue, "label:[major_heat=,              *大暑, 六月中=]  ", "remainder:120"],
+      [Residue, "label:[start_of_autumn=,         *立秋, 七月節=]  ", "remainder:135"],
+      [Residue, "label:[limit_of_heat=,           *処暑, 七月中=]  ", "remainder:150"],
+      [Residue, "label:[white_dew=,               *白露, 八月節=]  ", "remainder:165"],
+      [Residue, "label:[autumnal_equinox=,        *秋分, 八月中=]  ", "remainder:180"],
+      [Residue, "label:[cold_dew=,                *寒露, 九月節=]  ", "remainder:195"],
+      [Residue, "label:[frost_descent=,           *霜降, 九月中=]  ", "remainder:210"],
+      [Residue, "label:[start_of_winter=,         *立冬, 十月節=]  ", "remainder:225"],
+      [Residue, "label:[minor_snow=,              *小雪, 十月中=]  ", "remainder:240"],
+      [Residue, "label:[major_snow=,              *大雪, 十一月節=]", "remainder:255"],
+      [Residue, "label:[winter_solstice=,         *冬至, 十一月中=]", "remainder:270"],
+      [Residue, "label:[minor_cold=,              *小寒, 十二月節=]", "remainder:285"],
+      [Residue, "label:[major_cold=,              *大寒, 十二月中=]", "remainder:300"],
+      [Residue, "label:[start_of_spring=,         *立春, 正月節=]  ", "remainder:315"],
+      [Residue, 'label:[#{A:rain_water=,          *雨水},正月中=]  ', "remainder:330"], # 戊寅・儀鳳暦では啓蟄
+      [Residue, 'label:[#{B:awakening_of_insects=,*啓蟄},二月節=]  ', "remainder:345"]  # 戊寅・儀鳳暦では雨水
     ],
 
     [Residue,

@@ -14,7 +14,7 @@ module When::BasicTypes
 {"date"=>
   {"abbr_day_names"=>["Dg", "Dl", "Dm", "Dc", "Dj", "Dv", "Ds"],
    "abbr_month_names"=>
-    ["~,",
+    [nil,
      "Gen",
      "Feb",
      "Mar",

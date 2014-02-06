@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2013 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license
   described in the LICENSE.txt file included in this archive.
@@ -121,10 +121,10 @@ module Test
       end
     end
 
-    def test__to_hash
+    def test__to_h
       [
        ['HLC0.0.0.0.0',
-         {:calendar=>["_e:Mayan::PHLC",-13], :sdn=>584283, :cal_date=>[13, 0, 0, 0, 0],
+         {:calendar=>["_e:LongCount::PHLC",-13], :sdn=>584283, :cal_date=>[13, 0, 0, 0, 0],
           :notes=>[[{:note=>"Trecena", :value=>"Trecena(4/13)"},
                     {:note=>"Tzolk'in", :value=>"Ajaw(19/20)"},
                     {:note=>"Lords_of_the_Night", :value=>"G9(0/9)"},
@@ -137,9 +137,9 @@ module Test
        ['明治7.5.7',
          {:calendar=>["_e:Japanese::明治",1867], :sdn=>2405651, :cal_date=>[7, 5, 7],
           :notes=>[[{:note=>"干支",  :value=>"甲戌(10)", :position=>"共通"}],
-                   [{:note=>"月名",  :value=>"May",     :position=>"月建"}],
-                   [{:note=>"干支",  :value=>"甲子(0)", :position=>"共通"},
-                    {:note=>"六曜",  :value=>"赤口",    :position=>"民間"}]]}],
+                   [{:note=>"月名",  :value=>"May",      :position=>"月建"}],
+                   [{:note=>"干支",  :value=>"甲子(00)", :position=>"共通"},
+                    {:note=>"六曜",  :value=>"赤口",     :position=>"民間"}]]}],
 
        ['明治17.5.7',
          {:calendar=>["_e:Japanese::明治",1867], :sdn=>2409304, :cal_date=>[17, 5, 7],
@@ -156,17 +156,17 @@ module Test
        [11,
          {:calendar=>["_tm:JulianDate"], :sdn=>11,
           :notes=>[[{:note=>"Week",  :value=>"Friday(4)"},
-                    {:note=>"干支",  :value=>"甲子(0)"}]]}],
+                    {:note=>"干支",  :value=>"甲子(00)"}]]}],
 
        [11.0,
          {:calendar=>["_tm:JulianDate"], :sdn=>11,
           :notes=>[[{:note=>"Week",  :value=>"Friday(4)"},
-                    {:note=>"干支",  :value=>"甲子(0)"}]],
+                    {:note=>"干支",  :value=>"甲子(00)"}]],
           :clk_time=>[11, 12, 0, 0]}]
 
       ].each do |sample|
         date, verify = sample
-        list = When.when?(date).to_hash({:simple=>true})
+        list = When.when?(date).to_h({:simple=>true})
         [:calendar, :cal_date, :sdn, :clk_time].each do |key|
           assert_equal(verify[key], list[key])
         end

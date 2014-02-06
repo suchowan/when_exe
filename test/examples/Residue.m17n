@@ -1,5 +1,5 @@
 BEGIN:B:M17N
-# Copyright (C) 2011 Takashi SUGA
+# Copyright (C) 20112-13 Takashi SUGA
 #
 # You may use and/or modify this file according to the license
 # described in the LICENSE.txt file included in this archive.
@@ -23,7 +23,8 @@ BEGIN:B:M17N
       REMAINDER:5
     END:CO:RESIDUE
     BEGIN:CO:RESIDUE
-      LABEL:[Sunday,日曜日]
+      LABEL;ALTID=1;LANGUAGE=en:Sunday
+      LABEL;ALTID=1;LANGUAGE=ja:日曜日
       REMAINDER:6
     END:CO:RESIDUE
   END:CO:RESIDUE

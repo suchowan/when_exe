@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2013 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license
   described in the LICENSE.txt file included in this archive.
@@ -52,7 +52,7 @@ module Test::Coordinates
         assert_equal(sample[1], (r6 & date3).to_s)
       end
 
-      kanshi = When.Resource("_co:Residue?divisor=60&YEAR=4&DAY=11")
+      kanshi = When.Resource("_co:Residue?divisor=60&year=4&day=11")
       date   = When.when?("19820606T021540+0900^^Julian")
       assert_equal("1982-07-27T02:15:40+09:00", (date & kanshi.to('day')).to_s)
       assert_equal("1985-06-06T02:15:40+09:00", (date & kanshi.to('year')[1]).to_s)
@@ -133,7 +133,7 @@ module Test::Coordinates
 
       assert_equal(2426467, (date2+When::Duration('P30Y')).to_i)
       sample = [
-        ["Japan64(1931).05.05", false],
+        ["ModernJapanese64(1931).05.05", false],
         ["S06(1931).05.05", true]
       ]
       ((date2+When::Duration('P30Y')).scan(When.Resource('ModernJapanese', '_e:'))).each do |d|
@@ -344,8 +344,13 @@ module Test::Coordinates
     end
 
     def test__reference
-      location = When.Resource("_co:Spatial?label=Kyoto&long=136&lat=30&ref=http%3A%2F%2f")
+      location = When.Resource("_co:Spatial?label=Kyoto&long=136&lat=30&ref=(http://)")
       assert_equal("http://", location.ref)
+    end
+
+    def test__surface_radius
+      location = When.Resource("_co:Spatial?label=Kyoto&long=136&lat=30&ref=(http://)")
+      assert_equal(6378.14, location.surface_radius)
     end
 
     def test__spatial_m17n

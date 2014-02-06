@@ -100,8 +100,8 @@ module When
       def ephemeris_equinox(date)
         equinox_time = @engine.cn_to_time(+date[0])
         equinox_date = (equinox_time + 0.5 + @engine.long/360.0).floor
-        sun_set_time = @engine.sun_set(equinox_date)
-        (sun_set_time <= equinox_time) ? equinox_date+1 : equinox_date
+        sunset_time = @engine.sunset(equinox_date)
+        (sunset_time <= equinox_time) ? equinox_date+1 : equinox_date
       end
 
       private

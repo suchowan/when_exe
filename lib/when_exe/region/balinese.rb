@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2013 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -71,24 +71,21 @@ module When
     # ウク周期
     #
     class Wuku < Residue
+
+      # Urip 7
+      Urip7    = [ 5, 4, 3, 7, 8, 6, 9]
+
+      # Urip 5
+      Urip5    = [ 9, 7, 4, 8, 5]
+
       # 2日週
-      Dwiwara  = [ 0, 1, 1, 1, 1, 1, 0,
-                   1, 0, 0, 0, 1, 0, 1,
-                   0, 1, 0, 1, 0, 1, 0,
-                   0, 0, 1, 0, 1, 1, 1,
-                   1, 1, 0, 0, 0, 0, 0]
+      Dwiwara  = (0...35).to_a.map {|d| (Urip7[d % 7] + Urip5[d % 5]) %  2}
+
       # 10日週
-      Dasawara = [ 0, 1, 2, 3, 4, 3, 5,
-                   6, 7, 8, 5, 3, 9, 2,
-                   9, 4, 9, 1, 5, 1, 8,
-                   7, 8, 1, 7, 2, 4, 4,
-                   4, 6, 7, 0, 7, 0, 0]
+      Dasawara = (0...35).to_a.map {|d| (Urip7[d % 7] + Urip5[d % 5]) % 10}
+
       # Watek
-      Watek    = [ 0, 1, 2, 3, 4, 3, 5,
-                   6, 7, 8, 5, 3, 9,10,
-                   9, 4, 9, 1, 5, 1,11,
-                   7, 8, 1, 7,10, 4, 4,
-                   4, 6, 7, 0, 7, 0, 0]
+      Watek    = (0...35).to_a.map {|d|  Urip7[d % 7] + Urip5[d % 5] - 7  }
 
       # 2日週
       # @return [When::BasicTypes::M17n]
@@ -136,15 +133,15 @@ module When
     #
     # バリのサカ暦
     #
-    Balinese = [self, [
+    BalineseLuniSolar = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "period:[BalineseLuniSolar=, バリ・サカ暦=]",
-      ["[BSE=, サカ暦=, alias:Balinese_Saka_Era]1886-07<13", "Calendar Epoch", "1886-07<13^BalineseLuniSolar1965",
-                                                             "1892-07-04^BalineseLuniSolar1971",
-                                                             "1914-07-08^BalineseLuniSolar1993",
-                                                             "1921-06<10^BalineseLuniSolar2000",
-                                                             "1924-07<14^BalineseLuniSolar2003", '+Infinity']
+      ["[SE=, サカ暦=, alias:Balinese_Saka_Era]1887-07<13", "Calendar Epoch", "1965-07<13^BalineseLuniSolar1965",
+                                                            "1971-07-04^BalineseLuniSolar1971",
+                                                            "1993-07-08^BalineseLuniSolar1993",
+                                                            "2000-06<10^BalineseLuniSolar2000",
+                                                            "2003-07<14^BalineseLuniSolar2003", '+Infinity']
     ]]
   end
 
@@ -204,6 +201,8 @@ module When
                                               :trunk=>When.Resource('_m:BalineseTerms::HinduMonth::*'),
                                               :shift=>+8})
 
+        @origin_of_MSC = 0
+
         @tabular = CyclicTableBased.new({
           'indices'    => [month_index, Coordinates::Index.new],
           'rule_table' => @rule_table
@@ -222,8 +221,6 @@ module When
         @indices    = [month_index, Coordinates::Index.new({:branch=>{-2=>intercalary_day[0]}})]
 
         @note       = When.CalendarNote(@note || 'BalineseNote')
-
-        @timezone ||= 0
         super
       end
     end
@@ -452,16 +449,16 @@ module When
 
           [When::BasicTypes::M17n,
             "names:[Dasawara=, 10日週=]",
-            "[Sri    ]", #  0
+            "[Pandita]", #  0
             "[Pati   ]", #  1
-            "[Raja   ]", #  2
-            "[Manuh  ]", #  3
-            "[Duka   ]", #  4
-            "[Manusa ]", #  5
-            "[Raksasa]", #  6
-            "[Suka   ]", #  7
+            "[Suka   ]", #  2
+            "[Duka   ]", #  3
+            "[Sri    ]", #  4
+            "[Manuh  ]", #  5
+            "[Manusa ]", #  6
+            "[Raja   ]", #  7
             "[Dewa   ]", #  8
-            "[Pandita]"  #  9
+            "[Raksasa]"  #  9
           ],
 
           [When::Coordinates::Residue,
@@ -476,18 +473,18 @@ module When
 
           [When::BasicTypes::M17n,
             "names:[Watek=]",
-            "[Suku-Gajah=  ]", #  0
-            "[Gajah-Lembu= ]", #  1
-            "[Watu-Lembu=  ]", #  2
-            "[Wong-Lembu=  ]", #  3
-            "[Buta-Uler=   ]", #  4
-            "[Gajah-Lintah=]", #  5
-            "[Suku-Uler=   ]", #  6
-            "[Watu-Lintah= ]", #  7
+            "[Watu-Lembu=  ]", #  7
             "[Buta-Lintah= ]", #  8
-            "[Wong-Gajah=  ]", #  9
-            "[Watu-Uler=   ]", # 10
-            "[Buta-Gajah=  ]"  # 11
+            "[Suku-Uler=   ]", #  9
+            "[Wong-Gajah=  ]", # 10
+            "[Gajah-Lembu= ]", # 11
+            "[Watu-Lintah= ]", # 12
+            "[Buta-Uler=   ]", # 13
+            "[Suku-Gajah=  ]", # 14
+            "[Wong-Lembu=  ]", # 15
+            "[Gajah-Lintah=]", # 16
+            "[Watu-Uler=   ]", # 17
+            "[Buta-Gajah=  ]"  # 18
           ],
 
           [When::Coordinates::Residue,

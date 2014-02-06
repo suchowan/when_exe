@@ -14,7 +14,8 @@ module When::BasicTypes
 {"date"=>
   {"abbr_day_names"=>["ned", "pon", "uto", "sri", "čet", "pet", "sub"],
    "abbr_month_names"=>
-    ["jan",
+    [nil,
+     "jan",
      "feb",
      "mar",
      "apr",
@@ -31,7 +32,8 @@ module When::BasicTypes
    "formats"=>
     {"default"=>"%d.%m.%Y.", "long"=>"%e. %B %Y.", "short"=>"%e. %b. %Y."},
    "month_names"=>
-    ["januar",
+    [nil,
+     "januar",
      "februar",
      "mart",
      "april",

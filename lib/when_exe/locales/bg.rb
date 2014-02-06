@@ -15,7 +15,7 @@ module When::BasicTypes
   {"abbr_day_names"=>["нед", "пон", "вт", "ср", "чет", "пет", "съб"],
    "abbr_month_names"=>
     [nil,
-     "яну.",
+     "ян.",
      "фев.",
      "март",
      "апр.",

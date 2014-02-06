@@ -11,29 +11,30 @@ module When
     #
     # オブジェクトの内容を Hash 化
     #
-    # @param [String, Integer] options {When::TM::TemporalPosition#_to_hash}に渡す
+    # @param [String, Integer] options {When::TM::TemporalPosition#_to_h}に渡す
     # @param [Hash] options 下記のとおり
+    # @option options [Numeric] :precision 指定があれば「イベント名(イベント時刻)」出力の時刻を指定の精度に丸める
     # @option options [Boolean] :camel   true ならシンボルを camel case にする
     # @option options [String]  :locale  文字列化の locale(指定なしは M17nオブジェクトに変換)
     # @option options [Boolean] :simple  true ならIRI の先頭部分を簡約表現にする
     # @option options [Boolean] :residue true なら Residue をそのまま出力
-    # @option options [Object]  :その他  各クラス#_to_hash を参照
+    # @option options [Object]  :その他  各クラス#_to_h を参照
     #
     # @return [Hash] (Whenモジュール内のクラスは文字列 or M17n化)
     #
-    def to_hash(options={})
-      _m17n_form(_to_hash(options), options.kind_of?(Hash) ? options : {})
+    def to_h(options={})
+      _m17n_form(_to_h(options), options.kind_of?(Hash) ? options : {})
     end
 
     #
     # オブジェクトの内容を JSON 化
     #
-    # @param [Object] options #to_hash を参照
+    # @param [Object] options #to_h を参照
     #
-    # @return [String] to_hash 結果を JSON文字列化したもの
+    # @return [String] to_h 結果を JSON文字列化したもの
     #
     def _to_json(options={})
-      JSON.dump(to_hash(options))
+      JSON.dump(to_h(options))
     end
 
     #
@@ -47,14 +48,14 @@ module When
     #
     # 時間位置オブジェクトの内容を Hash 化
     #
-    # @param [Object] options #to_hash を参照
+    # @param [Object] options #to_h を参照
     #
     # @return [Hash]
     #   各クラスの HashProperty に列挙した属性のうち値が false/nil でないものを
     #     属性 => 値
     #   とする Hash
     #
-    def _to_hash(options={})
+    def _to_h(options={})
       hash = {}
       self.class::HashProperty.each do |property|
         method, skip = property
@@ -69,19 +70,20 @@ module When
     #
     # @param [Object] element 変換元
     # @param [Hash] options 下記の通り
-    # @option options [Boolean] :camel   true ならシンボルを camel case にする
-    # @option options [String]  :locale  文字列化の locale(指定なしは M17nオブジェクトに変換)
-    # @option options [Boolean] :simple  true ならIRI の先頭部分を簡約表現にする
-    # @option options [Boolean] :residue true なら Residue をそのまま出力
+    # @option options [Numeric] :precision 指定があれば「イベント名(イベント時刻)」出力の時刻を指定の精度に丸める
+    # @option options [Boolean] :camel     true ならシンボルを camel case にする
+    # @option options [String]  :locale    文字列化の locale(指定なしは M17nオブジェクトに変換)
+    # @option options [Boolean] :simple    true ならIRI の先頭部分を簡約表現にする
+    # @option options [Boolean] :residue   true なら Residue をそのまま出力
     #
     # @return [Hash, Array] 変換結果
     #
     # @note element.events のある日付は _event_form で変換する
     #
     def _m17n_form(element, options={})
-      result = element.respond_to?(:_event_form)    ? element._event_form(self)       :
-               element.respond_to?(:_to_hash_value) ? element._to_hash_value(options) :
-               element.respond_to?(:label)         && element.label ?   element.label :
+      result = element.respond_to?(:_event_form)    ? element._event_form(self, options[:precision]) :
+               element.respond_to?(:_to_hash_value) ? element._to_hash_value(options)                :
+               element.respond_to?(:label)         && element.label ?   element.label                :
         case element
         when Hash   ; Hash[*(element.keys.inject([]) { |s, k|
                         s + [_m17n_form(k, options), _m17n_form(element[k], options)]
@@ -121,7 +123,7 @@ module When
       end
 
       #
-      # to_hash のための要素生成
+      # to_h のための要素生成
       # @private
       def _to_hash_value(options={})
         options[:residue] ? self : to_m17n
@@ -130,7 +132,7 @@ module When
 
     class Pair
       #
-      # to_hash のための要素生成
+      # to_h のための要素生成
       # @private
       def _to_hash_value(options={})
         to_s
@@ -319,6 +321,7 @@ module When
                 begin
                   date = it.next
                 end while date.to_i == dates[-1].to_i
+                date = date.to_cal_date unless date.instance_of?(TM::CalDate)
                 dates << date
               end
             end
@@ -326,6 +329,11 @@ module When
         else
           begun = self.floor(MONTH,DAY) + When::TM::PeriodDuration.new([0, first,  0])
           ended = begun                 + When::TM::PeriodDuration.new([0, length, 0])
+          loop do
+            last = ended.prev
+            break unless last.cal_date[MONTH-1] == ended.cal_date[MONTH-1]
+            ended = last
+          end
           if block_given?
             (begun...ended).map do |date|
               yield(date)
@@ -535,7 +543,7 @@ module When
       #   - :dynamical dynamical_time / 秒
       #   - :universal universal_time / 秒
       #
-      def _to_hash(options={})
+      def _to_h(options={})
         hash = super.update({
           :sdn      => to_i,
           :calendar => calendar_name,
@@ -596,9 +604,7 @@ module When
 
       def _to_uri(date)
         uri  = date.gsub(/\./, '-').gsub(/%/, '@')
-        unless @calendar_era_name || @frame == When.Calendar('Gregorian')
-          uri += '^^' + @frame.iri.gsub(/\?/, '%3F').gsub('.', '@').split(/\//)[-1]
-        end
+        uri += '^^' + @frame.iri.split(/\//)[-1] unless @calendar_era_name || @frame == When.Calendar('Gregorian')
         uri
       end
       private :_to_uri
@@ -772,7 +778,9 @@ module When
       #
       def to_m17n(precision=@precision)
         time  = m17n('T' + _time_to_s(precision))
-        time += @frame.zone if (@frame && !@frame.equal?(Clock.local_time))
+        if @frame
+          time += @frame.zone unless Clock.is_local_time_set? && @frame.equal?(Clock.local_time)
+        end
         return time
       end
 
@@ -784,7 +792,9 @@ module When
       #
       def to_s(precision=@precision)
         time  = 'T' + _time_to_s(precision)
-        time += @frame.zone if (@frame && !@frame.equal?(Clock.local_time))
+        if @frame
+          time += @frame.zone unless Clock.is_local_time_set? && @frame.equal?(Clock.local_time)
+        end
         return time
       end
 
@@ -846,9 +856,12 @@ module When
 
         # 秒
         digits  = [precision - @clk_time.length + 1, STRING-SECOND].min
-        if digits >= 0
-          terms  << @clk_time[-1]
-          format += (digits == 0) ? "%02d" : "%02.#{digits}f"
+        if digits == 0
+          format += "%02d"
+        elsif digits > 0
+          factor  = 10**digits
+          terms[-1] = ((@clk_time[-1] + 1E-6) * factor).floor.to_f / factor  # 切り捨て(10で割る丸めガードあり)
+          format += "%02.#{digits}f"
         end
 
         # 結果
@@ -857,7 +870,7 @@ module When
       end
 
       #
-      # to_hash のための要素生成
+      # to_h のための要素生成
       # @private
       def _to_hash_value(options={})
         clk_time.map {|e| _m17n_form(e, options) }
@@ -923,7 +936,7 @@ module When
       #   - :clk_time to_clock_time の結果 ( 日, 時, 分, 秒 )
       #   - :notes  Hash (の Array (の Array)) - _notes(options)
       #
-      def _to_hash(options={})
+      def _to_h(options={})
         super.update({:cal_date=>@cal_date})
       end
 
@@ -1090,32 +1103,37 @@ module When
       # 多言語対応文字列化 - When.exe Standard Representation により多言語対応文字列化する
       #
       # @param [Integer] precision どの桁まで多言語対応文字列化するか、分解能で指定する
+      # @param [false]   round 常に切り捨てる(DateAndTimeとの互換性のためのダミーの引数)
       #
       # @return [When::BasicTypes::M17n]
       #
-      def to_m17n(precision=@precision)
-        era, = @calendar_era_name
-        date = _date_to_s(precision)
-        return m17n(date) unless era
-        return m17n(era) + date
+      def to_m17n(precision=@precision, round=false)
+        date = m17n(_date_to_s(precision))
+        return date unless @calendar_era
+        return _parent_labels.inject(m17n(@calendar_era_name[0])) {|era_name, parent|
+          era_name.prefix(m17n(parent) + '::')
+        } + date
       end
 
       # 文字列化 - When.exe Standard Representation により文字列化する
       #
       # @param [Integer] precision どの桁まで多言語対応文字列化するか、分解能で指定する
+      # @param [false]   round 常に切り捨てる(DateAndTimeとの互換性のためのダミーの引数)
       #
       # @return [String]
       #
-      def to_s(precision=@precision)
-        era, = @calendar_era_name
+      def to_s(precision=@precision, round=false)
         date = _date_to_s(precision)
-        return date unless era
-        return era.to_s + date
+        return date unless @calendar_era
+        return _parent_labels.inject(@calendar_era_name[0].to_s) {|era_name, parent|
+          parent.to_s + '::' + era_name
+        } + date
       end
 
       # event を 文字列化 - 日時で与えられた event を文字列化する
       #
       # @param [When::TM::TemporalPosition] other 時系の歩度を比較する基準(nilは比較しない)
+      # @param [Numeric] round_precision イベント名(イベント)出力の場合の時刻の丸め位置(nilなら丸めない)
       #
       # @return [String]
       #
@@ -1124,13 +1142,34 @@ module When
       #   日時の精度が日より細かい - イベント名(イベント時刻)
       #   日時の精度が日           - イベント名(当日までの経過日数)
       #
-      def _event_form(other=nil)
+      def _event_form(other=nil, round_precision=nil)
         return to_m17n unless events
-        return events[0] + '(' + clk_time.to_s[/[:*=0-9]+/] + ')' if precision > When::DAY
+        return events[0] + '(' + _clk_time_for_inspect(round_precision).to_s(round_precision || precision)[/[:*=0-9]+/] + ')' if precision > When::DAY
         return events[0] unless other
         other = JulianDate.dynamical_time(other.dynamical_time,
                   {:time_standard=>time_standard}) unless time_standard.rate_of_clock == other.time_standard.rate_of_clock
         events[0] + '('  + (other.to_i - to_i).to_s + ')'
+      end
+
+      private
+
+      # 日付の年号に曖昧性がある場合の親年号の label の Array
+      #
+      # @return [Array<String>]
+      #
+      def _parent_labels
+        return [] unless (area   = When::TM::CalendarEra[nil]) &&
+                         (period = area[nil])
+        list = []
+        era  = @calendar_era
+        while (labels = period[era.label.to_s]) &&
+              (epoch  = labels[era.epoch_year]) &&
+              (epoch.size > 1) &&
+              (parent = era.parent).respond_to?(:epoch_year)
+          list << parent.label
+          era = parent
+        end
+        list
       end
 
       # 日付の年号以外の部分を文字列化する
@@ -1144,23 +1183,23 @@ module When
         precision = [precision, 1 - @cal_date.length].max
         precision = [precision, DAY].min
         terms  = []
-        format = ""
+        ext_dg = [(@extra_year_digits||1).to_i, 0].max
 
         # 年
         year_by_epoch = @cal_date[0]
-        if (@calendar_era_name)
+        if @calendar_era_name
           era, epoch, reverse = @calendar_era_name
           year_in_term        = reverse ? -year_by_epoch : year_by_epoch
           year_by_calendar    = epoch + year_by_epoch if epoch
           terms  << year_in_term
-          format += (0..99) === (year_in_term * 1) ? "%02d." : "%04d."
+          format = (0..99) === (year_in_term * 1) ? "%02d." : "%04d."
           if year_by_calendar && year_by_calendar != year_in_term
             terms  << (year_by_calendar * 1)
             format += "(%04d)"
           end
         else
           terms  << year_by_epoch
-          format += (0..9999) === (year_by_epoch * 1) ? "%04d." : "%06d."
+          format = (0..9999) === (year_by_epoch * 1) ? "%04d." : "%+0#{5+ext_dg}d."
         end
 
         # 月日
@@ -1196,22 +1235,35 @@ module When
       # 多言語対応文字列化 - When.exe Standard Representation により多言語対応文字列化する
       #
       # @param [Integer] precision どの桁まで多言語対応文字列化するか、分解能で指定する
+      # @param [true, false] round 指定の桁までで丸める(true)か, 切り捨てる(false)か
+      # @note 丸めるのは precision が When::DAY よりも高精度の場合のみである
       #
       # @return [When::BasicTypes::M17n]
       #
-      def to_m17n(precision=@precision)
-        super + @clk_time.to_m17n(precision)
+      def to_m17n(precision=@precision, round=false)
+        super + _clk_time_for_inspect(round ? precision : nil).to_m17n(precision)
       end
 
       # 文字列化 -When.exe Standard Representation により文字列化する
       #
       # @param [Integer] precision どの桁まで多言語対応文字列化するか、分解能で指定する
+      # @param [true, false] round 指定の桁までで丸める(true)か, 切り捨てる(false)か
+      # @note 丸めるのは precision が When::DAY よりも高精度の場合のみである
       #
       # @return [String]
       #
-      def to_s(precision=@precision)
-        super + @clk_time.to_s(precision)
+      def to_s(precision=@precision, round=false)
+        super + _clk_time_for_inspect(round ? precision : nil).to_s(precision)
       end
+
+      # 出力に使用する clk_time の作成
+      def _clk_time_for_inspect(precision)
+        return @clk_time unless precision && precision > When::DAY
+        base = self + When::TM::Duration.new(@clk_time.frame._round_value(precision))
+        base.clk_time.clk_time[When::HOUR] = @clk_time.clk_time[When::HOUR] + 1 unless self.to_i == base.to_i
+        return base.clk_time
+      end
+      private :_clk_time_for_inspect
 
       # 時
       #

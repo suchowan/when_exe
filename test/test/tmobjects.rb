@@ -124,6 +124,17 @@ module Test::TM
       period_0203_0206 = When::TM::Period.new(instant[2], instant[5])
       period_0201_0206 = When::TM::Period.new(instant[0], instant[5])
 
+      extent_0201_0202 = When::EX::Extent.new(period_0201_0202)
+      extent_0202_0203 = When::EX::Extent.new(period_0202_0203)
+      extent_0203_0204 = When::EX::Extent.new(period_0203_0204)
+      extent_0204_0205 = When::EX::Extent.new(period_0204_0205)
+      extent_0205_0206 = When::EX::Extent.new(period_0205_0206)
+
+      extent_0202_0204 = When::EX::Extent.new(period_0202_0204)
+      extent_0204_0206 = When::EX::Extent.new(period_0204_0206)
+      extent_0203_0206 = When::EX::Extent.new(period_0203_0206)
+      extent_0201_0206 = When::EX::Extent.new(period_0201_0206)
+
       sample = ['P1D', 'P0D', 'P0D', 'P0D', 'P1D', 'P2D']
       instant.each do |i|
         assert_equal(sample.shift, period_0202_0204.distance(i).to_s)
@@ -136,6 +147,22 @@ module Test::TM
        ['P0D', period_0204_0205, period_0202_0204],
        ['P0D', period_0203_0206, period_0202_0204],
        ['P1D', period_0205_0206, period_0202_0204]].each do |sample|
+        assert_equal(sample[0], sample[1].distance(sample[2]).to_s)
+        assert_equal(sample[0], sample[2].distance(sample[1]).to_s)
+      end
+
+      sample = ['P1D', 'P0D', 'P0D', 'P0D', 'P1D', 'P2D']
+      instant.each do |i|
+        assert_equal(sample.shift, extent_0202_0204.distance(i).to_s)
+      end
+
+      [['P2D', extent_0201_0202, extent_0204_0206],
+       ['P0D', extent_0201_0202, extent_0202_0204],
+       ['P0D', extent_0202_0203, extent_0202_0204],
+       ['P0D', extent_0203_0204, extent_0202_0204],
+       ['P0D', extent_0204_0205, extent_0202_0204],
+       ['P0D', extent_0203_0206, extent_0202_0204],
+       ['P1D', extent_0205_0206, extent_0202_0204]].each do |sample|
         assert_equal(sample[0], sample[1].distance(sample[2]).to_s)
         assert_equal(sample[0], sample[2].distance(sample[1]).to_s)
       end
@@ -283,46 +310,6 @@ module Test::TM
          assert_equal(sample[1], period[sample[0]])
       end
     end
-
-    def test__julian_gregorian_change
-      epoch = When.when?('CE1582.10.3') ^ When.Duration('P1D')
-      sample = [
-        "CE1582.10.03",
-        "CE1582.10.04",
-        "CE1582.10.15",
-        "CE1582.10.16"
-      ]
-      4.times do
-        assert_equal(sample.shift, epoch.next.to_s)
-      end
-
-      sample = [
-        "CE1582.10.16",
-        "CE1582.10.15",
-        "CE1582.10.04",
-        "CE1582.10.03"
-      ]
-      epoch = When.when?('CE1582.10.16') ^ -When.Duration('P1D')
-      4.times do
-        assert_equal(sample.shift, epoch.next.to_s)
-      end
-
-     assert_equal(
-       [["October 1582",
-        ["-", 1, 2, 3, 4, 15, 16],
-        [17, 18, 19, 20, 21, 22, 23],
-        [24, 25, 26, 27, 28, 29, 30],
-        [31, "-", "-", "-", "-", "-", "-"]]],
-       When.when?('CE1582.10').month_included('SU') {|date, type|
-         case type
-         when When::YEAR,
-              When::MONTH ; date.strftime("%B %Y")
-         when When::WEEK  ; nil
-         when When::DAY   ; date[0]
-         else             ; '-'
-         end
-       })
-    end
   end
 
   class IntervalLength < Test::Unit::TestCase
@@ -335,30 +322,6 @@ module Test::TM
       ].each do |sample|
         interval = When.Duration(sample[0])
         assert_equal(sample[1..5], [interval.value, interval.factor, interval.radix, interval.unit, interval.to_s])
-      end
-    end
-
-    def test__julian_gregorian_change
-      epoch = When.when?('CE1582.10.03') ^ When.Duration('1D')
-      sample = [
-        "CE1582.10.03",
-        "CE1582.10.04",
-        "CE1582.10.15",
-        "CE1582.10.16"
-      ]
-      4.times do
-        assert_equal(sample.shift, epoch.next.to_s)
-      end
-
-      sample = [
-        "CE1582.10.16",
-        "CE1582.10.15",
-        "CE1582.10.04",
-        "CE1582.10.03"
-      ]
-      epoch = When.when?('CE1582.10.16') ^ -When.Duration('1D')
-      4.times do
-        assert_equal(sample.shift, epoch.next.to_s)
       end
     end
   end

@@ -54,10 +54,9 @@ module When::BasicTypes
  "time"=>
   {"am"=>"am",
    "formats"=>
-    {"default"=>"%a, %d %b %Y %H:%M:%S %z",
-     "long"=>"%B %d, %Y %H:%M",
-     "short"=>"%d %b %H:%M",
-     "time"=>"%H:%M:%S %z"},
+    {"default"=>"%a, %d %b %Y %I:%M:%S %p %Z",
+     "long"=>"%B %d, %Y %I:%M %p",
+     "short"=>"%d %b %I:%M %p"},
    "pm"=>"pm"},
  "datetime"=>
   {"distance_in_words"=>

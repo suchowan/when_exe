@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2013 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -19,16 +19,33 @@ module When::Parts
     LabelProperty = nil
 
     # @private
-    class Element
-      attr_reader :predicate
-      attr_reader :object
-      attr_reader :attribute
+    class ContentLine
+
+      RFC6350 = {
+        "\\\\" => "\\",
+        "\\n"  => "\n",
+        "\\N"  => "\n",
+        "\\;"  => ";",
+        "\\:"  => ":"
+      }
+
+      RFC6868 = {
+        "^n"  => "\n",
+        "^^"  => "^",
+        "^'"  => '"'
+      }
+
+      attr_reader   :predicate
+      attr_accessor :object
+      attr_reader   :attribute
       attr_accessor :namespace
-      attr_reader :marked
+      attr_accessor :same_altid
+      attr_reader   :marked
 
       def initialize(key, object=nil, marked=nil)
         key = key.downcase.gsub(/-/,'_') if (key==key.upcase)
         @predicate, @namespace = key.split(/:/).reverse
+        object     = object.gsub(/\^./) {|escape| RFC6868[escape] || escape} if object.instance_of?(String)
         @object    = object
         @marked    = marked
         @attribute = {}
@@ -80,21 +97,16 @@ module When::Parts
       #
       def [](label)
 
-        # nil label
+        # nil label の場合
         return _pool[label] unless label
 
-        # 階層構造の確認
-        unless label =~ /\?/
-          terms = label.split(/::/)
-          terms.shift if terms[0] == ''
-          return terms.inject(self) {|obj,term| obj = obj[term]} if terms.length >= 2
-        end
+        # 階層がある場合
+        terms = Resource._encode(label).split(/::/)
+        terms.shift if terms[0] == ''
+        return terms.inject(self) {|obj,term| obj = obj[Resource._decode(term)]} if terms.length >= 2
 
         # 階層がない場合
-        path, options = label.split(/\?/, 2)
-        label  = Resource._extract_prefix(path)
-        label += '?' + options if options
-        _pool[label.gsub(/%3A%3A/, '::')]
+        _pool[Resource._decode(Resource._extract_prefix(terms[0]))]
       end
 
       # オブジェクト登録
@@ -192,13 +204,17 @@ module When::Parts
         return iri unless iri.instance_of?(String)
 
         # 階層がある場合は、階層をたどる
+        iri = Resource._decode(iri)
+        iri = $1 while iri =~ /^\((.*)\)$/
         iri = namespace + iri if namespace && iri !~ /^[_a-z\d]+:[^:]/i
-        root, *leaves= iri.split(/::/)
-        return leaves.inject(_instance(root)) {|obj,leaf| obj[leaf]} unless leaves==[] || iri =~ /\?/
+        root, *leaves= Resource._encode(iri).split(/::/)
+        if leaves.size > 0
+          return leaves.inject(_instance(Resource._decode(root))) {|obj,leaf| obj[Resource._decode(leaf)]}
+        end
 
         # 登録ずみなら、参照
-        path, query = _extract_prefix(iri).split(/\?/, 2)
-        iri      = query ? (path + '?' + query) : path
+        iri = _extract_prefix(iri)
+        path, query = iri.split(/\?/, 2)
         if When.multi_thread
           my_mutex = nil
           @_lock_.synchronize do
@@ -236,21 +252,26 @@ module When::Parts
       def _parse(line, type=nil)
         return line unless line.kind_of?(String)
         line.sub!(/\s#.*$/, '')
-        return Locale._split($1) if type && line =~ /^#{type}:(.+)$/i
-        return Locale._split(line) unless line =~ /^(\*)?([A-Z][-A-Z_]{0,255})(?:;(.*?))?:(.*)$/i
-
-        marked, key, property, value = $~[1..4]
-        element = Element.new(key, value, marked)
-        if (property)
-          element.attribute['.'] = property+':'+value
-          property.split(/;/) do |pr|
-            prop = Element.new(*pr.split(/=/, 2))
-            element.attribute[prop.predicate] = prop
+        return Locale._split($1) if type && /^#{type}:(.+)$/i =~ line
+        tokens = line.scan(/((?:[^\\:]|\\.)+)(?::(?!\z))?|:/).flatten
+        return Locale._split(line) unless tokens.size > 1 && /^(\*)?([A-Z][-A-Z_]{0,255})(?:;(.+))?$/i =~ tokens[0]
+        marked, key, property = $~[1..3]
+        values = tokens[1..-1]
+        value  = values.join(':') unless values == [nil]
+        content = ContentLine.new(key, value, marked)
+        value ||= ''
+        if property
+          content.attribute['.'] = property + ':' + value
+          property.scan(/((?:[^\\;]|\\.)+)(?:;(?!\z))?|;/).flatten.each do |pr|
+            pr ||= ''
+            pr.gsub!(/\\./) {|escape| ContentLine::RFC6350[escape] || escape}
+            prop = ContentLine.new(*pr.split(/=/, 2))
+            content.attribute[prop.predicate] = prop
           end
         else
-          element.attribute['.'] = value
+          content.attribute['.'] = value
         end
-        return element
+        return content
       end
 
       # @private
@@ -270,16 +291,72 @@ module When::Parts
         return path
       end
 
+      # @private
+      def _replace_tags(source, tags)
+        case source
+        when String
+          target = source.dup
+          tags.each_pair do |key, value|
+            target.gsub!(/#\{(\?[^=#}]+?=)?#{key}(:.*?)?\}/, '\1' + value) if value.kind_of?(String)
+          end
+          target.gsub(/#\{.+?(:(.*?))?\}/, '\2')
+        when Array
+          source.map {|target| _replace_tags(target, tags)}
+        when Hash
+          target = {}
+          source.each_pair do |key, value|
+            target[key] = tags[key].kind_of?(Numeric) ? tags[key] : _replace_tags(value, tags)
+          end
+          target
+        else
+          source
+        end
+      end
+
+      # @private
+      def _encode(iri)
+        return iri unless iri =~ /\(/
+
+        iri = iri.dup
+        begin
+          unless iri.gsub!(/\([^()]*\)/) {|token|
+            token.gsub(/[():?&%]/) {|char|'%' + char.ord.to_s(16)}
+          }
+            raise ArgumentError, 'Brackets do not correspond: ' + iri 
+          end
+        end while iri =~ /\(/
+        iri
+      end
+
+      # @private
+      def _decode(iri)
+        return iri unless iri =~ /%28/
+
+        iri = iri.dup
+        begin
+          unless iri.gsub!(/%28.*?%29/) {|token|
+            token.gsub(/%([\dA-F]{2})/i) {$1.to_i(16).chr}
+          }
+            raise ArgumentError, 'Brackets do not correspond: ' + iri 
+          end
+        end while iri =~ /%28/
+        iri = $1 if iri =~ /^\((.*)\)$/
+        iri
+      end
+
       private
 
       def _create_object(iri, path, query)
         options = {}
         replace = {}
         if query
-          options = Hash[*query.split(/&/).map{ |pair| pair.split(/=/, 2) }.flatten]
+          options = Hash[*Resource._encode(query).split(/&/).map{|pair|
+            key, value = pair.split(/=/, 2)
+            [key, Resource._decode(value)]
+          }.flatten]
           keys    = options.keys
           keys.each do |key|
-            replace[$1] = options.delete(key) if key =~ /^!(.+)/
+            replace[$1] = options.delete(key) if key =~ /^([A-Z].*)/
           end
         end
         options['..'] = iri
@@ -292,6 +369,14 @@ module When::Parts
           when Class
             obj = list[0].new(options)
           when Array
+            top = list[0][0]
+            if top.kind_of?(Hash)
+              top.each_pair do |key, value|
+                replace.update(value[replace.delete(key)]) if value.kind_of?(Hash) && value.key?(replace[key])
+              end
+              list[0] = list[0][1..-1]
+              list[0] = _replace_tags(list[0], top.merge(replace))
+            end
             if list[0][0].kind_of?(Class)
               # 配列の先頭がクラスである場合
               klass, *list = list[0]
@@ -317,11 +402,10 @@ module When::Parts
           parsed = nil
           OpenURI
           begin
-            open(path, "1".respond_to?(:force_encoding) ? 'r:utf-8' : 'r') do |file|
-              resource = file.read
-              replace.keys.each do |key|
-                resource.gsub!(/#\{#{key}\}/, replace[key])
-              end
+            args  = [path, "1".respond_to?(:force_encoding) ? 'r:utf-8' : 'r']
+            args << {:ssl_verify_mode=>OpenSSL::SSL::VERIFY_NONE} if path =~ /^https:/
+            open(*args) do |file|
+              resource = _replace_tags(file.read, replace)
               parsed = (resource[0..5]=='BEGIN:') ? _ics(resource.split(/[\n\r]+/)) :
                                                     _xml(REXML::Document.new(resource).root)
             end
@@ -339,9 +423,9 @@ module When::Parts
       end
 
       def _class(path)
-        return nil unless (path =~ /^http:\/\/hosi\.org\/When\/(.*)/)
-        list  = [When]
-        $1.split(/\//).each do |mod|
+        return nil unless path.index(Resource.base_uri) == 0
+        list = [When]
+        path[Resource.base_uri.length..-1].split(/\//).each do |mod|
           if list[0].const_defined?(mod)
             list.unshift(list[0].const_get(mod))
           else
@@ -362,19 +446,19 @@ module When::Parts
           key = '' if expanded_name == 'xmlns'
           namespace[key] = value.to_s
         end
-        obj << Element.new('xmlns:namespace', namespace) if (namespace.size>0)
+        obj << ContentLine.new('xmlns:namespace', namespace) if (namespace.size>0)
         xml.each do |e|
           next unless defined? e.name
           if (e.attributes['type'])
             obj << _xml(e, namespace)
           else
-            element = Element.new(e.expanded_name, e.attributes['ref']||e.text)
+            content = ContentLine.new(e.expanded_name, e.attributes['ref']||e.text)
             e.attributes.each_pair do |key,value|
-              attr = Element.new(value.name, value)
+              attr = ContentLine.new(value.name, value)
               attr.namespace = value.prefix
-              element.attribute[key] = attr
+              content.attribute[key] = attr
             end
-            obj << element
+            obj << content
           end
         end
         return obj
@@ -461,7 +545,6 @@ module When::Parts
       return @iri if @iri
       root = @_pool['..']
       path = root.instance_of?(String) ? root : label.to_s
-      path = path.gsub(/::/, '%3A%3A')
       if root.respond_to?(:iri)
         prefix = root.iri
         path = prefix + '::' + path if prefix
@@ -482,15 +565,15 @@ module When::Parts
         return child[iri * 1]
       when String
         obj = self
-        iri.split(/::/).each do |label|
+        Resource._encode(iri).split(/::/).each do |label|
           return obj.child if label == '*'
           if obj == Resource
-            obj = Resource._instance(label)
+            obj = Resource._instance(Resource._decode(label))
           else
             case label
             when ''  ; obj = Resource
             when '.' # obj = obj
-            else     ; obj = obj._pool[label.gsub(/%3A%3A/, '::')]
+            else     ; obj = obj._pool[Resource._decode(label)]
             end
           end
           raise ArgumentError, "IRI not found: #{iri}" unless obj
@@ -703,13 +786,7 @@ module When::Parts
     def _set_variables(options)
       @options = options[:options] || {} if options.key?(:options)
       options.each_pair do |key,value|
-        unless (key =~ /^options$|^[_.]/)
-          # スキームの":"がエンコーディングされていたら、valueをデコード
-          if (value =~ /^\w+%3A/i)
-            value.gsub!(/%[0-9A-F]{2}/i) do |c|
-              c.sub(/%/,'0x').hex.chr
-            end
-          end
+        unless (key =~ /^options$|^\.|^[A-Z]/)
           case "#{key}"
           when 'namespace' ; value = Locale._namespace(value)
           when 'locale'    ; value = Locale._locale(value)
@@ -721,65 +798,95 @@ module When::Parts
 
     # 配下のオブジェクトの生成
     def _child(options)
-      @child = []
-      query = options.dup
-      options['..'] = self
-      leaf = options['.']
+      @child           = []
+      query            = options.dup
+      options['..']    = self
+      leaves           = options.delete('.').map {|leaf| Resource._parse(leaf)}
+      key_list         = []
+      properties       = {}
       label_candidates = nil
 
-      leaf.each_index do |i|
-        element = Resource._parse(leaf[i])
-        case element
-        when Array
-          if element[0].kind_of?(Class)
-            list = []
-            element.each do |e|
-              if e.kind_of?(Hash)
-                list += e.keys.map {|key| Resource::Element.new(key, e[key])}
-              else
-                list << e
-              end
-            end
-            options['.'] = list
-            @child << element[0].new(options.dup)
+      # ContentLine の処理(namespace, locale, altidの前処理)
+      leaves.each do |content|
+        next unless content.kind_of?(ContentLine)
+        key   = content.predicate
+        value = content.object
+        next options.delete(key) unless value
+        case key
+        when 'namespace'
+          options[key] ||= {}
+          if content.attribute['altid']
+            options[key][content.attribute['prefix'].object] = content.object
           else
-            options.delete('.')
-            @child << self.class.new(*(element + [options]))
+            options[key] = options[key].update(Locale._namespace(value))
           end
+        when 'locale'
+          options[key] = Locale._locale(value)
+        else
+          _parse_altid(properties, content)
+          key_list << key unless key_list.include?(key)
+        end
+      end
 
-        when Resource::Element
-          key   = element.predicate
-          value = element.object
-          if (value)
-            case key
-            when 'namespace'
-              options[key] ||= {}
-              options[key] = options[key].merge(Locale._namespace(value))
-            when 'locale'
-              options[key] = Locale._locale(value)
+      # ContentLine の処理(一般)
+      key_list.each do |key|
+        content = properties[key][0]
+        value   = content.same_altid ? When::BasicTypes::M17n.new(content, options['namespace'], []) : content.object
+        value   = When::BasicTypes::M17n.new(value, nil, nil, options) if value.instance_of?(String) && value =~ /^\s*\[/
+        @_pool[value.to_s] = value if value.kind_of?(When::BasicTypes::M17n)
+        if content.marked || key == self.class::LabelProperty
+          @label = value
+        else
+          options[key] = value
+          label_candidates ||= value
+        end
+      end
+
+      # Array の処理(子オブジェクトの生成)
+      leaves.each do |content|
+        next unless content.kind_of?(Array)
+        if content[0].kind_of?(Class)
+          list = []
+          content.each do |e|
+            if e.kind_of?(Hash)
+              list += e.keys.map {|key| Resource::ContentLine.new(key, e[key])}
             else
-              if (value.instance_of?(String) && value =~ /^\[/)
-                options.delete('.')
-                value  = m17n(value, nil, nil, options.dup)
-                @_pool[value.to_s] = value
-              end
-              if element.marked || key == self.class::LabelProperty
-                @label = value
-              else
-                options[key] = value
-                label_candidates ||= value
-              end
+              list << e
             end
-          else
-            options.delete(key)
+          end
+          options['.'] = list
+          @child << content[0].new(options.dup)
+        else
+          options.delete('.')
+          @child << self.class.new(*(content + [options]))
+        end
+      end
+
+      # 代表ラベルの設定
+      options.update(query)
+      unless @label
+        raise ArgumentError, "label attribute not found: #{options['.']}" unless label_candidates
+        @label = label_candidates
+      end
+    end
+
+    # ALTIDを持つ ContentLine の解析
+    def _parse_altid(properties, content)
+      key = content.predicate
+      properties[key] ||= []
+      if content.attribute['altid']
+        found = false
+        (0...properties[key].length).to_a.each do |i|
+          prev = properties[key][i]
+          if prev.attribute['altid'] && prev.attribute['altid'].object == content.attribute['altid'].object
+            content.same_altid      = prev
+            properties[key][i] = content
+            found = true
+            break
           end
         end
       end
-      options.update(query)
-      unless @label
-        raise ArgumentError, "label attribute not found: #{leaf}" unless label_candidates
-        @label = label_candidates
-      end
+      properties[key] << content unless found
     end
 
     # 配下のオブジェクトの前後関係の設定
@@ -800,12 +907,20 @@ module When::Parts
       end
     end
 
+    alias :__method_missing :method_missing
+
     # その他のメソッド
-    #   When::Parts::GeometricComplex で定義されていないメソッドは
+    #   When::Parts::Resource で定義されていないメソッドは
     #   処理を @child (type: Array) に委譲する
     #
     def method_missing(name, *args, &block)
-      @child.send(name.to_sym, *args, &block)
+      return __method_missing(name, *args, &block) if When::Parts::MethodCash::Escape.key?(name)
+      self.class.module_eval %Q{
+        def #{name}(*args, &block)
+          @child.send("#{name}", *args, &block)
+        end
+      } unless When::Parts::MethodCash.escape(name)
+      @child.send(name, *args, &block)
     end
 
     #

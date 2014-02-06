@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2012 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -14,7 +14,7 @@ class When::TM::CalendarEra
     "namespace:[ja=http://ja.wikipedia.org/wiki/, en=http://en.wikipedia.org/wiki/]",
     "locale:[=ja:, en=en:, alias]",
     "area:[日本]",
-    ["[皇紀]1",		"@A",	"-659-01-01^Chinese::儀鳳暦"],
+    ["[皇紀]1",		"@A",	"-659-01-01^Chinese::平朔儀鳳暦"],
     ["[皇紀]1113",	"[::_m:EpochEvents::CalendarReform]",	"0453-12-14^Chinese::元嘉暦"],
     ["[皇紀]1253",	"",					"0593-01-01^Japanese"],
     ["[皇紀]2533",	"[::_m:EpochEvents::CalendarReform]",	"1873-01-01^Gregorian"]
@@ -27,7 +27,7 @@ class When::TM::CalendarEra
     "namespace:[ja=http://ja.wikipedia.org/wiki/, en=http://en.wikipedia.org/wiki/]",
     "locale:[=ja:, en=en:, alias]",
     "period:[(日本書紀)=ja:%%<日本書紀>, (Nihon_Shoki)=en:Nihon_Shoki]",
-    ["[神武]1",	"@A",	"name=[神武];-659-01-01^Chinese::儀鳳暦"],
+    ["[神武]1",	"@A",	"name=[神武];-659-01-01^Chinese::平朔儀鳳暦"],
     ["[綏靖]1",	"@A",	"name=[綏靖];-580-01-08"],
     ["[安寧]0",	"@A",	"name=[安寧];-548-07-03"],
     ["[懿徳]1",	"@A",	"name=[懿徳];-509-02-04"],

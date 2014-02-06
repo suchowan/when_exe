@@ -35,7 +35,7 @@ module When::BasicTypes
      "giovedì",
      "venerdì",
      "sabato"],
-   "formats"=>{"default"=>"%d-%m-%Y", "long"=>"%d %B %Y", "short"=>"%d %b"},
+   "formats"=>{"default"=>"%d/%m/%Y", "long"=>"%d %B %Y", "short"=>"%d %b"},
    "month_names"=>
     [nil,
      "gennaio",

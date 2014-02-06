@@ -138,20 +138,20 @@ module When
   class TM::CalendarEra
 
     # シャカ紀元
-     Javanese = [self, [
+     JavaneseLunar = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "period:[JavaneseLunar=, ジャワ・イスラーム暦=]",
-      ["[JSE=, サカ暦=, alias:Javanese_Saka_Era]1547.1.1", "Calendar Epoch", "1035-01-01^Javanese1547",
-                                                                             "1163-01-01^Javanese1675",
-                                                                             "1237-01-01^Javanese1749", '+Infinity']
+      ["[SE=, サカ暦=, alias:Javanese_Saka_Era]1547.1.1", "Calendar Epoch", "1035-01-01^Javanese1547",
+                                                                            "1163-01-01^Javanese1675",
+                                                                            "1237-01-01^Javanese1749", '+Infinity']
     ]]
   end
 
   module CalendarTypes
 
     #
-    # Javanese Calendar (JSE1547-1674) : Dal年 - 閏年
+    # Javanese Calendar (SE1547-1674) : Dal年 - 閏年
     #
     Javanese1547 =  [CyclicTableBased, {
       'origin_of_LSC' =>  2317690,
@@ -169,7 +169,7 @@ module When
     }]
 
     #
-    # Javanese Calendar (JSE1675-1748) : Dal年 - 平年
+    # Javanese Calendar (SE1675-1748) : Dal年 - 平年
     #
     Javanese1675 =  [CyclicTableBased, {
       'origin_of_LSC' =>  2360214,
@@ -187,7 +187,7 @@ module When
     }]
 
     #
-    # Javanese Calendar (JSE1749-) : Dal年 - 平年,月日別配当
+    # Javanese Calendar (SE1749-) : Dal年 - 平年,月日別配当
     #
     Javanese1749 =  [CyclicTableBased, {
       'origin_of_LSC' =>  2385728,

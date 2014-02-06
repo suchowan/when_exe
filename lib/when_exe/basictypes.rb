@@ -26,6 +26,7 @@ module When
         # @param [Hash] options
         # @option options [String, Array<String, Integer>] :era_name デフォルトの年号(Integerは0年に対応する通年)
         # @option options [Array<Numeric>] :abbr 上位省略形式で使用する上位部分
+        # @option options [Integer] :extra_year_digits ISO8601拡大表記のための年の構成要素拡大桁数(省略時 1桁)
         #
         # @return [Array] format, date, time, clock, era
         #
@@ -48,7 +49,7 @@ module When
           if options[:abbr].kind_of?(When::TimeValue)
             options[:abbr] = ((options[:frame]||When.Calendar('Gregorian')) ^ options[:abbr]).cal_date
           end
-          date_time = date_time.gsub(/_+/, '')
+          date_time = date_time.gsub(/_([\d])/, '\1')
           begin
             return _to_array_basic(date_time, options)
           rescue ArgumentError
@@ -97,8 +98,8 @@ module When
             format, date  = Date._to_array_extended_ISO8601(d, options)
 
           # extended date & time format (JIS X0301)
-          when  /^(\[[^\]]+\]|[^-+\d]+)([-+*&%@!>=<?\dW.\(\)]+)?(?:(T([:*=.,\d]+)?)([A-Z]+|[-+][:\d]+)?)?$/
-            era, d, t, time, clock = $~[1..5]
+          when  /^((.+::)?(\[[^\]]+\]|[^-+\d]+))([-+*&%@!>=<?\dW.\(\)]+)?(?:(T([:*=.,\d]+)?)([A-Z]+|[-+][:\d]+)?)?$/
+            era, parent, child, d, t, time, clock = $~[1..7]
             format, date, era = Date._to_array_extended_X0301(d, era, options)
             era ||= options[:era_name] if (d =~ /\./)
 
@@ -124,46 +125,69 @@ module When
     #
     class Date < DateTime
 
+      # @private
+      Extra_Year_Digits = Hash.new {|hash, key|
+        ex = (key || 1).to_i
+        hash[key] =
+          if ex > 0
+            [
+              /^(\d{2})$/,
+              /^([-+]\d{#{4+ex}})(\d{2})(\d{2})$/,
+              /^([-+]\d{#{4+ex}})-(\d{2})$/,
+              /^([-+]\d{#{4+ex}})$/,
+              /^([-+]\d{#{4+ex}})W(\d{2})(\d{1})?$/,
+              /^([+]\d{#{2+ex}})$/,
+              /^([-]\d{#{2+ex}})$/,
+              /^([-+]\d{#{4+ex}})(\d{3})$/
+            ]
+          elsif ex == 0
+            [/^(\d{2})$/] + [/^(\d{4})$/] * 6
+          else
+            [/^(\d{4})$/] * 7
+          end
+      }
+
       class << self
         # ISO 8601 基本形式の表現を分解して配列化する
         def _to_array_basic_ISO8601(date, options={})
           by, bm, bd = options[:abbr]
+          extra_reg  = Extra_Year_Digits[options[:extra_year_digits]]
           case date
-          when nil                            ; return nil
-          when /^(\d{4})(\d{2})(\d{2})$/      ; return nil,     [$1.to_i, $2.to_i, $3.to_i]          # 5.2.1.1
-          when /^(\d{4})-(\d{2})$/            ; return nil,     [$1.to_i, $2.to_i]                   # 5.2.1.2
-          when /^(\d{4})$/                    ; return nil,     [$1.to_i]                            # 5.2.1.2
-          when /^(\d{2})$/                    ; return :century,[$1.to_i * 100]                      # 5.2.1.2
-          when /^(\d{4})(\d{3})$/             ; return :day,    [$1.to_i, $2.to_i]                   # 5.2.2.1
-          when /^(\d{4})W(\d{2})(\d{1})?$/    ; return :week,   [$1.to_i, $2.to_i, _int($3)]         # 5.2.3.1-2
-          when /^([-+]\d{6})(\d{2})(\d{2})$/  ; return nil,     [$1.to_i, $2.to_i, $3.to_i]          # 5.2.1.4 a)
-          when /^([-+]\d{6})-(\d{2})$/        ; return nil,     [$1.to_i, $2.to_i]                   # 5.2.1.4 b)
-          when /^([-+]\d{6})$/                ; return nil,     [$1.to_i]                            # 5.2.1.4 c)
-          when /^([-+]\d{6})W(\d{2})(\d{1})?$/; return :week,   [$1.to_i, $2.to_i, _int($3)]         # 5.2.3.4 a-b)
-          when /^([+]\d{4})$/                 ; return :century,[$1.to_i * 100]                      # 5.2.1.4 d)
-          when /^([-]\d{4})$/                 ; return :century,[$1.to_i * 100]       unless by      # 5.2.1.4 d)
-          when /^([-+]\d{6})(\d{3})$/         ; return :day,    [$1.to_i, $2.to_i]                   # 5.2.2.3 a)
-          else                                ; raise ArgumentError, "Wrong date format" unless by
+          when nil                          ; return nil
+          when /^(\d{4})(\d{2})(\d{2})$/    ; return nil,     [$1.to_i, $2.to_i, $3.to_i]          # 5.2.1.1
+          when /^(\d{4})-(\d{2})$/          ; return nil,     [$1.to_i, $2.to_i]                   # 5.2.1.2
+          when /^(\d{4})$/                  ; return nil,     [$1.to_i]                            # 5.2.1.2
+          when extra_reg[0]                 ; return :century,[$1.to_i * 100]                      # 5.2.1.2
+          when /^(\d{4})(\d{3})$/           ; return :day,    [$1.to_i, $2.to_i]                   # 5.2.2.1
+          when /^(\d{4})W(\d{2})(\d{1})?$/  ; return :week,   [$1.to_i, $2.to_i, _int($3)]         # 5.2.3.1-2
+          when extra_reg[1]                 ; return nil,     [$1.to_i, $2.to_i, $3.to_i]          # 5.2.1.4 a)
+          when extra_reg[2]                 ; return nil,     [$1.to_i, $2.to_i]                   # 5.2.1.4 b)
+          when extra_reg[3]                 ; return nil,     [$1.to_i]                            # 5.2.1.4 c)
+          when extra_reg[4]                 ; return :week,   [$1.to_i, $2.to_i, _int($3)]         # 5.2.3.4 a-b)
+          when extra_reg[5]                 ; return :century,[$1.to_i * 100]                      # 5.2.1.4 d)
+          when extra_reg[6]                 ; return :century,[$1.to_i * 100]       unless by      # 5.2.1.4 d)
+          when extra_reg[7]                 ; return :day,    [$1.to_i, $2.to_i]                   # 5.2.2.3 a)
+          else                              ; raise ArgumentError, "Wrong date format" unless by
           end
 
           by = by.to_i
           case date
-          when /^(\d{2})(\d{2})(\d{2})$/      ; return nil,     [_century($1,by), $2.to_i, $3.to_i]  # 5.2.1.3 a)
-          when /^-(\d{2})(\d{2})?$/           ; return nil,     [_century($1,by), _int($2)]          # 5.2.1.3 b-c)
-          when /^--(\d{2})(\d{2})?$/          ; return nil,     [by, $1.to_i,     _int($2)]          # 5.2.1.3 d-e)
-          when /^(\d{2})(\d{3})$/             ; return :day,    [_century($1,by), $2.to_i]           # 5.2.2.2 a)
-          when /^-(\d{3})$/                   ; return :day,    [by, $1.to_i]                        # 5.2.2.2 b)
-          when /^(\d{2})W(\d{2})(\d{1})?$/    ; return :week,   [_century($1,by), $2.to_i, _int($3)] # 5.2.3.3 a-b)
-          when /^-(\d{1})W(\d{2})(\d{1})?$/   ; return :week,   [_decade($1,by),  $2.to_i, _int($3)] # 5.2.3.3 c-d)
-          when /^-W(\d{2})(\d{1})?$/          ; return :week,   [by, $1.to_i,     _int($2)]          # 5.2.3.3 e-f)
-          else                                ; raise ArgumentError, "Wrong date format" unless bm
+          when /^(\d{2})(\d{2})(\d{2})$/    ; return nil,     [_century($1,by), $2.to_i, $3.to_i]  # 5.2.1.3 a)
+          when /^-(\d{2})(\d{2})?$/         ; return nil,     [_century($1,by), _int($2)]          # 5.2.1.3 b-c)
+          when /^--(\d{2})(\d{2})?$/        ; return nil,     [by, $1.to_i,     _int($2)]          # 5.2.1.3 d-e)
+          when /^(\d{2})(\d{3})$/           ; return :day,    [_century($1,by), $2.to_i]           # 5.2.2.2 a)
+          when /^-(\d{3})$/                 ; return :day,    [by, $1.to_i]                        # 5.2.2.2 b)
+          when /^(\d{2})W(\d{2})(\d{1})?$/  ; return :week,   [_century($1,by), $2.to_i, _int($3)] # 5.2.3.3 a-b)
+          when /^-(\d{1})W(\d{2})(\d{1})?$/ ; return :week,   [_decade($1,by),  $2.to_i, _int($3)] # 5.2.3.3 c-d)
+          when /^-W(\d{2})(\d{1})?$/        ; return :week,   [by, $1.to_i,     _int($2)]          # 5.2.3.3 e-f)
+          else                              ; raise ArgumentError, "Wrong date format" unless bm
           end
 
           bm = bm.to_i
           case date
-          when /^---(\d{2})$/                 ; return nil,     [by, bm, $1.to_i]                    # 5.2.1.3 f)
-          when /^-W-(\d{1})$/                 ; return :week,   [by, bm, $1.to_i]                    # 5.2.3.3 g)
-          when /^----$/                       ; return nil,     [by, bm, bd.to_i] if bd              # extension
+          when /^---(\d{2})$/               ; return nil,     [by, bm, $1.to_i]                    # 5.2.1.3 f)
+          when /^-W-(\d{1})$/               ; return :week,   [by, bm, $1.to_i]                    # 5.2.3.3 g)
+          when /^----$/                     ; return nil,     [by, bm, bd.to_i] if bd              # extension
           end
 
           raise ArgumentError, "Wrong date format: #{date}"
@@ -402,15 +426,7 @@ module When
       def to_m17n
         self
       end
-
-      #
-      # 識別文字列
-      #
-      # @return [String]
-      #
-      def label
-        @label || to_s
-      end
+      alias :label :to_m17n
 
       #
       # _m17n_form のための要素生成 - 何もしないで自身を返す
@@ -463,22 +479,39 @@ module When
         rest, options = _attributes(args)
         _sequence
 
-        if (_pool[@label])
-          _copy_all(_pool[@label])
+        return _copy_all(_pool[@label.to_s]) if _pool[@label.to_s]
 
+        case rest[0]
+        when When::Parts::Resource::ContentLine
+          content, namespace = rest
+          namespace ||= {}
+          names       = []
+          locale      = []
+          begin
+            loc   = content.attribute['language'].object
+            locale << [nil, loc, namespace[loc]]
+            name  = content.object
+            ref   = content.attribute['reference'] || content.attribute['url']
+            name += '=' + (/^NUL$/i =~ ref.object ? '' : ref.object) if ref
+            names << name
+          end while (content = content.same_altid)
+          @names     ||= names.reverse
+          @namespace ||= namespace if namespace.kind_of?(Hash)
+          @locale    ||= locale.reverse
+          @label       = self
+        when nil ;
         else
-          if (rest)
-            names, namespace, locale = args
-            @names       = names if names
-            @namespace ||= Parts::Locale._namespace(namespace) if namespace
-            @locale    ||= Parts::Locale._locale(locale)       if locale
-          end
-          @namespace ||= {}
-          @locale    ||= []
-
-          @code_space = @namespace['']
-          self[0..-1] = _names(@names, @namespace, @locale)
+          names, namespace, locale = rest
+          @names       = names if names
+          @namespace ||= Parts::Locale._namespace(namespace) if namespace
+          @locale    ||= Parts::Locale._locale(locale)       if locale
+          @label       = self
         end
+        @namespace ||= {}
+        @locale    ||= []
+
+        @code_space = @namespace['']
+        self[0..-1] = _names(@names, @namespace, @locale)
       end
     end
 
@@ -497,17 +530,6 @@ module When
       # @return [String, When::BasicTypes::M17n]
       #
       attr_reader :label
-
-      # オブジェクトのtap
-      unless method_defined?(:tap)
-        #
-        # tap - yield による処理のチェーン化
-        #
-        def tap
-          yield(self)
-          self
-        end
-      end
 
       private
 
@@ -567,7 +589,12 @@ module When
       #   処理を @name (type: When::BasicTypes::Code) に委譲する
       #
       def method_missing(name, *args, &block)
-        @name.send(name.to_sym, *args, &block)
+        self.class.module_eval %Q{
+          def #{name}(*args, &block)
+            @name.send("#{name}", *args, &block)
+          end
+        } unless When::Parts::MethodCash.escape(name)
+        @name.send(name, *args, &block)
       end
     end
   end
@@ -608,7 +635,14 @@ module When
       #   処理を @temporal_extent (type: When::TM::Period) に委譲する
       #
       def method_missing(name, *args, &block)
-        @temporal_extent.send(name.to_sym, *args, &block)
+        self.class.module_eval %Q{
+          def #{name}(*args, &block)
+            list = args.map {|arg| arg.kind_of?(self.class) ? arg.temporal_extent : arg}
+            @temporal_extent.send("#{name}", *list, &block)
+          end
+        } unless When::Parts::MethodCash.escape(name)
+        list = args.map {|arg| arg.kind_of?(self.class) ? arg.temporal_extent : arg}
+        @temporal_extent.send(name, *list, &block)
       end
     end
   end
