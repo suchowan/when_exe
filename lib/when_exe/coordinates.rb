@@ -1957,7 +1957,12 @@ module When::Coordinates
             end
           } unless When::Parts::MethodCash.escape(name)
           return @note.send(name, *(args + [self]), &block)
-        elsif respond_to?(:forwarded_formula, true)
+        elsif When::Ephemeris::Formula.method_defined?(name)
+          unless respond_to?(:forwarded_formula, true)
+            instance_eval('class << self; include When::Ephemeris::Formula::Methods; end')
+            @formula ||= When::Ephemeris::Formula.new({:location=>@location})
+            @formula   = When.Resource(Array(@formula), '_ep:')
+          end
           instance_eval %Q{
             def #{name}(*args, &block)
               forward = forwarded_formula("#{name}", args[0])
