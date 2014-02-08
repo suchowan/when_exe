@@ -52,6 +52,7 @@
 # * NAMESPACE Property を追加
 # * LOCALE Property を追加
 # * SUMMARY Property で[...]表現を多言語対応文字列として解釈する
+# * RFC6350 ( http://tools.ietf.org/html/rfc6350 ) 方式にも対応
 # === Content Lines
 #   RFC 5545 3.1 Content Lines では、記述が75文字を超える場合、改行してインデントする。
 #   本ライブラリでは文字数によらず、BEGIN:の次の行を基準にして、より深いインデントがある場合は、
