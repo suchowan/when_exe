@@ -303,7 +303,7 @@ module When::Coordinates
       notes['凶会'] = kue
 
       #   凶会日に省略される吉日
-      _notes_without_kue(notes, month, dates.range < 2 ? '歳' : '大歳', (conditions[:sai]||0).to_s) unless notes['凶会']
+      _notes_without_kue(notes, month, dates.range < 2 ? '歳' : '大歳', conditions[:sai] ? conditions[:sai].to_s != '0' : nil) unless notes['凶会']
 
       # 具注暦(大衍暦以来)
       notes['天一']     ||= begin
@@ -366,7 +366,7 @@ module When::Coordinates
 
       return notes if notes['大小歳']
 
-      unless variation == '0'
+      if variation
         note = Notes['大小歳差分'][[month, @remainder]]
         if note
           notes['大小歳'] = daisai + note

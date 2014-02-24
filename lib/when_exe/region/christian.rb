@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2013 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -68,50 +68,54 @@ module When
 
   module CalendarTypes
 
+    _egyptian_month_indices  = [
+      When::Coordinates::Index.new({:unit =>13, :trunk=>When::Parts::Resource._instance('_m:ChristianTerms::EgyptianMonth::*')}),
+      When::Coordinates::Index.new
+    ]
+
+    _ethiopian_month_indices = [
+      When::Coordinates::Index.new({:unit =>13, :trunk=>When::Parts::Resource._instance('_m:ChristianTerms::EthiopianMonth::*')}),
+      When::Coordinates::Index.new
+    ]
+
     #
-    # Coptic Calendar in Egypt
+    # Coptic Calendar in Egypt and Ethiopia
     #
-    EgyptianCoptic =  [CyclicTableBased, {
+    Coptic =  [{'Epoch'=>{'284Y'=>{'origin_of_MSC' =>   1,
+                                   'label'         => Parts::Resource._instance('_m:ChristianTerms::Coptic'),
+                                   'indices'       => _egyptian_month_indices},
+                            '8Y'=>{'origin_of_MSC' => 277,
+                                   'label'         => Parts::Resource._instance('_m:ChristianTerms::Ethiopian'),
+                                   'indices'       => _ethiopian_month_indices}}}, CyclicTableBased, {
       'label'         => Parts::Resource._instance('_m:ChristianTerms::Coptic'),
       'origin_of_LSC' => 1825030,
       'origin_of_MSC' =>       1,
       'epoch_in_CE'   =>     285,
-      'indices' => [
-         When::Coordinates::Index.new({:unit =>13,
-                                       :trunk=>When::Parts::Resource._instance('_m:ChristianTerms::EgyptianMonth::*')}),
-         When::Coordinates::Index.new
-       ],
+      'indices'       => _egyptian_month_indices,
       'rule_table' => {
-        'T' => {'Rule'  =>[366,365,365,365]},
+        'T' => {'Rule'  =>[365,365,366,365]},
         365 => {'Length'=>[30]*12+[5]},
         366 => {'Length'=>[30]*12+[6]}
       }
     }]
 
     #
-    # Coptic Calendar in Ethiopia
+    # Christian Base Calendar
     #
-    EthiopianCoptic =  [CyclicTableBased, {
-      'label'         => Parts::Resource._instance('_m:ChristianTerms::Ethiopian'),
-      'origin_of_LSC' => 1825030,
-      'origin_of_MSC' =>     277,
-      'epoch_in_CE'   =>     285,
-      'indices' => [
-         When::Coordinates::Index.new({:unit =>13,
-                                       :trunk=>When::Parts::Resource._instance('_m:ChristianTerms::EthiopianMonth::*')}),
-         When::Coordinates::Index.new
-       ],
-      'rule_table' => {
-        'T' => {'Rule'  =>[366,365,365,365]},
-        365 => {'Length'=>[30]*12+[5]},
-        366 => {'Length'=>[30]*12+[6]}
-      }
-    }]
+    class Christian < When::TM::Calendar
 
-    #
-    # Julian Calendar
-    #
-    class Julian < When::TM::Calendar
+      # @private
+      # 
+      # ::Date オブジェクトに対応する暦法名
+      # (require 'Date' されていることの保証は呼び出し側)
+      #
+      def self._default_start(date)
+        case date.start
+        when ::Date::JULIAN    ; 'Julian'
+        when ::Date::GREGORIAN ; 'Gregorian'
+        else                   ; "Civil?reform_jdn=#{date.start}"
+        end
+      end
 
       # 年月日 -> 通日
       #
@@ -167,19 +171,10 @@ module When
         return (((((mm + 10) % 12) % 5) % 2) == 0) ? 31 : 30
       end
 
-      # 太陰方程式
-      #
-      # @param [Numeric] year 西暦の年数
-      # @return [Integer] 0 (ユリウス暦では補正なし)
-      #
-      def _lunar_equation(year)
-        0
-      end
-
       private
 
       def _normalize(args=[], options={})
-        @label   ||= When.Resource('_m:ChristianTerms::Julian')
+        raise TypeError, "#{self.class} is abstract class" unless @label
         @note      = When.CalendarNote(@note || 'Christian')
         @indices ||= [
            Index.new({:unit =>12,
@@ -192,9 +187,38 @@ module When
     end
 
     #
+    # Julian Calendar
+    #
+    class Julian < Christian
+
+      # 太陰方程式
+      #
+      # @param [Numeric] year 西暦の年数
+      # @return [Integer] 0 (ユリウス暦では補正なし)
+      #
+      def _lunar_equation(year)
+        0
+      end
+
+      # @private
+      #
+      # 対応する ::Date の start 属性
+      def _default_start
+        ::Date::JULIAN
+      end
+
+      private
+
+      def _normalize(args=[], options={})
+        @label ||= When.Resource('_m:ChristianTerms::Julian')
+        super
+      end
+    end
+
+    #
     # Gregorian Calendar
     #
-    class Gregorian < Julian
+    class Gregorian < Christian
 
       # 通日 - > ユリウス暦とグレゴリオ暦の差
       #
@@ -281,6 +305,11 @@ module When
       # @return [Integer]
       #
       attr_reader :reform_jdn
+
+      # @private
+      #
+      # 対応する ::Date の start 属性
+      alias :_default_start :reform_jdn
 
       #
       # 年初の最初の定義の年
@@ -487,6 +516,7 @@ module When
         # 日の暦注 ----------------------------
         [When::BasicTypes::M17n,
           "names:[day]",
+          [When::BasicTypes::M17n, "names:[Week,           七曜]"      ],
           [When::BasicTypes::M17n, "names:[Easter,         復活祭]"    ],
           [When::BasicTypes::M17n, "names:[Christmas,      クリスマス]"],
           [When::BasicTypes::M17n, "names:[Fixed_feast=,   固定祝日=]" ],
@@ -587,6 +617,17 @@ module When
       # @return [Integer]
       attr_reader :f
 
+      # 七曜
+      #
+      # @param [When::TM::TemporalPosition] date
+      # @param [When::TM::ReferenceSystem] frame 使用する暦法(ダミー)
+      #
+      # @return [When::Coordinates::Residue] 七曜
+      #
+      def week(date, frame=nil)
+        When.Residue('Week')[date.to_i % 7]
+      end
+
       # クリスマス
       #
       # @param [Numeric] date 西暦の年数
@@ -648,7 +689,7 @@ module When
       # @return [nil]    祝日に該当しない
       #
       def fixed_feast(date, frame=nil)
-        date = When.Calendar(frame||'Gregorian') ^ date unless date.frame.kind_of?(When::CalendarTypes::Julian)
+        date = When.Calendar(frame||'Gregorian') ^ date unless date.frame.kind_of?(When::CalendarTypes::Christian)
         Fixed_feasts[date.cal_date[-2..-1]]
       end
 
@@ -663,7 +704,7 @@ module When
       def moveable_feast(date, frame=nil)
         result = Moveable_feasts[date.to_i - easter(date, frame).to_i]
         return result if result
-        date = When.Calendar(frame||'Gregorian') ^ date unless date.frame.kind_of?(When::CalendarTypes::Julian)
+        date = When.Calendar(frame||'Gregorian') ^ date unless date.frame.kind_of?(When::CalendarTypes::Christian)
         Moveable_feasts[date.cal_date[-2..-1] + [date.to_i % 7]]
       end
 
@@ -691,7 +732,7 @@ module When
         @b = (b || @b ||   0).to_i
         @f = (f || @f ||   0).to_i
         @event   = 'easter'
-        @prime ||= [['Month'], nil]
+        @prime ||= [['Month'], ['Week']]
         super
       end
 
@@ -699,8 +740,10 @@ module When
       # 任意の暦をグレゴリオorユリウス暦日に変換
       #
       def _to_date_for_note(date)
-        return date if date.frame.kind_of?(When::CalendarTypes::Julian)
-        When.Calendar(date.to_i < 2299161 ? 'Julian' : 'Gregorian') ^ date
+        return When.Calendar(When::CalendarTypes::Christian._default_start(date)) ^ date if ::Object.const_defined?(:Date) && date.kind_of?(::Date)
+        return When.Calendar('Gregorian') ^ date if date.kind_of?(::Time)
+        return date if date.frame.kind_of?(When::CalendarTypes::Christian)
+        When.Calendar(date.frame.iri =~ /Coptic/ || date.to_i < 2299161 ? 'Julian' : 'Gregorian') ^ date
       end
 
       # 当該年のイベントの日付

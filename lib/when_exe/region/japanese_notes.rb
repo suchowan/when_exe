@@ -203,7 +203,7 @@ class When::CalendarTypes::CalendarNote
 
         [Note, 0x07F8, "label:[甘露=]",      'position:上段 上段 上段 上段', 'suffix:日'],   # 22: 七曜 廿七宿
         [Note, 0x07F8, "label:[金剛峯=]",    'position:上段 上段 上段 上段'],                # 23: 七曜 廿七宿
-        [Note, 0x07F8, "label:[羅刹=]",      'position:中段 中段 上段 上段'],                # 24: 七曜 廿七宿
+        [Note, 0x07F8, "label:[羅刹=]",      'position:上段 上段 上段 上段'],                # 24: 七曜 廿七宿
 
         [Note, 0x3FFC, "label:[大將軍=ja:%%<大将軍_(方位神)>]",
                                              'position:上段 上段 上段 上段',   'suffix:-'],  # 25: 干支 節年
@@ -213,11 +213,11 @@ class When::CalendarTypes::CalendarNote
                                              'position:上段 上段 上段 上段',   'suffix:-'],  # 27: 干支
         [Note, 0x3FFC, "label:[歳下食=ja:%%<暦注下段>#%.<歳下食>]",
                                              'position:上段 上段 上段 上段'],                # 28: 干支 節年
-        [Note, 0x3FFC, "label:[忌遠行=]",    'position:上段 中段 上段 上段'],                # 29: 支 節月
-        [Note, 0x3FFC, "label:[忌夜行=]",    'position:上段 中段 上段 上段'],                # 30: 支 節月
+        [Note, 0x3FFC, "label:[忌遠行=]",    'position:上段 上段 上段 上段'],                # 29: 支 節月
+        [Note, 0x3FFC, "label:[忌夜行=]",    'position:上段 上段 上段 上段'],                # 30: 支 節月
         [Note, 0x3FFC, "label:[下食時=ja:%%<暦注下段>#%.<時下食>]",
                                              'position:上段 上段 上段 上段',   'suffix:-'],  # 31: 支 節月 貞享暦で一部廃止
-        [Note, 0x3FFC, "label:[天間=]",      'position:上段 中段 上段 中段上'],              # 32: 干支 節月
+        [Note, 0x3FFC, "label:[天間=]",      'position:上段 上段 上段 中段上'],              # 32: 干支 節月
         [Note, 0x3FFC, "label:[不視病=]",    'position:上段 上段 上段 上段'],                # 33: 干
         [Note, 0x3FFC, "label:[不問疾=]",    'position:上段 上段 上段 上段'],                # 34: 干
         [Note, 0x3FFC, "label:[不弔人=]",    'position:上段 上段 上段 上段'],                # 35: 支
@@ -229,13 +229,13 @@ class When::CalendarTypes::CalendarNote
         [Note, 0x3FFC, "label:[沐浴=]",      'position:中段 中段 中段 中段'],                # 40: 支 没滅凶会日×
         [Note, 0x3FFD, "label:[臘=ja:%%<臘日>]",
                                              'position:中段 中段 中段 中段', 'suffix:日'],   # 41: 支 太陽黄経
-        [Note, 0x3FFC, "label:[伐=]",        'position:上段 中段 中段 中段上', 'suffix:日'], # 42: 干支
+        [Note, 0x3FFC, "label:[伐=]",        'position:中段 中段 中段 中段上', 'suffix:日'], # 42: 干支
         [Note, 0x3FFC, "label:[五墓=ja:%%<暦注下段>#%.<五墓日>]",
-                                             'position:上段 上段 中段 中段下', 'suffix:日'], # 43: 干支
-        [Note, 0x3FFC, "label:[六蛇=]",      'position:上段 上段 中段 中段上'],              # 44: 干支 節月
-        [Note, 0x3FFC, "label:[七鳥=]",      'position:上段 上段 中段 中段上'],              # 45: 干支 節月
-        [Note, 0x3FFC, "label:[八龍=]",      'position:上段 上段 中段 中段上'],              # 46: 干支 節月
-        [Note, 0x3FFC, "label:[九虎=]",      'position:上段 中段 中段 中段上'],              # 47: 干支 節月
+                                             'position:中段 中段 中段 中段下', 'suffix:日'], # 43: 干支
+        [Note, 0x3FFC, "label:[六蛇=]",      'position:中段 中段 中段 中段上'],              # 44: 干支 節月
+        [Note, 0x3FFC, "label:[七鳥=]",      'position:中段 中段 中段 中段上'],              # 45: 干支 節月
+        [Note, 0x3FFC, "label:[八龍=]",      'position:中段 中段 中段 中段上'],              # 46: 干支 節月
+        [Note, 0x3FFC, "label:[九虎=]",      'position:中段 中段 中段 中段上'],              # 47: 干支 節月
         [Note, 0x07FF, "label:[没=ja:%%<没日>]",
                                              'position:中段 中段 中段 中段', 'suffix:日'],   # 48: 太陽黄経
         [Note, 0xFFF8, "label:[日食]",       'position:中段 中段 中段 中段'],                # 49: 日食表
@@ -487,7 +487,7 @@ class When::CalendarTypes::CalendarNote
         @cal4note  = cal4note
         @o_date    = date
         @l_date    = @cal4note.l_calendar ^ date
-        @m_date    = date.frame.kind_of?(When::CalendarTypes::Julian) ? @l_date : @o_date
+        @m_date    = date.frame.kind_of?(When::CalendarTypes::Christian) ? @l_date : @o_date
         @s_date    = @cal4note.s_calendar ^ date
       end
     end
@@ -521,7 +521,7 @@ class When::CalendarTypes::CalendarNote
 
     # オブジェクトの正規化
     def _normalize(args=[], options={})
-      @prime ||= [%w(干支), %w(月名), %w(干支 六曜 廿四節気 祝祭日)]
+      @prime ||= [%w(干支), %w(月名), %w(七曜 干支 六曜 廿四節気 祝祭日)]
       super
     end
 
@@ -551,7 +551,7 @@ class When::CalendarTypes::CalendarNote
           pattern = ''
           while year == month
             length   = month.length(When::MONTH)
-            length   = -length if dates.o_date.frame.kind_of?(When::CalendarTypes::Julian) # 太陽暦
+            length   = -length if dates.o_date.frame.kind_of?(When::CalendarTypes::Christian) # 太陽暦
             pattern += '閏' if month[When::MONTH] * 0 == 1
             pattern += MonthPattern[length] || '改'
             month   += When::DurationP1M
@@ -590,7 +590,7 @@ class When::CalendarTypes::CalendarNote
         # 大小
         unless notes_hash['大小']
           length = dates.o_date.length(When::MONTH)
-          length = -length if dates.o_date.frame.kind_of?(When::CalendarTypes::Julian) # 太陽暦
+          length = -length if dates.o_date.frame.kind_of?(When::CalendarTypes::Christian) # 太陽暦
           notes_hash['大小'] = "#{dates.o_date[When::MONTH]*0==1 ? '閏' : ''}#{MonthPattern[length] || '改'}(#{length.abs})"
         end
 
@@ -607,7 +607,7 @@ class When::CalendarTypes::CalendarNote
       _note_values(dates, notes, _all_keys[-1], _elements[-1]) do |dates, focused_notes, notes_hash|
 
         focused_notes[0..-1] = focused_notes & NoteFocused[dates.range][-1]
-        root = When.Resource(dates.range == 1 ? '_co:CommonResidue?V=0618' : '_co:CommonResidue')
+        root = When.Resource('_co:CommonResidue')
 
         # 干支
         residue = dates.s_date.to_i-11
@@ -620,9 +620,6 @@ class When::CalendarTypes::CalendarNote
          JapaneseLuniSolarNote, JapaneseSolarNote].each do |note|
           note._day_notes(notes_hash, dates, conditions)
         end
-
-        # 廿四節気
-        notes_hash['廿四節気'] = _residue24(notes_hash['廿四節気'], root, dates)
 
         # 七曜
         notes_hash['七曜']   ||= root['Week'][dates.s_date.to_i % 7]
@@ -673,14 +670,6 @@ class When::CalendarTypes::CalendarNote
     end
 
     #
-    # 廿四節気を Resudue 化
-    #
-    def _residue24(index, root, dates)
-      return index unless index.kind_of?(Integer)
-      root['二十四節気::*'][(index-3) % 24]
-    end
-
-    #
     # 廿七宿を Resudue 化
     #
     def _residue27(index, root)
@@ -693,7 +682,7 @@ class When::CalendarTypes::CalendarNote
     #
     def month_stem_branch(date)
       date.most_significant_coordinate*12+(date.cal_date[1] * 1) +
-     (date.frame.kind_of?(When::CalendarTypes::Julian) ? 12 : 13)
+     (date.frame.kind_of?(When::CalendarTypes::Christian) ? 12 : 13)
     end
   end
 
@@ -927,17 +916,45 @@ class When::CalendarTypes::CalendarNote
 
       # 月相
       unless notes['月相']
-        date  = When.when?(dates.o_date.to_cal_date.to_s,
-                  {:frame=>dates.o_date.frame,
-                   :clock=>dates.l_date.frame.formula[-1].kind_of?(When::Ephemeris::ChineseTrueLunation) ?
-                           When.Clock(-21600) : dates.l_date.frame.time_basis})
-        range = dates.cal4note.l_phases.formula.thiti_range(date)
-        notes['月相'] = if range
+        # イベントの判定
+        formula = dates.cal4note.l_phases.formula
+        clock   = formula.kind_of?(When::Ephemeris::ChineseTrueLunation) &&
+          (3..27).include?(dates.l_date.cal_date[2]) ?
+            When.Clock(-21600) :               # 唐代暦法の望弦は午前6時を日の境界とする
+            dates.l_date.frame._time_basis[-1] # その他(進朔も考慮した時刻)
+        odate   = When.when?(dates.o_date.to_cal_date.to_s, {:frame=>dates.o_date.frame, :clock=>clock})
+        phases  = formula.phase_range(odate)
+        thitis  = phases.map {|phase| (phase % 1) * 30.0}
+        note    = if thitis[0] >= thitis[1]
+          dates.o_date.frame.kind_of?(When::CalendarTypes::Christian) || conditions[:shoyo] ? '朔' : nil
+        else
+          range = thitis[0]...thitis[1]
           range.include?( 7.5) ? '上弦' :
           range.include?(15.0) ? '望'   :
           range.include?(22.5) ? '下弦' : nil
+        end
+
+        # 結果の反映
+        if conditions[:shoyo]
+          # :shoyo が true ならイベント時刻も返す
+          notes['月相'] = if note
+            etime = formula._to_seed_type(formula.cn_to_time((phases[1] * 4).floor / 4.0), odate)
+            if formula.respond_to?(:lunation_length) && formula.lunation_length.kind_of?(Rational)
+              shoyo  =  etime.clk_time.universal_time
+              shoyo +=  When::TM::Duration::DAY if (0...clock.universal_time).include?(shoyo)
+              shoyo  = (shoyo  / When::TM::Duration::DAY * formula.denominator * 1000 + 0.5).floor / 1000.0
+              shoyo  =  shoyo.to_i if shoyo == shoyo.to_i
+              "#{note}(#{shoyo}/#{formula.denominator})"
+            else
+              etime.events = [note]
+              etime
+            end
+          else
+            nil
+          end
         else
-          dates.o_date.frame.kind_of?(When::CalendarTypes::Julian) ? '朔' : nil
+          # :shoyo が false ならイベン名のみ返す
+          notes['月相'] = note
         end
       end
 
@@ -1141,7 +1158,7 @@ class When::CalendarTypes::CalendarNote
       def _day_notes(notes, dates, conditions={})
         date  = When.when?(dates.o_date.to_cal_date.to_s,
                   {:frame=>dates.o_date.frame,
-                   :clock=>dates.s_date.frame.time_basis})
+                   :clock=>dates.s_date.frame._time_basis[0]})
         patch = (@patch || Patch)[date.to_i] unless dates.o_date.frame.respond_to?(:twin) &&
                                                     dates.o_date.frame.twin
         longitude, motsu = patch ? patch : dates.cal4note.s_terms.position(date)
@@ -1246,9 +1263,30 @@ class When::CalendarTypes::CalendarNote
         # 廿四節気
         div, mod = longitude.divmod(15)
         if mod == 0
-          notes['廿四節気'] = (div - 21) % 24
-          div, mod = notes['廿四節気'].divmod(2)
-          notes['節中']   ||= Notes12[div] + %w(節 中)[mod]
+          note = (div - 21) % 24
+          div, mod = note.divmod(2)
+          notes['節中']     ||= Notes12[div] + %w(節 中)[mod]
+          notes['廿四節気'] ||= 
+            begin
+              root      = When.Resource(dates.range == 1 ? '_co:CommonResidue?V=0618' : '_co:CommonResidue')
+              residue   = root['二十四節気::*'][(note-3) % 24]
+              if conditions[:shoyo]
+                formula = dates.cal4note.s_terms.formula
+                etime   = dates.cal4note.s_terms.term(date - When.Duration('P3D'), [0,15], When::SYSTEM)
+                if formula.respond_to?(:year_length) && formula.year_length.kind_of?(Rational)
+                  shoyo  =  etime.clk_time.universal_time
+                  shoyo +=  When::TM::Duration::DAY * (etime.to_i - date.to_i)
+                  shoyo  = (shoyo  / When::TM::Duration::DAY * formula.denominator * 1000 + 0.5).floor / 1000.0
+                  shoyo  =  shoyo.to_i if shoyo == shoyo.to_i
+                  residue.label + "(#{shoyo}/#{formula.denominator})"
+                else
+                  etime.events = [residue.label]
+                  etime
+                end
+              else
+                residue
+              end
+            end
         end
 
         # 七十二候

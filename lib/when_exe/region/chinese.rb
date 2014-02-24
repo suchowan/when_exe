@@ -133,15 +133,15 @@ module When
       # @return [Numeric]
       attr_reader :anomalistic_month_shift
 
-      # 当該日付のthiti の変化範囲(唐代の定朔の暦法用 cn_to_time(1L) を使用する)
+      # 当該日付の月の位相の変化範囲(唐代の定朔の暦法用 cn_to_time(1L) を使用する)
       #
       # @param [When::TM::TemporalPosition] date 日付
       #
-      # @return [Range] 当該日付のthiti の変化範囲(朔を含む場合 nil)
+      # @return [Array<Numeric>] 当該日付の月の位相の変化範囲
       #
-      def thiti_range(date)
+      def phase_range(date)
         date = date.floor
-        p0, p1 = [date, date.succ].map {|d|
+        [date, date.succ].map {|d|
           t  = d.to_f
           c  = (30.0 * ((t - CYCLE_0M) * @cycle_number_1m + @cycle_number_0m)).floor
           t0 = t1 = nil
@@ -156,9 +156,8 @@ module When
               break
             end
           end
-          (c + (t-t0) / (t1-t0)) % 30.0
+          (c + (t-t0) / (t1-t0)) / 30.0
         }
-        p0 >= p1 ? nil : p0...p1
       end
 
       private
@@ -297,12 +296,20 @@ module When
       #
       # @param [Numeric] y 年
       #
-      # @return [Array<Numeric:月番号>, Array<Numeric:中気のない月の月番号>]
+      # @return [Array<Numeric:月番号>, Hash<Numeric:含む中気の数=>Numeric:月番号>]
       #
       def intercalary_pattern(y)
-        m = _base_month(y)
-        l = _base_ids(y)
-        [l, (0...l.size).to_a.map {|i| _intercalary?(m+i) ? l[i] : nil}.compact]
+        m  = _base_month(y)
+        l  = _base_ids(y)
+        c  = {0=>[], 1=>[], 2=>[]}
+        d0 = Residue.mod(_new_month(m)-1) {|n| _new_epoch(n)}[0]
+        l.size.times do |i|
+          d1 = Residue.mod(_new_month(m+i+1)-1) {|n| _new_epoch(n)}[0]
+          c[d1-d0] << l[i]
+          d0 = d1
+        end
+        c.delete(1)
+        [l, c]
       end
 
       private

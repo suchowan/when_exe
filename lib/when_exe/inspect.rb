@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2013 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -59,7 +59,7 @@ module When
       hash = {}
       self.class::HashProperty.each do |property|
         method, skip = property
-        value        = send(method)
+        value        = respond_to?(method, true) ? send(method) : skip
         hash[method] = value unless value == skip || value.class == skip
       end
       hash
@@ -109,7 +109,7 @@ module When
       def to_m17n
         return m17n(@remainder.to_s)     unless label
         return label + "(#{difference})" unless @format
-        label[0...0] + (@format % [label, difference, difference+1])
+        (label[0...0] + @format) % [label, difference, difference+1]
       end
 
       # 文字列化
@@ -119,7 +119,7 @@ module When
       def to_s
         return @remainder.to_s                unless label
         return label.to_s + "(#{difference})" unless @format
-        (@format % [label, difference, difference+1]).to_s
+        @format.to_s % [label.to_s, difference, difference+1]
       end
 
       #
@@ -538,7 +538,7 @@ module When
       #   - :calendar  calendar_name の結果       - Array<暦法または暦年代(, 付属情報..)>
       #   - :notes     Hash (の Array (の Array)) - _notes(options)
       #   clock が定義されている場合、さらに下記も出力する
-      #   - :clock     時計(When::TM::Clock, When::V::Timezone, When::Parts::Timezone)
+      #   - :clock     時計(When::Parts::Timezone::Base)
       #   - :clk_time  to_clock_time の結果       - ( 日, 時, 分, 秒 )
       #   - :dynamical dynamical_time / 秒
       #   - :universal universal_time / 秒
@@ -582,32 +582,19 @@ module When
         to_m17n(*args).to_s
       end
 
-      # URI要素化 - URI表現の要素として用いる形式に変換
-      #
-      # @overload to_uri()
+      # caret 付きの frame 名
       #
       # @return [String]
       #
-      def to_uri(*args)
-        _to_uri(to_s(*args))
-      end
-
-      # URI要素化(日付のみ) - 日付の部分をURI表現の要素として用いる形式に変換
+      # @note 暦年代付きかまたは frame がグレゴリオ暦の場合は空文字列を返す
       #
-      # @overload to_date_uri()
-      #
-      # @return [String]
-      #
-      def to_date_uri(*args)
-        _to_uri(to_s(*args).sub(/T([-+][\d:]+|Z|MTC)$/,''))
+      def caret_frame
+        prefix = When::Parts::Resource.base_uri + 'CalendarTypes/'
+        path   = frame.iri
+        return '' if @calendar_era_name || path == prefix + 'Gregorian'
+        path   = path[prefix.length..-1] if path.index(prefix) == 0
+        '^^' + path
       end
-
-      def _to_uri(date)
-        uri  = date.gsub(/\./, '-').gsub(/%/, '@')
-        uri += '^^' + @frame.iri.split(/\//)[-1] unless @calendar_era_name || @frame == When.Calendar('Gregorian')
-        uri
-      end
-      private :_to_uri
 
       # 指定の書式による多言語対応文字列化 - pattern で指定した書式で多言語対応文字列化する
       #

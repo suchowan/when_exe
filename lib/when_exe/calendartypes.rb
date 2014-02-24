@@ -88,6 +88,15 @@ module When::CalendarTypes
       time = When::TM::JulianDate._d_to_t(sdn-0.5)
       @time_standard.to_dynamical_time(time) - When::TimeStandard.to_dynamical_time(time)
     end
+
+    #
+    # Zone 名
+    #
+    # @return [String]
+    #
+    def zone
+      iri.split('/')[-1]
+    end
   end
 
   #
@@ -1294,7 +1303,8 @@ module When::CalendarTypes
       value   = options.delete(:value) if options.kind_of?(Hash)
       result  = notes(date, options)
       result  = [result] unless result.kind_of?(Array)
-      result  = result.flatten.compact
+      result.flatten!
+      result.delete_if {|hash| hash.empty?}
       return false unless result.size > 0
       return true unless value
       result.each do |hash|
@@ -1481,13 +1491,13 @@ module When::CalendarTypes
 
       # return Array of Hash
       focused_notes.map {|note|
-        next nil unless notes[note]
+        next {} unless notes[note]
         if note_objects[note].respond_to?(:to_note_hash)
           note_objects[note].to_note_hash(notes[note], dates)
         else
           {:note=>note_objects[note].label, :value=>notes[note]}
         end
-      }.compact
+      }
     end
 
     #

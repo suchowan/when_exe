@@ -341,6 +341,9 @@ module Test::Coordinates
       location = When.Resource("examples/sample.xml?lat=35&long=135")
       assert_equal( 7875.0, location.lat)
       assert_equal(30375.0, location.long)
+      location = When.Resource("examples/sample.json?lat=35&long=135")
+      assert_equal( 7875.0, location.lat)
+      assert_equal(30375.0, location.long)
     end
 
     def test__reference
@@ -378,7 +381,7 @@ module Test::Coordinates
       assert_equal(+135.9, When::Coordinates.to_deg("135.5400E", 'EW'))
       assert_equal(+135.9, When::Coordinates.to_deg("E135.5400", 'EW'))
       assert_equal("135.5400E", When::Coordinates.to_dms(+135.9, 'EW'))
-      assert_equal( "35.3935N", When::Coordinates.to_dms(+35.66, 'NS'))
+      assert_equal( "35.3936N", When::Coordinates.to_dms(+35.66, 'NS'))
     end
   end
 end

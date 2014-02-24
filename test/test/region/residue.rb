@@ -92,8 +92,8 @@ module Test
     def test__epoch_in_CE
       cals  = [
         'Gregorian',
-        'EgyptianCoptic',
-        'EthiopianCoptic',
+        'Coptic?Epoch=284Y',
+        'Coptic?Epoch=8Y',
         'IndianNationalSolar',
         'HinduSolar?type=SBV',
         'HinduSolar?type=SBVZ',

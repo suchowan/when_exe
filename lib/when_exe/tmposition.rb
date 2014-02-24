@@ -271,7 +271,7 @@ module When::TM
       # @param [String] specification When.exe Standard Representation
       # @param [Hash] options 下記の通り
       # @option options [When::TM::ReferenceSystem] :frame 暦法の指定
-      # @option options [When::TM::Clock, When::V::Timezone, When::Parts::Timezone, String] :clock 時法の指定
+      # @option options [When::Parts::Timezone::Base, String] :clock 時法の指定
       # @option options [String] :tz 時法の指定(時間帯を指定する場合 :clock の替わりに用いることができる)
       # @option options [Array<Numeric>] :abbr ISO8601上位省略形式のためのデフォルト日付(省略時 指定なし)
       # @option options [Integer] :extra_year_digits ISO8601拡大表記のための年の構成要素拡大桁数(省略時 1桁)
@@ -296,7 +296,7 @@ module When::TM
       # @note options の中身は本メソッドによって更新されることがある。
       #
       # @note :tz は 'Asia/Tokyo'など時間帯を表す文字列をキーにして、登録済みのWhen::V::Timezone, When::Parts::Timezoneを検索して使用する。
-      #       :clock はWhen::TM::Clock, When::V::Timezone, When::Parts::Timezoneオブジェクトをそのまま使用するか '+09:00'などの文字列をWhen::TM::Clock化して使用する。
+      #       :clock はWhen::Parts::Timezone::Baseオブジェクトをそのまま使用するか '+09:00'などの文字列をWhen::TM::Clock化して使用する。
       #       :tz の方が :clock よりも優先される。
       #
       # @return [When::TM::TemporalPosition]    ISO8601 time point
@@ -630,15 +630,17 @@ module When::TM
     # @param [Hash] option  時間の歩度が1.0でない場合のための option
     #   see {When::TM::TemporalPosition._instance}
     #
+    # @param [Integer] start ::DateTime オブジェクトのグレゴリオ改暦日(ユリウス通日)
+    #
     # @return [::DateTime]
     #
-    def to_date_time(option={:frame=>When.utc})
+    def to_date_time(option={:frame=>When.utc}, start=_default_start)
       return JulianDate.dynamical_time(dynamical_time, option).to_date_time unless time_standard.rate_of_clock == 1.0
       raise TypeError, "Clock not assigned" unless clock
       Rational
       offset   = Rational(-(clock.universal_time/Duration::SECOND).to_i, (Duration::DAY/Duration::SECOND).to_i)
       clk_time = clock.to_clk_time(universal_time - (to_i - JulianDate::JD19700101)*Duration::DAY).clk_time
-      ::DateTime.jd(to_i, clk_time[1], clk_time[2], clk_time[3].to_i, offset, ::Date::GREGORIAN)
+      ::DateTime.jd(to_i, clk_time[1], clk_time[2], clk_time[3].to_i, offset, start)
     end
 
     # 標準ライブラリの Date オブジェクトへの変換
@@ -646,11 +648,13 @@ module When::TM
     # @param [Hash] option  時間の歩度が1.0でない場合のための option
     #   see {When::TM::TemporalPosition._instance}
     #
+    # @param [Integer] start ::DateTime オブジェクトのグレゴリオ改暦日(ユリウス通日)
+    #
     # @return [::Date]
     #
-    def to_date(option={})
+    def to_date(option={}, start=_default_start)
       return JulianDate.dynamical_time(dynamical_time, option).to_date unless time_standard.rate_of_clock == 1.0
-      ::Date.jd(to_i, ::Date::GREGORIAN)
+      ::Date.jd(to_i, start)
     end
 
     # 組み込みライブラリの Time オブジェクトへの変換
@@ -1005,6 +1009,12 @@ module When::TM
         raise RangeError, "can't find target date: #{self} -> #{jdn}" if done.key?(date.to_i)
         done[date.to_i] = true
       end
+    end
+
+    #
+    # 対応する ::Date の start 属性
+    def _default_start
+      frame ? frame._default_start : ::Date::GREGORIAN
     end
 
     alias :_method_missing :method_missing
@@ -1887,7 +1897,7 @@ module When::TM
       count   = digit - length
       period  = PeriodDuration.new((count<=0) ? 1 : 0.1**count, digit, (-@frame.indices.length)..length)
       result  = floor(digit, precision) + period
-      result += clock._tz_difference if (result.universal_time <= self.universal_time)
+      result += clock.tz_difference if (result.universal_time <= self.universal_time)
       return result
     end
 
@@ -1969,8 +1979,8 @@ module When::TM
         clock ||= options[:time].frame if options[:time].kind_of?(ClockTime)
         clock ||= Clock.local_time
       end
-      clock = When.Clock(clock) if (clock.kind_of?(String))
-      clock_is_timezone = clock.respond_to?(:daylight)
+      clock = When.Clock(clock) if clock.kind_of?(String)
+      clock_is_timezone = clock && !clock.kind_of?(When::TM::Clock)
       clock = clock.daylight if clock_is_timezone
 
       # ClockTime

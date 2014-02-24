@@ -1262,18 +1262,17 @@ module When::Ephemeris
       root(time0, cn) {|t| time_to_cn(t)}
     end
 
-    # 当該日付のthiti の変化範囲
+    # 当該日付の月の位相の変化範囲
     #
     # @param [When::TM::TemporalPosition] date 日付
     #
-    # @return [Range] 当該日付のthiti の変化範囲(朔を含む場合 nil)
+    # @return [Array<Numeric>] 当該日付の月の位相の変化範囲
     #
-    def thiti_range(date)
-      date   = date.floor
-      p0, p1 = [date, date.succ].map {|d|
-        (30.0 * time_to_cn(d)) % 30.0
+    def phase_range(date)
+      date = date.floor
+      [date, date.succ].map {|d|
+        time_to_cn(d)
       }
-      p0 >= p1 ? nil : p0...p1
     end
 
     # 指定の周期番号パターンになる最も近い過去の日時

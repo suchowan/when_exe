@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2013 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -309,6 +309,9 @@ module When::TimeStandard
   #
   # @private
   module TimeBasis
+
+    # @private
+    attr_reader :_time_basis
 
     module FixedTimeBasis
 

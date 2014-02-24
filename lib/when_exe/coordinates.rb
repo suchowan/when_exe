@@ -22,18 +22,18 @@ module When::Coordinates
                     When::HOUR=>'PT1H', When::MINUTE=>'PT1M', When::SECOND=>'PT1S'}
   MATCH     = {'NS'=>/(N|S|北緯|南緯)/, 'EW'=>/(E|W|東経|西経)/}
 
-  # 60進->10進変換
+  # 60進->10進変換(1/225度単位)
   #
   # @param [String]   src 60進法で表した方向付きの数値
   # @param [String]   dir 方向 ('NS' または 'EW')
   #
-  # @return [Numeric] 10進変換した数値 (src が nil なら0.0を、Numeric ならそのままsrcを返す)
+  # @return [Numeric] 10進変換した数値 (src が nil なら0.0を、Numeric なら 225*src を返す)
   #
-  def self.to_deg(src, dir)
+  def self.to_deg_225(src, dir)
     case src
     when String
       src = src.gsub(/_+/,'').gsub(/@/, '.')
-      return src.to_f unless (src =~ MATCH[dir])
+      return src.to_r * Spatial::DEGREE if (src =~ /E[-+]/ || src !~ MATCH[dir])
       sign  = ($1 == dir[1..1]) ? -1 : +1
       value = src.gsub(MATCH[dir], '').strip
       if ((value + "00000") =~ /^(\d+)\.(\d{2})(\d{2})(\d+)$/)
@@ -42,14 +42,27 @@ module When::Coordinates
       else
         deg, min, sec = value.split(/[^\d.]+/)
       end
-      return sign * (deg.to_i + (min||0).to_f/60 +  (sec||0).to_f/3600)
+      return sign * (deg.to_i *  Spatial::DEGREE +
+                (min||0).to_f * (Spatial::DEGREE/60.0) +
+                (sec||0).to_f * (Spatial::DEGREE/3600.0))
     when NilClass
       0.0
     when Numeric
-      src
+      src * Spatial::DEGREE
     else
       raise TypeError, "Invalid Location Type"
     end
+  end
+
+  # 60進->10進変換(度単位)
+  #
+  # @param [String]   src 60進法で表した方向付きの数値
+  # @param [String]   dir 方向 ('NS' または 'EW')
+  #
+  # @return [Numeric] 10進変換した数値 (src が nil なら0.0を、Numeric ならそのままsrcを返す)
+  #
+  def self.to_deg(src, dir)
+    to_deg_225(src, dir) / Spatial::DEGREE
   end
 
   # 10進->60進変換
@@ -61,10 +74,20 @@ module When::Coordinates
   #
   def self.to_dms(src, dir)
     dir      = (src >= 0) ? dir[0..0] : dir[1..1]
-    deg, min  =  src.abs.divmod(1)
-    min, sec  = (60*min).divmod(1)
-    sec       = (60*sec).floor
-    (['N','S'].include?(dir) ? "%02d.%02d%02d%s" : "%03d.%02d%02d%s") % [deg, min, sec, dir]
+    deg, min  =     src.abs.divmod(1)
+    min, sec  =    (60*min).divmod(1)
+    sec       = (60000*sec).round
+    fig = 5
+    3.times do
+      div, mod = sec.divmod(10)
+      if mod == 0
+        fig -= 1
+        sec  = div
+      else
+        break
+      end
+    end
+    (['N','S'].include?(dir) ? "%02d.%02d%0#{fig}d%s" : "%03d.%02d%0#{fig}d%s") % [deg, min, sec, dir]
   end
 
   #
@@ -1395,17 +1418,35 @@ module When::Coordinates
 
     # 要素の正規化
     def _normalize(args=[], options={})
-      @long  = When::Coordinates.to_deg(@long, 'EW') * DEGREE if @long
-      @lat   = When::Coordinates.to_deg(@lat,  'NS') * DEGREE if @lat
-      @datum = When.Resource(@datum || 'Earth', '_ep:')
-      if @tz.kind_of?(String)
-        @label ||= @tz
-        @tz      = When::Parts::Timezone.tz_info[@tz]
-      end
+      # 時間帯による指定
+      @tz = When::Parts::Timezone.tz_info[@tz] if @tz.kind_of?(String)
       if @tz
-        @long  ||= @tz.longitude * DEGREE
-        @lat   ||= @tz.latitude  * DEGREE
+        @label ||= @tz.label
+        @long  ||= @tz.longitude
+        @lat   ||= @tz.latitude
       end
+
+      # 場所の名前による指定
+      if @label && !(@long && @lat)
+        begin
+          OpenURI
+          open('http://en.wikipedia.org/wiki/' + @label, "1".respond_to?(:force_encoding) ? 'r:utf-8' : 'r') do |source|
+            if source.read =~ /tools\.wmflabs\.org\/geohack\/geohack\.php\?.+?params=(.+?[NS])_(.+?[EW])/
+              @lat, @long = $~[1..2].map {|pos|
+                pos.gsub!(/_(\d)_/, '_0\1_')
+                pos.sub!('_', '.')
+                pos.gsub!('_', '')
+              }
+            end
+          end
+        rescue
+        end
+      end
+
+      # データの整形
+      @long  = When::Coordinates.to_deg_225(@long, 'EW') if @long
+      @lat   = When::Coordinates.to_deg_225(@lat,  'NS') if @lat
+      @datum = When.Resource(@datum || 'Earth', '_ep:')
       @long ||= 0.0
       @lat  ||= 0.0
       @alt    =
@@ -1642,6 +1683,13 @@ module When::Coordinates
     #
     def _diff_to_CE
       @_diff_to_CE ||= @epoch_in_CE ? @epoch_in_CE - @origin_of_MSC : 0
+    end
+
+    # @private
+    #
+    # 対応する ::Date の start 属性
+    def _default_start
+      ::Date::GREGORIAN
     end
 
     # protected

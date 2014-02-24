@@ -171,7 +171,7 @@ module When::Parts
           if v.kind_of?(String)
             v = v.strip
             next if (v=~/^#/)
-            (v =~ /^(\*)?(.*?)(?:\s*=\s*(.+))?$/) ? $~[1..3] : [[nil, '', nil]]
+            (v =~ /^(\*)?(.*?)(?:\s*=\s*(.*))?$/) ? $~[1..3] : [[nil, '', nil]]
           else
             v
           end
@@ -212,7 +212,7 @@ module When::Parts
       def _hash_value(hash, locale, default='')
         locale = locale.sub(/\..*/, '').sub(/-/,'_')
         return hash[locale] if (hash[locale])
-        return _hash_value(hash, _alias[locale], default) if (_alias[locale])
+        return _hash_value(hash, _alias[locale], default) if _alias[locale]
         language = locale.sub(/_.*/, '')
         return hash[language] if (hash[language])
         return hash[default]
@@ -491,9 +491,12 @@ module When::Parts
     def _label_value(locale)
       label = Locale._hash_value(@names, locale, nil)
       return label if label
-      addition = When::BasicTypes::M17n._get_locale(locale, @access_key)
-      return @names[''] unless addition
-      update(addition)
+      foreign  = When::BasicTypes::M17n._get_locale(locale, @access_key)
+      return @names[''] unless foreign
+      english  = @names['en'] || @names['']
+      addition = english.dup.sub!(/^#{When::BasicTypes::M17n._get_locale('en', @access_key)['en']}/, '')
+      foreign[locale] += addition if addition
+      update(foreign)
       return Locale._hash_value(@names, locale)
     end
 

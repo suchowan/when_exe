@@ -132,20 +132,22 @@ module Test
 
        ['1985-1-1',
          {:calendar=>["_c:Gregorian"], :sdn=>2446067, :cal_date=>[1985, 1, 1],
-          :notes=>[[{:note=>"Month", :value=>"January"}],[]]}],
+          :notes=>[[{:note=>"Month", :value=>"January"}],[{:note=>"Week", :value=>"Tuesday(1)"}]]}],
 
        ['明治7.5.7',
          {:calendar=>["_e:Japanese::明治",1867], :sdn=>2405651, :cal_date=>[7, 5, 7],
           :notes=>[[{:note=>"干支",  :value=>"甲戌(10)", :position=>"共通"}],
                    [{:note=>"月名",  :value=>"May",      :position=>"月建"}],
-                   [{:note=>"干支",  :value=>"甲子(00)", :position=>"共通"},
+                   [{:note=>"七曜",  :value=>"Thursday(3)", :position=>"共通"},
+                    {:note=>"干支",  :value=>"甲子(00)", :position=>"共通"},
                     {:note=>"六曜",  :value=>"赤口",     :position=>"民間"}]]}],
 
        ['明治17.5.7',
          {:calendar=>["_e:Japanese::明治",1867], :sdn=>2409304, :cal_date=>[17, 5, 7],
           :notes=>[[{:note=>"干支",  :value=>"甲申(20)", :position=>"共通"}],
                    [{:note=>"月名",  :value=>"May",      :position=>"月建"}],
-                   [{:note=>"干支",  :value=>"丁巳(53)", :position=>"共通"},
+                   [{:note=>"七曜",  :value=>"Wednesday(2)", :position=>"共通"},
+                    {:note=>"干支",  :value=>"丁巳(53)", :position=>"共通"},
                     {:note=>"六曜",  :value=>"先負",     :position=>"民間"}]]}],
 
        ['CE-2010.06.08T12:00:00+09:00',

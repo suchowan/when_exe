@@ -225,13 +225,13 @@ module When::Parts
             end
           end
           case @_pool[iri]
-          when my_mutex; my_mutex.synchronize    {_create_object(iri, path, query) }
-          when Mutex   ; @_pool[iri].synchronize { @_pool[iri] }
+          when my_mutex; my_mutex.synchronize    {@_pool[iri] = _create_object(iri, path, query) }
+          when Mutex   ; @_pool[iri].synchronize {@_pool[iri]}
           else         ; @_pool[iri]
           end
         else
-          @_pool ||= {}
-          @_pool[iri] ? @_pool[iri] : _create_object(iri, path, query)
+          @_pool      ||= {}
+          @_pool[iri] ||= _create_object(iri, path, query)
         end
       end
 
@@ -294,6 +294,8 @@ module When::Parts
       # @private
       def _replace_tags(source, tags)
         case source
+        when When::BasicTypes::M17n
+          source
         when String
           target = source.dup
           tags.each_pair do |key, value|
@@ -305,7 +307,7 @@ module When::Parts
         when Hash
           target = {}
           source.each_pair do |key, value|
-            target[key] = tags[key].kind_of?(Numeric) ? tags[key] : _replace_tags(value, tags)
+            target[key] = _replace_tags(tags[key] || value, tags)
           end
           target
         else
@@ -346,7 +348,9 @@ module When::Parts
 
       private
 
+      # オブジェクト生成
       def _create_object(iri, path, query)
+        # query analyzation
         options = {}
         replace = {}
         if query
@@ -361,67 +365,38 @@ module When::Parts
         end
         options['..'] = iri
 
-        obj  = nil
+        # internal Resource
         list = _class(path)
-        if list
-          # direct URI
-          case list[0]
-          when Class
-            obj = list[0].new(options)
-          when Array
-            top = list[0][0]
-            if top.kind_of?(Hash)
-              top.each_pair do |key, value|
-                replace.update(value[replace.delete(key)]) if value.kind_of?(Hash) && value.key?(replace[key])
-              end
-              list[0] = list[0][1..-1]
-              list[0] = _replace_tags(list[0], top.merge(replace))
-            end
-            if list[0][0].kind_of?(Class)
-              # 配列の先頭がクラスである場合
-              klass, *list = list[0]
-              unless list[-1].kind_of?(Hash)
-                if list.length == 1
-                  list[0] = {'.'=>Array(list[0])}
-                else
-                  list << {}
-                end
-              end
+        return _internal(list, replace, options) if list
+
+        # external Resource
+        OpenURI
+        begin
+          args  = [path, "1".respond_to?(:force_encoding) ? 'r:utf-8' : 'r']
+          args << {:ssl_verify_mode=>OpenSSL::SSL::VERIFY_NONE} if path =~ /^https:/
+          open(*args) do |file|
+            resource = file.read
+            case resource[0..5].upcase
+            when 'BEGIN:'
+              options['.'] = _ics(_replace_tags(resource, replace).split(/[\n\r]+/))
+              options['.'][0].new(options)
+            when '<?XML '
+              options['.'] = _xml(REXML::Document.new(_replace_tags(resource, replace)).root)
+              options['.'][0].new(options)
             else
-              # 配列の先頭がクラスではない場合
-              klass, *list = [list[1], *list[0]]
-              list << {} unless list[-1].kind_of?(Hash)
+              _internal(_json(JSON.parse(resource)), replace, options)
             end
-            list[-1] = list[-1].merge(options)
-            obj = klass.new(*list)
-          else
-            obj = list[0]
           end
-        else
-          # external Resource
-          parsed = nil
-          OpenURI
-          begin
-            args  = [path, "1".respond_to?(:force_encoding) ? 'r:utf-8' : 'r']
-            args << {:ssl_verify_mode=>OpenSSL::SSL::VERIFY_NONE} if path =~ /^https:/
-            open(*args) do |file|
-              resource = _replace_tags(file.read, replace)
-              parsed = (resource[0..5]=='BEGIN:') ? _ics(resource.split(/[\n\r]+/)) :
-                                                    _xml(REXML::Document.new(resource).root)
-            end
-          rescue OpenURI::HTTPError => error
-            message = error.message + " - #{path}"
-            error   = error.respond_to?(:uri) ?
-                        error.class.new(message, error.io, error.uri) :
-                        error.class.new(message, error.io)
-            raise error
-          end
-          options['.'] = parsed
-          obj = parsed[0].new(options)
+        rescue OpenURI::HTTPError => error
+          message = error.message + " - #{path}"
+          error   = error.respond_to?(:uri) ?
+                      error.class.new(message, error.io, error.uri) :
+                      error.class.new(message, error.io)
+          raise error
         end
-        @_pool[iri] = obj
       end
 
+      # 内部形式定義の取得
       def _class(path)
         return nil unless path.index(Resource.base_uri) == 0
         list = [When]
@@ -435,6 +410,42 @@ module When::Parts
           end
         end
         return list
+      end
+
+      # 内部形式定義のオブジェクト化
+      def _internal(list, replace, options)
+        case list[0]
+        when Class
+          list[0].new(options)
+        when Array
+          top = list[0][0]
+          if top.kind_of?(Hash)
+            top.each_pair do |key, value|
+              replace.update(value[replace.delete(key)]) if value.kind_of?(Hash) && value[replace[key]]
+            end
+            list[0] = list[0][1..-1]
+            list[0] = _replace_tags(list[0], top.merge(replace))
+          end
+          if list[0][0].kind_of?(Class)
+            # 配列の先頭がクラスである場合
+            klass, *list = list[0]
+            unless list[-1].kind_of?(Hash)
+              if list.length == 1
+                list[0] = {'.'=>Array(list[0])}
+              else
+                list << {}
+              end
+            end
+          else
+            # 配列の先頭がクラスではない場合
+            klass, *list = [list[1], *list[0]]
+            list << {} unless list[-1].kind_of?(Hash)
+          end
+          list[-1] = list[-1].merge(options)
+          klass.new(*list)
+        else
+          list[0]
+        end
       end
 
       # .xml フォーマットの読み込み
@@ -496,6 +507,27 @@ module When::Parts
           end
         end
         raise ArgumentError, "BEGIN-END mismatch"
+      end
+
+      # .json フォーマットの読み込み
+      def _json(json)
+        case json
+        when Array
+          json.map {|value| _json(value)}
+        when Hash
+          hash = {}
+          json.each_pair {|key, value| hash[key] = _json(value)}
+          hash
+        when String
+          return json unless json =~ /^When::/
+          begin
+            return json.split('::').inject(Object) {|ns, sym| ns.const_get(sym)}
+          rescue
+            json
+          end
+        else
+          json
+        end
       end
     end
 

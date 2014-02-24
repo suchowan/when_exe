@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2013 Takashi SUGA
+  Copyright (C) 2013-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -55,7 +55,27 @@ end
 #
 class Date
 
-  include When::TM::TemporalPosition::Conversion if When::TM.const_defined?(:TemporalPosition)
+  if When::TM.const_defined?(:TemporalPosition)
+
+    include When::TM::TemporalPosition::Conversion
+
+    #
+    # 対応する When::TM::CalDate or DateAndTime を生成
+    #
+    # @param [Hash] options 暦法や時法などの指定
+    #   see {When::TM::TemporalPosition._instance}
+    #
+    # @return [When::TM::CalDate, When::TM::DateAndTime]
+    #
+    # @note 暦法の指定がない場合、start メソッドの値によって
+    #       Julian / Gregorian / Civil 暦法を選択する
+    #
+    def tm_position(options={})
+      options[:frame] ||= When::CalendarTypes::Christian._default_start(self)
+      super(options)
+    end
+    alias :to_tm_position :tm_position
+  end
 
   alias :__method_missing :method_missing
 
@@ -129,6 +149,18 @@ class Numeric
     Coordinates::Pair._force_pair(self, branch)
   end
   alias :pair :to_pair
+
+  #
+  # self を秒数とみなして When::Parts::Timezone::Base を取得
+  #
+  # @return [When::Parts::Timezone::Base]
+  #
+  # @note core/extension
+  #
+  def clock
+    When.Clock(self)
+  end
+  alias :to_clock :clock
 
   # メソッド名に相当する単位で表した When::TM::IntervalLength
   # @method unit_interval_length
@@ -232,6 +264,18 @@ class String
     When::Parts::Resource._instance(self, '_c:')
   end
   alias :to_calendar :calendar
+
+  #
+  # self を時間帯文字列とみなして When::Parts::Timezone::Base を取得
+  #
+  # @return [When::Parts::Timezone::Base]
+  #
+  # @note core/extension
+  #
+  def clock
+    When.Clock(self)
+  end
+  alias :to_clock :clock
 
   #
   # self をプレフィクス '_c:' を省略した IRI とみなして When::TM::CalendarNote を取得

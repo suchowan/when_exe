@@ -302,6 +302,7 @@ module When::TM
   class Clock < ReferenceSystem
 
     include When::Coordinates
+    include When::Parts::Timezone::Base
     include Spatial::Normalize
     include Temporal
 
@@ -310,7 +311,7 @@ module When::TM
 
       # When::TM::Clock Class のグローバルな設定を行う
       #
-      # @param [When::TM::Clock, When::Parts::Timezone, When::V::Timezone, String] local 地方時を使用する場合、指定する
+      # @param [When::Parts::Timezone::Base, String] local 地方時を使用する場合、指定する
       #
       # @return [void]
       #
@@ -326,9 +327,9 @@ module When::TM
 
       # 地方時
       #
-      # @param [When::TM::Clock, When::Parts::Timezone, When::V::Timezone, String] local 地方時
+      # @param [When::Parts::Timezone::Base, String] local 地方時
       #
-      # @return [When::TM::Clock, When::Parts::Timezone, When::V::Timezone, String]
+      # @return [When::Parts::Timezone::Base, String]
       #
       # @note
       #   @local_timeは、原則、ライブラリ立ち上げ時に _setup_ で初期化する。
@@ -344,7 +345,7 @@ module When::TM
 
       # When::TM::Clock のローカルタイムを読みだす
       #
-      # @return [When::TM::Clock, When::Parts::Timezone, When::V::Timezone]
+      # @return [When::Parts::Timezone::Base]
       #
       def local_time
         _local_time[1]
@@ -593,60 +594,6 @@ module When::TM
       return time
     end
 
-    # When::TM::TemporalPosition の時間帯を変更して複製する
-    #
-    # @param [When::TM::CalDate, When::TM::DateAndTime, When::TM::JulianDate] date
-    # @param [Hash] options see {When::TM::TemporalPosition._instance}
-    #
-    # @return [When::TM::DateAndTime, When::TM::JulianDate]
-    #
-    def ^(date, options={})
-      date = Position.any_other(date, options)
-      my_options = (date.options||{}).merge(options)
-      frac       = self.universal_time(date.to_i)
-      sdn, time  = (date.universal_time - frac).divmod(Duration::DAY)
-      my_options[:frame] ||= date.frame if date.kind_of?(CalDate)
-      my_options[:clock]   = self
-      case date
-      when DateAndTime
-        time += frac unless self.kind_of?(When::CalendarTypes::LocalTime)
-        DateAndTime.new(my_options[:frame].to_cal_date(sdn + JulianDate::JD19700101), time, my_options)
-      when CalDate
-        CalDate.new(my_options[:frame].to_cal_date(date.to_i), my_options)
-      when JulianDate
-        my_options[:frame] = my_options.delete(:clock)
-        JulianDate.universal_time(sdn * Duration::DAY, my_options)
-      else
-        raise TypeError, "Irregal (Temporal)Position"
-      end
-    end
-
-    # この時法の時間帯名
-    #
-    # @param [Symbol] format
-    #   - :extended ISO 8601 extended format (default)
-    #   - :basic    ISO 8601 basic format
-    #   - :hash     時間帯名の後ろにISO 8601 extended format を付加する
-    #
-    # @return [Array<String>]
-    #
-    # @note
-    #   :extended または :basicが指定され、上記は時間帯名が定義されていない場合は、ISO 8601形式で返す
-    #
-    def tzname(format=:extended)
-      name   = @tz_prop.tzname if @tz_prop.kind_of?(When::V::TimezoneProperty) && format != :hash
-      name ||= format == :basic ? to_basic : @zone
-      name   = Array(name)
-      return name unless format == :hash
-      tzid = case @tz_prop
-        when When::V::TimezoneProperty ; @tz_prop['..'].property['tzid'].object
-        when When::Parts::Timezone     ; @tz_prop.timezone.name
-        else                           ; ''
-        end
-      name[0] = tzid + name[0]
-      name
-    end
-
     #
     # _m17n_form のための要素生成
     #
@@ -662,38 +609,6 @@ module When::TM
     def to_basic
       return '' unless @zone
       @zone.gsub(/:/, '')
-    end
-
-    # 夏時間の有無
-    # @private
-    def _need_validate
-      case @tz_prop
-      when nil                       ; false
-      when When::V::TimezoneProperty ; @tz_prop._pool['..']._need_validate
-      else                           ; @tz_prop._need_validate
-      end
-    end
-
-    # 夏時間
-    # @private
-    def _daylight(time)
-      case @tz_prop
-      when nil                       ; return self
-      when When::V::TimezoneProperty ; timezone = @tz_prop._pool['..']
-      else                           ; timezone = @tz_prop
-      end
-      return self unless timezone
-      return timezone._daylight(time)
-    end
-
-    # この時法の夏時間-標準時間変化量
-    # @private
-    def _tz_difference
-      case @tz_prop
-      when nil                       ; 0
-      when When::V::TimezoneProperty ; @tz_prop._pool['..'].difference
-      else                           ; @tz_prop.difference
-      end
     end
 
     # 期間オブジェクトの桁数合わせ
@@ -723,7 +638,68 @@ module When::TM
       offset
     end
 
+    # この時法の時間帯名
+    #
+    # @param [Symbol] format
+    #   - :extended ISO 8601 extended format (default)
+    #   - :basic    ISO 8601 basic format
+    #   - :hash     時間帯名の後ろにISO 8601 extended format を付加する
+    #
+    # @return [Array<String>]
+    #
+    # @note
+    #   :extended または :basicが指定され、上記は時間帯名が定義されていない場合は、ISO 8601形式で返す
+    #
+    def tzname(format=:extended)
+      name   = @tz_prop.tzname if @tz_prop.kind_of?(When::V::TimezoneProperty) && format != :hash
+      name ||= format == :basic ? to_basic : @zone
+      name   = Array(name)
+      return name unless format == :hash
+      tzid = case @tz_prop
+        when When::V::TimezoneProperty ; @tz_prop['..'].property['tzid'].object
+        when When::Parts::Timezone     ; @tz_prop.timezone.name
+        else                           ; ''
+        end
+      name[0] = tzid + name[0]
+      name
+    end
+
+    # 標準時間帯の時計
+    # @return [When::TM::Clock]
+    def standard
+      _tz_prop ? _tz_prop.standard : self
+    end
+
+    # 夏時間帯の時計
+    # @return [When::TM::Clock]
+    def daylight
+      _tz_prop ? _tz_prop.daylight : self
+    end
+
+    # 夏時間帯と標準時間帯の時間差
+    # @return [When::TM:IntervalLength]
+    def tz_difference
+      _tz_prop ? _tz_prop.tz_difference : 0
+    end
+
+    # 夏時間の有無
+    # @private
+    def _need_validate
+      _tz_prop ? _tz_prop._need_validate : false
+    end
+
+    # 夏時間
+    # @private
+    def _daylight(time)
+      _tz_prop ? _tz_prop._daylight(time) : self
+    end
+
     private
+
+    # Timezone オブジェクト
+    def _tz_prop
+      @tz_prop.kind_of?(When::V::TimezoneProperty) ? @tz_prop._pool['..'] : @tz_prop
+    end
 
     # オブジェクトの正規化
     def _normalize(args=[], options={})
@@ -1009,7 +985,15 @@ module When::TM
         _compact(pool, parents)
         return pool unless pool.size < count
 
-        @order.each do |iri|
+        order = @order
+        if /\?.+?=/ =~ parents[-1]
+          begin
+            head  = When.CalendarEra(parents[-1])
+            order = order.dup.unshift(head)
+          rescue
+          end
+        end
+        order.each do |iri|
           When.CalendarEra(iri)
           pool = _candidates(options, area, period, key, epoch,  false) +
                  _candidates(options, area, period, key, reverse, true)

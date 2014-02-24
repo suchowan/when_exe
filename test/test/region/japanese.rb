@@ -155,7 +155,7 @@ module Test
               long  = dates.cal4note.s_terms.position(date)
               notes = date.notes(:indices => When::DAY,
                                  :notes   => (13<<9|1<<48|1<<71),
-                                 :locale  => 'ja').map {|n| n[:value]}
+                                 :locale  => 'ja').map {|n| n[:value]}.compact
               result << [date.to_m17n/'ja', notes]
             end
           end

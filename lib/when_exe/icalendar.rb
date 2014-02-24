@@ -923,7 +923,7 @@ module When::V
 
     # @private
     def _need_validate
-      (@difference != 0)
+      @tz_difference != 0
     end
 
     private
@@ -942,7 +942,7 @@ module When::V
           @standard = tz if (@standard==nil || tz.universal_time > @standard.universal_time)
         end
       end
-      @difference = @standard.universal_time - @daylight.universal_time
+      @tz_difference = @standard.universal_time - @daylight.universal_time
 
       name   = @property['tzid'].object
       case self.class[name]

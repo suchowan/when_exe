@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2013 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -64,19 +64,19 @@ module When
 
           case date_time
           # basic date & time format (ISO 8601)
-          when /^([-+W\d]+)(?:(T([.,\d]+)?)([A-Z]+|[-+]\d+)?)?$/
+          when /^([-+W\d]+)(?:(T([.,\d]+)?)([A-Z]+(\?.+)?|[-+]\d+)?)?$/
             d, t, time, clock = $~[1..4]
             format, date  = Date._to_array_basic_ISO8601(d, options)
 
           # basic date & time format (JIS X0301)
-          when /^([.\d]+)(?:(T([.,\d]+)?)([A-Z]+|[-+]\d+)?)?$/
+          when /^([.\d]+)(?:(T([.,\d]+)?)([A-Z]+(\?.+)?|[-+]\d+)?)?$/
             raise ArgumentError, "Wrong date format" unless options[:era_name]
             d, t, time, clock = $~[1..4]
             format, date  = Date._to_array_basic_X0301(d, options)
             era = options[:era_name]
 
           # basic time format (ISO 8601)
-          when /^(T(-{0,2}[.,\d]+)?)([A-Z]+|[-+]\d+)?$/
+          when /^(T(-{0,2}[.,\d]+)?)([A-Z]+(\?.+)?|[-+]\d+)?$/
             t, time, clock = $~[1..3]
 
           # not supported
@@ -93,18 +93,18 @@ module When
 
           case date_time
           # extended date & time format (ISO 8601)
-          when /^([-+*&%@!>=<?\dW.]+)(?:(T([:*=.,\d]+)?)([A-Z]+|[-+][:\d]+)?)?$/
+          when /^([-+*&%@!>=<?\dW.]+)(?:(T([:*=.,\d]+)?)([A-Z]+(\?.+)?|[-+][:\d]+)?)?$/
             d, t, time, clock = $~[1..4]
             format, date  = Date._to_array_extended_ISO8601(d, options)
 
           # extended date & time format (JIS X0301)
-          when  /^((.+::)?(\[[^\]]+\]|[^-+\d]+))([-+*&%@!>=<?\dW.\(\)]+)?(?:(T([:*=.,\d]+)?)([A-Z]+|[-+][:\d]+)?)?$/
+          when  /^((.+::)?(\[[^\]]+\]|[^-+\d]+))([-+*&%@!>=<?\dW.\(\)]+)?(?:(T([:*=.,\d]+)?)([A-Z]+(\?.+)?|[-+][:\d]+)?)?$/
             era, parent, child, d, t, time, clock = $~[1..7]
             format, date, era = Date._to_array_extended_X0301(d, era, options)
             era ||= options[:era_name] if (d =~ /\./)
 
           # extended time format (ISO 8601)
-          when /^(T(-{0,2}[:*=.,\d]+)?)([A-Z]+|[-+][:\d]+)?$/
+          when /^(T(-{0,2}[:*=.,\d]+)?)([A-Z]+(\?.+)?|[-+][:\d]+)?$/
             t, time, clock = $~[1..3]
 
           # not supported
@@ -336,7 +336,7 @@ module When
         # 時間帯の表現を正規化する
         def _to_string_clock(clock)
           return nil unless clock
-          return clock if (clock =~ /^[A-Z]+$/)
+          return clock if (clock =~ /^[A-Z]+(\?.+)?$/)
           raise ArgumentError, "Wrong clock format: #{clock}" unless (clock =~ /^([-+])(\d{2})(?::?(\d{2}))?$/)
           s, h, m = $~[1..3]
           return s + h + ':' + (m||'00')

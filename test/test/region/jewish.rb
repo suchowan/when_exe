@@ -53,7 +53,7 @@ module Test
         date += When.Duration('P1Y')
       end
 
-      assert_equal("Common::BCE3761(-3760).10.07",
+      assert_equal("BCE3761(-3760).10.07",
                    (When.era('BCE')[0] ^ When.Calendar('Jewish').domain[''].first).to_s)
 
     end

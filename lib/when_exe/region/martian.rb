@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2013 Takashi SUGA
+  Copyright (C) 2013-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -63,7 +63,7 @@ module When
       # @return [Numeric] dynamical date
       #
       def to_dynamical_date(date)
-        (date - MTC0) * Ratio + J2000Jan6
+        (date - @mtc0) * Ratio + J2000Jan6
       end
 
       # dynamical date を当該時刻系の日付に変換する
@@ -73,7 +73,7 @@ module When
       # @return [Numeric] 当該時刻系の日付
       #
       def from_dynamical_date(date)
-        (date - J2000Jan6) / Ratio + MTC0
+        (date - J2000Jan6) / Ratio + @mtc0
       end
 
       # universal time を dynamical time に変換する
@@ -98,6 +98,15 @@ module When
         When::TM::JulianDate._d_to_t(
           from_dynamical_date(
             When::TM::JulianDate._t_to_d(time)))
+      end
+
+      private
+
+      # オブジェクトの正規化
+      def _normalize(args=[], options={})
+        @location = When.Resource(@location || '_l:long=0&lat=0&datum=Mars')
+        @mtc0     = MTC0 + @location.long / (360.0 * When::Coordinates::Spatial::DEGREE)
+        super
       end
     end
   end
@@ -169,7 +178,7 @@ module When
 
       # オブジェクトの正規化
       def _normalize(args=[], options={})
-        @event ||= 'solis'
+        @event  ||= 'solis'
         super
       end
     end
@@ -177,14 +186,14 @@ module When
     #
     # Martian Time, Coordinated
     #
-    class MTC < UTC
+    class MTC < LocalTime
 
       private
 
       # オブジェクトの正規化
       def _normalize(args=[], options={})
         @label         = m17n('MTC')
-        @time_standard = When.Resource("_t:MartianTimeCoordinated")
+        @time_standard = When.Resource("_t:MartianTimeCoordinated?location=(_l:long=#{@long||0}&datum=Mars)")
         super
       end
     end

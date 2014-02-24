@@ -47,7 +47,7 @@ module When
     # Initializations
     #
     # @param [Hash] options
-    # @option options [When::TM::Clock, When::V::Timezone, When::Parts::Timezone] :local        デフォルトの地方時
+    # @option options [When::Parts::Timezone::Base] :local        デフォルトの地方時
     # @option options [When::Coordinates::Spatial]  :location     デフォルトの空間位置
     # @option options [When::TM::IntervalLength]    :until        V::Event::Enumerator の until
     # @option options [Hash{String=>String}]        :alias        Locale の読替パターン         ({ 読替前のlocale=>読替後のlocale })
@@ -197,16 +197,16 @@ module When
       autoload :WorldWeek,           'when_exe/region/world'
       autoload :ShireWeek,           'when_exe/region/shire'
 
-      DefaultNotes   = [['_m:CalendarTerms::Month'], []]
+      DefaultNotes   = [['_m:CalendarTerms::Month'], ['CommonResidue::Week']]
       JulianDayNotes = [['CommonResidue::Week', 'CommonResidue::干支']]
-      BahaiNotes     = [['Bahai::YearName'], ['_m:BahaiTerms::Month'], []]
+      BahaiNotes     = [['Bahai::YearName'], ['_m:BahaiTerms::Month'], ['CommonResidue::Week']]
       JavaneseNotes  = [['Javanese::Windu'], ['_m:CalendarTerms::Month'],
                         ['Javanese::Pasaran', 'Javanese::Paringkelan', 'Javanese::Week', 'Javanese::Wuku']]
-      ChineseNotes   = [['CommonResidue::干支'], ['_m:CalendarTerms::Month'], ['CommonResidue::干支']]
-      TibetanNotes   = [['Tibetan::干支'], ['_m:CalendarTerms::Month'], []]
-      YiNotes        = [['Yi::YearName'], ['_m:CalendarTerms::Month'], []]
-      MayanNotes     = [{'0B'=>{'Base'=>'?Epoch=0D'}, '2B'=>{'Base'=>'?Epoch=2D'}},
-                        ['Mayan#{Base:}::Trecena', 'Mayan#{Base:}::Tzolk\'in', 'Mayan#{Base:}::Lords_of_the_Night', 'Mayan#{Base:}::Haab\'']]
+      ChineseNotes   = [['CommonResidue::干支'], ['_m:CalendarTerms::Month'], ['CommonResidue::Week', 'CommonResidue::干支']]
+      TibetanNotes   = [['Tibetan::干支'], ['_m:CalendarTerms::Month'], ['CommonResidue::Week']]
+      YiNotes        = [['Yi::YearName'], ['_m:CalendarTerms::Month'], ['CommonResidue::Week']]
+      MayanNotes     = [{},['Mayan#{?Epoch=Epoch}::Trecena', 'Mayan#{?Epoch=Epoch}::Tzolk\'in',
+                            'Mayan#{?Epoch=Epoch}::Lords_of_the_Night', 'Mayan#{?Epoch=Epoch}::Haab\'']]
     end
   end
 
@@ -274,10 +274,9 @@ module When
       autoload :LongCount,               'when_exe/region/mayan'
 
       # Defualt search path for Epochs and Eras
-      DefaultEpochs = ['Common',     'Common?Reform=1752.09.14', 'ModernJapanese',
-                       'IndianNationalSolar',  'Iranian',   'Hijra',    'Jewish',
-                       'Roman',      'Byzantine', 'French',   'World',
-                       'LongCount',  'LongCount?Epoch=0D', 'LongCount?Epoch=2D',
+      DefaultEpochs = ['Common',     'ModernJapanese',
+                       'IndianNationalSolar',  'Iranian',   'Hijra', 'Jewish',
+                       'Roman',      'Byzantine', 'French', 'World', 'LongCount',
                        'BalineseLuniSolar',  'JavaneseLunar',
                        'Japanese',   'JapanesePrimeMinister', 'NihonKoki', 'NihonShoki',
                        'Chinese',    'Ryukyu',  'Vietnamese', 'Korean',
@@ -554,25 +553,27 @@ module When
 
   # When::TM::Clock の生成/参照
   #
+  # @param [When::Parts::Timezone::Base] clock なにもせず clock をそのまま返す
   # @param [String] clock  時法を表す文字列
   # @param [Numeric] clock 秒を単位として表した時差(東経側を + とする)
-  # @param [When::TM::Clock] clock なにもせず clock をそのまま返す
   #
-  # @return [When::TM::Clock] clock に対応する When::TM::Clock オブジェクト
+  # @return [When::Parts::Timezone::Base] 生成/参照した When::Parts::Timezone::Base オブジェクト
   #
   def Clock(clock)
     case clock
-    when TM::Clock ; return clock
-    when 'Z'       ; return utc
+    when Parts::Timezone::Base            ; return clock
+    when 'Z', 0                           ; return utc
+    when Numeric                          ; return Parts::Resource._instance("_tm:Clock?label=" + TM::Clock.to_hms(clock))
     when /^#{CalendarTypes::TimeSystems}/ ; return Parts::Resource._instance('_c:' + clock)
-    when Numeric   ; return utc if clock==0
-    when String
-      c = TM::Clock[clock] || V::Timezone[clock]
-      return c if c
-      clock, options = clock.split('?')
-    else           ; raise TypeError, "Invalid Type: #{clock.class}"
+    when String                           ;
+    else                                  ; raise TypeError, "Invalid Type: #{clock.class}"
     end
-    iri  = "_tm:Clock?label=" + TM::Clock.to_hms(clock)
+    c    = TM::Clock[clock] || V::Timezone[clock]
+    return c if c
+    clock, options = clock.split('?')
+    hms  = TM::Clock.to_hms(clock)
+    return Parts::Timezone[clock] unless hms
+    iri  = "_tm:Clock?label=" + hms
     iri += "&" + options if options
     Parts::Resource._instance(iri)
   end
@@ -583,6 +584,52 @@ module When
   #
   def utc
     Parts::Resource._instance("_c:UTC")
+  end
+
+  # When::Coordinates::Spatial の生成/参照
+  #
+  # @overload Location(location)
+  #   @param [When::Coordinates::Spatial] location なにもせず location をそのまま返す
+  #   @param [String] location  空間位置の IRI (デフォルトプレフィクス _l:) または都市名(en.wikipedia.orgを参照)
+  #   @param [When::Parts::Timezone] 代表する都市の時間帯
+  #
+  # @overload Location(longitude, latitide, altitide=0, datum='Earth')
+  #   @param [Numeric] longitude 経度 / 度 (東経を正とする)
+  #   @param [Numeric] latitide  緯度 / 度 (北緯を正とする)
+  #   @param [Numeric] altitide  高度 / m
+  #   @param [When::Ephemeris::Datum] datum 座標系
+  #   @param [String] datum 座標系の IRI (デフォルトプレフィクス _ep:)
+  #
+  # @note longitudeが経度を意味する文字列, latitude が緯度を意味する文字列の場合、
+  #       引数の順番によらず、それぞれ経度および緯度と解釈する
+  #
+  # @return [When::Coordinates::Spatial] 生成/参照した When::Coordinates::Spatial オブジェクト
+  #
+  def Location(*args)
+    case args[0]
+    when Coordinates::Spatial ; return args[0]
+    when Parts::Timezone      ; return args[0].location
+    when String               ; return Parts::Resource._instance(args[0], args[0] =~ /=/ ? '_l:' : '_l:label=') if args.size == 1
+    when Numeric              ;
+    else                      ; raise TypeError, "Invalid Type: #{args[0].class}"
+    end
+    rest = []
+    longitude = latitude = nil
+    args.each do |arg|
+      case arg
+      when /^#{Coordinates::MATCH['EW']}\s*[.@\d]/, /[.@\d]\s*#{Coordinates::MATCH['EW']}$/; longitude = arg
+      when /^#{Coordinates::MATCH['NS']}\s*[.@\d]/, /[.@\d]\s*#{Coordinates::MATCH['NS']}$/; latitude  = arg
+      else ; rest << arg
+      end
+    end
+    longitude ||= rest.shift
+    latitude  ||= rest.shift
+    raise ArgumentError, "too few arguments" unless longitude && latitude
+    altitude, datum = rest
+    iri = "_l:long=#{longitude}&lat=#{latitude}"
+    iri += "&alt=#{altitude}" if altitude
+    iri += "&datum=#{datum}"  if datum
+    Parts::Resource._instance(iri)
   end
 
   #

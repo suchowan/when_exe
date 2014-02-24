@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2012 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -10,14 +10,21 @@ module When
   module Coordinates
 
     # Mayan Residue
-    Mayan = [{'Epoch' => {'0D'=>{'Haab'=>'-65', 'Trecena'=> '8', 'Tzolkin'=>'4', 'LoN'=>'3'},
-                          '2D'=>{'Haab'=>'-63', 'Trecena'=>'10', 'Tzolkin'=>'6', 'LoN'=>'5'}}}, BasicTypes::M17n, [
+    Mayan = [{'Epoch' => Hash.new {|hash, key|
+                           epoch = key.to_i
+                           hash[key] = key ? {
+                             'Haab'    => ((300 + epoch) % 365).to_s,
+                             'Trecena' => ((  8 + epoch) %  13).to_s,
+                             'Tzolkin' => ((  4 + epoch) %  20).to_s,
+                             'LoN'     => ((  3 + epoch) %   9).to_s
+                           } : nil
+                         }}, BasicTypes::M17n, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[Mayan]",
 
       [Residue,
-        "label:[Haab', ハアブ, Haab]", "divisor:365", 'day:#{Haab:-65}', "format:[%2$d%1$s/365]",
+        "label:[Haab', ハアブ, Haab]", "divisor:365", 'day:#{Haab:300}', "format:[%2$d%1$s/365]",
         "namespace:[glyph=http://en.wikipedia.org/wiki/File:Maya-]",
         [Residue, "label:[Pop     =glyph:Pop.jpg,            ポプ,       Pop   ]", "remainder:  0"],
         [Residue, "label:[Wo'     =glyph:Dresden-wo.jpg,     ウオ,       Wo    ]", "remainder: 20"],
@@ -90,12 +97,11 @@ module When
     #
     # Mayan Long Count
     #
-    LongCount = [{'Epoch'=>{'0D' => {'Base' => '?Epoch=0D'},
-                            '2D' => {'Base' => '?Epoch=2D'}}}, self, [
+    LongCount = [{}, self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
-      'area:[LongCount#{Base}=en:Mesoamerican_Long_Count_calendar, マヤ長期暦=ja:%%<長期暦>]',
-     ["[PHLC=, 先史時代=, PreHistoricLongCount=]0.0.0.0.0", "[Pre Historic=]",	'-13.0.0.0.0^LongCount#{Base}'],
+      'area:[LongCount#{?Epoch=Epoch}=en:Mesoamerican_Long_Count_calendar, マヤ長期暦=ja:%%<長期暦>]',
+     ["[PHLC=, 先史時代=, PreHistoricLongCount=]0.0.0.0.0", "[Pre Historic=]",	'-13.0.0.0.0^LongCount#{?Epoch=Epoch}'],
      ["[HLC=,  歴史時代=, HistoricLongCount=]0.0.0.0.1",    "[Historic Age=]",	  "0.0.0.0.1"],
      ["[NLC=,  新時代=,   NewLongCount=]0.0.0.0.1",	    "[New Age=]",	 "13.0.0.0.1", "26.0.0.0.1"]
     ]]
@@ -109,8 +115,11 @@ module When
     #
     # Mayan Long Count
     #
-    LongCount =  [{'Epoch'=>{'0D' => {'origin_of_LSC' => 584283, 'Base'=>'?Epoch=0D'},
-                             '2D' => {'origin_of_LSC' => 584285, 'Base'=>'?Epoch=2D'}}}, CyclicTableBased, {
+    LongCount =  [{'Epoch' => Hash.new {|hash, key|
+                                hash[key] = {
+                                  'origin_of_LSC' => 584283 + key.to_i,
+                                  'Epoch'         => key
+                                }}}, CyclicTableBased, {
       'origin_of_LSC' => 584283,
       'rule_table'    => {
         'T' => {'Rule'  =>[360]},
@@ -118,7 +127,7 @@ module When
       },
       'index_of_MSC' => 2,
       'indices'=> [_c20, _c20, _c18, _c20],
-      'note'   => 'MayanNotes#{Base}'
+      'note'   => 'MayanNotes#{?Epoch=Epoch}'
     }]
   end
 end

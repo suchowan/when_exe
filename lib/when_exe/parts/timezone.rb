@@ -29,7 +29,7 @@ module When::Parts
 
       # 夏時間帯と標準時間帯の時間差
       # @return [When::TM:IntervalLength]
-      attr_reader :difference
+      attr_reader :tz_difference
 
       # When::TM::TemporalPosition の時間帯を変更して複製する
       #
@@ -39,6 +39,7 @@ module When::Parts
       # @return [When::TM::DateAndTime, When::TM::JulianDate]
       #
       def ^(date, options={})
+        date    = When::TM::Position.any_other(date, options)
         options = date._attr.merge({:clock=>self}).merge(options)
         return When::TM::JulianDate.dynamical_time(date.dynamical_time, options) unless date.frame.kind_of?(When::TM::Calendar)
         date.frame.jul_trans(When::TM::JulianDate.dynamical_time(date.dynamical_time), options)
@@ -123,7 +124,9 @@ module When::Parts
     def location
       return @location if @location
       tzinfo = self.class.tz_info[label]
-      @location = When.Resource("_l:long=#{tzinfo.longitude.to_f}&lat=#{tzinfo.latitude.to_f}&label=#{label}")
+      longitude = When::Coordinates.to_dms(tzinfo.longitude, 'EW')
+      latitude  = When::Coordinates.to_dms(tzinfo.latitude,  'NS')
+      @location = When.Resource("_l:long=#{longitude}&lat=#{latitude}&label=#{label}")
     end
 
     # 時分秒のインデクス
@@ -162,11 +165,11 @@ module When::Parts
       dst, std  = _offsets(Time.now.to_i)
       @standard = When::TM::Clock.new({:zone=>std, :tz_prop=>self})
       if std == dst
-        @daylight   = @standard
-        @difference = 0
+        @daylight      = @standard
+        @tz_difference = 0
       else
-        @daylight   = When::TM::Clock.new({:zone=>dst, :tz_prop=>self})
-        @difference = @standard.universal_time - @daylight.universal_time
+        @daylight      = When::TM::Clock.new({:zone=>dst, :tz_prop=>self})
+        @tz_difference = @standard.universal_time - @daylight.universal_time
       end
       @indices = When::Coordinates::DefaultTimeIndices
     end
