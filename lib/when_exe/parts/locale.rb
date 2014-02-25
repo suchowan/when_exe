@@ -464,25 +464,25 @@ module When::Parts
 
     # @private
     def _copy(options={})
-      if (options.key?(:names))
+      self[0..-1] = options[:label]      if options[:label]
+      if options[:names]
         @names    = options[:names]
         @keys     = @names.keys.sort
         @values   = @names.values.compact.sort.reverse
       end
-      @link       = options[:link]       if (options.key?(:link))
-      @code_space = options[:code_space] if (options.key?(:code_space))
-      @access_key = options[:access_key] if (options.key?(:access_key))
-      self[0..-1] = options[:label]      if (options.key?(:label))
+      @link       = options[:link]       if options[:link]
+      @access_key = options[:access_key] if options[:access_key]
+      @code_space = options[:code_space] if options[:code_space]
       return self
     end
 
     # @private
     def _copy_all(other)
-      _copy({:names      => other.names,
+      _copy({:label      => other.to_s,
+             :names      => other.names,
              :link       => other.link,
-             :code_space => other.code_space,
              :access_key => other.access_key,
-             :label      => other.to_s
+             :code_space => other.code_space
             })
     end
 

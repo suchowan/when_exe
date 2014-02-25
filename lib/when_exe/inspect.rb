@@ -15,9 +15,9 @@ module When
     # @param [Hash] options 下記のとおり
     # @option options [Numeric] :precision 指定があれば「イベント名(イベント時刻)」出力の時刻を指定の精度に丸める
     # @option options [Boolean] :camel   true ならシンボルを camel case にする
+    # @option options [Symbol]  :method  _to_hash_value で変換に用いるメソッド(:to_m17n, :iri など, 指定なしなら変換しない)
     # @option options [String]  :locale  文字列化の locale(指定なしは M17nオブジェクトに変換)
-    # @option options [Boolean] :simple  true ならIRI の先頭部分を簡約表現にする
-    # @option options [Boolean] :residue true なら Residue をそのまま出力
+    # @option options [Boolean] :prefix  true ならIRI の先頭部分を簡約表現にする
     # @option options [Object]  :その他  各クラス#_to_h を参照
     #
     # @return [Hash] (Whenモジュール内のクラスは文字列 or M17n化)
@@ -34,6 +34,7 @@ module When
     # @return [String] to_h 結果を JSON文字列化したもの
     #
     def _to_json(options={})
+      options[:method] = :to_m17n unless options.key?(:method)
       JSON.dump(to_h(options))
     end
 
@@ -41,7 +42,15 @@ module When
     # _m17n_form のための要素生成
     # @private
     def _to_hash_value(options={})
-       @_pool ? When::Parts::Resource._path_with_prefix(self, options[:simple]) : self
+       method = options[:method]
+       if method.kind_of?(Symbol)
+         if respond_to?(method, true) && method != :iri
+           return send(method)
+         elsif registered?
+           return When::Parts::Resource._path_with_prefix(self, options[:prefix])
+         end
+       end
+       self
     end
 
     private
@@ -72,9 +81,9 @@ module When
     # @param [Hash] options 下記の通り
     # @option options [Numeric] :precision 指定があれば「イベント名(イベント時刻)」出力の時刻を指定の精度に丸める
     # @option options [Boolean] :camel     true ならシンボルを camel case にする
+    # @option options [Symbol]  :method  _to_hash_value で変換に用いるメソッド(:to_m17n, :iri など, 指定なしなら変換しない)
     # @option options [String]  :locale    文字列化の locale(指定なしは M17nオブジェクトに変換)
-    # @option options [Boolean] :simple    true ならIRI の先頭部分を簡約表現にする
-    # @option options [Boolean] :residue   true なら Residue をそのまま出力
+    # @option options [Boolean] :prefix    true ならIRI の先頭部分を簡約表現にする
     #
     # @return [Hash, Array] 変換結果
     #
@@ -89,7 +98,7 @@ module When
                         s + [_m17n_form(k, options), _m17n_form(element[k], options)]
                       })]
         when Array  ; element.map {|e| _m17n_form(e, options)}
-        when Class  ; When::Parts::Resource._path_with_prefix(element, options[:simple])
+        when Class  ; When::Parts::Resource._path_with_prefix(element, options[:prefix])
         when Symbol ; options[:camel] ? element.to_s.split(/_/).map {|e| e.capitalize}.join('').to_sym : element
         when Numeric, FalseClass, TrueClass ; element
         else        ; element.to_s
@@ -121,21 +130,20 @@ module When
         return label.to_s + "(#{difference})" unless @format
         @format.to_s % [label.to_s, difference, difference+1]
       end
-
-      #
-      # to_h のための要素生成
-      # @private
-      def _to_hash_value(options={})
-        options[:residue] ? self : to_m17n
-      end
     end
 
     class Pair
       #
       # to_h のための要素生成
+      #
+      # @param [Hash] options 下記のとおり
+      # @option options [Symbol] :method :to_m17n なら to_s を返す、その他は self を返す
+      #
+      # @return [String, When::Coordinates::Pair]
+      #
       # @private
       def _to_hash_value(options={})
-        to_s
+        options[:method] == :to_m17n ? to_s : self
       end
     end
   end
@@ -454,7 +462,9 @@ module When
       #   [ value [String, When::BasicTypes::M17n, When::Coordinates::Residue] 暦注の値 ]
       #
       def notes(options={})
-        _m17n_form(_notes(options), options.kind_of?(Hash) ? options : {})
+        form_options = options.kind_of?(Hash) ? options : {}
+        form_options[:method] = :to_m17n unless form_options.key?(:method)
+        _m17n_form(_notes(options), form_options)
       end
 
       #

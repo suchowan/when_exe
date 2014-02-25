@@ -418,6 +418,9 @@ module When
         return nil
       end
 
+      # @private
+      HashProperty = [:label, :names, :link, :access_key, :code_space]
+
       #
       # When::BasicTypes::M17n に変換する - 何もしないで自身を返す
       #
@@ -427,17 +430,6 @@ module When
         self
       end
       alias :label :to_m17n
-
-      #
-      # _m17n_form のための要素生成 - 何もしないで自身を返す
-      #
-      # @param [Hash] options 未使用
-      #
-      # @return [When::BasicTypes::M17n]
-      #
-      def _to_hash_value(options={})
-        self
-      end
 
       # オブジェクトの生成
       #
@@ -479,7 +471,9 @@ module When
         rest, options = _attributes(args)
         _sequence
 
-        return _copy_all(_pool[@label.to_s]) if _pool[@label.to_s]
+        return _pool[@label.to_s] ?
+          _copy_all(_pool[@label.to_s]) :  # 階層になった Resource の代表ラベルのための生成
+          _copy(options) if @label         # M17n#to_h の出力と書式互換の入力による生成
 
         case rest[0]
         when When::Parts::Resource::ContentLine

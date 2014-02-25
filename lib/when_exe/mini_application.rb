@@ -141,6 +141,10 @@ module When
 
     private
 
+    # to_h メソッドのオプション設定
+    HashMethod = {:iri     => [:to_h, {:method=>:iri    , :prefix=>true}],
+                  :to_m17n => [:to_h, {:method=>:to_m17n, :prefix=>true}]}
+
     # 引数読み込み
     #
     # args [String] コマンドライン入力
@@ -167,7 +171,7 @@ module When
         when Numeric ; dates << arg ; numbers << arg
         when Hash    ; options.update(arg)
         when Range   ; arg.each {|d| dates << d}
-        when Symbol  ; output = arg
+        when Symbol  ; output = [arg]
         when String
           case arg
           when /^:(.+?)(?:\[(..)\])?$/             ; output  = [$1.to_sym, $2].compact
@@ -199,7 +203,7 @@ module When
           dates << arg
         end
       end
-      [calendars, dates, numbers, methods, output, options]
+      [calendars, dates, numbers, methods, HashMethod[output[0]] || output, options]
     end
 
     # 変換処理(実行部)

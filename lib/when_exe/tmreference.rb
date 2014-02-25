@@ -597,9 +597,12 @@ module When::TM
     #
     # _m17n_form のための要素生成
     #
+    # @param [Hash] options 下記のとおり
+    # @option options [Symbol] :method :to_m17n なら時間帯名を返す、その他は When::Parts::Resource#to_h 参照
+    #
     # @private
     def _to_hash_value(options={})
-      tzname(:hash)[0]
+      options[:method] == :to_m17n ? tzname(:hash)[0] : super
     end
 
     # この時法のUTCとの差(ISO 8601 basic format)

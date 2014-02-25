@@ -1300,6 +1300,9 @@ module When::Coordinates
       end
     end
 
+    # @private
+    HashProperty = [:label, :long, :lat, [:alt, 0.0], :ref]
+
     # Degree / Internal Location Unit(16")
     #
     #   (3600 を 2 の因数で割りつくした値を単位とする)
@@ -1418,6 +1421,7 @@ module When::Coordinates
 
     # 要素の正規化
     def _normalize(args=[], options={})
+
       # 時間帯による指定
       @tz = When::Parts::Timezone.tz_info[@tz] if @tz.kind_of?(String)
       if @tz
@@ -1428,18 +1432,17 @@ module When::Coordinates
 
       # 場所の名前による指定
       if @label && !(@long && @lat)
-        begin
-          OpenURI
-          open('http://en.wikipedia.org/wiki/' + @label, "1".respond_to?(:force_encoding) ? 'r:utf-8' : 'r') do |source|
-            if source.read =~ /tools\.wmflabs\.org\/geohack\/geohack\.php\?.+?params=(.+?[NS])_(.+?[EW])/
-              @lat, @long = $~[1..2].map {|pos|
-                pos.gsub!(/_(\d)_/, '_0\1_')
-                pos.sub!('_', '.')
-                pos.gsub!('_', '')
-              }
-            end
+        OpenURI
+        open('http://en.wikipedia.org/wiki/' + @label, "1".respond_to?(:force_encoding) ? 'r:utf-8' : 'r') do |source|
+          if source.read =~ /tools\.wmflabs\.org\/geohack\/geohack\.php\?.+?params=(.+?[NS])_(.+?[EW])/
+            @lat, @long = $~[1..2].map {|pos|
+              pos.gsub!(/_(\d)_/, '_0\1_')
+              pos.sub!('_', '.')
+              pos.gsub!('_', '')
+            }
+          else
+            raise ArgumentError, 'Wrong location name: ' + @label
           end
-        rescue
         end
       end
 

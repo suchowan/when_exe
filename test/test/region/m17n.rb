@@ -168,7 +168,7 @@ module Test
 
       ].each do |sample|
         date, verify = sample
-        list = When.when?(date).to_h({:simple=>true})
+        list = When.when?(date).to_h({:method=>:to_m17n, :prefix=>true})
         [:calendar, :cal_date, :sdn, :clk_time].each do |key|
           assert_equal(verify[key], list[key])
         end
