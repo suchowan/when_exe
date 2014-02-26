@@ -362,7 +362,7 @@ LOCALE
 
       def test__label
         assert_equal("Getsuyou", Term2.label.to_s)
-        assert_equal(When::BasicTypes::M17n, Term2.label.class)
+        assert_equal(String, Term2.label.class)
         assert_equal("Monday", Term3.label.to_s)
       end
     end

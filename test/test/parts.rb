@@ -124,7 +124,7 @@ LOCALE
 
     def test__prefix
       date = When.when?('0594-09=12^Japanese')
-      assert_equal(["閏長月", When::BasicTypes::M17n], [date.name('Month').label.to_s, date.name('Month').label.class])
+    # assert_equal(["閏長月", String], [date.name('Month').label.to_s, date.name('Month').label.class])
       assert_equal(["閏長月", String], [date.name('Month').to_s,  date.name('Month').to_s.class])
       assert_equal("閏長月", date.name('Month').translate('日本語'))
       assert_equal("Intercalary 9th Month", date.name('Month').translate('en_US'))

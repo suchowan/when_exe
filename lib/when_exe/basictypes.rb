@@ -422,6 +422,13 @@ module When
       HashProperty = [:label, :names, :link, :access_key, :code_space]
 
       #
+      # 代表名
+      #
+      # @return [String]
+      #
+      attr_reader :label
+
+      #
       # When::BasicTypes::M17n に変換する - 何もしないで自身を返す
       #
       # @return [When::BasicTypes::M17n]
@@ -429,7 +436,6 @@ module When
       def to_m17n
         self
       end
-      alias :label :to_m17n
 
       # オブジェクトの生成
       #
@@ -492,20 +498,18 @@ module When
           @names     ||= names.reverse
           @namespace ||= namespace if namespace.kind_of?(Hash)
           @locale    ||= locale.reverse
-          @label       = self
         when nil ;
         else
           names, namespace, locale = rest
           @names       = names if names
           @namespace ||= Parts::Locale._namespace(namespace) if namespace
           @locale    ||= Parts::Locale._locale(locale)       if locale
-          @label       = self
         end
         @namespace ||= {}
         @locale    ||= []
 
         @code_space = @namespace['']
-        self[0..-1] = _names(@names, @namespace, @locale)
+        self[0..-1] = @label = _names(@names, @namespace, @locale)
       end
     end
 

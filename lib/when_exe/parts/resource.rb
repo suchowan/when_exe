@@ -19,6 +19,12 @@ module When::Parts
     LabelProperty = nil
 
     # @private
+    Ref  = /^http:\/\/(.+?)\.wikipedia\.org\/wiki\/(.+?)$/
+
+    # @private
+    Link = /<li class="interlanguage-link interwiki-(.+?)"><a href="\/\/(.+?)\.wikipedia\.org\/wiki\/(.+?)" title="(.+?) – /
+
+    # @private
     class ContentLine
 
       RFC6350 = {
@@ -145,6 +151,12 @@ module When::Parts
       #
       attr_reader :base_uri
 
+      # Root Directory for When_exe Resources
+      #
+      # @return [String]
+      #
+      attr_reader :root_dir
+
       # @private
       attr_reader :_prefix, :_prefix_values, :_prefix_index
       private     :_prefix, :_prefix_values, :_prefix_index
@@ -152,6 +164,7 @@ module When::Parts
       # 初期化
       #
       # @param [String] base_uri Base URI for When_exe Resources
+      # @param [String] root_dir Root Directory for When_exe Resources
       #
       # @return [void]
       #
@@ -159,7 +172,7 @@ module When::Parts
       #   本メソッドでマルチスレッド対応の管理変数の初期化を行っている。
       #   このため、本メソッド自体はスレッドセーフでない。
       #
-      def _setup_(base_uri=When::SourceURI)
+      def _setup_(base_uri=When::SourceURI, root_dir=When::RootDir)
         super()
         @_prefix = {
           '_w'   => base_uri + '/',
@@ -180,6 +193,7 @@ module When::Parts
           '_sc'  => base_uri + 'Ephemeris/V50/'
         }
         @base_uri       = base_uri
+        @root_dir       = root_dir
         @_prefix_values = @_prefix.values.sort.reverse
         @_prefix_index  = @_prefix.invert
       end
@@ -370,8 +384,9 @@ module When::Parts
         return _internal(list, replace, options) if list
 
         # external Resource
-        OpenURI
         begin
+          return wikipedia_relation(wikipedia_object(path), path) if path =~ Ref
+          OpenURI
           args  = [path, "1".respond_to?(:force_encoding) ? 'r:utf-8' : 'r']
           args << {:ssl_verify_mode=>OpenSSL::SSL::VERIFY_NONE} if path =~ /^https:/
           open(*args) do |file|
@@ -529,6 +544,73 @@ module When::Parts
           json
         end
       end
+
+      # wikipedia の読み込み
+      def wikipedia_object(ref)
+        # 採取済みデータ
+        ref   =~ Ref
+        locale, path = $~[1..2]
+        title = URI.decode(path.gsub('_', ' '))
+        mode  = "".respond_to?(:force_encoding) ? ':utf-8' : ''
+        dir   = (When::Parts::Resource.root_dir || When::RootDir) + '/data/wikipedia/' + locale
+        FileUtils.mkdir_p(dir) unless FileTest.exist?(dir)
+
+        open("#{dir}/#{path}.json", 'r'+mode) do |source|
+          json = JSON.parse(source.read)
+          json.key?('names') ?
+            When::BasicTypes::M17n.new(json) :
+            When::Coordinates::Spatial.new(json)
+        end
+
+      rescue
+        # 新しいデータ
+        OpenURI
+        open(ref, 'r'+mode) do |source|
+
+          # wikipedia contents
+          contents = source.read
+
+          # word
+          word = {
+            :label => title,
+            :names => {''=>title, locale=>title},
+            :link  => {''=>ref,   locale=>ref  }
+          }
+          contents.scan(Link) do |link|
+            word[:names][$~[1]] = $~[4]
+            word[:link ][$~[1]] = "http://#{$~[1]}.wikipedia.org/wiki/#{$~[3]}"
+          end
+          object = When::BasicTypes::M17n.new(word)
+
+          # location
+          if contents =~ /tools\.wmflabs\.org\/geohack\/geohack\.php\?.+?params=(.+?[NS])_(.+?[EW])/
+            location = {
+              :label => object
+            }
+            location[:lat], location[:long] = $~[1..2].map {|pos|
+              pos.gsub(/_(\d)[._]/, '_0\1_').sub('.', '_').sub('_', '.').gsub('_', '')
+            }
+            object = When::Coordinates::Spatial.new(location)
+          end
+
+          # save data
+          open("#{dir}/#{path}.json", 'w'+mode) do |source|
+            source.write(object.to_json(:method=>:to_h))
+          end
+          object
+        end
+      end
+
+      # wikipedia オブジェクトの関連付け
+      def wikipedia_relation(object, path)
+        if object.kind_of?(When::Coordinates::Spatial)
+          object.label._pool['..'] = object
+          object._pool[object.label.to_s] = object.label
+          object.send(:child=, [object.label])
+        end
+        object._pool['..'] = path
+        object
+      end
     end
 
     include Synchronize
@@ -540,7 +622,8 @@ module When::Parts
     #
     # @return [Array<When::Parts::Resource>]
     #
-    attr_reader :child
+    attr_accessor :child
+    private :child=
 
     #
     # Resource包含階層で使用する namespace

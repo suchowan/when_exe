@@ -69,16 +69,17 @@ module When::Coordinates
   #
   # @param [Numeric] src 数値
   # @param [String]  dir 方向 ('NS' または 'EW')
+  # @param [Integer] round 秒の小数点以下最大桁数
   #
   # @return [String] 60進変換した数値
   #
-  def self.to_dms(src, dir)
+  def self.to_dms(src, dir, round=6)
     dir      = (src >= 0) ? dir[0..0] : dir[1..1]
     deg, min  =     src.abs.divmod(1)
     min, sec  =    (60*min).divmod(1)
-    sec       = (60000*sec).round
-    fig = 5
-    3.times do
+    sec       = (60*10**round*sec).round
+    fig = round + 2
+    round.times do
       div, mod = sec.divmod(10)
       if mod == 0
         fig -= 1
@@ -1301,7 +1302,7 @@ module When::Coordinates
     end
 
     # @private
-    HashProperty = [:label, :long, :lat, [:alt, 0.0], :ref]
+    HashProperty = [:label, [:alt, 0.0], [:datum, When::Ephemeris::Earth], :ref]
 
     # Degree / Internal Location Unit(16")
     #
@@ -1430,23 +1431,8 @@ module When::Coordinates
         @lat   ||= @tz.latitude
       end
 
-      # 場所の名前による指定
-      if @label && !(@long && @lat)
-        OpenURI
-        open('http://en.wikipedia.org/wiki/' + @label, "1".respond_to?(:force_encoding) ? 'r:utf-8' : 'r') do |source|
-          if source.read =~ /tools\.wmflabs\.org\/geohack\/geohack\.php\?.+?params=(.+?[NS])_(.+?[EW])/
-            @lat, @long = $~[1..2].map {|pos|
-              pos.gsub!(/_(\d)_/, '_0\1_')
-              pos.sub!('_', '.')
-              pos.gsub!('_', '')
-            }
-          else
-            raise ArgumentError, 'Wrong location name: ' + @label
-          end
-        end
-      end
-
       # データの整形
+      @label = When::BasicTypes::M17n.new(@label)        if @label.kind_of?(Hash)
       @long  = When::Coordinates.to_deg_225(@long, 'EW') if @long
       @lat   = When::Coordinates.to_deg_225(@lat,  'NS') if @lat
       @datum = When.Resource(@datum || 'Earth', '_ep:')
@@ -1458,6 +1444,21 @@ module When::Coordinates
         when Numeric ; @alt.to_f
         else         ; 0.0
         end
+    end
+
+    #
+    # 空間位置オブジェクトの内容を Hash 化
+    #
+    # @param [Object] options When::Parts::Resource#to_h を参照
+    # @option options [Symbol] :method :to_h を label の内容の Hash 書き出しのために追加
+    #
+    # @return [Hash] Hash 化した空間位置オブジェクト
+    #
+    def _to_h(options={})
+      hash = super
+      hash[:long] = When::Coordinates.to_dms(@long / DEGREE, 'EW')
+      hash[:lat]  = When::Coordinates.to_dms(@lat  / DEGREE, 'NS')
+      hash
     end
 
     # 観測地の惑星中心を原点とする三次元座標

@@ -464,15 +464,24 @@ module When::Parts
 
     # @private
     def _copy(options={})
-      self[0..-1] = options[:label]      if options[:label]
-      if options[:names]
-        @names    = options[:names]
+      if options.key?('label') # for JSON
+        opt = {}
+        options.each_pair do |key, value|
+          opt[key.to_sym] = value
+        end
+      else
+        opt = options
+      end
+
+      self[0..-1] = opt[:label]      if opt[:label]
+      if opt[:names]
+        @names    = opt[:names]
         @keys     = @names.keys.sort
         @values   = @names.values.compact.sort.reverse
       end
-      @link       = options[:link]       if options[:link]
-      @access_key = options[:access_key] if options[:access_key]
-      @code_space = options[:code_space] if options[:code_space]
+      @link       = opt[:link]       if opt[:link]
+      @access_key = opt[:access_key] if opt[:access_key]
+      @code_space = opt[:code_space] if opt[:code_space]
       return self
     end
 

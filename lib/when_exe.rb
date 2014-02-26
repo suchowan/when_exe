@@ -20,12 +20,13 @@ begin
 rescue LoadError, NoMethodError
 end
 
-autoload :URI,     'uri'
-autoload :OpenURI, 'open-uri'
-autoload :OpenSSL, 'openssl'
-autoload :JSON,    'json'
-autoload :REXML,   'rexml/document'
-autoload :Mutex,   'thread' unless Object.const_defined?(:Mutex)
+autoload :URI,       'uri'
+autoload :OpenURI,   'open-uri'
+autoload :OpenSSL,   'openssl'
+autoload :FileUtils, 'fileutils'
+autoload :JSON,      'json'
+autoload :REXML,     'rexml/document'
+autoload :Mutex,     'thread' unless Object.const_defined?(:Mutex)
 
 $:.unshift(File.dirname(__FILE__)) unless
   $:.include?(File.dirname(__FILE__)) || $:.include?(File.expand_path(File.dirname(__FILE__)))
@@ -82,7 +83,15 @@ module When
     end
   end
 
+  #
+  # when_exe 用 International Resource Identifier
+  #
   SourceURI = "http://hosi.org/When/"
+
+  #
+  # ライブラリのあるディレクトリ
+  #
+  RootDir   = File.dirname(__FILE__).sub(/\/[^\/]*$/,'')
 
   require 'when_exe/version'
   require 'when_exe/parts/enumerator'
@@ -590,7 +599,7 @@ module When
   #
   # @overload Location(location)
   #   @param [When::Coordinates::Spatial] location なにもせず location をそのまま返す
-  #   @param [String] location  空間位置の IRI (デフォルトプレフィクス _l:) または都市名(en.wikipedia.orgを参照)
+  #   @param [String] location  空間位置の IRI (デフォルトプレフィクス _l:)
   #   @param [When::Parts::Timezone] 代表する都市の時間帯
   #
   # @overload Location(longitude, latitide, altitide=0, datum='Earth')
@@ -609,7 +618,7 @@ module When
     case args[0]
     when Coordinates::Spatial ; return args[0]
     when Parts::Timezone      ; return args[0].location
-    when String               ; return Parts::Resource._instance(args[0], args[0] =~ /=/ ? '_l:' : '_l:label=') if args.size == 1
+    when String               ; return Parts::Resource._instance(args[0], '_l:') if args.size == 1
     when Numeric              ;
     else                      ; raise TypeError, "Invalid Type: #{args[0].class}"
     end
@@ -691,6 +700,21 @@ module When
       BasicTypes::M17n.new(source, namespace, locale, options)
     else ; raise TypeError, "Invalid Type: #{source.class}"
     end
+  end
+
+  # Wikipedia を参照して When::BasicTypes::M17n を生成する
+  #
+  # @param [String] title Wikipedia の項目名
+  # @param [String] locale Wikipedia の言語
+  #
+  # @return [When::BasicTypes::M17n] 項目に対応する多言語対応文字列
+  #
+  # @note 生成した多言語対応文字列の parent が nil でない場合、
+  #       その項目の位置情報を表わす When::Coordinates::Spatial を指す
+  #
+  def Wikipedia(title, locale='en')
+    object = Parts::Resource._instance("http://#{locale}.wikipedia.org/wiki/#{URI.encode(title).gsub(' ', '_')}")
+    object.kind_of?(BasicTypes::M17n) ? object : object.label
   end
 
   # When::Parts::Resource の生成/参照

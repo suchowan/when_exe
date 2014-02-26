@@ -33,7 +33,7 @@ module When
     #
     # @return [String] to_h 結果を JSON文字列化したもの
     #
-    def _to_json(options={})
+    def to_json(options={})
       options[:method] = :to_m17n unless options.key?(:method)
       JSON.dump(to_h(options))
     end
