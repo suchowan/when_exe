@@ -709,7 +709,7 @@ module When
   #
   # @return [When::BasicTypes::M17n] 項目に対応する多言語対応文字列
   #
-  # @note 生成した多言語対応文字列の parent が nil でない場合、
+  # @note 生成した多言語対応文字列の location が nil でない場合、
   #       その項目の位置情報を表わす When::Coordinates::Spatial を指す
   #
   def Wikipedia(title, locale='en')

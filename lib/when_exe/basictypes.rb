@@ -429,6 +429,13 @@ module When
       attr_reader :label
 
       #
+      # 位置情報
+      #
+      # @return [When::Coordinates::Spatial]
+      #
+      alias :location :parent
+
+      #
       # When::BasicTypes::M17n に変換する - 何もしないで自身を返す
       #
       # @return [When::BasicTypes::M17n]
