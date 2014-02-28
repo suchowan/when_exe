@@ -223,6 +223,7 @@ module When::Parts
         @unifications || DefaultUnification
       end
 
+      # @private
       def _alias
         @aliases || DefaultAlias
       end
@@ -388,11 +389,12 @@ module When::Parts
       }
 
       # 生成
-      # @private
-      dup._copy({
-        :label => keys.include?('') ? names.delete(nil) : (names[''] = names[keys[0]]),
-        :names => names
-      })
+      terms.reverse.each do |term|
+        return term.dup._copy({
+          :label => keys.include?('') ? names.delete(nil) : (names[''] = names[keys[0]]),
+          :names => names
+        }) if term.kind_of?(Locale)
+      end
     end
     alias :% :_printf
 
@@ -479,6 +481,7 @@ module When::Parts
         @keys     = @names.keys.sort
         @values   = @names.values.compact.sort.reverse
       end
+      @label      = opt[:label]      if opt[:label]
       @link       = opt[:link]       if opt[:link]
       @access_key = opt[:access_key] if opt[:access_key]
       @code_space = opt[:code_space] if opt[:code_space]

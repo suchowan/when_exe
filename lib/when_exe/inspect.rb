@@ -47,7 +47,7 @@ module When
          if respond_to?(method, true) && method != :iri
            return send(method)
          elsif registered?
-           return When::Parts::Resource._path_with_prefix(self, options[:prefix])
+           return iri(options[:prefix])
          end
        end
        self
@@ -198,11 +198,12 @@ module When
 
       #
       # 時法名
+      # @param [Boolean] prefix true ならIRI の先頭部分を簡約表現にする
       #
       # @return [Array<String>] String 時法の IRI
       #
-      def clock_name
-        [When::Parts::Resource._path_with_prefix(clock)]
+      def clock_name(prefix=true)
+        [clock.iri(prefix)]
       end
 
       #

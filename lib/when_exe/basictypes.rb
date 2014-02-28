@@ -429,11 +429,11 @@ module When
       attr_reader :label
 
       #
-      # 位置情報
+      # 名前が意味するもの自体のオブジェクト
       #
-      # @return [When::Coordinates::Spatial]
+      # @return [When::BasicTypes::Object]
       #
-      alias :location :parent
+      alias :what :parent
 
       #
       # When::BasicTypes::M17n に変換する - 何もしないで自身を返す

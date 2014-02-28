@@ -149,13 +149,17 @@ module When::Parts
       #
       # @return [String]
       #
-      attr_reader :base_uri
+      def base_uri
+        @base_uri ||= When::SourceURI
+      end
 
       # Root Directory for When_exe Resources
       #
       # @return [String]
       #
-      attr_reader :root_dir
+      def root_dir
+        @root_dir ||= When::RootDir
+      end
 
       # @private
       attr_reader :_prefix, :_prefix_values, :_prefix_index
@@ -175,6 +179,7 @@ module When::Parts
       def _setup_(base_uri=When::SourceURI, root_dir=When::RootDir)
         super()
         @_prefix = {
+          '_wp'  => 'http://en.wikipedia.org/wiki/',
           '_w'   => base_uri + '/',
           '_p'   => base_uri + 'Parts/',
           '_b'   => base_uri + 'BasicTypes/',
@@ -254,7 +259,11 @@ module When::Parts
         _setup_ unless @_pool
         path = obj.kind_of?(Class) ? obj.to_s.sub(/^When::/, base_uri).gsub(/::/, '/') :
                                      obj.iri
-        return path unless simple
+        simple ? _simplify_path(path) : path
+      end
+
+      # @private
+      def _simplify_path(path)
         _prefix_values.each do |value|
           index = path.index(value)
           return _prefix_index[value] + ':' + path[value.length..-1] if index
@@ -399,7 +408,7 @@ module When::Parts
               options['.'] = _xml(REXML::Document.new(_replace_tags(resource, replace)).root)
               options['.'][0].new(options)
             else
-              _internal(_json(JSON.parse(resource)), replace, options)
+              _internal(_json([JSON.parse(resource)]), replace, options)
             end
           end
         rescue OpenURI::HTTPError => error
@@ -552,7 +561,7 @@ module When::Parts
         locale, path = $~[1..2]
         title = URI.decode(path.gsub('_', ' '))
         mode  = "".respond_to?(:force_encoding) ? ':utf-8' : ''
-        dir   = (When::Parts::Resource.root_dir || When::RootDir) + '/data/wikipedia/' + locale
+        dir   = Resource.root_dir + '/data/wikipedia/' + locale
         FileUtils.mkdir_p(dir) unless FileTest.exist?(dir)
 
         open("#{dir}/#{path}.json", 'r'+mode) do |source|
@@ -569,6 +578,7 @@ module When::Parts
 
           # wikipedia contents
           contents = source.read
+          raise KeyError, 'Article not found: ' + title if contents =~ /<div class="noarticletext">/
 
           # word
           word = {
@@ -654,17 +664,21 @@ module When::Parts
 
     # オブジェクトの IRI
     #
-    #  @return [Sring]
+    # @param [Boolean] prefix true ならIRI の先頭部分を簡約表現にする
     #
-    def iri
-      return @iri if @iri
-      root = @_pool['..']
-      path = root.instance_of?(String) ? root : label.to_s
-      if root.respond_to?(:iri)
-        prefix = root.iri
-        path = prefix + '::' + path if prefix
+    # @return [Sring]
+    #
+    def iri(prefix=false)
+      unless @iri
+        root = @_pool['..']
+        path = root.instance_of?(String) ? root : label.to_s
+        if root.respond_to?(:iri)
+          root_iri = root.iri
+          path = root_iri + '::' + path if root_iri
+        end
+        @iri = path
       end
-      @iri = path
+      prefix ? Resource._simplify_path(@iri) : @iri
     end
 
     # IRI または child の番号によるオブジェクト参照

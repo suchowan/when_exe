@@ -1,6 +1,9 @@
-["When::Coordinates::Spatial",
- "label:[Tokyo]",
- "lat:#{lat:N35.412011}",
- "long:#{long:E139.421322}",
- "alt:#{alt:0}",
- "datum:#{datum:JGD2000}"]
+[{},"When::Coordinates::Spatial",
+  {
+   "label" : "[Tokyo]",
+   "lat"   : "#{lat:N35.412011}",
+   "long"  : "#{long:E139.421322}",
+   "alt"   : "#{alt:0}",
+   "datum" : "#{datum:JGD2000}"
+  }
+]
