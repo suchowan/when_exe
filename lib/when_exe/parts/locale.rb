@@ -344,12 +344,14 @@ module When::Parts
         (@names.keys + other.names.keys).uniq.each do |key|
           names[key] = _label_value(key) + other._label_value(key)
         end
+        links = other.link
       else
         @names.keys.each do |key|
           names[key] = _label_value(key) + other.to_s
         end
+        links = {}
       end
-      return dup._copy({:names=>names, :label=>to_s + other.to_s})
+      return dup._copy({:names=>names, :link=>links.merge(link), :label=>to_s + other.to_s})
     end
 
     # 書式指定による文字列化
@@ -388,13 +390,18 @@ module When::Parts
         l
       }
 
+      # link ハッシュ
+      links = terms.reverse.inject({}) {|h,t|
+        h.update(t.link) if t.kind_of?(Locale)
+        h
+      }
+
       # 生成
-      terms.reverse.each do |term|
-        return term.dup._copy({
-          :label => keys.include?('') ? names.delete(nil) : (names[''] = names[keys[0]]),
-          :names => names
-        }) if term.kind_of?(Locale)
-      end
+      dup._copy({
+        :label => keys.include?('') ? names.delete(nil) : (names[''] = names[keys[0]]),
+        :names => names,
+        :link  => links
+      })
     end
     alias :% :_printf
 
@@ -520,7 +527,7 @@ module When::Parts
       @names = {}
       @link  = {}
 
-      if (names.kind_of?(String))
+      if names.kind_of?(String)
         unless (names=~/\A\s*\[(.+?)\]\s*\z/m)
           names      = names.strip
           @names[''] = names
@@ -539,7 +546,7 @@ module When::Parts
         case v
         when '', /^#/ ;
         when /^\/(.+)/; @access_key = $1
-        when /^(\*)?(?:([^=%]*?)\s*:)?\s*(.+?)\s*(=\s*([^=]+?)?)?$/
+        when /^(\*)?(?:([^=%]*?)\s*:)?\s*(.+?)\s*(=\s*([^=]+?(\?.+)?)?)?$/
           asterisk[0], locale, name, assignment, ref = $~[1..5]
           asterisk[1], locale, default_ref = default_locale.shift unless locale
           locale ||= ''
@@ -555,7 +562,7 @@ module When::Parts
           end
           ref += '%%<' + name + '>' if (ref =~ /[\/#:]$/)
           @link[locale] = _encode(ref)
-        else ; raise ArgumentError, "Irregal locale format"
+        else ; raise ArgumentError, "Irregal locale format: " + v
         end
       end
 

@@ -1363,6 +1363,32 @@ module When::Coordinates
     #
     attr_reader :tz
 
+    # 緯度文字列
+    #
+    # @param [Integer] round 秒の小数点以下最大桁数
+    #
+    # @return [String] 緯度文字列(DD.MMSSsss[NS])
+    #
+    def lat_s
+      When::Coordinates.to_dms(lat / When::Coordinates::Spatial::DEGREE, 'NS', round=6)
+    end
+
+    # 経度文字列
+    #
+    # @param [Integer] round 秒の小数点以下最大桁数
+    #
+    # @return [String] 経度文字列(DDD.MMSSsss[EW])
+    #
+    def long_s
+      When::Coordinates.to_dms(long / When::Coordinates::Spatial::DEGREE, 'EW', round=6)
+    end
+
+    # 高度 / m
+    #
+    # @return [Numeric]
+    # @return [:Center] 天体の中心の場合
+    #
+    attr_reader :alt
     # 観測地の地心距離 / kmを返します。
     #
     # @return [Numeric]
@@ -1456,8 +1482,8 @@ module When::Coordinates
     #
     def _to_h(options={})
       hash = super
-      hash[:long] = When::Coordinates.to_dms(@long / DEGREE, 'EW')
-      hash[:lat]  = When::Coordinates.to_dms(@lat  / DEGREE, 'NS')
+      hash[:long] = long_s
+      hash[:lat]  = lat_s
       hash
     end
 

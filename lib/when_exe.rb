@@ -713,7 +713,10 @@ module When
   #       その項目の位置情報を表わす When::Coordinates::Spatial を指す
   #
   def Wikipedia(title, locale='en')
-    object = Parts::Resource._instance("http://#{locale}.wikipedia.org/wiki/#{URI.encode(title).gsub(' ', '_')}")
+    entry, query = title.split('?', 2)
+    url  = "http://#{locale}.wikipedia.org/wiki/#{URI.encode(entry).gsub(' ', '_')}"
+    url += '?' + query if query
+    object = Parts::Resource._instance(url)
     object.kind_of?(BasicTypes::M17n) ? object : object.label
   end
 

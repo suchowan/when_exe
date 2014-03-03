@@ -101,7 +101,7 @@ module When::CalendarTypes
       def term_delta(parameter=nil)
         return @delta unless parameter
         num, den = parameter.split(/\//, 2)
-        When::TM::IntervalLength.new([(den || @den).to_f-1,1].max, 'day')
+        When::TM::IntervalLength.new([(den || @den).to_f,1].max*0.9, 'day')
       end
     end
 

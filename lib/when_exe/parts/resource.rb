@@ -394,7 +394,10 @@ module When::Parts
 
         # external Resource
         begin
-          return wikipedia_relation(wikipedia_object(path), path) if path =~ Ref
+          if path =~ Ref
+            object = wikipedia_object(path, query)
+            return wikipedia_relation(object, path, query)
+          end
           OpenURI
           args  = [path, "1".respond_to?(:force_encoding) ? 'r:utf-8' : 'r']
           args << {:ssl_verify_mode=>OpenSSL::SSL::VERIFY_NONE} if path =~ /^https:/
@@ -555,7 +558,7 @@ module When::Parts
       end
 
       # wikipedia の読み込み
-      def wikipedia_object(ref)
+      def wikipedia_object(ref, query)
         # 採取済みデータ
         ref   =~ Ref
         locale, path = $~[1..2]
@@ -566,6 +569,7 @@ module When::Parts
 
         open("#{dir}/#{path}.json", 'r'+mode) do |source|
           json = JSON.parse(source.read)
+          json.update(Hash[*query.split('&').map {|pair| pair.split('=')}.flatten]) if query
           json.key?('names') ?
             When::BasicTypes::M17n.new(json) :
             When::Coordinates::Spatial.new(json)
@@ -607,18 +611,23 @@ module When::Parts
           open("#{dir}/#{path}.json", 'w'+mode) do |source|
             source.write(object.to_json(:method=>:to_h))
           end
-          object
+          query ? wikipedia_object(ref, query) : object
         end
       end
 
       # wikipedia オブジェクトの関連付け
-      def wikipedia_relation(object, path)
+      def wikipedia_relation(object, path, query)
+        code_space = path.sub(/[^\/]+$/, '')
         if object.kind_of?(When::Coordinates::Spatial)
           object.label._pool['..'] = object
           object._pool[object.label.to_s] = object.label
           object.send(:child=, [object.label])
+          object.label.send(:code_space=, code_space)
+        else
+          object.send(:code_space=, code_space)
         end
-        object._pool['..'] = path
+        object._pool['..']  = path
+        object._pool['..'] += '?' + query if query
         object
       end
     end

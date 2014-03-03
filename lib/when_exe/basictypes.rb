@@ -356,8 +356,9 @@ module When
       # an optional codeSpace
       #
       # @return [String] anyURI (Optional)
-      attr_reader :code_space
+      attr_accessor :code_space
       alias :codeSpace :code_space
+      private :code_space=
 
       # オブジェクトの生成
       #

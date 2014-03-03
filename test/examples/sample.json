@@ -1,8 +1,15 @@
 [{},"When::Coordinates::Spatial",
   {
-   "label" : "[Tokyo]",
-   "lat"   : "#{lat:N35.412011}",
-   "long"  : "#{long:E139.421322}",
+   "label" :
+     {
+       "label" : "Tokyo",
+       "names" : 
+         {""   : "Tokyo",
+          "ja" : "東京"
+         }
+     },
+   "lat"   : "#{lat:35.412011N}",
+   "long"  : "#{long:139.421322E}",
    "alt"   : "#{alt:0}",
    "datum" : "#{datum:JGD2000}"
   }
