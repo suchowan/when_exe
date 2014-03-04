@@ -66,13 +66,16 @@ module When::CalendarTypes
         den = (den || @den).to_f
         date      = date.floor(precision) if precision < date.precision
         options   = date._attr
+        is_date_and_time = options.key?(:clock)
         options[:precision] = precision
+        options[:clock]   ||= date.frame.time_basis || When::TM::Clock.local_time
         quot, mod = (@formula.time_to_cn(date)*30.0).divmod(den)
         cycle     = quot * den + num
         cycle    += den if mod > (num % den)
         time      = When::TM::JulianDate._d_to_t(@formula.cn_to_time(cycle/30.0))
         time      = date.time_standard.from_dynamical_time(time) if @formula.is_dynamical
-        date.frame.jul_trans(When::TM::JulianDate.universal_time(time), options)
+        event = date.frame.jul_trans(When::TM::JulianDate.universal_time(time), options)
+        is_date_and_time ? event : event.to_cal_date
       end
 
       # 日付に対応する座標

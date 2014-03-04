@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2013 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -66,18 +66,20 @@ module When::Parts
 
       # When::Parts::MethodCash のグローバルな設定を行う
       #
-      # @param [Boolean] direct '_' で終わるメソッドをキャッシュせずに毎回計算する場合 true, キャッシュする場合 false/nil
-      # @param [Hash{Symbol=>boolean}] escape 毎回 method_missing を発生させるメソッドを true にして指定
-      # @param [false, nil] escape to_str, to_ary, to_hash のみ毎回 method_missing を発生させる
-      # @param [true] escape すべて毎回 method_missing を発生させる
+      # @param [Hash] options
+      # @option options [Boolean]               :direct '_' で終わるメソッドをキャッシュせずに毎回計算するか否か
+      # @option options [Hash{Symbol=>boolean}] :escape 毎回 method_missing を発生させるメソッドを true にする
+      # @option options [false, nil]            :escape to_str, to_ary, to_hash のみ毎回 method_missing を発生させる
+      # @option options [true]                  :escape すべて毎回 method_missing を発生させる
       #
       # @return [void]
       #
-      # @note When::TM::Calendar クラスの一部はキャッシュ使用を前提としているため direct=true では動作しません
+      # @note When::TM::Calendar クラスの一部はキャッシュ使用を前提としているため :direct=>true では動作しません
       #
-      def _setup_(direct=false, escape=false)
-        @direct = direct
-        case escape
+      def _setup_(options={})
+        @_setup_info = options
+        @direct      = options[:direct]
+        case options[:escape]
         when true
           instance_eval %Q{
             def escape(method)
@@ -85,7 +87,7 @@ module When::Parts
             end
           }
         when Hash
-          @escape = Escape.merge(escape)
+          @escape = Escape.merge(options[:escape])
           instance_eval %Q{
             def escape(method)
               @escape[method]
@@ -98,6 +100,14 @@ module When::Parts
             end
           }
         end
+      end
+
+      # 設定情報を取得する
+      #
+      # @return [Hash] 設定情報
+      #
+      def _setup_info
+        @_setup_info ||= {}
       end
 
       # method_missing メソッドを forward するか否か

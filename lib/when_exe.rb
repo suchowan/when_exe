@@ -56,9 +56,13 @@ module When
     # @option options [Array<String>]               :order        CalendarEra の検索順序        ([ IRI of When::TM::CalendarEra ])
     # @option options [Hash{String=>Array, String}] :format       strftime で用いる記号の定義   ({ 記号=>[ 書式,項目名 ] or 記号列 })
     # @option options [Array<Array>]                :leap_seconds 閏秒の挿入記録                ([ [JD, TAI-UTC, (MJD, OFFSET)] ])
+    # @option options [String]                      :base_uri     Base URI for When_exe Resources (Default When::SourceURI)
+    # @option options [String]                      :root_dir     Root Directory for When_exe Resources Cash data (Default When::RootDir)
     # @option options [Boolean]                     :multi_thread マルチスレッド対応            (true: 対応, false/nil: 非対応)
     # @option options [Boolean]                     :direct       '_' で終わるメソッドをキャッシュせずに毎回計算するか否か
     # @option options [Hash{Symbol=>boolean}]       :escape       毎回 method_missing を発生させるメソッドを true にする
+    # @option options [false, nil]                  :escape       to_str, to_ary, to_hash のみ毎回 method_missing を発生させる
+    # @option options [true]                        :escape       すべて毎回 method_missing を発生させる
     #
     # @return [void]
     #
@@ -68,8 +72,8 @@ module When
     #
     def _setup_(options={})
       @multi_thread = options[:multi_thread]
-      Parts::MethodCash._setup_(options[:direct], options[:escape])
-      Parts::Resource._setup_
+      Parts::MethodCash._setup_(options)
+      Parts::Resource._setup_(options)
       Parts::Locale._setup_(options)
       Coordinates::Spatial._setup_(options[:location])
       TM::CalendarEra._setup_(options[:order])
@@ -80,6 +84,23 @@ module When
       V::Timezone._setup_
       Parts::Timezone._setup_
       TimeStandard._setup_(options[:leap_seconds])
+    end
+
+    # 設定情報を取得する
+    #
+    # @return [Hash] 設定情報
+    #
+    def _setup_info
+      {:multi_thread => @multi_thread}.
+      update(Parts::MethodCash._setup_info).
+      update(Parts::Resource._setup_info).
+      update(Parts::Locale._setup_info).
+      update(Coordinates::Spatial._setup_info).
+      update(TM::CalendarEra._setup_info).
+      update(TM::Clock._setup_info).
+      update(TM::TemporalPosition._setup_info).
+      update(V::Event._setup_info).
+      update(TimeStandard._setup_info)
     end
   end
 

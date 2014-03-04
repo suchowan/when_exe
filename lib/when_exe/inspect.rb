@@ -170,10 +170,6 @@ module When
       }
 
       class << self
-
-        # strftime で用いる書式のハッシュ
-        attr_accessor :format
-
         # When::TM::TemporalPosition Class のグローバルな設定を行う
         #
         # @param [Hash] format strftime で用いる記号の定義
@@ -184,6 +180,19 @@ module When
         #
         def _setup_(format=nil)
           @format = format ? Format.merge(format) : Format
+        end
+
+        # 設定情報を取得する
+        #
+        # @return [Hash] 設定情報
+        #
+        def _setup_info
+          {:format => format}
+        end
+
+        # strftime で用いる書式のハッシュ
+        def format
+          @format ||= Format
         end
       end
 
@@ -686,7 +695,7 @@ module When
           when /^%%/
             format += '%%'
           when /^%/
-            action = (TemporalPosition.format || Format)[c[-1..-1]]
+            action = TemporalPosition.format[c[-1..-1]]
             case action
             when Array
               format += action[0]

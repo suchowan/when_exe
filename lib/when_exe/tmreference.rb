@@ -325,6 +325,14 @@ module When::TM
         @local_time = local
       end
 
+      # 設定情報を取得する
+      #
+      # @return [Hash] 設定情報
+      #
+      def _setup_info
+        {:local => _local_time}
+      end
+
       # 地方時
       #
       # @param [When::Parts::Timezone::Base, String] local 地方時
@@ -948,6 +956,14 @@ module When::TM
         @_lock_ = Mutex.new if When.multi_thread
         @_pool  = {}
         @order  = order || DefaultEpochs
+      end
+
+      # 設定情報を取得する
+      #
+      # @return [Hash] 設定情報
+      #
+      def _setup_info
+        {:order => @order || _setup_}
       end
 
       # When::TM::CalendarEra オブジェクトを検索し取得する

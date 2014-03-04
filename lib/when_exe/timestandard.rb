@@ -91,6 +91,14 @@ module When::TimeStandard
         end
     end
 
+    # 設定情報を取得する
+    #
+    # @return [Hash] 設定情報
+    #
+    def _setup_info
+      {:leap_seconds => _leap_seconds}
+    end
+
     # @private
     # 閏秒の挿入記録を取得する
     def _leap_seconds

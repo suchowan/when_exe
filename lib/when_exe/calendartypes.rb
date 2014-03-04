@@ -1200,17 +1200,27 @@ module When::CalendarTypes
 
     # Enumeratorの生成
     #
-    # @param [When::TM::TemporalPosition] first 始点
-    # @param [Symbol] direction
-    #   [:forward] 昇順
-    #   [:reverse] 降順
-    # @param [String] event イベント名
-    # @param [Integer] count_limit 繰り返し回数(デフォルトは指定なし)
+    # @overload enum_for(range, event=@event, count_limit=nil)
+    #   @param [Range, When::Parts::GeometricComplex] range
+    #     [ 始点 - range.first ]
+    #     [ 終点 - range.last  ]
+    #   @param [String] event イベント名
+    #   @param [Integer] count_limit 繰り返し回数(デフォルトは指定なし)
+    #
+    # @overload enum_for(first, direction=:forward, event=@event, count_limit=nil)
+    #   @param [When::TM::TemporalPosition] first 始点
+    #   @param [Symbol] direction
+    #     [:forward] 昇順
+    #     [:reverse] 降順
+    #   @param [String] event イベント名
+    #   @param [Integer] count_limit 繰り返し回数(デフォルトは指定なし)
     #
     # @return [Enumerator]
     #
-    def enum_for(first, direction=:forward, event=@event, count_limit=nil)
-      Enumerator.new(self, first, direction, event, count_limit)
+    def enum_for(*args)
+      Enumerator.new(*(args[0].kind_of?(Range) ?
+        [self, args[0],                      args[1] || @event, args[2]] :
+        [self, args[0], args[1] || :forward, args[2] || @event, args[3]]))
     end
     alias :to_enum :enum_for
 
@@ -1545,15 +1555,31 @@ module When::CalendarTypes
 
       # オブジェクトの生成
       #
-      # @param [When::CalendarTypes::CalendarNote] parent 暦注アルゴリズム
-      # @param [When::TM::TemporalPosition] first 始点
-      # @param [Symbol] direction
-      #   [:forward] 昇順
-      #   [:reverse] 降順
-      # @param [String] event イベント名
-      # @param [Integer] count_limit 繰り返し回数(デフォルトは指定なし)
+      # @overload initialize(parent, range, event, count_limit=nil))
+      #   @param [When::CalendarTypes::CalendarNote] parent 暦注アルゴリズム
+      #   @param [Range, When::Parts::GeometricComplex] range
+      #     [ 始点 - range.first ]
+      #     [ 終点 - range.last  ]
+      #   @param [String] event イベント名
+      #   @param [Integer] count_limit 繰り返し回数(デフォルトは指定なし)
       #
-      def initialize(parent, first, direction, event, count_limit=nil)
+      # @overload initialize(parent, first, direction, event, count_limit=nil))
+      #   @param [When::CalendarTypes::CalendarNote] parent 暦注アルゴリズム
+      #   @param [When::TM::TemporalPosition] first 始点
+      #   @param [Symbol] direction
+      #     [:forward] 昇順
+      #     [:reverse] 降順
+      #   @param [String] event イベント名
+      #   @param [Integer] count_limit 繰り返し回数(デフォルトは指定なし)
+      #
+      def initialize(*args)
+        if args[1].kind_of?(Range)
+          parent, range, event, count_limit = args
+          first     = range.first
+          direction = :forward
+        else
+          parent, first, direction, event, count_limit = args
+        end
         @parent = parent
         void, @event, @parameter = event.split(/^([^\d]+)/)
         @delta = @parent.send((@event+'_delta').to_sym, @parameter)
@@ -1569,7 +1595,9 @@ module When::CalendarTypes
         else
           date   = event_eval(first + @delta) if first.to_i > date.to_i
         end
-        super(@parent, date, direction, count_limit)
+        range ?
+          super(@parent, range.exclude_end? ? date...range.last : date..range.last, count_limit) :
+          super(@parent, date, direction, count_limit)
       end
     end
   end

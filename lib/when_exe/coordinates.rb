@@ -1268,6 +1268,14 @@ module When::Coordinates
         end
       end
 
+      # 設定情報を取得する
+      #
+      # @return [Hash] 設定情報
+      #
+      def _setup_info
+        {:location => @default_location}
+      end
+
       # デフォルトの空間位置を読みだす
       #
       # @return [When::Coordinates::Spatial]

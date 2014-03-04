@@ -62,6 +62,8 @@ module When::Parts
         ref = _get(label)
         return ref if ref
         self[label] = self.new(label)
+      rescue
+        nil
       end
       alias :get :[]
 

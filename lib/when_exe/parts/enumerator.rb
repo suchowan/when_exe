@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2012 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -234,13 +234,14 @@ module When::Parts
 
     # オブジェクトの生成
     #
-    # @overload initialize(parent, range, count_limit=nil))
+    # @overload initialize(parent, range, count_limit=nil)
     #   @param [Comparable] parent 生成元
     #   @param [Range, When::Parts::GeometricComplex] range
     #     [ 始点 - range.first ]
     #     [ 終点 - range.last  ]
     #   @param [Integer] count_limit 繰り返し回数(デフォルトは指定なし)
     #
+    # @overload initialize(parent, first, direction, count_limit=nil)
     #   @param [Comparable] parent 生成元
     #   @param [When::TM::TemporalPosition] first 始点
     #   @param [Symbol] direction

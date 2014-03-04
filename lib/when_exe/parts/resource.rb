@@ -167,8 +167,9 @@ module When::Parts
 
       # 初期化
       #
-      # @param [String] base_uri Base URI for When_exe Resources
-      # @param [String] root_dir Root Directory for When_exe Resources
+      # @param [Hash] options
+      # @option options [String] :base_uri Base URI for When_exe Resources (Default When::SourceURI)
+      # @option options [String] :root_dir Root Directory for When_exe Resources Cash data (Default When::RootDir)
       #
       # @return [void]
       #
@@ -176,7 +177,7 @@ module When::Parts
       #   本メソッドでマルチスレッド対応の管理変数の初期化を行っている。
       #   このため、本メソッド自体はスレッドセーフでない。
       #
-      def _setup_(base_uri=When::SourceURI, root_dir=When::RootDir)
+      def _setup_(options={})
         super()
         @_prefix = {
           '_wp'  => 'http://en.wikipedia.org/wiki/',
@@ -197,10 +198,18 @@ module When::Parts
           '_n'   => base_uri + 'CalendarTypes/CalendarNote/',
           '_sc'  => base_uri + 'Ephemeris/V50/'
         }
-        @base_uri       = base_uri
-        @root_dir       = root_dir
+        @base_uri       = options[:base_uri] || When::SourceURI
+        @root_dir       = options[:root_dir] || When::RootDir
         @_prefix_values = @_prefix.values.sort.reverse
         @_prefix_index  = @_prefix.invert
+      end
+
+      # 設定情報を取得する
+      #
+      # @return [Hash] 設定情報
+      #
+      def _setup_info
+        {:base_uri => base_uri, :root_dir => root_dir}
       end
 
       # オブジェクト生成&参照

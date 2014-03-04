@@ -534,10 +534,6 @@ module When::V
     class << self
       include When::Parts::Resource::Pool
 
-      # 最大打ち切り時間
-      # @return [When::TM::IntervalLength]
-      attr_reader :default_until
-
       # When::V::Event Class のグローバルな設定を行う
       #
       # @param [When::TM::IntervalLength] default_until
@@ -556,6 +552,21 @@ module When::V
         @_lock_ = Mutex.new if When.multi_thread
         @_pool = {}
         @default_until = default_until
+      end
+
+      # 設定情報を取得する
+      #
+      # @return [Hash] 設定情報
+      #
+      def _setup_info
+        {:until => default_until}
+      end
+
+      # 最大打ち切り時間
+      #
+      # @return [When::TM::IntervalLength]
+      def default_until
+        @default_until ||= 1000*When::TM::Duration::YEAR
       end
     end
 
@@ -1205,7 +1216,7 @@ module When::V
           rule['UNTIL']    = When.when?(rule['UNTIL'])
         end
         unless rule['UNTIL']
-          rule['UNTIL'] = When.now + (Event.default_until || 1000*When::TM::Duration::YEAR)
+          rule['UNTIL'] = When.now + Event.default_until
         end
         rule['COUNT']      = rule['COUNT'].to_i if (rule['COUNT'])
         rule['INTERVAL']   = (rule['INTERVAL'] || 1).to_i

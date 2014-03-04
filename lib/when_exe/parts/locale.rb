@@ -71,6 +71,14 @@ module When::Parts
         @unifications = options[:unification] || DefaultUnification
       end
 
+      # 設定情報を取得する
+      #
+      # @return [Hash] 設定情報
+      #
+      def _setup_info
+        {:alias => _alias, :unification => _unification}
+      end
+
       # 特定 locale に対応した文字列の取得
       #
       # @param [String] source もとにする String または M17n
@@ -220,12 +228,12 @@ module When::Parts
 
       # @private
       def _unification
-        @unifications || DefaultUnification
+        @unifications ||= DefaultUnification
       end
 
       # @private
       def _alias
-        @aliases || DefaultAlias
+        @aliases ||= DefaultAlias
       end
       private :_alias
     end
