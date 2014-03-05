@@ -350,7 +350,7 @@ module Test::Coordinates
         assert_equal( '40.0000N', location.lat_s)
         assert_equal('139.421322E',location.long_s)
       else
-        puts "Tests for JSON have been skipped at line #{__LINE__} of #{__FILE__.split(/\//)[-1]}."
+        puts "\nTests for JSON have been skipped at line #{__LINE__} of #{__FILE__.split(/\//)[-1]}.\n"
       end
     end
 

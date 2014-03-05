@@ -6,7 +6,7 @@
 =end
 
 begin
-  autoload :JSON, 'json'
+  require 'json'
 rescue LoadError
 end
 begin
