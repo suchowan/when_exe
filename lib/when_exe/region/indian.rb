@@ -11,7 +11,7 @@ module When
     IndianTerms = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
-      "names:[IndianTerms]",
+      "names:[IndianTerms=]",
       "[IndianNationalSolar=en:Indian_national_calendar, インド国定暦]",
       "[HinduSolar=en:Hindu_calendar,     インド太陽暦=ja:%%<ヒンドゥー暦>]",
       "[HinduLuniSolar=en:Hindu_calendar, インド太陰太陽暦=ja:%%<ヒンドゥー暦>]",

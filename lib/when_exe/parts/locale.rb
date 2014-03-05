@@ -54,21 +54,37 @@ module When::Parts
       "\\,"  => ","
     }
 
+    # Wikipedia の URL の正規表現
+    # @private
+    Ref  = /^http:\/\/(.+?)\.wikipedia\.org\/wiki\/(.+?)$/
+
+    # Wikipedia の多言語リンクの正規表現
+    # @private
+    Link = /<li class="interlanguage-link interwiki-(.+?)"><a href="\/\/(.+?)\.wikipedia\.org\/wiki\/(.+?)" title="(.+?) – /
+
     class << self
+
+      # Wikipedia の連続的な参照を抑制するための遅延時間/秒
+      #
+      # @return [Numeric]
+      #
+      attr_accessor :wikipedia_interval
 
       # When::Parts::Locale Module のグローバルな設定を行う
       #
       # @param [Hash] options 下記の通り
-      # @option options [Hash] :alias       Locale の読み替えパターンを Hash で指定する。
-      # @option options [Hash] :unification 漢字の包摂パターンを Hash で指定する。
+      # @option options [Hash]    :alias              Locale の読み替えパターンを Hash で指定する。
+      # @option options [Hash]    :unification        漢字の包摂パターンを Hash で指定する。
+      # @option options [Numeric] :wikipedia_interval Wikipedia の連続的な参照を抑制するための遅延時間/秒
       #
       # @note
       #   :alias の指定がない場合、aliases は DefaultAlias(モジュール定数)と解釈する。
       #   :unification の指定がない場合、unifications は DefaultUnification(モジュール定数)と解釈する。
       #
       def _setup_(options={})
-        @aliases      = options[:alias]       || DefaultAlias
-        @unifications = options[:unification] || DefaultUnification
+        @aliases            = options[:alias]       || DefaultAlias
+        @unifications       = options[:unification] || DefaultUnification
+        @wikipedia_interval = options[:wikipedia_interval]
       end
 
       # 設定情報を取得する
@@ -76,7 +92,9 @@ module When::Parts
       # @return [Hash] 設定情報
       #
       def _setup_info
-        {:alias => _alias, :unification => _unification}
+        {:alias              => _alias,
+         :unification        => _unification,
+         :wikipedia_interval => @wikipedia_interval}
       end
 
       # 特定 locale に対応した文字列の取得
@@ -226,16 +244,110 @@ module When::Parts
         return hash[default]
       end
 
+      # 漢字の包摂パターン
       # @private
       def _unification
         @unifications ||= DefaultUnification
       end
 
-      # @private
+      private
+
+      # Locale の読み替えパターン
       def _alias
         @aliases ||= DefaultAlias
       end
-      private :_alias
+
+      # wikipedia オブジェクトの生成・参照
+      def wikipedia_object(path, query=nil)
+        return nil unless Object.const_defined?(:JSON) && path =~ Ref
+        _wikipedia_relation(_wikipedia_object(path, $~[1], $~[2], query), path, query)
+      end
+
+      # wikipedia の読み込み
+      def _wikipedia_object(path, locale, file, query)
+        # 採取済みデータ
+        title = URI.decode(file.gsub('_', ' '))
+        mode  = "".respond_to?(:force_encoding) ? ':utf-8' : ''
+        dir   = Resource.root_dir + '/data/wikipedia/' + locale
+        FileUtils.mkdir_p(dir) unless FileTest.exist?(dir)
+
+        open("#{dir}/#{file}.json", 'r'+mode) do |source|
+          json = JSON.parse(source.read)
+          json.update(Hash[*query.split('&').map {|pair| pair.split('=')}.flatten]) if query
+          json.key?('names') ?
+            When::BasicTypes::M17n.new(json) :
+            When::Coordinates::Spatial.new(json)
+        end
+
+      rescue => no_file_error
+        # 新しいデータ
+        case @wikipedia_interval
+        when 0
+          raise no_file_error
+        when Numeric
+          if @wikipedia_last_access
+            delay = (@wikipedia_last_access + @wikipedia_interval.abs - Time.now.to_f).ceil
+            sleep(delay) if delay > 0
+          end
+        end
+        contents = nil
+        begin
+          OpenURI
+          source   = open(path, 'r'+mode)
+          contents = source.read
+        ensure
+          @wikipedia_last_access = Time.now.to_f
+          source.close if source
+        end
+
+        # wikipedia contents
+        raise KeyError, 'Article not found: ' + title if contents =~ /<div class="noarticletext">/
+
+        # word
+        word = {
+          :label => title,
+          :names => {''=>title, locale=>title},
+          :link  => {''=>path,   locale=>path  }
+        }
+        contents.scan(Link) do |link|
+          word[:names][$~[1]] = $~[4]
+          word[:link ][$~[1]] = "http://#{$~[1]}.wikipedia.org/wiki/#{$~[3]}"
+        end
+        object = When::BasicTypes::M17n.new(word)
+
+        # location
+        if contents =~ /tools\.wmflabs\.org\/geohack\/geohack\.php\?.+?params=(.+?[NS])_(.+?[EW])/
+          location = {
+            :label => object
+          }
+          location[:lat], location[:long] = $~[1..2].map {|pos|
+            pos.gsub(/_(\d)[._]/, '_0\1_').sub('.', '_').sub('_', '.').gsub('_', '')
+          }
+          object = When::Coordinates::Spatial.new(location)
+        end
+
+        # save data
+        open("#{dir}/#{file}.json", 'w'+mode) do |source|
+          source.write(object.to_json(:method=>:to_h))
+        end
+        query ? _wikipedia_object(path, locale, file, query) : object
+      end
+
+      # wikipedia オブジェクトの関連付け
+      def _wikipedia_relation(object, path, query)
+        code_space = path.sub(/[^\/]+$/, '')
+        if object.kind_of?(When::Coordinates::Spatial)
+          object.label._pool['..'] = object
+          object._pool[object.label.to_s] = object.label
+          object.send(:child=, [object.label])
+          object.label.send(:code_space=, code_space)
+        else
+          object.send(:code_space=, code_space)
+        end
+        object._pool['..']  = path
+        object._pool['..'] += '?' + query if query
+        object
+      end
     end
 
     # ローケール指定時の文字列
@@ -573,12 +685,25 @@ module When::Parts
         else ; raise ArgumentError, "Irregal locale format: " + v
         end
       end
+      if Locale.wikipedia_interval && Locale.wikipedia_interval <= 0
+        ['en', ''].each do |lc|
+          if Locale::Ref =~ @link[lc] && $~[1] == 'en'
+            object = Locale.send(:wikipedia_object, @link[lc])
+            if object
+              @names = object.names.merge(@names)
+              @link  = object.link.merge(@link)
+            end
+            break
+          end
+        end
+      end
 
       # keys, values の準備
       @keys   = @names.keys.sort
       @values = @names.values.sort.reverse
 
-      return @names[mark[0] || mark[1] || mark[2]]
+      # 代表名
+      @names[mark[0] || mark[1] || mark[2]]
     end
 
     # encode URI from patterns %%(...) or %.(...)

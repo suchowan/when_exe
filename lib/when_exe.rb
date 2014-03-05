@@ -6,6 +6,10 @@
 =end
 
 begin
+  autoload :JSON, 'json'
+rescue LoadError
+end
+begin
   require 'rubygems'
 rescue LoadError
 end
@@ -24,7 +28,6 @@ autoload :URI,       'uri'
 autoload :OpenURI,   'open-uri'
 autoload :OpenSSL,   'openssl'
 autoload :FileUtils, 'fileutils'
-autoload :JSON,      'json'
 autoload :REXML,     'rexml/document'
 autoload :Mutex,     'thread' unless Object.const_defined?(:Mutex)
 
@@ -47,7 +50,7 @@ module When
 
     # Initializations
     #
-    # @param [Hash] options
+    # @param [Hash] options 以下の通り
     # @option options [When::Parts::Timezone::Base] :local        デフォルトの地方時
     # @option options [When::Coordinates::Spatial]  :location     デフォルトの空間位置
     # @option options [When::TM::IntervalLength]    :until        V::Event::Enumerator の until
@@ -168,7 +171,7 @@ module When
     autoload :IslamicTerms,          'when_exe/region/islamic'
     autoload :JewishTerms,           'when_exe/region/jewish'
     autoload :RomanTerms,            'when_exe/region/roman'
-    autoload :ChristianTerms,        'when_exe/region/christian'
+    autoload :CopticTerms,           'when_exe/region/coptic'
     autoload :FrenchTerms,           'when_exe/region/french'
     autoload :WorldTerms,            'when_exe/region/world'
     autoload :ShireTerms,            'when_exe/region/shire'
@@ -195,6 +198,7 @@ module When
     autoload :TabularIslamic,        'when_exe/region/islamic'
     autoload :EphemerisBasedIslamic, 'when_exe/region/islamic'
     autoload :Jewish,                'when_exe/region/jewish'
+    autoload :Coptic,                'when_exe/region/coptic'
     autoload :JulianA,               'when_exe/region/roman'
     autoload :JulianB,               'when_exe/region/roman'
     autoload :JulianC,               'when_exe/region/roman'
@@ -567,7 +571,7 @@ module When
   #   @param [String, Regexp] key     検索する暦年代または、暦年代にマッチする正規表現
   #   @param [Integer]        epoch   年数を昇順にカウントする方式での暦元(0年)の通年(デフォルトは nil - 指定なし)
   #   @param [Integer]        reverse 年数を降順にカウントする方式での暦元(0年)の通年(デフォルトは nil - 指定なし)
-  #   @param [Hash] options
+  #   @param [Hash] options 以下の通り
   #   @option options [String]  :area   暦年代の使用地域の指定(デフォルトは nil - 指定なし)
   #   @option options [String]  :period 暦年代の使用時代の指定(デフォルトは nil - 指定なし)
   #   @option options [Integer] :count  何件ヒットするまで検索するかを指定(デフォルトは 1件)

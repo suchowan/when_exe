@@ -19,12 +19,6 @@ module When::Parts
     LabelProperty = nil
 
     # @private
-    Ref  = /^http:\/\/(.+?)\.wikipedia\.org\/wiki\/(.+?)$/
-
-    # @private
-    Link = /<li class="interlanguage-link interwiki-(.+?)"><a href="\/\/(.+?)\.wikipedia\.org\/wiki\/(.+?)" title="(.+?) – /
-
-    # @private
     class ContentLine
 
       RFC6350 = {
@@ -167,7 +161,7 @@ module When::Parts
 
       # 初期化
       #
-      # @param [Hash] options
+      # @param [Hash] options 以下の通り
       # @option options [String] :base_uri Base URI for When_exe Resources (Default When::SourceURI)
       # @option options [String] :root_dir Root Directory for When_exe Resources Cash data (Default When::RootDir)
       #
@@ -403,10 +397,8 @@ module When::Parts
 
         # external Resource
         begin
-          if path =~ Ref
-            object = wikipedia_object(path, query)
-            return wikipedia_relation(object, path, query)
-          end
+          object = When::Parts::Locale.send(:wikipedia_object, path, query)
+          return object if object
           OpenURI
           args  = [path, "1".respond_to?(:force_encoding) ? 'r:utf-8' : 'r']
           args << {:ssl_verify_mode=>OpenSSL::SSL::VERIFY_NONE} if path =~ /^https:/
@@ -420,6 +412,7 @@ module When::Parts
               options['.'] = _xml(REXML::Document.new(_replace_tags(resource, replace)).root)
               options['.'][0].new(options)
             else
+              raise NoMethodError, 'JSON not supported' unless Object.const_defined?(:JSON)
               _internal(_json([JSON.parse(resource)]), replace, options)
             end
           end
@@ -564,80 +557,6 @@ module When::Parts
         else
           json
         end
-      end
-
-      # wikipedia の読み込み
-      def wikipedia_object(ref, query)
-        # 採取済みデータ
-        ref   =~ Ref
-        locale, path = $~[1..2]
-        title = URI.decode(path.gsub('_', ' '))
-        mode  = "".respond_to?(:force_encoding) ? ':utf-8' : ''
-        dir   = Resource.root_dir + '/data/wikipedia/' + locale
-        FileUtils.mkdir_p(dir) unless FileTest.exist?(dir)
-
-        open("#{dir}/#{path}.json", 'r'+mode) do |source|
-          json = JSON.parse(source.read)
-          json.update(Hash[*query.split('&').map {|pair| pair.split('=')}.flatten]) if query
-          json.key?('names') ?
-            When::BasicTypes::M17n.new(json) :
-            When::Coordinates::Spatial.new(json)
-        end
-
-      rescue
-        # 新しいデータ
-        OpenURI
-        open(ref, 'r'+mode) do |source|
-
-          # wikipedia contents
-          contents = source.read
-          raise KeyError, 'Article not found: ' + title if contents =~ /<div class="noarticletext">/
-
-          # word
-          word = {
-            :label => title,
-            :names => {''=>title, locale=>title},
-            :link  => {''=>ref,   locale=>ref  }
-          }
-          contents.scan(Link) do |link|
-            word[:names][$~[1]] = $~[4]
-            word[:link ][$~[1]] = "http://#{$~[1]}.wikipedia.org/wiki/#{$~[3]}"
-          end
-          object = When::BasicTypes::M17n.new(word)
-
-          # location
-          if contents =~ /tools\.wmflabs\.org\/geohack\/geohack\.php\?.+?params=(.+?[NS])_(.+?[EW])/
-            location = {
-              :label => object
-            }
-            location[:lat], location[:long] = $~[1..2].map {|pos|
-              pos.gsub(/_(\d)[._]/, '_0\1_').sub('.', '_').sub('_', '.').gsub('_', '')
-            }
-            object = When::Coordinates::Spatial.new(location)
-          end
-
-          # save data
-          open("#{dir}/#{path}.json", 'w'+mode) do |source|
-            source.write(object.to_json(:method=>:to_h))
-          end
-          query ? wikipedia_object(ref, query) : object
-        end
-      end
-
-      # wikipedia オブジェクトの関連付け
-      def wikipedia_relation(object, path, query)
-        code_space = path.sub(/[^\/]+$/, '')
-        if object.kind_of?(When::Coordinates::Spatial)
-          object.label._pool['..'] = object
-          object._pool[object.label.to_s] = object.label
-          object.send(:child=, [object.label])
-          object.label.send(:code_space=, code_space)
-        else
-          object.send(:code_space=, code_space)
-        end
-        object._pool['..']  = path
-        object._pool['..'] += '?' + query if query
-        object
       end
     end
 

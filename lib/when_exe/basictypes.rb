@@ -23,7 +23,7 @@ module When
         # When.exe Standard Representation 形式の表現を分解してArray化する
         #
         # @param [String] date_time 日時を表現する When.exe Standard Representation 形式の文字列
-        # @param [Hash] options
+        # @param [Hash] options 以下の通り
         # @option options [String, Array<String, Integer>] :era_name デフォルトの年号(Integerは0年に対応する通年)
         # @option options [Array<Numeric>] :abbr 上位省略形式で使用する上位部分
         # @option options [Integer] :extra_year_digits ISO8601拡大表記のための年の構成要素拡大桁数(省略時 1桁)

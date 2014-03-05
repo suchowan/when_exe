@@ -12,7 +12,7 @@ module When
     ChineseTerms = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=ja:, en=en:, alias]",
-      "names:[ChineseTerms]",
+      "names:[ChineseTerms=]",
       "[中国太陽暦(節月)=ja:%%<二十四節気>#%.<暦月と節月>, *ChineseSolar=en:Solar_term]",
       "[中国太陰太陽暦=ja:%%<中国暦>, *ChineseLuniSolar=en:Chinese_calendar]",
       "[彝暦=ja:%%<イ族>, *Yi=en:Yi_people]",
@@ -69,7 +69,7 @@ module When
     YiTerms = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=ja:, en=en:, alias]",
-      "names:[YiTerms]",
+      "names:[YiTerms=]",
 
       [self,
         "names:[月=ja:%%<月_(暦)>, *Month]",

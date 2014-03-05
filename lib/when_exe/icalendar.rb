@@ -683,8 +683,8 @@ module When::V
     #
     # @overload each(first, direction, count_limit)
     #   @param [When::TM::TemporalPosition] first  始点
-    #   @param [Symbol]  direction   :forward - 昇順, :reverse - 降順
-    #   @param [Integer] count_limit 繰り返し回数(デフォルトは指定なし)
+    #   @param [Symbol]  direction   :forward - 昇順, :reverse - 降順  (options[:direction]で渡してもよい)
+    #   @param [Integer] count_limit 繰り返し回数(デフォルトは指定なし, options[:count_limit]で渡してもよい)
     #
     # @return [Enumerator]
     #
@@ -1068,7 +1068,7 @@ module When::V
         @options = When::Parts::Enumerator._options(args)
         @exdate  = @options.delete(:exdate)
         @exevent = @options.delete(:exevent)
-        @parent, @rule, @dtstart, @duration, *args = args
+        @parent, @rule, @dtstart, @duration, *rest = args
         @dtstart = When.when?(@dtstart)
         @rule    = self.class._decode_rule(@rule, @dtstart) if (@rule.kind_of?(String))
         @logics  = @rule[:logics]
@@ -1082,7 +1082,7 @@ module When::V
             @dtstart = @dtstart.dup._copy({:tz_prop=>nil, :validate=>:done})
           end
         end
-        _range(args)
+        _range(rest)
         _rewind
       end
 
@@ -1501,9 +1501,9 @@ module When::V
               shift = (period[PostFreqIndex[@by_part]] != 0)
               raise ArgumentError, "n*e+/-s format not permitted" if (nth || shift) && @freq_index >= When::DAY
               if (nth==nil || nth>0)
-                enum = @ref.enum_for(lower_bound, :forward, spec)
+                enum = @ref.enum_for(lower_bound, :forward, {:event=>spec})
               else
-                enum = @ref.enum_for(higher_bound, :reverse, spec)
+                enum = @ref.enum_for(higher_bound, :reverse, {:event=>spec})
               end
               if (nth)
                 date = nil

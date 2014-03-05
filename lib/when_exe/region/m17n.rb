@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2013 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -46,7 +46,7 @@ module When
       CalendarTerms = [M17n, [
         "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
         "locale:[=en:, ja=ja:, alias]",
-        "names:[CalendarTerms]",
+        "names:[CalendarTerms=]",
 
         "[Intercalary %s=, *閏]",
 
@@ -87,28 +87,28 @@ module When
       EpochEvents = [M17n, [
         "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
         "locale:[=en:, ja=ja:, alias]",
-        "names:[EpochEvents]",
-        "[Accession,        代始]",
-        "[FelicitousEvent,  祥瑞]",
-        "[NaturalDisaster,  災異]",
-        "[InauspiciousYear, 革年]",
-        "[Foundation,       創業]",
-        "[CalendarReform,   改暦]"
+        "names:[EpochEvents=]",
+        "[Accession=,        代始]",
+        "[FelicitousEvent=,  祥瑞]",
+        "[NaturalDisaster=,  災異]",
+        "[InauspiciousYear=, 革年]",
+        "[Foundation=,       創業]",
+        "[CalendarReform=,   改暦]"
       ]]
 
       # Formats
       CalendarFormats = [M17n, [
         "locale:[=]",
-        "names:[CalendarFormats]",
-        "[Date,          /date/formats/default]",
-        "[DateLong,      /date/formats/long   ]",
-        "[DateShort,     /date/formats/short  ]",
-        "[DateTime,      /time/formats/default]",
-        "[DateTimeLong,  /time/formats/long   ]",
-        "[DateTimeShort, /time/formats/short  ]",
-        "[Time,          /time/formats/time   ]",
-        "[AM,            /time/am             ]",
-        "[PM,            /time/pm             ]"
+        "names:[CalendarFormats=]",
+        "[Date=,          /date/formats/default]",
+        "[DateLong=,      /date/formats/long   ]",
+        "[DateShort=,     /date/formats/short  ]",
+        "[DateTime=,      /time/formats/default]",
+        "[DateTimeLong=,  /time/formats/long   ]",
+        "[DateTimeShort=, /time/formats/short  ]",
+        "[Time=,          /time/formats/time   ]",
+        "[AM=,            /time/am             ]",
+        "[PM=,            /time/pm             ]"
       ]]
     end
   end

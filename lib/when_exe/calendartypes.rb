@@ -1200,27 +1200,32 @@ module When::CalendarTypes
 
     # Enumeratorの生成
     #
-    # @overload enum_for(range, event=@event, count_limit=nil)
+    # @overload enum_for(range, options={})
     #   @param [Range, When::Parts::GeometricComplex] range
     #     [ 始点 - range.first ]
     #     [ 終点 - range.last  ]
-    #   @param [String] event イベント名
-    #   @param [Integer] count_limit 繰り返し回数(デフォルトは指定なし)
+    #   @param [Hash] options 以下の通り
+    #   @option options [String]  :event イベント名(デフォルトは@event)
+    #   @option options [Integer] :count_limit 繰り返し回数(デフォルトは指定なし)
     #
-    # @overload enum_for(first, direction=:forward, event=@event, count_limit=nil)
+    # @overload enum_for(first, direction=:forward, options={})
     #   @param [When::TM::TemporalPosition] first 始点
-    #   @param [Symbol] direction
-    #     [:forward] 昇順
+    #   @param [Symbol] direction (options[:direction]で渡してもよい)
+    #     [:forward] 昇順(デフォルト)
     #     [:reverse] 降順
-    #   @param [String] event イベント名
-    #   @param [Integer] count_limit 繰り返し回数(デフォルトは指定なし)
+    #   @param [Hash] options 以下の通り
+    #   @option options [String]  :event イベント名(デフォルトは@event)
+    #   @option options [Integer] :count_limit 繰り返し回数(デフォルトは指定なし)
     #
     # @return [Enumerator]
     #
     def enum_for(*args)
-      Enumerator.new(*(args[0].kind_of?(Range) ?
-        [self, args[0],                      args[1] || @event, args[2]] :
-        [self, args[0], args[1] || :forward, args[2] || @event, args[3]]))
+      params  = args.dup
+      options = params[-1].kind_of?(Hash) ? params.pop.dup : {}
+      options[:event] ||= @event
+      self.class::Enumerator.new(*(params[0].kind_of?(Range) ?
+        [self, params[0],                        options] :
+        [self, params[0], params[1] || :forward, options]))
     end
     alias :to_enum :enum_for
 
@@ -1555,33 +1560,37 @@ module When::CalendarTypes
 
       # オブジェクトの生成
       #
-      # @overload initialize(parent, range, event, count_limit=nil))
+      # @overload initialize(parent, range, options)
       #   @param [When::CalendarTypes::CalendarNote] parent 暦注アルゴリズム
       #   @param [Range, When::Parts::GeometricComplex] range
       #     [ 始点 - range.first ]
       #     [ 終点 - range.last  ]
-      #   @param [String] event イベント名
-      #   @param [Integer] count_limit 繰り返し回数(デフォルトは指定なし)
+      #   @param [Hash] options 以下の通り
+      #   @option options [String]  :event イベント名
+      #   @option options [Integer] :count_limit 繰り返し回数(デフォルトは指定なし)
       #
-      # @overload initialize(parent, first, direction, event, count_limit=nil))
+      # @overload initialize(parent, first, direction, options)
       #   @param [When::CalendarTypes::CalendarNote] parent 暦注アルゴリズム
       #   @param [When::TM::TemporalPosition] first 始点
-      #   @param [Symbol] direction
-      #     [:forward] 昇順
+      #   @param [Symbol] direction (options[:direction]で渡してもよい)
+      #     [:forward] 昇順(デフォルト)
       #     [:reverse] 降順
-      #   @param [String] event イベント名
-      #   @param [Integer] count_limit 繰り返し回数(デフォルトは指定なし)
+      #   @param [Hash] options 以下の通り
+      #   @option options [String]  :event イベント名
+      #   @option options [Integer] :count_limit 繰り返し回数(デフォルトは指定なし)
       #
       def initialize(*args)
         if args[1].kind_of?(Range)
-          parent, range, event, count_limit = args
+          parent, range, options = args
           first     = range.first
-          direction = :forward
+          last      = range.last
+          direction = first < last ? :forward : :reverse
         else
-          parent, first, direction, event, count_limit = args
+          parent, first, direction, options = args
         end
+        direction = options[:direction] if options[:direction]
         @parent = parent
-        void, @event, @parameter = event.split(/^([^\d]+)/)
+        void, @event, @parameter = options.delete(:event).split(/^([^\d]+)/)
         @delta = @parent.send((@event+'_delta').to_sym, @parameter)
         instance_eval %Q{
           def event_eval(date)
@@ -1596,8 +1605,8 @@ module When::CalendarTypes
           date   = event_eval(first + @delta) if first.to_i > date.to_i
         end
         range ?
-          super(@parent, range.exclude_end? ? date...range.last : date..range.last, count_limit) :
-          super(@parent, date, direction, count_limit)
+          super(@parent, range.exclude_end? ? date...last : date..last, options) :
+          super(@parent, date, direction, options)
       end
     end
   end

@@ -11,7 +11,7 @@ module When
     IranianTerms = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/, ar=http://ar.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, ar=ar:, alias=ja:]",
-      "names:[IranianTerms]",
+      "names:[IranianTerms=]",
       "[SolarHejri=en:Iranian_calendars#Modern_calendar_.28Solar_Hejri.29, ヘジラ太陽暦=ja:%%<イラン暦>]",
 
       [self,

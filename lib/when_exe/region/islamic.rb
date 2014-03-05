@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2013 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -11,7 +11,7 @@ module When
     IslamicTerms = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/, ar=http://ar.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, ar=ar:, alias]",
-      "names:[IslamicTerms]",
+      "names:[IslamicTerms=]",
       "[TabularIslamic=en:Islamic_calendar, イスラーム暦=ja:ヒジュラ暦]",
       "[EphemerisBasedIslamic=en:Islamic_calendar, イスラーム暦=ja:ヒジュラ暦]",
 
@@ -38,7 +38,7 @@ module When
     # ヒジュラ紀元
      Hijra = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/]",
-      "area:[Islamic]",
+      "area:[Islamic=]",
       ["[AfterHijra=en:Islamic_calendar,*alias:AH]1.1.1", "Calendar Epoch", "01-01-01^TabularIslamic"],
     ]]
   end

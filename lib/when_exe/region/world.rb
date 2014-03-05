@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2013 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -12,7 +12,7 @@ module When
     WorldTerms = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
-      "names:[WorldTerms]",
+      "names:[WorldTerms=]",
       "[World=en:The_World_Calendar, 世界暦]"
     ]]
   end
@@ -21,7 +21,7 @@ module When
 
     World = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/]",
-      "area:[Common]",
+      "area:[Common=]",
       ["[BCE=en:BCE_(disambiguation), alias:BeforeCommonEra]0.1.1"],
       ["[CE=en:Common_Era, alias:CommonEra]1.1.1", "Calendar Epoch", "01-01-01^World"]
     ]]
@@ -126,22 +126,6 @@ module When
       end
 
       alias :week :sunday
-
-      # Enumeratorの生成
-      #
-      # @param [When::TM::TemporalPosition] first 始点
-      # @param [Symbol] direction
-      #   [ :forward - 昇順 ]
-      #   [ :reverse - 降順 ]
-      # @param [String] event イベント名
-      # @param [Integer] count_limit 繰り返し回数(デフォルトは指定なし)
-      #
-      # @return [When::CalendarTypes::ShireWeek::Enumerator]
-      #
-      def enum_for(first, direction=:forward, event=nil, count_limit=nil)
-        Enumerator.new(self, first, direction, event||@event, count_limit)
-      end
-      alias :to_enum :enum_for
 
       # オブジェクトの正規化
       # @private

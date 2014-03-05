@@ -11,7 +11,7 @@ module When
     BalineseTerms = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
-      "names:[BalineseTerms]",
+      "names:[BalineseTerms=]",
       "[BalineseLuniSolar=, バリ・サカ暦=]",
       "[Tenganan=, テンガナン暦=]",
 

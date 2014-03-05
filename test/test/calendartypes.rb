@@ -87,7 +87,7 @@ module Test::CalendarTypes
       assert_equal(true, sample.empty?)
 
       sample = Sample.dup
-      note.each(today...last, 'term0/90', 4) do |date|
+      note.each(today...last, {:event=>'term0/90', :count_limit=>4}) do |date|
         assert_equal(sample.shift, date.to_s)
       end
       assert_equal(Sample.length - 4, sample.length)

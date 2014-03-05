@@ -972,7 +972,7 @@ module When::TM
       #   @param [String, Regexp] key     検索する暦年代または、暦年代にマッチする正規表現
       #   @param [Integer]        epoch   年数を昇順にカウントする方式での暦元(0年)の通年(デフォルトは nil - 指定なし)
       #   @param [Integer]        reverse 年数を降順にカウントする方式での暦元(0年)の通年(デフォルトは nil - 指定なし)
-      #   @param [Hash] options
+      #   @param [Hash] options 以下の通り
       #   @option options [String]  :area   暦年代の使用地域の指定(デフォルトは nil - 指定なし)
       #   @option options [String]  :period 暦年代の使用時代の指定(デフォルトは nil - 指定なし)
       #   @option options [Integer] :count  何件ヒットするまで検索するかを指定(デフォルトは 1件)

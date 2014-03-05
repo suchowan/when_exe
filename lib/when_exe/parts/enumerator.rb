@@ -244,10 +244,10 @@ module When::Parts
     # @overload initialize(parent, first, direction, count_limit=nil)
     #   @param [Comparable] parent 生成元
     #   @param [When::TM::TemporalPosition] first 始点
-    #   @param [Symbol] direction
+    #   @param [Symbol] direction (options[:direction]で渡してもよい)
     #     [ :forward - 昇順 ]
     #     [ :reverse - 降順 ]
-    #   @param [Integer] count_limit 繰り返し回数(デフォルトは指定なし)
+    #   @param [Integer] count_limit 繰り返し回数(デフォルトは指定なし, options[:count_limit]で渡してもよい)
     #
     def initialize(*args)
       @options = self.class._options(args)
@@ -260,9 +260,9 @@ module When::Parts
 
     private
 
-    def _range(args)
-      if (args[0].instance_of?(Range))
-        range, @count_limit, others = args
+    def _range(rest)
+      if (rest[0].instance_of?(Range))
+        range, @count_limit, others = rest
         raise ArgumentError, "Too many arguments" if others
         @first   = When.when?(range.first)
         @last    = When.when?(range.last)
@@ -274,12 +274,16 @@ module When::Parts
           @direction = :forward
         end
       else
-        @first, @direction, @count_limit, others = args
+        @first, @direction, @count_limit, others = rest
         raise ArgumentError, "Too many arguments" if others
         raise ArgumentError, "Too few arguments"  unless @first
         @direction ||= :forward
         @last        = nil
       end
+      @count_limit = @options[:count_limit] if @options[:count_limit] && (!@count_limit || @count_limit > @options[:count_limit])
+      @options.delete(:count_limit)
+      @direction   = @options[:direction] if @options[:direction]
+      @options.delete(:direction)
     end
 
     def _exclude(value)

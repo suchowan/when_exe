@@ -13,7 +13,7 @@ module When
                  "ja=http://ja.wikipedia.org/wiki/, " +
                  "cal=http://en.wikipedia.org/wiki/Middle-earth_calendar]",
       "locale:[=en:, ja=ja:, alias]",
-      "names:[ShireTerms]",
+      "names:[ShireTerms=]",
       "[Shire=en:The_Lord_of_the_Rings, ホビット庄暦=ja:%%<指輪物語>]",
 
       [self,
@@ -152,22 +152,6 @@ module When
       end
 
       alias :week :saturday
-
-      # Enumeratorの生成
-      #
-      # @param [When::TM::TemporalPosition] first 始点
-      # @param [Symbol] direction
-      #   [ :forward - 昇順 ]
-      #   [ :reverse - 降順 ]
-      # @param [String] event イベント名
-      # @param [Integer] count_limit 繰り返し回数(デフォルトは指定なし)
-      #
-      # @return [When::CalendarTypes::ShireWeek::Enumerator]
-      #
-      def enum_for(first, direction=:forward, event=@event, count_limit=nil)
-        Enumerator.new(self, first, direction, event, count_limit)
-      end
-      alias :to_enum :enum_for
 
       # オブジェクトの正規化
       # @private

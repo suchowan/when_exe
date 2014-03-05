@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2013 Takashi SUGA
+  Copyright (C) 2011-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -11,7 +11,7 @@ module When
     JavaneseTerms = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
-      "names:[JavaneseTerms]",
+      "names:[JavaneseTerms=]",
       "[JavaneseLunar=, ジャワ・イスラーム暦=]",
       "[Pranatamangsa=, プラノトモンソ=]",
 

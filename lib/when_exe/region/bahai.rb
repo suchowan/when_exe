@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2013 Takashi SUGA
+  Copyright (C) 2013-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -11,7 +11,7 @@ module When
     BahaiTerms = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/, ar=http://ar.wikipedia.org/wiki/]",
       "locale:[=en:, ar=ar:, alias=en:]",
-      "names:[BahaiTerms]",
+      "names:[BahaiTerms=]",
       "[Bahai=en:Bah%C3%A1%27%C3%AD_calendar, ja:バハーイー暦=ja:%%<バハーイー教>]",
 
       # %0s は“閏”の表記を抑制する指定となっている

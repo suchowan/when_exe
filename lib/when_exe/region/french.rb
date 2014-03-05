@@ -11,7 +11,7 @@ module When
     FrenchTerms = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
-      "names:[FrenchTerms]",
+      "names:[FrenchTerms=]",
 
       [self,
         "names:[Month, 月=ja:%%<月_(暦)>]",

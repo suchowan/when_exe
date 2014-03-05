@@ -19,7 +19,7 @@ class Time
   #
   # 対応する When::TM::JulianDate を生成
   #
-  # @param [Hash] options
+  # @param [Hash] options 以下の通り
   # @option options [When::TM::Clock] :clock
   # @option options [When::Parts::Timezone] :tz
   #

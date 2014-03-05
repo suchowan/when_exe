@@ -736,7 +736,7 @@ module Test:V
         "1997-09-03T10:20:00-04:00",
         "1997-09-03T10:40:00-04:00",
       ]
-      event3.enum_for(When.when?('19970902T090000'), :forward, 30).each do |date|
+      event3.enum_for(When.when?('19970902T090000'), :forward, {:count_limit=>30}).each do |date|
         assert_equal(sample.shift, date.to_s)
       end
       assert_equal([], sample)
@@ -753,7 +753,7 @@ module Test:V
         "1997-09-04T10:20:00-04:00",
         "1997-09-04T10:00:00-04:00",
       ]
-      event3.enum_for(When.when?('19970904T170000'), :reverse, 10, {'1st'=>'DontCare'}).each do |date|
+      event3.enum_for(When.when?('19970904T170000'), {:direction=>:reverse, :count_limit=>10, '1st'=>'DontCare'}).each do |date|
         assert_equal(sample.shift, date.to_s)
       end
       assert_equal([], sample)

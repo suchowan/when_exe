@@ -66,7 +66,7 @@ module When::Parts
 
       # When::Parts::MethodCash のグローバルな設定を行う
       #
-      # @param [Hash] options
+      # @param [Hash] options 以下の通り
       # @option options [Boolean]               :direct '_' で終わるメソッドをキャッシュせずに毎回計算するか否か
       # @option options [Hash{Symbol=>boolean}] :escape 毎回 method_missing を発生させるメソッドを true にする
       # @option options [false, nil]            :escape to_str, to_ary, to_hash のみ毎回 method_missing を発生させる

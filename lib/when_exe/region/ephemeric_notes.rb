@@ -280,7 +280,7 @@ module When::CalendarTypes
       # 干潮・満潮の日時
       #
       # @param [When::TM::TemporalPosition] date
-      # @param [Hash] options
+      # @param [Hash] options 以下の通り
       # @option options [String] tide 潮汐計算方式 'Horizontal' - 地平高度基準, 'Equatorial' - 子午線通過基準(デフォルト)
       #
       # @return [Array<Array<Integer, When::TM::TemporalPosotion>>] 干潮・満潮の日時の Array

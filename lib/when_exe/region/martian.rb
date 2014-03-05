@@ -12,7 +12,7 @@ module When
     MartianTerms = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
-      "names:[MartianTerms]",
+      "names:[MartianTerms=]",
       "[Darian=en:Darian_calendar, ダリアン暦]",
 
       [self,
