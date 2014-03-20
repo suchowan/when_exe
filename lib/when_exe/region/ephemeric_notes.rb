@@ -137,6 +137,11 @@ module When::CalendarTypes
     #
     class LunarPhases < LuniSolarPositions
 
+      # 月の位相のための term の別名
+      #
+      # @return [When::TM::CalDate] date またはその直後のイベントの日時
+      alias :phase :term
+
       private
 
       # オブジェクトの正規化

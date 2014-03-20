@@ -8,6 +8,10 @@
 module When
   module Parts::Resource
 
+    # option key for _m17n_form
+    # @private
+    FormOptions = [:precision, :camel, :method, :locale, :prefix]
+   
     #
     # オブジェクトの内容を Hash 化
     #
@@ -641,7 +645,7 @@ module When
       #
       # @return [designator に依存]
       #
-      def term(designator, locale=nil, d=0, e=3)
+      def _term(designator, locale=nil, d=0, e=3)
         designator = When::Parts::Locale.translate(designator,locale)
         case designator
                                                                 # 現在のロケールにおける曜日の省略名
@@ -699,7 +703,7 @@ module When
             case action
             when Array
               format += action[0]
-              terms  << term(action[1], locale, c[1..-2].to_i, e||3)
+              terms  << _term(action[1], locale, c[1..-2].to_i, e||3)
             when String
               action = action.translate(locale) if action.kind_of?(When::BasicTypes::M17n)
               if (action =~ /%/)

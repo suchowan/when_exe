@@ -157,5 +157,50 @@ module Test
       end
 #=end
     end
+
+    def test_daien_lunation
+      sample = [
+        2938, 2993, 2708, 2760, 2573, 2691, 2622, 
+        2626, 2637, 2523, 2551, 2637, 2625, 2886, 
+        2703, 2764, 2791, 2680, 2792, 2764, 2797, 
+        1402, 2626, 2380, 2807, 3003,   23, 2698]
+
+      %w(0765-02-01 0765-12-01 0768-09-01 0769-04-01 0769-07-01 0771-05-01 0772-04-01
+         0772-09-01 0774-06-01 0775-02-01 0776-03-01 0780-05-01 0781-09-01 0784-10=01
+         0786-03-01 0788-04-01 0791-02-01 0791-09-01 0792-05-01 0813-12-01 0816-03-01
+         0820-02-01 0820-03-01 0822-02-01 0835-04-01 0836-04-01 0841-11-01 0853-02-01).each do |ptn|
+        date = When.when?(ptn+ '^^Chinese::大衍暦')
+        formula = date.frame.formula[-1]
+        m = When::Coordinates::Residue.mod(date.to_i+1) {|cn| formula.cn_to_time(cn)}
+        t = formula.cn_to_time(m[0]) + Rational(1,2)
+        assert_equal(sample.shift, (t - t.floor) * formula.denominator)
+      end
+    end
+
+    def test_solar_terms_for_chinese_true_lunation
+      date     = When.when?('1690-1-1^^JapaneseTwin::貞享暦(節月)')
+      formula = date.frame.formula[0]
+      class << formula
+        attr_reader :day_shift, :longitude_shift, :year_delta
+      end
+      assert_equal(["12S", Rational(-1,4), 2336118.19, 1.0e-06, 1684.0, 365.241696],
+        [formula.formula, formula.longitude_shift, formula.day_epoch, formula.year_delta, formula.year_epoch, formula.year_length.to_f])
+      m = When::Coordinates::Residue.mod(date.to_i+1) {|cn| formula.cn_to_time(cn)}
+      t = formula.cn_to_time(m[0]) + Rational(1,2)
+    # assert_equal(["1690-01-01", 2338355, 20278, [15.923047, 30.436807, 2338340.576953]],
+    #   [date.to_s, date.to_i, m[0], [m[1], m[2], t].map {|x| (x*1000000).round / 1000000.0}])
+
+      date     = When.when?('1801-1-1^^JapaneseTwin::寛政暦(節月)')
+      formula = date.frame.formula[0]
+      class << formula
+        attr_reader :day_epoch, :day_shift, :year_delta, :year_epoch, :year_length, :longitude_shift
+      end
+      assert_equal(["12S", Rational(-1,4), 2377390.607112, 1797.0, 365.242347071],
+        [formula.formula, formula.longitude_shift, formula.day_epoch, formula.year_epoch, formula.year_length.to_f])
+      m = When::Coordinates::Residue.mod(date.to_i+1) {|cn| formula.cn_to_time(cn)}
+      t = formula.cn_to_time(m[0]) + Rational(1,2)
+    # assert_equal(["1801-01-01", 2378897, 21610, [15.986637, 30.436862, 2378882.513363]],
+    #   [date.to_s, date.to_i, m[0], [m[1], m[2], t].map {|x| (x*1000000).round / 1000000.0}])
+    end
   end
 end

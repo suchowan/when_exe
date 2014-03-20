@@ -257,13 +257,11 @@ module When::Parts
       when GeometricComplex
         @node     = args[0].node
         @reverse ^= args[0].reverse
-        super(self.first, self.last, exclude_end?) if self.first && self.last
-        return
+        return super(self.first||-Float::INFINITY, self.last||+Float::INFINITY, exclude_end?)
 
       when Array
         @node = args[0]
-        super(self.first, self.last, exclude_end?) if self.first && self.last
-        return
+        return super(self.first||-Float::INFINITY, self.last||+Float::INFINITY, exclude_end?)
 
       when Range
         first = [args[0].first, true]
@@ -288,7 +286,7 @@ module When::Parts
       @node = []
       @node << first if first
       @node << last  if last
-      super(self.first, self.last, exclude_end?) if first && last
+      super(self.first||-Float::INFINITY, self.last||+Float::INFINITY, exclude_end?)
     end
 
     private

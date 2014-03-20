@@ -8,60 +8,6 @@
 require 'when_exe/region/ephemeric_notes'
 require 'when_exe/region/japanese_residues'
 
-
-class When::TM::CalendarEra
-
-  kyoto = '?time_basis=(LAT?long=135.4520E&lat=35.0117N)'
-  tokyo = '?time_basis=+09:18:59'
-  jst   = '?time_basis=+09:00&intercalary_span=3'
-
-  # Japanese Luni-Solar Calendar Series for JapaneseNote
-  JapaneseLuniSolarSeries = [self, [
-    'namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]',
-    'locale:[=en:, ja=ja:, alias]',
-    'area:[JapaneseLuniSolarSeries=, 日本の暦月=]',
-    ['[平朔儀鳳暦=]-660.01.01', '@F',  "-660-01-01^Chinese::平朔儀鳳暦"],
-    ['[元嘉暦]454.01.01',       '@CR',  "454-01-01^Chinese::元嘉暦"],
-    ['[儀鳳暦]697.01.01',       '@CR',  "697-01-01^Chinese::麟徳暦"],
-    ['[大衍暦]764.01.01',       '@CR',  "764-01-01^Chinese::大衍暦"],
-    ['[五紀暦]858.01.01',       '@CR',  "858-01-01^Chinese::五紀暦"],
-    ['[宣明暦]862.01.01',       '@CR',  "862-01-01^Chinese::宣明暦"],
-    ['[前貞享暦=]1685.01.01',   '@CR', "1685-01-01^ChineseLuniSolar#{kyoto}"],
-    ['[貞享暦]1687.01.01',      '@CR', "1687-01-01^ChineseLuniSolar#{kyoto}"],
-    ['[貞享補暦A=]1753.01.01',  '@CR', "1753-01-01^ChineseLuniSolar#{kyoto}"],
-    ['[貞享補暦B=]1754.01.01',  '@CR', "1754-01-01^ChineseLuniSolar#{kyoto}"],
-    ['[宝暦暦]1755.01.01',      '@CR', "1755-01-01^ChineseLuniSolar#{kyoto}"],
-    ['[修正宝暦暦=]1771.01.01', '@CR', "1771-01-01^ChineseLuniSolar#{kyoto}"],
-    ['[寛政暦]1798.01.01',      '@CR', "1798-01-01^ChineseLuniSolar#{kyoto}"],
-    ['[天保暦]1844.01.01',      '@CR', "1844-01-01^ChineseLuniSolar#{kyoto}"], # 京都平均太陽時
-    ['[JLSA=,旧暦A=]1872.12.03','@CR', "1872-12-03^ChineseLuniSolar#{tokyo}"], # 東京平均太陽時
-    ['[JLSB=,旧暦B=]1887.11.18','@CR', "1887-11-18^ChineseLuniSolar#{jst}"]    # 日本標準時
-  ]]
-
-  # Japanese Solar Calendar Series for JapaneseNote
-  JapaneseSolarSeries = [self, [
-    'namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]',
-    'locale:[=en:, ja=ja:, alias]',
-    'area:[JapaneseSolarSeries=, 日本の節月=]',
-    ['[平朔儀鳳暦=]-661.01.01', '@F',  "-661-01-01^Chinese::平朔儀鳳暦(節月)"], # 年の始めに遡って開始(実際は12.22)
-    ['[元嘉暦]454.01.12',       '@CR',  "454-01-12^Chinese::元嘉暦(節月)"],
-    ['[儀鳳暦]696.12.27',       '@CR',  "696-12-27^Chinese::麟徳暦(節月)"],
-    ['[大衍暦]764.01.06',       '@CR',  "764-01-06^Chinese::大衍暦(節月)"],
-    ['[五紀暦]857.12.19',       '@CR',  "857-12-19^Chinese::五紀暦(節月)"],
-    ['[宣明暦]862.01.03',       '@CR',  "862-01-03^Chinese::宣明暦(節月)"],
-    ['[前貞享暦=]1685.01.01',   '@CR', "1685-01-01^Chinese::前貞享暦(節月)"],
-    ['[貞享暦]1687.01.08',      '@CR', "1687-01-08^Chinese::貞享暦(節月)"],
-    ['[貞享補暦A=]1752.12.30',  '@CR', "1752-12-30^Chinese::貞享補暦A(節月)"],
-    ['[貞享補暦B=]1753.12.19',  '@CR', "1753-12-19^Chinese::貞享補暦B(節月)"],
-    ['[宝暦暦]1755.01.07',      '@CR', "1755-01-07^Chinese::宝暦暦(節月)"],
-    ['[修正宝暦暦=]1771.01.11', '@CR', "1771-01-11^Chinese::修正宝暦暦(節月)"],
-    ['[寛政暦]1798.01.12',      '@CR', "1798-01-12^Chinese::寛政暦(節月)"],
-    ['[天保暦]1844.01.14',      '@CR', "1844-01-14^ChineseSolar#{kyoto}"], # 京都平均太陽時
-    ['[JSA=,旧暦A=]1872.11.26', '@CR', "1872-11-26^ChineseSolar#{tokyo}"], # 東京平均太陽時
-    ['[JSB=,旧暦B=]1887.11.26', '@CR', "1887-11-26^ChineseSolar#{jst}"]    # 日本標準時
-  ]]
-end
-
 class When::CalendarTypes::CalendarNote
 
   #
@@ -468,6 +414,7 @@ class When::CalendarTypes::CalendarNote
           cal4note = Cal4Note.new(date.frame, date.frame.twin)
           @range =
             case cal4note.l_calendar.formula[-1]
+            when When::Ephemeris::ChineseTrueLunation::JujiMethods ; 11 # 江戸時代の暦
             when When::Ephemeris::ChineseTrueLunation
               date.frame.twin =~ /戊寅|麟徳/ ? 1 : 10 # 唐代定朔暦(儀鳳暦 or 宣明暦)
             when When::Ephemeris::MeanLunation   ;  0 # 唐代以前平朔暦(元嘉暦)
@@ -1273,7 +1220,7 @@ class When::CalendarTypes::CalendarNote
               if conditions[:shoyo]
                 formula = dates.cal4note.s_terms.formula
                 etime   = dates.cal4note.s_terms.term(date - When.Duration('P3D'), [0,15], When::SYSTEM)
-                if formula.respond_to?(:year_length) && formula.year_length.kind_of?(Rational)
+                if formula.respond_to?(:year_length) && formula.denominator
                   shoyo  =  etime.clk_time.universal_time
                   shoyo +=  When::TM::Duration::DAY * (etime.to_i - date.to_i)
                   shoyo  = (shoyo  / When::TM::Duration::DAY * formula.denominator * 1000 + 0.5).floor / 1000.0

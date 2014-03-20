@@ -480,10 +480,10 @@ LOCALE
       reverse_1_4  = When::Parts::GeometricComplex.new(1,4, true)
       reverse_2_3  = When::Parts::GeometricComplex.new(2,3, true)
       reverse_2_5  = When::Parts::GeometricComplex.new(2,5, true)
-      assert_equal("..", reverse_all.to_s)
+      assert_equal("-Infinity..Infinity", reverse_all.to_s)
       assert_equal("1..4", reverse_1_4.to_s)
       assert_equal("2..3", reverse_2_3.to_s)
-      assert_equal("..", (reverse_2_3 | range_2_3).to_s)
+      assert_equal("-Infinity..Infinity", (reverse_2_3 | range_2_3).to_s)
       assert_equal("1..2", (reverse_1_4 | range_2_5).to_s)
     end
   end

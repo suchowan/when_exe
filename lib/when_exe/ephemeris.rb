@@ -1773,6 +1773,52 @@ module When::Ephemeris
   #
   class MeanLunation < Formula
 
+    #
+    # Lunar Calendar Formula
+    #
+    module LunarMethod
+
+      private
+
+      # 周期番号 -> 日時
+      #
+      # @param [Numeric] cn 周期番号
+      # @param [Numeric] time0 日時の初期近似値
+      #
+      # @return [Numeric] ユリウス日
+      #
+      # @note 半ティティの日時の丸め誤差に配慮
+      #
+      def cn_to_time_(cn, time0=nil)
+        time0 ||= (cn - @cycle_number_0m) / @cycle_number_1m
+        return time0 if (cn * 60 - (cn * 60).round).abs > 1e-8
+        ((time0 + 1.0/256 - @day_epoch) / @half_tithi).floor  * @half_tithi  + @day_epoch
+      end
+    end
+
+    #
+    # Solar Calendar Formula for Fixed Year Length Method
+    #
+    module SolarMethod
+
+      private
+
+      # 周期番号 -> 日時
+      #
+      # @param [Numeric] cn 周期番号
+      # @param [Numeric] time0 日時の初期近似値
+      #
+      # @return [Numeric] ユリウス日
+      #
+      # @note 太陽黄経が整数になる日時の丸め誤差に配慮
+      #
+      def cn_to_time_(cn, time0=nil)
+        time0 ||= (cn - @cycle_number_0m) / @cycle_number_1m
+        return time0 if (cn * 360 - (cn * 360).round).abs > 1e-8
+        ((time0 + 1.0/256 - @day_epoch) / @solar_degree).floor * @solar_degree + @day_epoch
+      end
+    end
+
     # 計算の基準経度 / 度
     # @return [Numeric]
     attr_reader :long
@@ -1850,88 +1896,42 @@ module When::Ephemeris
 
     private
 
-    # 周期番号 -> 日時
-    #
-    # @param [Numeric] cn 周期番号
-    # @param [Numeric] time0 日時の初期近似値
-    #
-    # @return [Numeric] ユリウス日
-    #
-    def cn_to_time_(cn, time0=nil)
-      time0 ||= (cn - @cycle_number_0m) / @cycle_number_1m
-      case @formula
-      when /S/ ; ((time0 + 1.0/256 - @day_epoch) / @solar_terms).floor * @solar_terms + @day_epoch
-      when /L/ ; ((time0 + 1.0/256 - @day_epoch) / @month_tithi).floor * @month_tithi + @day_epoch
-      end
-    end
-
     # オブジェクトの正規化
     def _normalize(args=[], options={})
       Rational
       @time_standard   ||= 'universal'
       @epoch_shift     ||= 1721139        # 西暦 0 年  春分
       @day_shift       ||= Rational(-1,2) # 夜半 -1/2, 日出 -1/4
-      @day_shift          = @day_shift.to_r
-      @longitude_shift ||= Rational(-1,4) # 冬至 -1/4, 立春 -1/8
-      @longitude_shift   = @longitude_shift.to_r
-      @day_epoch         = @day_epoch.to_i + @day_shift
-      @year_length       = @year_length.to_r
-      @lunation_length   = @lunation_length.to_r
-      @month_length      = 1 / (1.to_r/@year_length + 1.to_r/@lunation_length)
-      @denominator       = [@year_length.denominator, @lunation_length.denominator].max
-      @solar_terms       = @year_length / 24
-      @month_tithi       = @lunation_length / 30
-      @year_epoch        = 0
-      @year_epoch        = @longitude_shift -_mean_sun_(@epoch_shift).to_i
-      @month_epoch       = 0
-      @month_epoch       = @longitude_shift -_mean_moon_(@epoch_shift).to_i
-      super
-    end
-  end
-
-  #
-  # Solar Calendar Formula for Variable Year Length Method
-  #
-  class VariableYearLengthMethod < Formula
-
-    # 日時 -> 周期番号
-    #
-    # @param [Numeric] t ユリウス日(Terrestrial Time)
-    # @param [When::TM::TemporalPosition] t
-    #
-    # @return [Numeric] 周期番号
-    #
-    def time_to_cn(t, cn0=nil)
-      cn0 ||= (t.to_f - @day_epoch) / @year_length + @year_epoch + @longitude_shift
-      root(cn0 * 12, t.to_f) {|cn| cn_to_time(cn) }
-    end
-
-    # 周期番号 -> 日時
-    #
-    # @param [Numeric] cn 周期番号
-    # @param [Numeric] time0 日時の初期近似値
-    #
-    # @return [Numeric] ユリウス日
-    #
-    def cn_to_time_(cn, time0=nil)
-      t, n = (cn / 12.0 - @longitude_shift - @year_epoch).divmod(1)
-      @day_epoch + @year_length * t - @year_delta * t * (t-1) + (@year_length - 2 * @year_delta * t) * n
-    end
-
-    private
-
-    # オブジェクトの正規化
-    def _normalize(args=[], options={})
-      Rational
-      @time_standard   ||= 'universal'
-      @day_shift       ||= Rational(-1,2) # 夜半 -1/2, 日出 -1/4
       @day_shift         = @day_shift.to_r
       @longitude_shift ||= Rational(-1,4) # 冬至 -1/4, 立春 -1/8
       @longitude_shift   = @longitude_shift.to_r
-      @day_epoch         = @day_epoch.to_f + @day_shift
-      @year_epoch        = @year_epoch.to_f
-      @year_length       = @year_length.to_f
-      @year_delta        = @year_delta.to_f * 1.0E-6
+      @day_epoch         = (@day_epoch.to_f == @day_epoch.to_i ? @day_epoch.to_i : @day_epoch.to_f) + @day_shift
+      @year_length       = @year_length.to_r
+      @year_delta        = @year_delta.to_f * 1.0E-6 if @year_delta
+      if @year_epoch
+        @year_epoch      = @year_epoch.to_f
+      else
+        @year_epoch      = 0
+        @year_epoch      = @longitude_shift -_mean_sun_(@epoch_shift).to_i
+      end
+
+      if @lunation_length && /S/i !~ @formula
+        # 月の位相の計算
+        @lunation_length = @lunation_length.to_r
+        @month_length    = 1 / (1.to_r/@year_length + 1.to_r/@lunation_length)
+        @half_tithi      = @lunation_length / 60
+        if @month_epoch
+          @month_epoch   = @month_epoch.to_f
+        else
+          @month_epoch   = 0
+          @month_epoch   = @longitude_shift -_mean_moon_(@epoch_shift).to_i
+        end
+        class << self; include LunarMethod; end
+      else
+        # 太陽黄経の計算
+        @solar_degree    = @year_length / 360
+        class << self; include SolarMethod;    end
+      end
       super
     end
   end

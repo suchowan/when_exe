@@ -397,7 +397,7 @@ module When::Parts
 
         # external Resource
         begin
-          object = When::Parts::Locale.send(:wikipedia_object, path, query)
+          object = When::Parts::Locale.send(:wikipedia_object, path, {:query=>query})
           return object if object
           OpenURI
           args  = [path, "1".respond_to?(:force_encoding) ? 'r:utf-8' : 'r']

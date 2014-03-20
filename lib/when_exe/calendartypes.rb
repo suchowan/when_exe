@@ -738,7 +738,7 @@ module When::CalendarTypes
       @months_in_year ||= 12
       super
     end
- end
+  end
 
   # 月日の配当が太陽の位置によって決定される太陽暦
   #
@@ -1417,7 +1417,9 @@ module When::CalendarTypes
       _opt       = options.dup
       notes      = _notes(_opt.delete(:notes)  || :prime)
       indices    = _indices(_opt.delete(:indices), notes)
-      date       = When.when?(date, _opt) unless date.kind_of?(When::TM::TemporalPosition)
+      _opt.keys.each do |key|
+         conditions[key] = _opt[key] unless date.class::FormOptions.include?(key)
+      end
       [_to_date_for_note(date), indices, notes, conditions, options]
     end
 

@@ -56,7 +56,7 @@ module When::Parts
 
     # Wikipedia の URL の正規表現
     # @private
-    Ref  = /^http:\/\/(.+?)\.wikipedia\.org\/wiki\/(.+?)$/
+    Ref  = /^http:\/\/(.+?)\.wikipedia\.org\/wiki\/([^#]+?)$/
 
     # Wikipedia の多言語リンクの正規表現
     # @private
@@ -258,13 +258,15 @@ module When::Parts
       end
 
       # wikipedia オブジェクトの生成・参照
-      def wikipedia_object(path, query=nil)
+      def wikipedia_object(path, options={})
+        query    = options.delete(:query)
+        interval = options.key?(:interval) ? options.delete(:interval) : @wikipedia_interval
         return nil unless Object.const_defined?(:JSON) && path =~ Ref
-        _wikipedia_relation(_wikipedia_object(path, $~[1], $~[2], query), path, query)
+        _wikipedia_relation(_wikipedia_object(path, $~[1], $~[2], query, interval, options), path, query)
       end
 
       # wikipedia の読み込み
-      def _wikipedia_object(path, locale, file, query)
+      def _wikipedia_object(path, locale, file, query, interval, options)
         # 採取済みデータ
         title = URI.decode(file.gsub('_', ' '))
         mode  = "".respond_to?(:force_encoding) ? ':utf-8' : ''
@@ -281,12 +283,12 @@ module When::Parts
 
       rescue => no_file_error
         # 新しいデータ
-        case @wikipedia_interval
+        case interval
         when 0
           raise no_file_error
         when Numeric
           if @wikipedia_last_access
-            delay = (@wikipedia_last_access + @wikipedia_interval.abs - Time.now.to_f).ceil
+            delay = (@wikipedia_last_access + interval.abs - Time.now.to_f).ceil
             sleep(delay) if delay > 0
           end
         end
@@ -328,7 +330,7 @@ module When::Parts
 
         # save data
         open("#{dir}/#{file}.json", 'w'+mode) do |source|
-          source.write(object.to_json(:method=>:to_h))
+          source.write(JSON.dump(object.to_h({:method=>:to_h}).update(options)))
         end
         query ? _wikipedia_object(path, locale, file, query) : object
       end

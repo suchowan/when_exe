@@ -181,6 +181,7 @@ module When
 
   module CalendarTypes
     autoload :Japanese,              'when_exe/region/japanese'
+    autoload :JapaneseTwin,          'when_exe/region/japanese_twin'
     autoload :ChineseSolar,          'when_exe/region/chinese'
     autoload :ChineseLuniSolar,      'when_exe/region/chinese'
     autoload :Chinese,               'when_exe/region/chinese'
@@ -280,8 +281,8 @@ module When
       autoload :JapanesePrimeMinister,   'when_exe/region/japanese'
       autoload :NihonKoki,               'when_exe/region/nihon_shoki'
       autoload :NihonShoki,              'when_exe/region/nihon_shoki'
-      autoload :JapaneseSolarSeries,     'when_exe/region/japanese_notes'
-      autoload :JapaneseLuniSolarSeries, 'when_exe/region/japanese_notes'
+      autoload :JapaneseSolarSeries,     'when_exe/region/japanese_twin'
+      autoload :JapaneseLuniSolarSeries, 'when_exe/region/japanese_twin'
       autoload :Chinese,                 'when_exe/region/chinese_epoch'
       autoload :ChineseSolarSeries,      'when_exe/region/chinese_epoch'
       autoload :ChineseLuniSolarSeries,  'when_exe/region/chinese_epoch'
@@ -730,16 +731,21 @@ module When
   # Wikipedia を参照して When::BasicTypes::M17n を生成する
   #
   # @param [String] title Wikipedia の項目名
-  # @param [String] locale Wikipedia の言語
+  # @param [Hash] options 以下の通り
+  # @option options [String]       :locale   Wikipedia の言語(デフォルト 'en' - 英語)
+  # @option options [Numeric, nil] :interval Wikipedia サイトへのアクセス制御(デフォルト When::Parts::Locale.wikipedia_interval)
+  # @option options [Object]       :その他   キャッシュファイルへの追加書き出し要素
   #
   # @return [When::BasicTypes::M17n] 項目に対応する多言語対応文字列
   #
   # @note 生成した多言語対応文字列の what が nil でない場合、
   #       その項目の位置情報を表わす When::Coordinates::Spatial を指す
   #
-  def Wikipedia(title, locale='en')
+  def Wikipedia(title, options={})
+    locale = options.delete(:locale) || 'en'
     entry, query = title.split('?', 2)
     url  = "http://#{locale}.wikipedia.org/wiki/#{URI.encode(entry).gsub(' ', '_')}"
+    Parts::Locale.send(:wikipedia_object, url, options) unless options.empty?
     url += '?' + query if query
     object = Parts::Resource._instance(url)
     object.kind_of?(BasicTypes::M17n) ? object : object.label

@@ -921,7 +921,11 @@ module When
       }
     ]
 
-    # 清::           時憲暦   1645 - 1911
+    # 清::           時憲暦   1645 - 1664 天聡戊辰元法
+    # 清::           大統暦   1665 - 1668
+    # 清::           時憲暦   1669 - 1725 天聡戊辰元法
+    # 清::           時憲暦   1726 - 1741 康熙甲子元法
+    # 清::           時憲暦   1742 - 1911 雍正癸卯元法
     Chinese1645 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>1645, 'origin_of_LSC'=>2321912,
       'indices'=> _IndicesM1,
