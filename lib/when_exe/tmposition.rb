@@ -1578,10 +1578,14 @@ module When::TM
     #
     def %(other)
       raise TypeError,"The right operand should be When::Coordinates::Residue" unless other.kind_of?(Residue)
-      case other.event
-      when 'day'  ; other % least_significant_coordinate
-      when 'year' ; other % (most_significant_coordinate + @frame._diff_to_CE)
-      else        ; raise ArgumentError,"The right operand should have a unit 'day' or 'year'"
+      if precision <= When::YEAR && other.units['year'] && other.event != 'year'
+        other.to('year') % (most_significant_coordinate + @frame._diff_to_CE)
+      else
+        case other.event
+        when 'day'  ; other % least_significant_coordinate
+        when 'year' ; other % (most_significant_coordinate + @frame._diff_to_CE)
+        else        ; raise ArgumentError,"The right operand should have a unit 'day' or 'year'"
+        end
       end
     end
 

@@ -372,6 +372,13 @@ module When::Parts
         iri
       end
 
+      # @private
+      def _instantiate(resource)
+        return resource unless resource.kind_of?(Array)
+        return resource[0].new(*resource[1..-1]) if resource[0].kind_of?(Class)
+        return resource.map {|rsc| _instantiate(rsc)}
+      end
+
       private
 
       # オブジェクト生成

@@ -15,11 +15,11 @@ module When
       'locale:[=en:, ja=ja:, alias]',
       'area:[JapaneseLuniSolarSeries=, 日本の暦月=]',
       ['[平朔儀鳳暦=]-660.01.01',  '@F',  "-660-01-01^JapaneseTwin::平朔儀鳳暦"],
-      ['[元嘉暦]454.01.01',        '@CR',  "454-01-01^Chinese::元嘉暦"],
-      ['[儀鳳暦]697.01.01',        '@CR',  "697-01-01^Chinese::麟徳暦"],
-      ['[大衍暦]764.01.01',        '@CR',  "764-01-01^Chinese::大衍暦"],
-      ['[五紀暦]858.01.01',        '@CR',  "858-01-01^Chinese::五紀暦"],
-      ['[宣明暦]862.01.01',        '@CR',  "862-01-01^Chinese::宣明暦"],
+      ['[元嘉暦]454.01.01',        '@CR',  "454-01-01^ChineseTwin::元嘉暦"],
+      ['[儀鳳暦]697.01.01',        '@CR',  "697-01-01^ChineseTwin::麟徳暦"],
+      ['[大衍暦]764.01.01',        '@CR',  "764-01-01^ChineseTwin::大衍暦"],
+      ['[五紀暦]858.01.01',        '@CR',  "858-01-01^ChineseTwin::五紀暦"],
+      ['[宣明暦]862.01.01',        '@CR',  "862-01-01^ChineseTwin::宣明暦"],
       ['[貞享乙丑暦=]1685.01.01',  '@CR', "1685-01-01^JapaneseTwin::貞享乙丑暦"],
       ['[貞享暦]1687.01.01',       '@CR', "1687-01-01^JapaneseTwin::貞享暦"    ],
       ['[宝暦癸酉暦=]1753.01.01',  '@CR', "1753-01-01^JapaneseTwin::宝暦癸酉暦"],
@@ -38,11 +38,11 @@ module When
       'locale:[=en:, ja=ja:, alias]',
       'area:[JapaneseSolarSeries=, 日本の節月=]',
       ['[平朔儀鳳暦=]-661.01.01',  '@F',  "-661-01-01^JapaneseTwin::平朔儀鳳暦(節月)"], # 年の始めに遡って開始(実際は12.22)
-      ['[元嘉暦]454.01.12',        '@CR',  "454-01-12^Chinese::元嘉暦(節月)"],
-      ['[儀鳳暦]696.12.27',        '@CR',  "696-12-27^Chinese::麟徳暦(節月)"],
-      ['[大衍暦]764.01.06',        '@CR',  "764-01-06^Chinese::大衍暦(節月)"],
-      ['[五紀暦]857.12.19',        '@CR',  "857-12-19^Chinese::五紀暦(節月)"],
-      ['[宣明暦]862.01.03',        '@CR',  "862-01-03^Chinese::宣明暦(節月)"],
+      ['[元嘉暦]454.01.12',        '@CR',  "454-01-12^ChineseTwin::元嘉暦(節月)"],
+      ['[儀鳳暦]696.12.27',        '@CR',  "696-12-27^ChineseTwin::麟徳暦(節月)"],
+      ['[大衍暦]764.01.06',        '@CR',  "764-01-06^ChineseTwin::大衍暦(節月)"],
+      ['[五紀暦]857.12.19',        '@CR',  "857-12-19^ChineseTwin::五紀暦(節月)"],
+      ['[宣明暦]862.01.03',        '@CR',  "862-01-03^ChineseTwin::宣明暦(節月)"],
       ['[貞享乙丑暦=]1685.01.01',  '@CR', "1685-01-01^JapaneseTwin::貞享乙丑暦(節月)"],
       ['[貞享暦]1687.01.08',       '@CR', "1687-01-08^JapaneseTwin::貞享暦(節月)"    ],
       ['[宝暦癸酉暦=]1752.12.30',  '@CR', "1752-12-30^JapaneseTwin::宝暦癸酉暦(節月)"],
@@ -65,6 +65,7 @@ module When
       'lunar_mean_motion'        => 13.36875,  # 月平行(恒星天に対する月の平均運動 / 日)
       'anomalistic_month_length' => 27.5546,   # 転終(近点月)
       'anomaly_method'           => 'c',       # (経朔-定朔)の計算方法(a:差分, b:微分, c:幾何学的補正)
+      'anomaly_precision'        => 1e-5,      # c 方式 での収束判定誤差 / 日
       'lunar_unit'               =>  0.1,      # 太陰遅速計算用招差法定数の時間の単位(限)
       'solar_weight'             =>  1,        # (経朔-定朔)の計算で用いる実行差での太陽盈縮の重み(0:非考慮,1:考慮)
       'm'                        => [          # 太陰遅速計算用招差法定数
@@ -93,8 +94,8 @@ module When
 
       [ChineseLuniSolar,
         'name:[貞享乙丑暦=]',
-        {'formula'=>['12S', '1L'].map {|f|
-          Ephemeris::ChineseTrueLunation.new(_japanese_common.merge({
+        {'formula'=>['12S', '1L'].map {|f| [
+          Ephemeris::ChineseTrueLunation, _japanese_common.merge({
             'formula'                  => f,
             'day_epoch'                => 2336111 +  7.675, # 暦元天正冬至のユリウス日
             'year_epoch'               => 1684,             # 暦元の西暦年
@@ -102,15 +103,15 @@ module When
             'anomalistic_year_shift'   => 6.445,            # 暦應(冬至から近日点通過までの日数)
             'lunation_shift'           =>  2.779 - 0.015,   # 閏應(暦元前経朔から暦元天正冬至までの日数)
             'anomalistic_month_shift'  => 22.72  - 0.015    # 転應(暦元前近/遠地点通過から暦元天正冬至までの日数)
-         }))
+         })]
         }
        }
       ],
 
       [ChineseLuniSolar,
         'name:[貞享暦]',
-        {'formula'=>['12S', '1L'].map {|f|
-          Ephemeris::ChineseTrueLunation.new(_japanese_common.merge({
+        {'formula'=>['12S', '1L'].map {|f| [
+          Ephemeris::ChineseTrueLunation, _japanese_common.merge({
             'formula'                  => f,
             'day_epoch'                => 2336111 +  7.69 , # 暦元天正冬至のユリウス日
             'year_epoch'               => 1684,             # 暦元の西暦年
@@ -118,15 +119,15 @@ module When
             'anomalistic_year_shift'   => 6.445,            # 暦應(冬至から近日点通過までの日数)
             'lunation_shift'           =>  2.779,           # 閏應(暦元前経朔から暦元天正冬至までの日数)
             'anomalistic_month_shift'  => 22.72             # 転應(暦元前近/遠地点通過から暦元天正冬至までの日数)
-         }))
+         })]
         }
        }
       ],
 
       [ChineseLuniSolar,
         'name:[宝暦癸酉暦=]',
-        {'formula'=>['12S', '1L'].map {|f|
-          Ephemeris::ChineseTrueLunation.new(_japanese_common.merge({
+        {'formula'=>['12S', '1L'].map {|f| [
+          Ephemeris::ChineseTrueLunation, _japanese_common.merge({
             'formula'                  => f,
             'day_epoch'                => 2336111 +  7.9038,# 暦元天正冬至のユリウス日
             'year_epoch'               => 1684,             # 暦元の西暦年
@@ -134,15 +135,15 @@ module When
             'anomalistic_year_shift'   => 6.445,            # 暦應(冬至から近日点通過までの日数)
             'lunation_shift'           =>  2.779 + 0.2138,  # 閏應(暦元前経朔から暦元天正冬至までの日数)
             'anomalistic_month_shift'  => 22.72  + 0.2138   # 転應(暦元前近/遠地点通過から暦元天正冬至までの日数)
-         }))
+         })]
         }
        }
       ],
 
       [ChineseLuniSolar,
         'name:[宝暦甲戌暦=]',
-        {'formula'=>['12S', '1L'].map {|f|
-          Ephemeris::ChineseTrueLunation.new(_japanese_common.merge({
+        {'formula'=>['12S', '1L'].map {|f| [
+          Ephemeris::ChineseTrueLunation, _japanese_common.merge({
             'formula'                  => f,
             'day_epoch'                => 2336111 +  7.6223,# 暦元天正冬至のユリウス日
             'year_epoch'               => 1684,             # 暦元の西暦年
@@ -150,15 +151,15 @@ module When
             'anomalistic_year_shift'   => 6.445,            # 暦應(冬至から近日点通過までの日数)
             'lunation_shift'           =>  2.779 - 0.0677,  # 閏應(暦元前経朔から暦元天正冬至までの日数)
             'anomalistic_month_shift'  => 22.72  - 0.0677   # 転應(暦元前近/遠地点通過から暦元天正冬至までの日数)
-         }))
+         })]
         }
        }
       ],
 
       [ChineseLuniSolar,
         'name:[宝暦暦]',
-        {'formula'=>['12S', '1L'].map {|f|
-          Ephemeris::ChineseTrueLunation.new(_japanese_common.merge({
+        {'formula'=>['12S', '1L'].map {|f| [
+          Ephemeris::ChineseTrueLunation, _japanese_common.merge({
             'formula'                  => f,
             'day_epoch'                => 2361671 + 14.536, # 暦元天正冬至のユリウス日
             'year_epoch'               => 1754,             # 暦元の西暦年
@@ -167,15 +168,15 @@ module When
             'lunation_shift'           => 25.654,           # 閏應(暦元前経朔から暦元天正冬至までの日数)
             'anomalistic_month_shift'  => 18.88,            # 転應(暦元前近/遠地点通過から暦元天正冬至までの日数)
             's'                        => ChineseSolar.change_unit(365.241556 / 365.241696, _japanese_common['s'])
-         }))
+         })]
         }
        }
       ],
 
       [ChineseLuniSolar,
         'name:[修正宝暦暦=]',
-        {'formula'=>['12S', '1L'].map {|f|
-          Ephemeris::ChineseTrueLunation.new(_japanese_common.merge({
+        {'formula'=>['12S', '1L'].map {|f| [
+          Ephemeris::ChineseTrueLunation, _japanese_common.merge({
             'formula'                  => f,
             'day_epoch'                => 2361671 + 14.681, # 暦元天正冬至のユリウス日
             'year_epoch'               => 1754,             # 暦元の西暦年
@@ -184,7 +185,7 @@ module When
             'lunation_shift'           => 25.82,            # 閏應(暦元前経朔から暦元天正冬至までの日数)
             'anomalistic_month_shift'  => 19.307,           # 転應(暦元前近/遠地点通過から暦元天正冬至までの日数)
             's'                        => ChineseSolar.change_unit(365.241626 / 365.241696, _japanese_common['s'])
-         }))
+         })]
         }
        }
       ],

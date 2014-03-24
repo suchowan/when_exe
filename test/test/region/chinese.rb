@@ -169,7 +169,7 @@ module Test
          0772-09-01 0774-06-01 0775-02-01 0776-03-01 0780-05-01 0781-09-01 0784-10=01
          0786-03-01 0788-04-01 0791-02-01 0791-09-01 0792-05-01 0813-12-01 0816-03-01
          0820-02-01 0820-03-01 0822-02-01 0835-04-01 0836-04-01 0841-11-01 0853-02-01).each do |ptn|
-        date = When.when?(ptn+ '^^Chinese::大衍暦')
+        date = When.when?(ptn+ '^^ChineseTwin::大衍暦')
         formula = date.frame.formula[-1]
         m = When::Coordinates::Residue.mod(date.to_i+1) {|cn| formula.cn_to_time(cn)}
         t = formula.cn_to_time(m[0]) + Rational(1,2)

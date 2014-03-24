@@ -736,6 +736,7 @@ module When::CalendarTypes
     #
     def _normalize(args=[], options={})
       @months_in_year ||= 12
+      @formula = When::Parts::Resource._instantiate(@formula)
       super
     end
   end

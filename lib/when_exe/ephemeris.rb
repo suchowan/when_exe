@@ -1791,7 +1791,7 @@ module When::Ephemeris
       #
       def cn_to_time_(cn, time0=nil)
         time0 ||= (cn - @cycle_number_0m) / @cycle_number_1m
-        return time0 if (cn * 60 - (cn * 60).round).abs > 1e-8
+        return time0 if (cn * 60 - (cn * 60).round).abs > @cycle_precision
         ((time0 + 1.0/256 - @day_epoch) / @half_tithi).floor  * @half_tithi  + @day_epoch
       end
     end
@@ -1814,7 +1814,7 @@ module When::Ephemeris
       #
       def cn_to_time_(cn, time0=nil)
         time0 ||= (cn - @cycle_number_0m) / @cycle_number_1m
-        return time0 if (cn * 360 - (cn * 360).round).abs > 1e-8
+        return time0 if (cn * 360 - (cn * 360).round).abs > @cycle_precision
         ((time0 + 1.0/256 - @day_epoch) / @solar_degree).floor * @solar_degree + @day_epoch
       end
     end
@@ -1914,6 +1914,8 @@ module When::Ephemeris
         @year_epoch      = 0
         @year_epoch      = @longitude_shift -_mean_sun_(@epoch_shift).to_i
       end
+      @cycle_precision ||= 1.0E-8
+      @cycle_precision   = @cycle_precision.to_f
 
       if @lunation_length && /S/i !~ @formula
         # 月の位相の計算
