@@ -112,6 +112,31 @@ module When
 
       # 暦注検索結果コンテナのハッシュ要素
       #
+      # @param [Boolean] compact 余分な nil や空配列を除去するか否か
+      # @param [Symbol] symbol 取り出したいハッシュ要素(:note, :value, etc.)
+      #
+      # @return [Array] ハッシュ要素からなる配列(元の構造が配列であった場合)
+      #
+      # @note 引数 symbol が Integer の場合は添え字とみなして元の配列の要素を取り出す
+      #
+      def value(compact=true, symbol=:value)
+        if kind_of?(Hash) && !key?(:note)
+          # Persistent Notes
+          sliced = {}
+          each_pair do |key, val|
+            sliced[key] = val[symbol]
+          end
+        else
+          # Non-Persistent Notes
+          return _bless(slice(symbol)) if symbol.kind_of?(Integer)
+          sliced = _dig(self) {|target| target.fetch(symbol, nil)}
+        end
+        sliced = _bless(sliced)
+        compact ? sliced.simplify : sliced
+      end
+
+      # 暦注検索結果コンテナのハッシュ要素
+      #
       # @param [Symbol] symbol 取り出したいハッシュ要素(:note, :value, etc.)
       #
       # @return [Array] ハッシュ要素からなる配列(元の構造が配列であった場合)
@@ -119,18 +144,7 @@ module When
       # @note 引数 symbol が Integer の場合は添え字とみなして元の配列の要素を取り出す
       #
       def [](symbol)
-        if kind_of?(Hash) && !key?(:note)
-          # Persistent Notes
-          return super if symbol.kind_of?(Integer)
-          sliced = {}
-          each_pair do |key, value|
-            sliced[key] = value[symbol]
-          end
-          _bless(sliced)
-        else
-          # Non-Persistent Notes
-          _bless(symbol.kind_of?(Integer) ? super : (_dig(self) {|target| target.fetch(symbol, nil)}))
-        end
+        value(false, symbol)
       end
 
       # 暦注検索結果コンテナの条件に合う要素を抽出する
