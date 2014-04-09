@@ -135,6 +135,7 @@ module When
   require 'when_exe/tmposition'
   require 'when_exe/tmreference'
   require 'when_exe/calendartypes'
+  require 'when_exe/calendarnote'
   require 'when_exe/locales/locales'
   require 'when_exe/region/m17n'
   require 'when_exe/region/residue'
@@ -221,28 +222,28 @@ module When
     _time_systems.each_pair do |key, required|
       autoload key.to_sym, required if required
     end
+  end
 
-    class CalendarNote
-      autoload :SolarTerms,          'when_exe/region/ephemeric_notes'
-      autoload :LunarPhases,         'when_exe/region/ephemeric_notes'
-      autoload :EphemericNote,       'when_exe/region/ephemeric_notes'
-      autoload :JapaneseNote,        'when_exe/region/japanese_notes'
-      autoload :BalineseNote,        'when_exe/region/balinese'
-      autoload :RomanNote,           'when_exe/region/roman'
-      autoload :WorldWeek,           'when_exe/region/world'
-      autoload :ShireWeek,           'when_exe/region/shire'
+  class CalendarNote
+    autoload :SolarTerms,            'when_exe/region/ephemeric_notes'
+    autoload :LunarPhases,           'when_exe/region/ephemeric_notes'
+    autoload :EphemericNote,         'when_exe/region/ephemeric_notes'
+    autoload :JapaneseNote,          'when_exe/region/japanese_notes'
+    autoload :BalineseNote,          'when_exe/region/balinese'
+    autoload :RomanNote,             'when_exe/region/roman'
+    autoload :WorldWeek,             'when_exe/region/world'
+    autoload :ShireWeek,             'when_exe/region/shire'
 
-      DefaultNotes   = [['_m:CalendarTerms::Month'], ['CommonResidue::Week']]
-      JulianDayNotes = [['CommonResidue::Week', 'CommonResidue::干支']]
-      BahaiNotes     = [['Bahai::YearName'], ['_m:BahaiTerms::Month'], ['CommonResidue::Week']]
-      JavaneseNotes  = [['Javanese::Windu'], ['_m:CalendarTerms::Month'],
-                        ['Javanese::Pasaran', 'Javanese::Paringkelan', 'Javanese::Week', 'Javanese::Wuku']]
-      ChineseNotes   = [['CommonResidue::干支'], ['_m:CalendarTerms::Month'], ['CommonResidue::Week', 'CommonResidue::干支']]
-      TibetanNotes   = [['Tibetan::干支'], ['_m:CalendarTerms::Month'], ['CommonResidue::Week']]
-      YiNotes        = [['Yi::YearName'], ['_m:CalendarTerms::Month'], ['CommonResidue::Week']]
-      MayanNotes     = [{},['Mayan#{?Epoch=Epoch}::Trecena', 'Mayan#{?Epoch=Epoch}::Tzolk\'in',
-                            'Mayan#{?Epoch=Epoch}::Lords_of_the_Night', 'Mayan#{?Epoch=Epoch}::Haab\'']]
-    end
+    DefaultNotes   = [['_m:CalendarTerms::Month'], ['CommonResidue::Week']]
+    JulianDayNotes = [['CommonResidue::Week', 'CommonResidue::干支']]
+    BahaiNotes     = [['Bahai::YearName'], ['_m:BahaiTerms::Month'], ['CommonResidue::Week']]
+    JavaneseNotes  = [['Javanese::Windu'], ['_m:CalendarTerms::Month'],
+                      ['Javanese::Pasaran', 'Javanese::Paringkelan', 'Javanese::Week', 'Javanese::Wuku']]
+    ChineseNotes   = [['CommonResidue::干支'], ['_m:CalendarTerms::Month'], ['CommonResidue::Week', 'CommonResidue::干支']]
+    TibetanNotes   = [['Tibetan::干支'], ['_m:CalendarTerms::Month'], ['CommonResidue::Week']]
+    YiNotes        = [['Yi::YearName'], ['_m:CalendarTerms::Month'], ['CommonResidue::Week']]
+    MayanNotes     = [{},['Mayan#{?Epoch=Epoch}::Trecena', 'Mayan#{?Epoch=Epoch}::Tzolk\'in',
+                          'Mayan#{?Epoch=Epoch}::Lords_of_the_Night', 'Mayan#{?Epoch=Epoch}::Haab\'']]
   end
 
   module Coordinates
@@ -546,11 +547,11 @@ module When
     Parts::Resource._instance(calendar, '_c:')
   end
 
-  # When::CalendarTypes::CalendarNote の生成/参照
+  # When::CalendarNote の生成/参照
   #
   # @param [String] notes 暦注リストを表す文字列
   #
-  # @return [When::CalendarTypes::CalendarNote] notes に対応する When::CalendarTypes::CalendarNote オブジェクト
+  # @return [When::CalendarNote] notes に対応する When::CalendarNote オブジェクト
   #
   def CalendarNote(notes)
     Parts::Resource._instance(notes, '_n:')

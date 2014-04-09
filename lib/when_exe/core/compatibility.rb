@@ -33,7 +33,9 @@ class String
     def to_r
       case self
       when /\.|E/i
-        to_f
+        it  = When::Coordinates::Residue.new(to_f, 1).enum_for
+        res = it.succ while it.has_next?
+        Rational(*res[0..1])
       when /\//
         Rational
         Rational(*split(/\//).map {|v| v.to_i})

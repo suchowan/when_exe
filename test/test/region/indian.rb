@@ -50,7 +50,7 @@ module Test
       cc     = When.Calendar('HinduSolar?type=SBS')
       date   = When.when?('1913-01-01', {:frame=>cc})
       assert_equal([2448361, "1913-01-01", "1991-04-14"], [date.to_i, date.to_s, date.to_date.to_s])
-      date   = When::CalendarTypes::CalendarNote::HinduNote::Dates.new(date)
+      date   = When::CalendarNote::HinduNote::Dates.new(date)
       assert_equal(2448361, date.to_i)
     end
   end

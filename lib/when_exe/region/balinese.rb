@@ -291,334 +291,334 @@ module When
         356  => {'Length'=>[30] * 6 + [28] * 2 + [30] * 4 }
       }
     }]
+  end
 
-    #
-    # バリ暦の暦注
-    #
-    class CalendarNote::BalineseNote < CalendarNote
+  #
+  # バリ暦の暦注
+  #
+  class CalendarNote::BalineseNote < CalendarNote
 
-      NoteObjects = [When::BasicTypes::M17n, [
-        "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
-        "locale:[=en:, ja=ja:, alias]",
-        "names:[Balinese]",
+    NoteObjects = [When::BasicTypes::M17n, [
+      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
+      "locale:[=en:, ja=ja:, alias]",
+      "names:[Balinese]",
 
-        # 年の暦注 ----------------------------
+      # 年の暦注 ----------------------------
+      [When::BasicTypes::M17n,
+        "names:[year]"
+      ],
+
+      # 月の暦注 ----------------------------
+      [When::BasicTypes::M17n,
+        "names:[month]",
         [When::BasicTypes::M17n,
-          "names:[year]"
-        ],
-
-        # 月の暦注 ----------------------------
-        [When::BasicTypes::M17n,
-          "names:[month]",
-          [When::BasicTypes::M17n,
-            "names:[Month]"
-          ]
-        ],
-
-        # 日の暦注 ----------------------------
-        [When::BasicTypes::M17n,
-          "names:[day]",
-
-          [When::BasicTypes::M17n,
-            "names:[Hari=, 日名=]",
-
-            [When::BasicTypes::M17n,
-              "names:[Suklapaksa=, 白分=]",
-              "[Lidi=   ]",
-              "[Kuda=   ]",
-              "[Kidang= ]",
-              "[Macan=  ]",
-              "[Kucing= ]",
-              "[Sampi=  ]",
-              "[Kerbau= ]",
-              "[Tikus=  ]",
-              "[Debu=   ]",
-              "[Anjing= ]",
-              "[Naga=   ]",
-              "[Kambing=]",
-              "[Mayang= ]",
-              "[Gajah=  ]",
-              "[Singa=  ]"
-            ],
-
-            [When::BasicTypes::M17n,
-              "names:[Krsnapaksa=, 黒分=]",
-              "[Ikan=   ]",
-              "[Lilin=  ]",
-              "[Ulung=  ]",
-              "[Kelapa= ]",
-              "[Banteng=]",
-              "[Hantu=  ]",
-              "[Areng=  ]",
-              "[Udang=  ]",
-              "[Semudra=]",
-              "[Pare=   ]",
-              "[Madu=   ]",
-              "[Kala=   ]",
-              "[Ular=   ]",
-              "[Padi=   ]",
-              "[Ulat=   ]"
-            ]
-          ],
-
-          [When::BasicTypes::M17n,
-            "names:[Dwiwara=, 2日週=]",
-            "[Menga=]", #  0
-            "[Pepet=]"  #  1
-          ],
-
-          [When::Coordinates::Residue,
-            "label:[Triwara=, 3日週=]", "divisor:3", "day:2",
-            [When::Coordinates::Residue, "label:[Pasah=       ]", "remainder:  0"],
-            [When::Coordinates::Residue, "label:[Gelang Tegeh=]", "remainder:  1"],
-            [When::Coordinates::Residue, "label:[Kajeng=      ]", "remainder:  2"]
-          ],
-
-          [When::BasicTypes::M17n,
-            "names:[Tjaturwara=, 4日週=]",
-            "[Sri=   ]",
-            "[Laba=  ]",
-            "[Jaya=  ]",
-            "[Menala=]"
-          ],
-
-          [When::Coordinates::Residue,
-            "label:[Pantjawara=, 5日週=]", "divisor:5", "day:1",
-            [When::Coordinates::Residue, "label:[Paing= ]", "remainder:  0"],
-            [When::Coordinates::Residue, "label:[Pon=   ]", "remainder:  1"],
-            [When::Coordinates::Residue, "label:[Wage=  ]", "remainder:  2"],
-            [When::Coordinates::Residue, "label:[Kliwon=]", "remainder:  3"],
-            [When::Coordinates::Residue, "label:[Umanis=]", "remainder:  4"]
-          ],
-
-          [When::Coordinates::Residue,
-            "label:[Perinkelan=, 六曜=]", "divisor:6", "day:2",
-            [When::Coordinates::Residue, "label:[Tungleh=]", "remainder:  0"],
-            [When::Coordinates::Residue, "label:[Aryang= ]", "remainder:  1"],
-            [When::Coordinates::Residue, "label:[Urukung=]", "remainder:  2"],
-            [When::Coordinates::Residue, "label:[Paniron=]", "remainder:  3"],
-            [When::Coordinates::Residue, "label:[Was=    ]", "remainder:  4"],
-            [When::Coordinates::Residue, "label:[Maulu=  ]", "remainder:  5"]
-          ],
-
-          [When::Coordinates::Residue,
-            "label:[Sadwara=, 6日週=]", "divisor:6", "day:2",
-            [When::Coordinates::Residue, "label:[Mina= ]", "remainder:  0"],
-            [When::Coordinates::Residue, "label:[Taru= ]", "remainder:  1"],
-            [When::Coordinates::Residue, "label:[Sato= ]", "remainder:  2"],
-            [When::Coordinates::Residue, "label:[Patra=]", "remainder:  3"],
-            [When::Coordinates::Residue, "label:[Wong= ]", "remainder:  4"],
-            [When::Coordinates::Residue, "label:[Paksi=]", "remainder:  5"]
-          ],
-
-          [When::Coordinates::Residue,
-            "label:[Septawara=, 7日週=]", "divisor:7", "day:6",
-            [When::Coordinates::Residue, "label:[Reditē=   ]", "remainder:  0"],
-            [When::Coordinates::Residue, "label:[Coma=     ]", "remainder:  1"],
-            [When::Coordinates::Residue, "label:[Anggara=  ]", "remainder:  2"],
-            [When::Coordinates::Residue, "label:[Buda=     ]", "remainder:  3"],
-            [When::Coordinates::Residue, "label:[Wraspati= ]", "remainder:  4"],
-            [When::Coordinates::Residue, "label:[Sukra=    ]", "remainder:  5"],
-            [When::Coordinates::Residue, "label:[Saniscara=]", "remainder:  6"]
-          ],
-
-          [When::BasicTypes::M17n,
-            "names:[Astawara=, 8日週=]",
-            "[Sri=   ]",
-            "[Indra= ]",
-            "[Guru=  ]",
-            "[Yama=  ]",
-            "[Ludra= ]",
-            "[Brahma=]",
-            "[Kala=  ]",
-            "[Uma=   ]"
-          ],
-
-          [When::BasicTypes::M17n,
-            "names:[Sangawara=, 9日週=]",
-            "[Dangu=  ]",
-            "[Jangur= ]",
-            "[Gigis=  ]",
-            "[Nohan=  ]",
-            "[Ogan=   ]",
-            "[Erangan=]",
-            "[Urungan=]",
-            "[Tulus=  ]",
-            "[Dadi=   ]"
-          ],
-
-          [When::BasicTypes::M17n,
-            "names:[Dasawara=, 10日週=]",
-            "[Pandita]", #  0
-            "[Pati   ]", #  1
-            "[Suka   ]", #  2
-            "[Duka   ]", #  3
-            "[Sri    ]", #  4
-            "[Manuh  ]", #  5
-            "[Manusa ]", #  6
-            "[Raja   ]", #  7
-            "[Dewa   ]", #  8
-            "[Raksasa]"  #  9
-          ],
-
-          [When::Coordinates::Residue,
-            "label:[Ingkel=]", "divisor:42", "day:20",
-            [When::Coordinates::Residue, "label:[Wong= ]", "remainder:  0"],
-            [When::Coordinates::Residue, "label:[Sato= ]", "remainder:  7"],
-            [When::Coordinates::Residue, "label:[Mina= ]", "remainder: 14"],
-            [When::Coordinates::Residue, "label:[Manuk=]", "remainder: 21"],
-            [When::Coordinates::Residue, "label:[Taru= ]", "remainder: 28"],
-            [When::Coordinates::Residue, "label:[Buku= ]", "remainder: 35"]
-          ],
-
-          [When::BasicTypes::M17n,
-            "names:[Watek=]",
-            "[Watu-Lembu=  ]", #  7
-            "[Buta-Lintah= ]", #  8
-            "[Suku-Uler=   ]", #  9
-            "[Wong-Gajah=  ]", # 10
-            "[Gajah-Lembu= ]", # 11
-            "[Watu-Lintah= ]", # 12
-            "[Buta-Uler=   ]", # 13
-            "[Suku-Gajah=  ]", # 14
-            "[Wong-Lembu=  ]", # 15
-            "[Gajah-Lintah=]", # 16
-            "[Watu-Uler=   ]", # 17
-            "[Buta-Gajah=  ]"  # 18
-          ],
-
-          [When::Coordinates::Residue,
-            "label:[Lintang=]", "divisor:35", "day:6",
-            [When::Coordinates::Residue, "label:[Gajah=           ]", "remainder:  0"],
-            [When::Coordinates::Residue, "label:[Kiriman=         ]", "remainder:  1"],
-            [When::Coordinates::Residue, "label:[Jong Sarat=      ]", "remainder:  2"],
-            [When::Coordinates::Residue, "label:[Tiwa-Tiwa=       ]", "remainder:  3"],
-            [When::Coordinates::Residue, "label:[Sangkatikel=     ]", "remainder:  4"],
-            [When::Coordinates::Residue, "label:[Bubu bolong=     ]", "remainder:  5"],
-            [When::Coordinates::Residue, "label:[Sungenge=        ]", "remainder:  6"],
-            [When::Coordinates::Residue, "label:[Uluku=           ]", "remainder:  7"],
-            [When::Coordinates::Residue, "label:[Pedati=          ]", "remainder:  8"],
-            [When::Coordinates::Residue, "label:[Kuda=            ]", "remainder:  9"],
-            [When::Coordinates::Residue, "label:[Gajah-Mina=      ]", "remainder: 10"],
-            [When::Coordinates::Residue, "label:[Bade=            ]", "remainder: 11"],
-            [When::Coordinates::Residue, "label:[Maglut=          ]", "remainder: 12"],
-            [When::Coordinates::Residue, "label:[Paglangan=       ]", "remainder: 13"],
-            [When::Coordinates::Residue, "label:[Kala Sungsang=   ]", "remainder: 14"],
-            [When::Coordinates::Residue, "label:[Kukus=           ]", "remainder: 15"],
-            [When::Coordinates::Residue, "label:[Asu=             ]", "remainder: 16"],
-            [When::Coordinates::Residue, "label:[Kartika=         ]", "remainder: 17"],
-            [When::Coordinates::Residue, "label:[Naga=            ]", "remainder: 18"],
-            [When::Coordinates::Residue, "label:[Banyakangrem=    ]", "remainder: 19"],
-            [When::Coordinates::Residue, "label:[Ru=              ]", "remainder: 20"],
-            [When::Coordinates::Residue, "label:[Patrem=          ]", "remainder: 21"],
-            [When::Coordinates::Residue, "label:[Lembu=           ]", "remainder: 22"],
-            [When::Coordinates::Residue, "label:[Dpat=            ]", "remainder: 23"],
-            [When::Coordinates::Residue, "label:[Tangis=          ]", "remainder: 24"],
-            [When::Coordinates::Residue, "label:[Salar Ukur=      ]", "remainder: 25"],
-            [When::Coordinates::Residue, "label:[Prahu Pgat=      ]", "remainder: 26"],
-            [When::Coordinates::Residue, "label:[Pwuhu atarung=   ]", "remainder: 27"],
-            [When::Coordinates::Residue, "label:[Lawean=          ]", "remainder: 28"],
-            [When::Coordinates::Residue, "label:[Kelapa=          ]", "remainder: 29"],
-            [When::Coordinates::Residue, "label:[Yuyu=            ]", "remainder: 30"],
-            [When::Coordinates::Residue, "label:[Lumbung=         ]", "remainder: 31"],
-            [When::Coordinates::Residue, "label:[Kumba=           ]", "remainder: 32"],
-            [When::Coordinates::Residue, "label:[Udang=           ]", "remainder: 33"],
-            [When::Coordinates::Residue, "label:[Bgoong=          ]", "remainder: 34"]
-          ],
-
-          [When::Coordinates::Wuku,
-            "label:[Wuku=]", "divisor:210", "day:146",
-            [When::Coordinates::Wuku, "label:[Sinta=       ]", "remainder:  0"],
-            [When::Coordinates::Wuku, "label:[Landep=      ]", "remainder:  7"],
-            [When::Coordinates::Wuku, "label:[Ukir=        ]", "remainder: 14"],
-            [When::Coordinates::Wuku, "label:[Kurantir=    ]", "remainder: 21"],
-            [When::Coordinates::Wuku, "label:[Tulu=        ]", "remainder: 28"],
-            [When::Coordinates::Wuku, "label:[Gumbreg=     ]", "remainder: 35"],
-            [When::Coordinates::Wuku, "label:[Wariga=      ]", "remainder: 42"],
-            [When::Coordinates::Wuku, "label:[Warigadian=  ]", "remainder: 49"],
-            [When::Coordinates::Wuku, "label:[Julungwangi= ]", "remainder: 56"],
-            [When::Coordinates::Wuku, "label:[Sungsang=    ]", "remainder: 63"],
-            [When::Coordinates::Wuku, "label:[Dunggulan=   ]", "remainder: 70"],
-            [When::Coordinates::Wuku, "label:[Kuningan=    ]", "remainder: 77"],
-            [When::Coordinates::Wuku, "label:[Langkir=     ]", "remainder: 84"],
-            [When::Coordinates::Wuku, "label:[Medangsiya=  ]", "remainder: 91"],
-            [When::Coordinates::Wuku, "label:[Pujut=       ]", "remainder: 98"],
-            [When::Coordinates::Wuku, "label:[Pahang=      ]", "remainder:105"],
-            [When::Coordinates::Wuku, "label:[Krulut=      ]", "remainder:112"],
-            [When::Coordinates::Wuku, "label:[Merakih=     ]", "remainder:119"],
-            [When::Coordinates::Wuku, "label:[Tambir=      ]", "remainder:126"],
-            [When::Coordinates::Wuku, "label:[Medangkungan=]", "remainder:133"],
-            [When::Coordinates::Wuku, "label:[Matal=       ]", "remainder:140"],
-            [When::Coordinates::Wuku, "label:[Uye=         ]", "remainder:147"],
-            [When::Coordinates::Wuku, "label:[Menail=      ]", "remainder:154"],
-            [When::Coordinates::Wuku, "label:[Prangbakat=  ]", "remainder:161"],
-            [When::Coordinates::Wuku, "label:[Bala=        ]", "remainder:168"],
-            [When::Coordinates::Wuku, "label:[Ugu=         ]", "remainder:175"],
-            [When::Coordinates::Wuku, "label:[Wayang=      ]", "remainder:182"],
-            [When::Coordinates::Wuku, "label:[Kelawu=      ]", "remainder:189"],
-            [When::Coordinates::Wuku, "label:[Dukut=       ]", "remainder:196"],
-            [When::Coordinates::Wuku, "label:[Watugunung=  ]", "remainder:203"]
-          ]
+          "names:[Month]"
         ]
-      ]]
+      ],
 
-      #
-      # When::Coordinates::Residue へ処理を委譲する暦注
-      #
-      # @private
-      When.CalendarNote('BalineseNote/NoteObjects')['day::*'].each do |cood|
-        case cood
-        when Coordinates::Residue
-          module_eval %Q{
-            def #{cood.label.to_s.downcase}(date, parameter=nil)
-              When.CalendarNote('BalineseNote/NoteObjects')['day']['#{cood.label.to_s}'] % date
-            end
-          }
-        when BasicTypes::M17n
-          module_eval %Q{
-            def #{cood.to_s.downcase}(date, parameter=nil)
-              (When.CalendarNote('BalineseNote/NoteObjects')['day']['Wuku'] % date).#{cood.to_s.downcase}
-            end
-          }
-        end
+      # 日の暦注 ----------------------------
+      [When::BasicTypes::M17n,
+        "names:[day]",
+
+        [When::BasicTypes::M17n,
+          "names:[Hari=, 日名=]",
+
+          [When::BasicTypes::M17n,
+            "names:[Suklapaksa=, 白分=]",
+            "[Lidi=   ]",
+            "[Kuda=   ]",
+            "[Kidang= ]",
+            "[Macan=  ]",
+            "[Kucing= ]",
+            "[Sampi=  ]",
+            "[Kerbau= ]",
+            "[Tikus=  ]",
+            "[Debu=   ]",
+            "[Anjing= ]",
+            "[Naga=   ]",
+            "[Kambing=]",
+            "[Mayang= ]",
+            "[Gajah=  ]",
+            "[Singa=  ]"
+          ],
+
+          [When::BasicTypes::M17n,
+            "names:[Krsnapaksa=, 黒分=]",
+            "[Ikan=   ]",
+            "[Lilin=  ]",
+            "[Ulung=  ]",
+            "[Kelapa= ]",
+            "[Banteng=]",
+            "[Hantu=  ]",
+            "[Areng=  ]",
+            "[Udang=  ]",
+            "[Semudra=]",
+            "[Pare=   ]",
+            "[Madu=   ]",
+            "[Kala=   ]",
+            "[Ular=   ]",
+            "[Padi=   ]",
+            "[Ulat=   ]"
+          ]
+        ],
+
+        [When::BasicTypes::M17n,
+          "names:[Dwiwara=, 2日週=]",
+          "[Menga=]", #  0
+          "[Pepet=]"  #  1
+        ],
+
+        [When::Coordinates::Residue,
+          "label:[Triwara=, 3日週=]", "divisor:3", "day:2",
+          [When::Coordinates::Residue, "label:[Pasah=       ]", "remainder:  0"],
+          [When::Coordinates::Residue, "label:[Gelang Tegeh=]", "remainder:  1"],
+          [When::Coordinates::Residue, "label:[Kajeng=      ]", "remainder:  2"]
+        ],
+
+        [When::BasicTypes::M17n,
+          "names:[Tjaturwara=, 4日週=]",
+          "[Sri=   ]",
+          "[Laba=  ]",
+          "[Jaya=  ]",
+          "[Menala=]"
+        ],
+
+        [When::Coordinates::Residue,
+          "label:[Pantjawara=, 5日週=]", "divisor:5", "day:1",
+          [When::Coordinates::Residue, "label:[Paing= ]", "remainder:  0"],
+          [When::Coordinates::Residue, "label:[Pon=   ]", "remainder:  1"],
+          [When::Coordinates::Residue, "label:[Wage=  ]", "remainder:  2"],
+          [When::Coordinates::Residue, "label:[Kliwon=]", "remainder:  3"],
+          [When::Coordinates::Residue, "label:[Umanis=]", "remainder:  4"]
+        ],
+
+        [When::Coordinates::Residue,
+          "label:[Perinkelan=, 六曜=]", "divisor:6", "day:2",
+          [When::Coordinates::Residue, "label:[Tungleh=]", "remainder:  0"],
+          [When::Coordinates::Residue, "label:[Aryang= ]", "remainder:  1"],
+          [When::Coordinates::Residue, "label:[Urukung=]", "remainder:  2"],
+          [When::Coordinates::Residue, "label:[Paniron=]", "remainder:  3"],
+          [When::Coordinates::Residue, "label:[Was=    ]", "remainder:  4"],
+          [When::Coordinates::Residue, "label:[Maulu=  ]", "remainder:  5"]
+        ],
+
+        [When::Coordinates::Residue,
+          "label:[Sadwara=, 6日週=]", "divisor:6", "day:2",
+          [When::Coordinates::Residue, "label:[Mina= ]", "remainder:  0"],
+          [When::Coordinates::Residue, "label:[Taru= ]", "remainder:  1"],
+          [When::Coordinates::Residue, "label:[Sato= ]", "remainder:  2"],
+          [When::Coordinates::Residue, "label:[Patra=]", "remainder:  3"],
+          [When::Coordinates::Residue, "label:[Wong= ]", "remainder:  4"],
+          [When::Coordinates::Residue, "label:[Paksi=]", "remainder:  5"]
+        ],
+
+        [When::Coordinates::Residue,
+          "label:[Septawara=, 7日週=]", "divisor:7", "day:6",
+          [When::Coordinates::Residue, "label:[Reditē=   ]", "remainder:  0"],
+          [When::Coordinates::Residue, "label:[Coma=     ]", "remainder:  1"],
+          [When::Coordinates::Residue, "label:[Anggara=  ]", "remainder:  2"],
+          [When::Coordinates::Residue, "label:[Buda=     ]", "remainder:  3"],
+          [When::Coordinates::Residue, "label:[Wraspati= ]", "remainder:  4"],
+          [When::Coordinates::Residue, "label:[Sukra=    ]", "remainder:  5"],
+          [When::Coordinates::Residue, "label:[Saniscara=]", "remainder:  6"]
+        ],
+
+        [When::BasicTypes::M17n,
+          "names:[Astawara=, 8日週=]",
+          "[Sri=   ]",
+          "[Indra= ]",
+          "[Guru=  ]",
+          "[Yama=  ]",
+          "[Ludra= ]",
+          "[Brahma=]",
+          "[Kala=  ]",
+          "[Uma=   ]"
+        ],
+
+        [When::BasicTypes::M17n,
+          "names:[Sangawara=, 9日週=]",
+          "[Dangu=  ]",
+          "[Jangur= ]",
+          "[Gigis=  ]",
+          "[Nohan=  ]",
+          "[Ogan=   ]",
+          "[Erangan=]",
+          "[Urungan=]",
+          "[Tulus=  ]",
+          "[Dadi=   ]"
+        ],
+
+        [When::BasicTypes::M17n,
+          "names:[Dasawara=, 10日週=]",
+          "[Pandita]", #  0
+          "[Pati   ]", #  1
+          "[Suka   ]", #  2
+          "[Duka   ]", #  3
+          "[Sri    ]", #  4
+          "[Manuh  ]", #  5
+          "[Manusa ]", #  6
+          "[Raja   ]", #  7
+          "[Dewa   ]", #  8
+          "[Raksasa]"  #  9
+        ],
+
+        [When::Coordinates::Residue,
+          "label:[Ingkel=]", "divisor:42", "day:20",
+          [When::Coordinates::Residue, "label:[Wong= ]", "remainder:  0"],
+          [When::Coordinates::Residue, "label:[Sato= ]", "remainder:  7"],
+          [When::Coordinates::Residue, "label:[Mina= ]", "remainder: 14"],
+          [When::Coordinates::Residue, "label:[Manuk=]", "remainder: 21"],
+          [When::Coordinates::Residue, "label:[Taru= ]", "remainder: 28"],
+          [When::Coordinates::Residue, "label:[Buku= ]", "remainder: 35"]
+        ],
+
+        [When::BasicTypes::M17n,
+          "names:[Watek=]",
+          "[Watu-Lembu=  ]", #  7
+          "[Buta-Lintah= ]", #  8
+          "[Suku-Uler=   ]", #  9
+          "[Wong-Gajah=  ]", # 10
+          "[Gajah-Lembu= ]", # 11
+          "[Watu-Lintah= ]", # 12
+          "[Buta-Uler=   ]", # 13
+          "[Suku-Gajah=  ]", # 14
+          "[Wong-Lembu=  ]", # 15
+          "[Gajah-Lintah=]", # 16
+          "[Watu-Uler=   ]", # 17
+          "[Buta-Gajah=  ]"  # 18
+        ],
+
+        [When::Coordinates::Residue,
+          "label:[Lintang=]", "divisor:35", "day:6",
+          [When::Coordinates::Residue, "label:[Gajah=           ]", "remainder:  0"],
+          [When::Coordinates::Residue, "label:[Kiriman=         ]", "remainder:  1"],
+          [When::Coordinates::Residue, "label:[Jong Sarat=      ]", "remainder:  2"],
+          [When::Coordinates::Residue, "label:[Tiwa-Tiwa=       ]", "remainder:  3"],
+          [When::Coordinates::Residue, "label:[Sangkatikel=     ]", "remainder:  4"],
+          [When::Coordinates::Residue, "label:[Bubu bolong=     ]", "remainder:  5"],
+          [When::Coordinates::Residue, "label:[Sungenge=        ]", "remainder:  6"],
+          [When::Coordinates::Residue, "label:[Uluku=           ]", "remainder:  7"],
+          [When::Coordinates::Residue, "label:[Pedati=          ]", "remainder:  8"],
+          [When::Coordinates::Residue, "label:[Kuda=            ]", "remainder:  9"],
+          [When::Coordinates::Residue, "label:[Gajah-Mina=      ]", "remainder: 10"],
+          [When::Coordinates::Residue, "label:[Bade=            ]", "remainder: 11"],
+          [When::Coordinates::Residue, "label:[Maglut=          ]", "remainder: 12"],
+          [When::Coordinates::Residue, "label:[Paglangan=       ]", "remainder: 13"],
+          [When::Coordinates::Residue, "label:[Kala Sungsang=   ]", "remainder: 14"],
+          [When::Coordinates::Residue, "label:[Kukus=           ]", "remainder: 15"],
+          [When::Coordinates::Residue, "label:[Asu=             ]", "remainder: 16"],
+          [When::Coordinates::Residue, "label:[Kartika=         ]", "remainder: 17"],
+          [When::Coordinates::Residue, "label:[Naga=            ]", "remainder: 18"],
+          [When::Coordinates::Residue, "label:[Banyakangrem=    ]", "remainder: 19"],
+          [When::Coordinates::Residue, "label:[Ru=              ]", "remainder: 20"],
+          [When::Coordinates::Residue, "label:[Patrem=          ]", "remainder: 21"],
+          [When::Coordinates::Residue, "label:[Lembu=           ]", "remainder: 22"],
+          [When::Coordinates::Residue, "label:[Dpat=            ]", "remainder: 23"],
+          [When::Coordinates::Residue, "label:[Tangis=          ]", "remainder: 24"],
+          [When::Coordinates::Residue, "label:[Salar Ukur=      ]", "remainder: 25"],
+          [When::Coordinates::Residue, "label:[Prahu Pgat=      ]", "remainder: 26"],
+          [When::Coordinates::Residue, "label:[Pwuhu atarung=   ]", "remainder: 27"],
+          [When::Coordinates::Residue, "label:[Lawean=          ]", "remainder: 28"],
+          [When::Coordinates::Residue, "label:[Kelapa=          ]", "remainder: 29"],
+          [When::Coordinates::Residue, "label:[Yuyu=            ]", "remainder: 30"],
+          [When::Coordinates::Residue, "label:[Lumbung=         ]", "remainder: 31"],
+          [When::Coordinates::Residue, "label:[Kumba=           ]", "remainder: 32"],
+          [When::Coordinates::Residue, "label:[Udang=           ]", "remainder: 33"],
+          [When::Coordinates::Residue, "label:[Bgoong=          ]", "remainder: 34"]
+        ],
+
+        [When::Coordinates::Wuku,
+          "label:[Wuku=]", "divisor:210", "day:146",
+          [When::Coordinates::Wuku, "label:[Sinta=       ]", "remainder:  0"],
+          [When::Coordinates::Wuku, "label:[Landep=      ]", "remainder:  7"],
+          [When::Coordinates::Wuku, "label:[Ukir=        ]", "remainder: 14"],
+          [When::Coordinates::Wuku, "label:[Kurantir=    ]", "remainder: 21"],
+          [When::Coordinates::Wuku, "label:[Tulu=        ]", "remainder: 28"],
+          [When::Coordinates::Wuku, "label:[Gumbreg=     ]", "remainder: 35"],
+          [When::Coordinates::Wuku, "label:[Wariga=      ]", "remainder: 42"],
+          [When::Coordinates::Wuku, "label:[Warigadian=  ]", "remainder: 49"],
+          [When::Coordinates::Wuku, "label:[Julungwangi= ]", "remainder: 56"],
+          [When::Coordinates::Wuku, "label:[Sungsang=    ]", "remainder: 63"],
+          [When::Coordinates::Wuku, "label:[Dunggulan=   ]", "remainder: 70"],
+          [When::Coordinates::Wuku, "label:[Kuningan=    ]", "remainder: 77"],
+          [When::Coordinates::Wuku, "label:[Langkir=     ]", "remainder: 84"],
+          [When::Coordinates::Wuku, "label:[Medangsiya=  ]", "remainder: 91"],
+          [When::Coordinates::Wuku, "label:[Pujut=       ]", "remainder: 98"],
+          [When::Coordinates::Wuku, "label:[Pahang=      ]", "remainder:105"],
+          [When::Coordinates::Wuku, "label:[Krulut=      ]", "remainder:112"],
+          [When::Coordinates::Wuku, "label:[Merakih=     ]", "remainder:119"],
+          [When::Coordinates::Wuku, "label:[Tambir=      ]", "remainder:126"],
+          [When::Coordinates::Wuku, "label:[Medangkungan=]", "remainder:133"],
+          [When::Coordinates::Wuku, "label:[Matal=       ]", "remainder:140"],
+          [When::Coordinates::Wuku, "label:[Uye=         ]", "remainder:147"],
+          [When::Coordinates::Wuku, "label:[Menail=      ]", "remainder:154"],
+          [When::Coordinates::Wuku, "label:[Prangbakat=  ]", "remainder:161"],
+          [When::Coordinates::Wuku, "label:[Bala=        ]", "remainder:168"],
+          [When::Coordinates::Wuku, "label:[Ugu=         ]", "remainder:175"],
+          [When::Coordinates::Wuku, "label:[Wayang=      ]", "remainder:182"],
+          [When::Coordinates::Wuku, "label:[Kelawu=      ]", "remainder:189"],
+          [When::Coordinates::Wuku, "label:[Dukut=       ]", "remainder:196"],
+          [When::Coordinates::Wuku, "label:[Watugunung=  ]", "remainder:203"]
+        ]
+      ]
+    ]]
+
+    #
+    # When::Coordinates::Residue へ処理を委譲する暦注
+    #
+    # @private
+    When.CalendarNote('BalineseNote/NoteObjects')['day::*'].each do |cood|
+      case cood
+      when Coordinates::Residue
+        module_eval %Q{
+          def #{cood.label.to_s.downcase}(date, parameter=nil)
+            When.CalendarNote('BalineseNote/NoteObjects')['day']['#{cood.label.to_s}'] % date
+          end
+        }
+      when BasicTypes::M17n
+        module_eval %Q{
+          def #{cood.to_s.downcase}(date, parameter=nil)
+            (When.CalendarNote('BalineseNote/NoteObjects')['day']['Wuku'] % date).#{cood.to_s.downcase}
+          end
+        }
       end
+    end
 
-      #
-      # 任意の暦をバリ暦日に変換
-      #
-      # @private
-      def _to_date_for_note(date)
-        return date if date.frame.kind_of?(When::CalendarTypes::BalineseLuniSolar)
-        (date ^ When.era(:period=>'BalineseLuniSolar')).each do |list|
-          return list[0] if list[0]
-        end
-        nil
+    #
+    # 任意の暦をバリ暦日に変換
+    #
+    # @private
+    def _to_date_for_note(date)
+      return date if date.frame.kind_of?(When::CalendarTypes::BalineseLuniSolar)
+      (date ^ When.era(:period=>'BalineseLuniSolar')).each do |list|
+        return list[0] if list[0]
       end
+      nil
+    end
 
-      # バリ暦日の「日名」
-      #
-      # @param [When::TM::TemporalPosition] date 「日名」を求める日付
-      # @param [nil] parameter 未使用
-      #
-      # @return [When::BasicTypes::M17n] 「日名」(欠日の場合は2日分を'/'で連結)
-      #
-      def hari(date, parameter=nil)
-        y, m, d = _to_date_for_note(date).cal_date
-        thiti     = [d * 1 - 1]
-        thiti[0] += 15 unless [0,1,nil].include?(m * 0)
-        thiti << (thiti[0] + 1) % 30 if d * 0 == -2
-        table = When.CalendarNote('BalineseNote/NoteObjects')['day']['Hari']
-        thiti.map {|t| table[t / 15][t % 15]}.join('/')
-      end
+    # バリ暦日の「日名」
+    #
+    # @param [When::TM::TemporalPosition] date 「日名」を求める日付
+    # @param [nil] parameter 未使用
+    #
+    # @return [When::BasicTypes::M17n] 「日名」(欠日の場合は2日分を'/'で連結)
+    #
+    def hari(date, parameter=nil)
+      y, m, d = _to_date_for_note(date).cal_date
+      thiti     = [d * 1 - 1]
+      thiti[0] += 15 unless [0,1,nil].include?(m * 0)
+      thiti << (thiti[0] + 1) % 30 if d * 0 == -2
+      table = When.CalendarNote('BalineseNote/NoteObjects')['day']['Hari']
+      thiti.map {|t| table[t / 15][t % 15]}.join('/')
+    end
 
-      private
+    private
 
-      # オブジェクトの正規化
-      def _normalize(args=[], options={})
-        @event   = 'hari'
-        @prime ||= [%w(Month), %w(Pantjawara Perinkelan Septawara Wuku)]
-        super
-      end
+    # オブジェクトの正規化
+    def _normalize(args=[], options={})
+      @event   = 'hari'
+      @prime ||= [%w(Month), %w(Pantjawara Perinkelan Septawara Wuku)]
+      super
     end
   end
 end

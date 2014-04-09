@@ -402,10 +402,27 @@ module When
       # @private
       module JujiMethods
 
+        # 授時暦・大統暦
+        module C
+          def _shift_l(year); @year_span * (year / @year_span) end
+          alias :_shift_s :_shift_l
+        end
+
+        # 貞享暦・宝暦暦
+        module Y
+          def _shift_l(year); year   end
+          def _shift_s(year); year-1 end
+        end
+
+        # 寛政暦?
+        module D
+          def _shift_l(year); 5 + year.div(10) * 10 end
+          alias :_shift_s :_shift_l
+        end
+
         # 暦元天正冬至から当該年の天正冬至までの日数
         def _winter_solstice_(year)
-          shift = @year_span > 1 ? @year_span * (year / @year_span) :  year-1
-          @year_length * year - @year_delta * year * shift
+          year * (@year_length - @year_delta  * _shift_s(year))
         end
 
         # 暦元天正冬至から当該年の近日点通過までの日数
@@ -415,8 +432,7 @@ module When
 
         # 歳周(当該年の日数)
         def _year_length_(year)
-          shift = @year_span > 1 ? @year_span * (year / @year_span) :  year
-          @year_length - 2 * @year_delta * shift
+          @year_length - 2 * @year_delta * _shift_l(year)
         end
       end
 
@@ -633,6 +649,14 @@ module When
           # 太陽黄経の計算(消長あり)
           class << self; include MethodS; end
           @year_span = @year_span.to_i
+        end
+
+        if self.kind_of?(JujiMethods)
+          case @year_span
+          when 0,1; class << self; include JujiMethods::Y; end
+        # when 10 ; class << self; include JujiMethods::D; end
+          else    ; class << self; include JujiMethods::C; end
+          end
         end
       end
     end

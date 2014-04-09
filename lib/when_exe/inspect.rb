@@ -237,8 +237,8 @@ module When
       #        0 - 今週
       #       +1 - 来週
       #   @param [String] wkst 週の開始曜日(defaultは 月曜)
-      #   @param [When::CalendarTypes::CalendarNote] wkst 暦注オブジェクト
-      #   @param [Array<When::CalendarTypes::CalendarNote, String>] wkst 暦注オブジェクトとそのイベントメソッド名
+      #   @param [When::CalendarNote] wkst 暦注オブジェクト
+      #   @param [Array<When::CalendarNote, String>] wkst 暦注オブジェクトとそのイベントメソッド名
       #     (暦注オブジェクトは、そのIRI文字列を指定しても良い)
       #   @param [Hash] opt 下記の通り
       #   @option opt [Range] :Range 上位繰り返し範囲(ユリウス通日...ユリウス通日)
@@ -301,8 +301,8 @@ module When
       #        0 - 今月
       #       +1 - 来月
       #   @param [String] wkst 週の開始曜日(defaultはなし)
-      #   @param [When::CalendarTypes::CalendarNote] wkst 暦注オブジェクト
-      #   @param [Array<When::CalendarTypes::CalendarNote, String>] wkst 暦注オブジェクトとそのイベントメソッド名
+      #   @param [When::CalendarNote] wkst 暦注オブジェクト
+      #   @param [Array<When::CalendarNote, String>] wkst 暦注オブジェクトとそのイベントメソッド名
       #    (暦注オブジェクトは、そのIRI文字列を指定しても良い)
       #   @param [Hash] opt 下記の通り
       #   @option opt [Range] :Range 上位繰り返し範囲(ユリウス通日...ユリウス通日)
@@ -375,8 +375,8 @@ module When
       #        0 - 今年
       #       +1 - 来年
       #   @param [String] wkst 週の開始曜日(defaultはなし)
-      #   @param [When::CalendarTypes::CalendarNote] wkst 暦注オブジェクト
-      #   @param [Array<When::CalendarTypes::CalendarNote, String>] wkst 暦注オブジェクトとそのイベントメソッド名
+      #   @param [When::CalendarNote] wkst 暦注オブジェクト
+      #   @param [Array<When::CalendarNote, String>] wkst 暦注オブジェクトとそのイベントメソッド名
       #     (暦注オブジェクトは、そのIRI文字列を指定しても良い)
       #   @param [Hash] opt 下記の通り
       #   @option opt [Range] :Range 上位繰り返し範囲(ユリウス通日...ユリウス通日)
@@ -468,8 +468,8 @@ module When
       # @param [String]  options { :notes   => String  } という Hash の指定と等価
       # @param [Integer] options { :indices => Integer } という Hash の指定と等価
       # @param [Hash] options 下記のとおり
-      # @option options [When::CalendarTypes::CalendarNote, String] :calendar_note 暦注を計算する暦注オブジェクトまたはそのIRI
-      # @option options [Object] その他のキー {When::CalendarTypes::CalendarNote#notes} を参照
+      # @option options [When::CalendarNote, String] :calendar_note 暦注を計算する暦注オブジェクトまたはそのIRI
+      # @option options [Object] その他のキー {When::CalendarNote#notes} を参照
       #
       # @return   [Array<Array<Hash{:note=>note, :value=>value}>>]
       #   [ note  [String, When::BasicTypes::M17n] 暦注名 ]
@@ -478,7 +478,10 @@ module When
       def notes(options={})
         form_options = options.kind_of?(Hash) ? options : {}
         form_options[:method] = :to_m17n unless form_options.key?(:method)
-        _m17n_form(_notes(options), form_options)
+        persistence = options.delete(:persistence) if options.kind_of?(Hash)
+        retrieved   = When::CalendarNote::Notes.retrieve(persistence, self.to_i)
+        return retrieved unless retrieved == false
+        When::CalendarNote::Notes.register(_m17n_form(_notes(options), form_options), persistence, self.to_i)
       end
 
       #
@@ -487,8 +490,8 @@ module When
       # @param [String]  options { :notes   => String  } という Hash の指定と等価
       # @param [Integer] options { :indices => Integer } という Hash の指定と等価
       # @param [Hash] options 下記のとおり
-      # @option options [When::CalendarTypes::CalendarNote, String] :calendar_note 暦注を計算する暦注オブジェクトまたはそのIRI
-      # @option options [Object] その他のキー {When::CalendarTypes::CalendarNote#notes} を参照
+      # @option options [When::CalendarNote, String] :calendar_note 暦注を計算する暦注オブジェクトまたはそのIRI
+      # @option options [Object] その他のキー {When::CalendarNote#notes} を参照
       #
       # @return   [Array<Array<Hash{:note=>note, :value=>value}>>]
       #   [ note  [String, When::BasicTypes::M17n, When::Coordinates::Residue] 暦注名 ]
@@ -511,7 +514,7 @@ module When
       # @param [Integer] options { :indices => Integer } という Hash の指定と等価
       # @param [Hash] options 下記のとおり
       # @option options [Object] :value 確認する暦注の値
-      # @option options [Object] その他のキー {When::CalendarTypes::CalendarNote#notes} を参照
+      # @option options [Object] その他のキー {When::CalendarNote#notes} を参照
       #
       # @return [Boolean]
       #   [ true  - 暦注が一致   ]
@@ -529,7 +532,7 @@ module When
       # @param [Hash] options 下記のとおり
       # @option options [String] :event 確認するイベント名
       # @option options [Object] :value 確認する暦注の値
-      # @option options [Object] その他のキー {When::CalendarTypes::CalendarNote#notes} を参照
+      # @option options [Object] その他のキー {When::CalendarNote#notes} を参照
       #
       # @return [Boolean]
       #   [ true  - 該当する   ]
@@ -554,8 +557,8 @@ module When
       # @param [String]  options { :notes   => String  } という Hash の指定と等価
       # @param [Integer] options { :indices => Integer } という Hash の指定と等価
       # @param [Hash] options 下記のとおり
-      # @option options [When::CalendarTypes::CalendarNote, String] :calendar_note 暦注を計算する暦注オブジェクトまたはそのIRI
-      # @option options [Object] その他のキー {When::CalendarTypes::CalendarNote#notes} を参照
+      # @option options [When::CalendarNote, String] :calendar_note 暦注を計算する暦注オブジェクトまたはそのIRI
+      # @option options [Object] その他のキー {When::CalendarNote#notes} を参照
       #
       # @return [Hash]
       #   - :sdn       日の通し番号 - ユリウス通日(Integer)
@@ -720,7 +723,7 @@ module When
       end
 
       #
-      # 使用する When::CalendarTypes::CalendarNote を決定する
+      # 使用する When::CalendarNote を決定する
       #
       #   options に副作用があることに注意
       #
@@ -927,8 +930,8 @@ module When
       # @param [String]  options { :notes   => String  } という Hash の指定と等価
       # @param [Integer] options { :indices => Integer } という Hash の指定と等価
       # @param [Hash] options 下記のとおり
-      # @option options [When::CalendarTypes::CalendarNote, String] :calendar_note 暦注を計算する暦注オブジェクトまたはそのIRI
-      # @option options [Object] その他のキー {When::CalendarTypes::CalendarNote#notes} を参照
+      # @option options [When::CalendarNote, String] :calendar_note 暦注を計算する暦注オブジェクトまたはそのIRI
+      # @option options [Object] その他のキー {When::CalendarNote#notes} を参照
       #
       # @return [Hash]
       #   - :calendar calendar_name の結果 ( name, epoch, reverse, go back )

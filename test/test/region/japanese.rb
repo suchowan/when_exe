@@ -155,15 +155,15 @@ module Test
               long  = dates.cal4note.s_terms.position(date)
               notes = date.notes(:indices => When::DAY,
                                  :notes   => (13<<9|1<<48|1<<71),
-                                 :locale  => 'ja').map {|n| n[:value]}.compact
+                                 :locale  => 'ja').simplify[:value].compact
               result << [date.to_m17n/'ja', notes]
             end
           end
         end
         assert_equal(sample.shift, result)
-        When::CalendarTypes::CalendarNote::JapaneseNote::SolarTerms.send(:patch=, {})
+        When::CalendarNote::JapaneseNote::SolarTerms.send(:patch=, {})
       end
-      When::CalendarTypes::CalendarNote::JapaneseNote::SolarTerms.send(:patch=, nil)
+      When::CalendarNote::JapaneseNote::SolarTerms.send(:patch=, nil)
     end
 
     def test__lunar_phases
@@ -194,7 +194,7 @@ module Test
        %w(平成26.11.22 平成26.11.29 平成26.12.06 平成26.12.14),
        %w(平成26.12.22 平成26.12.29)
       ].each do |month|
-        assert_equal([true], month.map {|date| When.when?(date).notes('月相').kind_of?(Hash)}.uniq)
+        assert_equal([true], month.map {|date| When.when?(date).is?('月相')}.uniq)
       end
     end
 =begin

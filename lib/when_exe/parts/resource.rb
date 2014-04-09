@@ -189,7 +189,7 @@ module When::Parts
           '_t'   => base_uri + 'TimeStandard/',
           '_ep'  => base_uri + 'Ephemeris/',
           '_c'   => base_uri + 'CalendarTypes/',
-          '_n'   => base_uri + 'CalendarTypes/CalendarNote/',
+          '_n'   => base_uri + 'CalendarNote/',
           '_sc'  => base_uri + 'Ephemeris/V50/'
         }
         @base_uri       = options[:base_uri] || When::SourceURI

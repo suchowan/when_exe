@@ -8,7 +8,7 @@
 require 'when_exe/region/ephemeric_notes'
 require 'when_exe/region/japanese_residues'
 
-class When::CalendarTypes::CalendarNote
+class When::CalendarNote
 
   #
   # 日本暦注
@@ -30,7 +30,7 @@ class When::CalendarTypes::CalendarNote
     # 日本暦注の要素
     #
     # @private
-    class Note < When::CalendarTypes::CalendarNote::NoteElement
+    class Note < When::CalendarNote::NoteElement
     end
 
     #
@@ -38,7 +38,7 @@ class When::CalendarTypes::CalendarNote
     #
     NoteObjects = [When::BasicTypes::M17n, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
-      "locale:[=ja:]",
+      "locale:[=ja:, en=en:]",
       "names:[日本暦注]",
 
       # 年の暦注 ----------------------------
@@ -82,7 +82,7 @@ class When::CalendarTypes::CalendarNote
       # 月の暦注 ----------------------------
       [When::BasicTypes::M17n,
         "names:[月]",
-        [Note, 0xFFFF, "label:[月名=ja:%%<月_(暦)>#%.<日本の和風月名>]",
+        [Note, 0xFFFF, "label:[月名=ja:%%<月_(暦)>#%.<日本の和風月名>, Month]",
                                              'position:月建'],                               #  0: 月の和名
       # [Note, 0xFFFF, "label:[干支]",       'position:共通'],                               #     干支
       # [Note, 0xFFFF, "label:[干=ja:%%<十干>]",
@@ -269,6 +269,7 @@ class When::CalendarTypes::CalendarNote
                                              'position:上段 上段 中段 中段上', 'suffix:日'], #100: 干支 節月
         [Note, 0x3FFF, "label:[雑事吉=]",    'position:雑事吉'],                             #101: 干支 節月(宣明暦以前)/暦月(貞享暦以降)
         [Note, 0x07FF, "label:[小字注=]",    'position:下段小字 下段小字 下段小字 下段小字'],#102: 干支 節月(宣明暦以前)/暦月(貞享暦以降)
+        [Note, 0x3800, "label:[鬼宿]",       'position:仮名暦'],                             #103: 廿八宿
       ]
     ]]
 
@@ -446,7 +447,7 @@ class When::CalendarTypes::CalendarNote
     # @param [When::TM::TemporalPosition] date 暦注を計算する日時
     #   (date が When::TM::TemporalPosition でない場合、When::TM::TemporalPosition に変換して使用する)
     # @param [Hash] options
-    #   :indices, :notes およびその他のキー => {When::CalendarTypes::CalendarNote#notes} を参照
+    #   :indices, :notes およびその他のキー => {When::CalendarNote#notes} を参照
     #
     # @return [Hash]               :notes が String の場合
     # @return [Array<Hash>]        上記に該当せず、:indices が Integer の場合
@@ -457,11 +458,11 @@ class When::CalendarTypes::CalendarNote
     #   :position => 具注暦でのその暦注の配置場所(String)
     #
     def notes(date, options={})
-      dates, indices, notes, conditions, options = _parse_note(date, options)
-      _result(indices.map {|i|
+      dates, indices, notes, persistence, conditions, options = _parse_note(date, options)
+      Notes.register(indices.map {|i|
         next [] unless i <= dates.precision
         send(NoteMethods[i-1], dates, notes[i-1], conditions)
-      }, options)
+      }, persistence, date.to_i)
     end
 
     private
@@ -574,8 +575,9 @@ class When::CalendarTypes::CalendarNote
         # 廿七宿
         notes_hash['廿七宿']   = _residue27(notes_hash['廿七宿'], root)
 
-        # 廿八宿
+        # 廿八宿 / 鬼宿
         notes_hash['廿八宿'] ||= root['宿'][(dates.s_date.to_i+11) % 28]
+        notes_hash['鬼宿']   ||= /鬼/ =~ notes_hash['廿八宿'].to_s ? '鬼宿' : nil
 
         # 九星
         notes_hash['九星']   ||= root['九星'][When::Coordinates::Kyusei.day(dates.s_date, dates.cal4note.s_terms)]
@@ -859,7 +861,7 @@ class When::CalendarTypes::CalendarNote
       phase, metsu = dates.cal4note.l_phases.position(date)
 
       # 滅
-      notes['滅'] = '滅' if metsu == 2
+      notes['滅'] =  metsu == 2 && dates.range < 11 ? '滅' : nil
 
       # 月相
       unless notes['月相']
@@ -1203,8 +1205,10 @@ class When::CalendarTypes::CalendarNote
 
         # 没
         if motsu == 0
-          notes['没'] = '没' if dates.range < 11
+          notes['没'] = dates.range < 11 ? '没' : nil
           return notes unless patch
+        else
+          notes['没'] = nil
         end
 
         # 廿四節気

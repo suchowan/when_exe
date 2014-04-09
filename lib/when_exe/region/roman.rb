@@ -207,120 +207,120 @@ module When
     RomanB =  [CyclicTableBased, Options.merge({'indices' => _IndicesB})]
     Roman  =  [CyclicTableBased, Options]
     RomanC =  [CyclicTableBased, Options.merge({'indices' => _IndicesC})]
+  end
 
-    #
-    # 古代ローマの暦注
-    #
-    class CalendarNote::RomanNote < CalendarNote
+  #
+  # 古代ローマの暦注
+  #
+  class CalendarNote::RomanNote < CalendarNote
 
-      NoteObjects = [When::BasicTypes::M17n, [
-        "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
-        "locale:[=en:, ja=ja:, alias]",
-        "names:[Roman]",
+    NoteObjects = [When::BasicTypes::M17n, [
+      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
+      "locale:[=en:, ja=ja:, alias]",
+      "names:[Roman]",
 
-        # 年の暦注 ----------------------------
-        [When::BasicTypes::M17n,
-          "names:[year]",
+      # 年の暦注 ----------------------------
+      [When::BasicTypes::M17n,
+        "names:[year]",
 
-          [When::Coordinates::Residue,
-            "label:[Solar=en:Solar_cycle_(calendar), 太陽章=]", "divisor:28", "year:-8",
-          ],
-
-          [When::Coordinates::Residue,
-            "label:[Metonic=en:Metonic_cycle, 太陰章=]", "divisor:19", "year:0",
-          ],
-
-          [When::Coordinates::Residue,
-            "label:[Indiction, インディクション]", "divisor:15", "year:-2",
-            [When::Coordinates::Residue, "label:[I=   ]", "remainder:  0"],
-            [When::Coordinates::Residue, "label:[II=  ]", "remainder:  1"],
-            [When::Coordinates::Residue, "label:[III= ]", "remainder:  2"],
-            [When::Coordinates::Residue, "label:[IV=  ]", "remainder:  3"],
-            [When::Coordinates::Residue, "label:[V=   ]", "remainder:  4"],
-            [When::Coordinates::Residue, "label:[VI=  ]", "remainder:  5"],
-            [When::Coordinates::Residue, "label:[VII= ]", "remainder:  6"],
-            [When::Coordinates::Residue, "label:[VIII=]", "remainder:  7"],
-            [When::Coordinates::Residue, "label:[IX=  ]", "remainder:  8"],
-            [When::Coordinates::Residue, "label:[X=   ]", "remainder:  9"],
-            [When::Coordinates::Residue, "label:[XI=  ]", "remainder: 10"],
-            [When::Coordinates::Residue, "label:[XII= ]", "remainder: 11"],
-            [When::Coordinates::Residue, "label:[XIII=]", "remainder: 12"],
-            [When::Coordinates::Residue, "label:[XIV= ]", "remainder: 13"],
-            [When::Coordinates::Residue, "label:[XV=  ]", "remainder: 14"],
-          ]
+        [When::Coordinates::Residue,
+          "label:[Solar=en:Solar_cycle_(calendar), 太陽章=]", "divisor:28", "year:-8",
         ],
 
-        # 月の暦注 ----------------------------
-        [When::BasicTypes::M17n,
-          "names:[month]",
-          [When::BasicTypes::M17n,
-            "names:[Month]"
-          ]
+        [When::Coordinates::Residue,
+          "label:[Metonic=en:Metonic_cycle, 太陰章=]", "divisor:19", "year:0",
         ],
 
-        # 日の暦注 ----------------------------
-        [When::BasicTypes::M17n,
-          "names:[day]",
-
-          [When::BasicTypes::M17n,
-            "names:[Nomen]"
-          ]
+        [When::Coordinates::Residue,
+          "label:[Indiction, インディクション]", "divisor:15", "year:-2",
+          [When::Coordinates::Residue, "label:[I=   ]", "remainder:  0"],
+          [When::Coordinates::Residue, "label:[II=  ]", "remainder:  1"],
+          [When::Coordinates::Residue, "label:[III= ]", "remainder:  2"],
+          [When::Coordinates::Residue, "label:[IV=  ]", "remainder:  3"],
+          [When::Coordinates::Residue, "label:[V=   ]", "remainder:  4"],
+          [When::Coordinates::Residue, "label:[VI=  ]", "remainder:  5"],
+          [When::Coordinates::Residue, "label:[VII= ]", "remainder:  6"],
+          [When::Coordinates::Residue, "label:[VIII=]", "remainder:  7"],
+          [When::Coordinates::Residue, "label:[IX=  ]", "remainder:  8"],
+          [When::Coordinates::Residue, "label:[X=   ]", "remainder:  9"],
+          [When::Coordinates::Residue, "label:[XI=  ]", "remainder: 10"],
+          [When::Coordinates::Residue, "label:[XII= ]", "remainder: 11"],
+          [When::Coordinates::Residue, "label:[XIII=]", "remainder: 12"],
+          [When::Coordinates::Residue, "label:[XIV= ]", "remainder: 13"],
+          [When::Coordinates::Residue, "label:[XV=  ]", "remainder: 14"],
         ]
-      ]]
+      ],
 
-      Order = [
-        'a.d. bis VI',
-        'prid.',    'a.d. III',  'a.d. IV',    'a.d. V',   'a.d. VI',   'a.d. VII', 'a.d. VIII', 
-        'a.d. IX',  'a.d. X',    'a.d. XI',    'a.d. XII', 'a.d. XIII', 'a.d. XIV', 'a.d. XV', 
-        'a.d. XVI', 'a.d. XVII', 'a.d. XVIII', 'a.d. XIX', 'a.d. XX',   'a.d. XXI', 'a.d. XXII'
+      # 月の暦注 ----------------------------
+      [When::BasicTypes::M17n,
+        "names:[month]",
+        [When::BasicTypes::M17n,
+          "names:[Month]"
+        ]
+      ],
+
+      # 日の暦注 ----------------------------
+      [When::BasicTypes::M17n,
+        "names:[day]",
+
+        [When::BasicTypes::M17n,
+          "names:[Nomen]"
+        ]
       ]
+    ]]
 
-      LongMonths = [3, 5, 7, 10, When.Pair(11,0.5), When.Pair(11,1.5)]
-      LongType   = [1, 2..6, 7, 8..14, 15]
-      ShortType  = [1, 2..4, 5, 6..12, 13]
+    Order = [
+      'a.d. bis VI',
+      'prid.',    'a.d. III',  'a.d. IV',    'a.d. V',   'a.d. VI',   'a.d. VII', 'a.d. VIII', 
+      'a.d. IX',  'a.d. X',    'a.d. XI',    'a.d. XII', 'a.d. XIII', 'a.d. XIV', 'a.d. XV', 
+      'a.d. XVI', 'a.d. XVII', 'a.d. XVIII', 'a.d. XIX', 'a.d. XX',   'a.d. XXI', 'a.d. XXII'
+    ]
 
-      # 暦注 - 日の名前
-      #
-      # @param [When::TM::CalDate] date
-      #
-      # @return [String]
-      #
-      def nomen(date)
-        y, m, d = date.cal_date
-        month_name = _abbr_of_month(date)
-        kal, to_nonae, nonae, to_idus, idus = LongMonths.include?(m) ? LongType : ShortType
-        case d
-        when kal      ; return                     'Kal. ' + month_name
-        when to_nonae ; return Order[nonae - d] + ' Non. ' + month_name
-        when nonae    ; return                     'Non. ' + month_name
-        when to_idus  ; return Order[idus  - d] + ' Id. '  + month_name
-        when idus     ; return                     'Id. '  + month_name
-        end
-        this_month = date.floor(When::MONTH)
-        next_month = this_month.succ
-        month_name = _abbr_of_month(next_month)
-        rest = next_month.to_i - date.to_i
-        if m == 2 && next_month.to_i - this_month.to_i == 29
-          return Order[0] + ' Kal. ' + month_name if rest == 5
-          rest -= 1 if rest > 5
-        end
-        return Order[rest] + ' Kal. ' + month_name
+    LongMonths = [3, 5, 7, 10, When.Pair(11,0.5), When.Pair(11,1.5)]
+    LongType   = [1, 2..6, 7, 8..14, 15]
+    ShortType  = [1, 2..4, 5, 6..12, 13]
+
+    # 暦注 - 日の名前
+    #
+    # @param [When::TM::CalDate] date
+    #
+    # @return [String]
+    #
+    def nomen(date)
+      y, m, d = date.cal_date
+      month_name = _abbr_of_month(date)
+      kal, to_nonae, nonae, to_idus, idus = LongMonths.include?(m) ? LongType : ShortType
+      case d
+      when kal      ; return                     'Kal. ' + month_name
+      when to_nonae ; return Order[nonae - d] + ' Non. ' + month_name
+      when nonae    ; return                     'Non. ' + month_name
+      when to_idus  ; return Order[idus  - d] + ' Id. '  + month_name
+      when idus     ; return                     'Id. '  + month_name
       end
-
-      private
-
-      # オブジェクトの正規化
-      def _normalize(args=[], options={})
-       @event = 'nomen'
-       super
+      this_month = date.floor(When::MONTH)
+      next_month = this_month.succ
+      month_name = _abbr_of_month(next_month)
+      rest = next_month.to_i - date.to_i
+      if m == 2 && next_month.to_i - this_month.to_i == 29
+        return Order[0] + ' Kal. ' + month_name if rest == 5
+        rest -= 1 if rest > 5
       end
+      return Order[rest] + ' Kal. ' + month_name
+    end
 
-      # 日の省略名
-      def _abbr_of_month(month)
-        name = month.name('month').to_s
-        return name.sub(/ (..).*/, ' \1.') if name.sub!(/Intercalaris(.*)?/, 'Int.\1')
-        name.size <= 3 ? name : name[/^...[^caeiou]*/] + '.'
-      end
+    private
+
+    # オブジェクトの正規化
+    def _normalize(args=[], options={})
+     @event = 'nomen'
+     super
+    end
+
+    # 日の省略名
+    def _abbr_of_month(month)
+      name = month.name('month').to_s
+      return name.sub(/ (..).*/, ' \1.') if name.sub!(/Intercalaris(.*)?/, 'Int.\1')
+      name.size <= 3 ? name : name[/^...[^caeiou]*/] + '.'
     end
   end
 end

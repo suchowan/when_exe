@@ -422,294 +422,294 @@ module When
         @border = [0,0,0]
       end
     end
+  end
 
-    #
-    # キリスト教の暦注(クリスマスと復活祭)
-    #
-    class CalendarNote::Christian < CalendarNote
+  #
+  # キリスト教の暦注(クリスマスと復活祭)
+  #
+  class CalendarNote::Christian < CalendarNote
 
-      NoteObjects = [When::BasicTypes::M17n, [
-        "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
-        "locale:[=en:, ja=ja:, alias]",
-        "names:[Christian]",
+    NoteObjects = [When::BasicTypes::M17n, [
+      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
+      "locale:[=en:, ja=ja:, alias]",
+      "names:[Christian]",
 
-        # 年の暦注 ----------------------------
+      # 年の暦注 ----------------------------
+      [When::BasicTypes::M17n,
+        "names:[year]"
+      ],
+
+      # 月の暦注 ----------------------------
+      [When::BasicTypes::M17n,
+        "names:[month]",
         [When::BasicTypes::M17n,
-          "names:[year]"
-        ],
-
-        # 月の暦注 ----------------------------
-        [When::BasicTypes::M17n,
-          "names:[month]",
-          [When::BasicTypes::M17n,
-            "names:[Month]"
-          ]
-        ],
-
-        # 日の暦注 ----------------------------
-        [When::BasicTypes::M17n,
-          "names:[day]",
-          [When::BasicTypes::M17n, "names:[Week,           七曜]"      ],
-          [When::BasicTypes::M17n, "names:[Easter,         復活祭]"    ],
-          [When::BasicTypes::M17n, "names:[Christmas,      クリスマス]"],
-          [When::BasicTypes::M17n, "names:[Fixed_feast=,   固定祝日=]" ],
-          [When::BasicTypes::M17n, "names:[Moveable_feast, 移動祝日]"  ]
+          "names:[Month]"
         ]
-      ]]
+      ],
 
-      # 固定祝日
-      Fixed_feasts = {
-        [ 1,  6] => "Epiphany",
-        [ 3,  1] => "St.David's Day",
-        [ 3, 17] => "St.Patrick's Day",
-        [ 3, 25] => "Annunciation-Lady Day",
-        [ 4, 23] => "St.George's Day",
-        [ 6, 24] => "Midsummer Day",
-        [ 9, 14] => "Holy Cross Day",
-        [ 9, 29] => "Michaelmas Day",
-        [11, 30] => "St.Andrew's Day",
-        [12, 13] => "St.Lucia's Day",
-        [12, 21] => "St.Thomas's Day",
-      # [12, 25] => "Christmas Day"
-      }
+      # 日の暦注 ----------------------------
+      [When::BasicTypes::M17n,
+        "names:[day]",
+        [When::BasicTypes::M17n, "names:[Week,           七曜]"      ],
+        [When::BasicTypes::M17n, "names:[Easter,         復活祭]"    ],
+        [When::BasicTypes::M17n, "names:[Christmas,      クリスマス]"],
+        [When::BasicTypes::M17n, "names:[Fixed_feast=,   固定祝日=]" ],
+        [When::BasicTypes::M17n, "names:[Moveable_feast, 移動祝日]"  ]
+      ]
+    ]]
 
-      # 移動祝日 (日付と曜日による)
-      moveable_feasts = {}
-      [[[ 9, 15, 2], "III Quatember"],
-       [[11, 27, 6], "Advent Sunday"],
-       [[12, 14, 2], "IV Quatember" ]].each do |pair|
-        date, name = pair
-        7.times do
-          moveable_feasts[date.dup] = name
-          date[1] += 1
-          if date[1] > 30
-            date[0] += 1
-            date[1]  = 1
-          end
+    # 固定祝日
+    Fixed_feasts = {
+      [ 1,  6] => "Epiphany",
+      [ 3,  1] => "St.David's Day",
+      [ 3, 17] => "St.Patrick's Day",
+      [ 3, 25] => "Annunciation-Lady Day",
+      [ 4, 23] => "St.George's Day",
+      [ 6, 24] => "Midsummer Day",
+      [ 9, 14] => "Holy Cross Day",
+      [ 9, 29] => "Michaelmas Day",
+      [11, 30] => "St.Andrew's Day",
+      [12, 13] => "St.Lucia's Day",
+      [12, 21] => "St.Thomas's Day",
+    # [12, 25] => "Christmas Day"
+    }
+
+    # 移動祝日 (日付と曜日による)
+    moveable_feasts = {}
+    [[[ 9, 15, 2], "III Quatember"],
+     [[11, 27, 6], "Advent Sunday"],
+     [[12, 14, 2], "IV Quatember" ]].each do |pair|
+      date, name = pair
+      7.times do
+        moveable_feasts[date.dup] = name
+        date[1] += 1
+        if date[1] > 30
+          date[0] += 1
+          date[1]  = 1
         end
       end
+    end
 
-      # 移動祝日
-      Moveable_feasts = {
-        # 復活祭からの日数による
-        -63 => "Septuagesima Sunday",
-        -56 => "Sexagesima Sunday",
-        -49 => "Quinquagesima Sunday",
-        -46 => "Ash Wednesday",
-        -42 => "Quadragesima Sunday",
-        -40 => "I Quatember",
-        -35 => "Reminizer Sunday",
-        -28 => "Oculi Sunday",
-        -21 => "Laetare Sunday",
-        -14 => "Judica Sunday",
-         -7 => "Palmarum",
-         -2 => "Good Friday",
-      #   0 => "Easter Day",
-          7 => "Low Sunday",
-         35 => "Rogation Sunday",
-         39 => "Ascension Day",
-         49 => "Whitsunday",
-         53 => "II Quatember",
-         56 => "Trinity Sunday",
-         60 => "Corpus Christi",
-      }.update(moveable_feasts) 
+    # 移動祝日
+    Moveable_feasts = {
+      # 復活祭からの日数による
+      -63 => "Septuagesima Sunday",
+      -56 => "Sexagesima Sunday",
+      -49 => "Quinquagesima Sunday",
+      -46 => "Ash Wednesday",
+      -42 => "Quadragesima Sunday",
+      -40 => "I Quatember",
+      -35 => "Reminizer Sunday",
+      -28 => "Oculi Sunday",
+      -21 => "Laetare Sunday",
+      -14 => "Judica Sunday",
+       -7 => "Palmarum",
+       -2 => "Good Friday",
+    #   0 => "Easter Day",
+        7 => "Low Sunday",
+       35 => "Rogation Sunday",
+       39 => "Ascension Day",
+       49 => "Whitsunday",
+       53 => "II Quatember",
+       56 => "Trinity Sunday",
+       60 => "Corpus Christi",
+    }.update(moveable_feasts) 
 
-      # 週日補正フラグ
-      # @return [Integer]
-      attr_reader :w
+    # 週日補正フラグ
+    # @return [Integer]
+    attr_reader :w
 
-      # 最も遅い満月の3月0日からの日数
-      # @return [Integer]
-      attr_reader :d
+    # 最も遅い満月の3月0日からの日数
+    # @return [Integer]
+    attr_reader :d
 
-      # クリスマスの3月0日からの日数
-      # @return [Integer]
-      attr_reader :x
+    # クリスマスの3月0日からの日数
+    # @return [Integer]
+    attr_reader :x
 
-      # 平年数
-      # @return [Integer]
-      attr_reader :n
+    # 平年数
+    # @return [Integer]
+    attr_reader :n
 
-      # 置閏周期
-      # @return [Integer]
-      attr_reader :s
+    # 置閏周期
+    # @return [Integer]
+    attr_reader :s
 
-      # 月の位相の補正
-      # @return [Integer]
-      attr_reader :c
+    # 月の位相の補正
+    # @return [Integer]
+    attr_reader :c
 
-      # ガード
-      # @return [Integer]
-      attr_reader :g
+    # ガード
+    # @return [Integer]
+    attr_reader :g
 
-      # ベース
-      # @return [Integer]
-      attr_reader :b
+    # ベース
+    # @return [Integer]
+    attr_reader :b
 
-      # 満月補正フラグ
-      # @return [Integer]
-      attr_reader :f
+    # 満月補正フラグ
+    # @return [Integer]
+    attr_reader :f
 
-      # 七曜
-      #
-      # @param [When::TM::TemporalPosition] date
-      # @param [When::TM::ReferenceSystem] frame 使用する暦法(ダミー)
-      #
-      # @return [When::Coordinates::Residue] 七曜
-      #
-      def week(date, frame=nil)
-        When.Residue('Week')[date.to_i % 7]
+    # 七曜
+    #
+    # @param [When::TM::TemporalPosition] date
+    # @param [When::TM::ReferenceSystem] frame 使用する暦法(ダミー)
+    #
+    # @return [When::Coordinates::Residue] 七曜
+    #
+    def week(date, frame=nil)
+      When.Residue('Week')[date.to_i % 7]
+    end
+
+    # クリスマス
+    #
+    # @param [Numeric] date 西暦の年数
+    # @param [When::TM::TemporalPosition] date
+    # @param [When::TM::ReferenceSystem] frame 使用する暦法(デフォルトは When.Resource('_c:Gregorian'))
+    #
+    # @return [Integer]           クリスマスのユリウス通日(dateが西暦の年数の場合)
+    # @return [When::TM::CalDate] クリスマスのWhen::TM::CalDate(yearがWhen::TM::TemporalPositionの場合)
+    #
+    def christmas(date, frame=nil)
+      _event(date, 'christmas', frame) do |year, frame|
+        @x - 1 + frame._coordinates_to_number(year, 2, 0)
       end
+    end
 
-      # クリスマス
-      #
-      # @param [Numeric] date 西暦の年数
-      # @param [When::TM::TemporalPosition] date
-      # @param [When::TM::ReferenceSystem] frame 使用する暦法(デフォルトは When.Resource('_c:Gregorian'))
-      #
-      # @return [Integer]           クリスマスのユリウス通日(dateが西暦の年数の場合)
-      # @return [When::TM::CalDate] クリスマスのWhen::TM::CalDate(yearがWhen::TM::TemporalPositionの場合)
-      #
-      def christmas(date, frame=nil)
-        _event(date, 'christmas', frame) do |year, frame|
-          @x - 1 + frame._coordinates_to_number(year, 2, 0)
-        end
-      end
-
-      # 復活祭
-      #
-      # @param [Numeric] date 西暦の年数
-      # @param [When::TM::TemporalPosition] date
-      # @param [When::TM::ReferenceSystem] frame 使用する暦法(デフォルトは When.Resource('_c:Gregorian'))
-      #
-      # @return [Integer]           復活祭のユリウス通日(dateが西暦の年数の場合)
-      # @return [When::TM::CalDate] 復活祭のWhen::TM::CalDate(yearがWhen::TM::TemporalPositionの場合)
-      #
-      def easter(date, frame=nil)
-        _event(date, 'easter', frame) do |year, frame|
-          golden = (year+@b) % @s + 1
-          m      = (frame._lunar_equation(year) + 11*golden + @c) % 30
-          if @f == 0
-            m += 1 if m==0 || m==1 && golden>=@n
-          else
-            m += (golden-1) / @f
-            m -= 30 if m>=@n
-          end
-          result  = frame._coordinates_to_number(year, 2, 0) + @d - 1 - m
-          result += @g - (result-@w) % 7 if @w<7
-          result
-        end
-      end
-
-      #   イベントの標準的な間隔を返す
-      # @private
-      def _delta(parameter=nil)
-        return When::DurationP1Y
-      end
-
-      # @private
-      alias :christmas_delta :_delta
-
-      # @private
-      alias :easter_delta    :_delta
-
-      # 固定祝日
-      #
-      # @param [When::TM::TemporalPosition] date
-      # @param [When::TM::ReferenceSystem] frame 使用する暦法(デフォルトは When.Resource('_c:Gregorian'))
-      #
-      # @return [String] 祝日の名称
-      # @return [nil]    祝日に該当しない
-      #
-      def fixed_feast(date, frame=nil)
-        date = When.Calendar(frame||'Gregorian') ^ date unless date.frame.kind_of?(When::CalendarTypes::Christian)
-        Fixed_feasts[date.cal_date[-2..-1]]
-      end
-
-      # 移動祝日
-      #
-      # @param [When::TM::TemporalPosition] date
-      # @param [When::TM::ReferenceSystem] frame 使用する暦法(デフォルトは When.Resource('_c:Gregorian'))
-      #
-      # @return [String] 祝日の名称
-      # @return [nil]    祝日に該当しない
-      #
-      def moveable_feast(date, frame=nil)
-        result = Moveable_feasts[date.to_i - easter(date, frame).to_i]
-        return result if result
-        date = When.Calendar(frame||'Gregorian') ^ date unless date.frame.kind_of?(When::CalendarTypes::Christian)
-        Moveable_feasts[date.cal_date[-2..-1] + [date.to_i % 7]]
-      end
-
-      private
-
-      # オブジェクトの正規化
-      #   w - 週日補正フラグ(デフォルト  6)
-      #   d - 最も遅い満月  (デフォルト 3月0日から 50日)
-      #   x - クリスマス    (デフォルト 3月0日から300日)
-      #   n - 平年数        (デフォルト 12)
-      #   s - 置閏周期      (デフォルト 19)
-      #   c - 月の位相の補正(デフォルト  3)
-      #   g - ガード        (デフォルト  7)
-      #   b - ベース        (デフォルト  0)
-      #   f - 満月補正フラグ(デフォルト  0)
-      def _normalize(args=[], options={})
-        w, d, x, n, s, c, g, b, f = args
-        @w = (w || @w ||   6).to_i
-        @d = (d || @d ||  50).to_i
-        @x = (x || @x || 300).to_i
-        @n = (n || @n ||  12).to_i
-        @s = (s || @s ||  19).to_i
-        @c = (c || @c ||   3).to_i
-        @g = (g || @g ||   7).to_i
-        @b = (b || @b ||   0).to_i
-        @f = (f || @f ||   0).to_i
-        @event   = 'easter'
-        @prime ||= [['Month'], ['Week']]
-        super
-      end
-
-      #
-      # 任意の暦をグレゴリオorユリウス暦日に変換
-      #
-      def _to_date_for_note(date)
-        return When.Calendar(When::CalendarTypes::Christian._default_start(date)) ^ date if ::Object.const_defined?(:Date) && date.kind_of?(::Date)
-        return When.Calendar('Gregorian') ^ date if date.kind_of?(::Time)
-        return date if date.frame.kind_of?(When::CalendarTypes::Christian)
-        When.Calendar(date.frame.iri =~ /Coptic/ || date.to_i < 2299161 ? 'Julian' : 'Gregorian') ^ date
-      end
-
-      # 当該年のイベントの日付
-      #   date       : 西暦の年数 or When::TM::(Temporal)Position
-      #   event      : イベント名 (String)
-      #   frame      : 暦法(デフォルトは When.Resource('_c:Gregorian'))
-      #
-      # @return [Integer]           イベントのユリウス通日(dateが西暦の年数の場合)
-      # @return [When::TM::CalDate] イベントのWhen::TM::CalDate(yearがWhen::TM::(Temporal)Positionの場合)
-      #
-      def _event(date, event, frame=nil)
-        case date
-        when Numeric
-          year    = date * 1
-        when When::TimeValue
-          options = date._attr
-          options[:precision] = When::DAY
-          options[:events]    = [event]
-          if frame
-            frame = When.Calendar(frame)
-            date  = frame.jul_trans(date, options)
-          else
-            frame = date.frame
-          end
-          year = date.most_significant_coordinate * 1
+    # 復活祭
+    #
+    # @param [Numeric] date 西暦の年数
+    # @param [When::TM::TemporalPosition] date
+    # @param [When::TM::ReferenceSystem] frame 使用する暦法(デフォルトは When.Resource('_c:Gregorian'))
+    #
+    # @return [Integer]           復活祭のユリウス通日(dateが西暦の年数の場合)
+    # @return [When::TM::CalDate] 復活祭のWhen::TM::CalDate(yearがWhen::TM::TemporalPositionの場合)
+    #
+    def easter(date, frame=nil)
+      _event(date, 'easter', frame) do |year, frame|
+        golden = (year+@b) % @s + 1
+        m      = (frame._lunar_equation(year) + 11*golden + @c) % 30
+        if @f == 0
+          m += 1 if m==0 || m==1 && golden>=@n
         else
-          raise TypeError, "Irregal date type: #{date.class}"
+          m += (golden-1) / @f
+          m -= 30 if m>=@n
         end
-        frame ||= When.Resource('_c:Gregorian')
-        result  = yield(year, frame)
-        return result if date.kind_of?(Numeric)
-        return frame.jul_trans(result, options)
+        result  = frame._coordinates_to_number(year, 2, 0) + @d - 1 - m
+        result += @g - (result-@w) % 7 if @w<7
+        result
       end
+    end
+
+    #   イベントの標準的な間隔を返す
+    # @private
+    def _delta(parameter=nil)
+      return When::DurationP1Y
+    end
+
+    # @private
+    alias :christmas_delta :_delta
+
+    # @private
+    alias :easter_delta    :_delta
+
+    # 固定祝日
+    #
+    # @param [When::TM::TemporalPosition] date
+    # @param [When::TM::ReferenceSystem] frame 使用する暦法(デフォルトは When.Resource('_c:Gregorian'))
+    #
+    # @return [String] 祝日の名称
+    # @return [nil]    祝日に該当しない
+    #
+    def fixed_feast(date, frame=nil)
+      date = When.Calendar(frame||'Gregorian') ^ date unless date.frame.kind_of?(When::CalendarTypes::Christian)
+      Fixed_feasts[date.cal_date[-2..-1]]
+    end
+
+    # 移動祝日
+    #
+    # @param [When::TM::TemporalPosition] date
+    # @param [When::TM::ReferenceSystem] frame 使用する暦法(デフォルトは When.Resource('_c:Gregorian'))
+    #
+    # @return [String] 祝日の名称
+    # @return [nil]    祝日に該当しない
+    #
+    def moveable_feast(date, frame=nil)
+      result = Moveable_feasts[date.to_i - easter(date, frame).to_i]
+      return result if result
+      date = When.Calendar(frame||'Gregorian') ^ date unless date.frame.kind_of?(When::CalendarTypes::Christian)
+      Moveable_feasts[date.cal_date[-2..-1] + [date.to_i % 7]]
+    end
+
+    private
+
+    # オブジェクトの正規化
+    #   w - 週日補正フラグ(デフォルト  6)
+    #   d - 最も遅い満月  (デフォルト 3月0日から 50日)
+    #   x - クリスマス    (デフォルト 3月0日から300日)
+    #   n - 平年数        (デフォルト 12)
+    #   s - 置閏周期      (デフォルト 19)
+    #   c - 月の位相の補正(デフォルト  3)
+    #   g - ガード        (デフォルト  7)
+    #   b - ベース        (デフォルト  0)
+    #   f - 満月補正フラグ(デフォルト  0)
+    def _normalize(args=[], options={})
+      w, d, x, n, s, c, g, b, f = args
+      @w = (w || @w ||   6).to_i
+      @d = (d || @d ||  50).to_i
+      @x = (x || @x || 300).to_i
+      @n = (n || @n ||  12).to_i
+      @s = (s || @s ||  19).to_i
+      @c = (c || @c ||   3).to_i
+      @g = (g || @g ||   7).to_i
+      @b = (b || @b ||   0).to_i
+      @f = (f || @f ||   0).to_i
+      @event   = 'easter'
+      @prime ||= [['Month'], ['Week']]
+      super
+    end
+
+    #
+    # 任意の暦をグレゴリオorユリウス暦日に変換
+    #
+    def _to_date_for_note(date)
+      return When.Calendar(When::CalendarTypes::Christian._default_start(date)) ^ date if ::Object.const_defined?(:Date) && date.kind_of?(::Date)
+      return When.Calendar('Gregorian') ^ date if date.kind_of?(::Time)
+      return date if date.frame.kind_of?(When::CalendarTypes::Christian)
+      When.Calendar(date.frame.iri =~ /Coptic/ || date.to_i < 2299161 ? 'Julian' : 'Gregorian') ^ date
+    end
+
+    # 当該年のイベントの日付
+    #   date       : 西暦の年数 or When::TM::(Temporal)Position
+    #   event      : イベント名 (String)
+    #   frame      : 暦法(デフォルトは When.Resource('_c:Gregorian'))
+    #
+    # @return [Integer]           イベントのユリウス通日(dateが西暦の年数の場合)
+    # @return [When::TM::CalDate] イベントのWhen::TM::CalDate(yearがWhen::TM::(Temporal)Positionの場合)
+    #
+    def _event(date, event, frame=nil)
+      case date
+      when Numeric
+        year    = date * 1
+      when When::TimeValue
+        options = date._attr
+        options[:precision] = When::DAY
+        options[:events]    = [event]
+        if frame
+          frame = When.Calendar(frame)
+          date  = frame.jul_trans(date, options)
+        else
+          frame = date.frame
+        end
+        year = date.most_significant_coordinate * 1
+      else
+        raise TypeError, "Irregal date type: #{date.class}"
+      end
+      frame ||= When.Resource('_c:Gregorian')
+      result  = yield(year, frame)
+      return result if date.kind_of?(Numeric)
+      return frame.jul_trans(result, options)
     end
   end
 end

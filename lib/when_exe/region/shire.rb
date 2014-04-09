@@ -36,164 +36,163 @@ module When
     ]]
   end
 
-  module CalendarTypes
+  #
+  # ホビット庄暦の暦週
+  #
+  class CalendarNote::ShireWeek < CalendarNote
 
-    #
-    # ホビット庄暦の暦週
-    #
-    class CalendarNote::ShireWeek < CalendarNote
+    NoteObjects = [When::BasicTypes::M17n, [
+      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
+      "locale:[=en:, ja=ja:, alias]",
+      "names:[Shire]",
 
-      NoteObjects = [When::BasicTypes::M17n, [
-        "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
-        "locale:[=en:, ja=ja:, alias]",
-        "names:[Shire]",
+      # 年の暦注 ----------------------------
+      [When::BasicTypes::M17n,
+        "names:[year]"
+      ],
 
-        # 年の暦注 ----------------------------
+      # 月の暦注 ----------------------------
+      [When::BasicTypes::M17n,
+        "names:[month]",
         [When::BasicTypes::M17n,
-          "names:[year]"
-        ],
-
-        # 月の暦注 ----------------------------
-        [When::BasicTypes::M17n,
-          "names:[month]",
-          [When::BasicTypes::M17n,
-            "names:[Month]"
-          ]
-        ],
-
-        # 日の暦注 ----------------------------
-        [When::BasicTypes::M17n,
-          "names:[day]",
-          [When::BasicTypes::M17n,
-            "names:[Week]",
-            "[Saturday,     土曜日]",
-            "[Sunday,       日曜日]",
-            "[Monday,       月曜日]",
-            "[Tuesday,      火曜日]",
-            "[Wednesday,    水曜日]",
-            "[Thursday,     木曜日]",
-            "[Friday,       金曜日]",
-            "[lithe,        中日= ]",
-            "[double,       重日= ]"
-          ]
+          "names:[Month]"
         ]
-      ]]
+      ],
 
-      # イベントの標準的な間隔を返す
-      # @private
-      def _delta(parameter=nil)
-        return When::DurationP1W
-      end
+      # 日の暦注 ----------------------------
+      [When::BasicTypes::M17n,
+        "names:[day]",
+        [When::BasicTypes::M17n,
+          "names:[Week]",
+          "[Saturday,     土曜日]",
+          "[Sunday,       日曜日]",
+          "[Monday,       月曜日]",
+          "[Tuesday,      火曜日]",
+          "[Wednesday,    水曜日]",
+          "[Thursday,     木曜日]",
+          "[Friday,       金曜日]",
+          "[lithe,        中日= ]",
+          "[double,       重日= ]"
+        ]
+      ]
+    ]]
 
-      # @private
-      def lithe_delta(parameter=nil)
-        return When::TM::PeriodDuration.new([0,0,7*52+1])
-      end
-
-      # 当日または直前の lithe の日
-      # @param date [When::TM::TemporalPosition]
-      # @param parameter [nil] 未使用
-      # @return [When::TM::TemporalPosition]
-      #
-      def lithe(date, parameter=nil)
-        event_name = 'lithe'
-        date  = date.frame.jul_trans(date, {:events=>[event_name]})
-        y,m,d = date.cal_date
-        h,n   = (m+5).divmod(7)
-        dow   = 182 * h[0] + 30 * n + d + 1
-        if m==8
-          case d
-          when 2 ; dow = 0
-          when 3 ; dow = date.frame._sum([y]) == 365 ? 1 : 0
-          when 4 ; dow = 1
-          end
-        end
-        return date if dow == 0
-        date += When::TM::PeriodDuration.new([0,0,-dow])
-        date.events = [event_name]
-        date
-      end
-
-      # 当日または直前の week_day の日
-      # @method week_day(date, parameter=nil)
-      #   @param date [When::TM::TemporalPosition]
-      #   @param parameter [nil] 未使用
-      #   @return [When::TM::TemporalPosition]
-      #   @note week_day は saturday, sunday, monday, tuesday, wednesday, thursday, friday に読み替えてください。
-
-      # @private
-      7.times do |k|
-        name = When.CalendarNote('ShireWeek/NoteObjects::day::Week')[k].to_s.downcase
-        module_eval %Q{
-          def #{name}(date, parameter=nil)
-            event_name = 'from_#{name}'
-            date  = date.frame.jul_trans(date, {:events=>[event_name], :precision=>When::DAY})
-            y,m,d = date.cal_date
-            h,n   = (m+5).divmod(7)
-            dow   = (182 * h[0] + 30 * n + d - #{k}) % 7
-            case m
-            when 8
-              case d
-              when 2 ; dow = 7 - #{k}
-              when 3 ; dow = (date.frame._sum([y]) == 365 && #{k} == 0) ? 0 : 8 - #{k}
-              when 4 ; dow = #{k} == 0 ? 0 : 9 - #{k}
-              end
-            when 9
-              dow += (date.frame._sum([y]) == 365) ? 1 : 2 if d < #{k}
-            end
-            return date if dow == 0
-            date += When::TM::PeriodDuration.new([0,0,-dow])
-            date.events = [event_name]
-            date
-          end
-
-          alias :#{name}_delta :_delta
-        }
-      end
-
-      alias :week :saturday
-
-      # オブジェクトの正規化
-      # @private
-      def _normalize(args=[], options={})
-        @event ||= 'saturday'
-        super
-      end
-
-      #
-      # イベントを取得する Enumerator
-      #
-      class Enumerator < CalendarNote::Enumerator
-
-        #
-        # 次のイベントを得る
-        #
-        # @return [When::TM::TemporalPosition]
-        #
-        def succ
-          value = @current
-          plus  = @delta.sign > 0
-          if @current==:first
-            @first   = event_eval(@first) unless plus
-            @current = @first
-          else
-            if plus
-              @current = event_eval(@current + @delta)
-            else
-              @last    = event_eval(@current - When.Duration('P1D'))
-              @current = event_eval(@current + @delta)
-              unless [@current.to_i, value.to_i].include?(@last.to_i) 
-                @current = @last
-                return value
-              end
-            end
-            @current = event_eval(@current + @delta * 2) if @current.to_i == value.to_i
-          end
-          return value
-        end
-      end
+    # イベントの標準的な間隔を返す
+    # @private
+    def _delta(parameter=nil)
+      return When::DurationP1W
     end
 
+    # @private
+    def lithe_delta(parameter=nil)
+      return When::TM::PeriodDuration.new([0,0,7*52+1])
+    end
+
+    # 当日または直前の lithe の日
+    # @param date [When::TM::TemporalPosition]
+    # @param parameter [nil] 未使用
+    # @return [When::TM::TemporalPosition]
+    #
+    def lithe(date, parameter=nil)
+      event_name = 'lithe'
+      date  = date.frame.jul_trans(date, {:events=>[event_name]})
+      y,m,d = date.cal_date
+      h,n   = (m+5).divmod(7)
+      dow   = 182 * h[0] + 30 * n + d + 1
+      if m==8
+        case d
+        when 2 ; dow = 0
+        when 3 ; dow = date.frame._sum([y]) == 365 ? 1 : 0
+        when 4 ; dow = 1
+        end
+      end
+      return date if dow == 0
+      date += When::TM::PeriodDuration.new([0,0,-dow])
+      date.events = [event_name]
+      date
+    end
+
+    # 当日または直前の week_day の日
+    # @method week_day(date, parameter=nil)
+    #   @param date [When::TM::TemporalPosition]
+    #   @param parameter [nil] 未使用
+    #   @return [When::TM::TemporalPosition]
+    #   @note week_day は saturday, sunday, monday, tuesday, wednesday, thursday, friday に読み替えてください。
+
+    # @private
+    7.times do |k|
+      name = When.CalendarNote('ShireWeek/NoteObjects::day::Week')[k].to_s.downcase
+      module_eval %Q{
+        def #{name}(date, parameter=nil)
+          event_name = 'from_#{name}'
+          date  = date.frame.jul_trans(date, {:events=>[event_name], :precision=>When::DAY})
+          y,m,d = date.cal_date
+          h,n   = (m+5).divmod(7)
+          dow   = (182 * h[0] + 30 * n + d - #{k}) % 7
+          case m
+          when 8
+            case d
+            when 2 ; dow = 7 - #{k}
+            when 3 ; dow = (date.frame._sum([y]) == 365 && #{k} == 0) ? 0 : 8 - #{k}
+            when 4 ; dow = #{k} == 0 ? 0 : 9 - #{k}
+            end
+          when 9
+            dow += (date.frame._sum([y]) == 365) ? 1 : 2 if d < #{k}
+          end
+          return date if dow == 0
+          date += When::TM::PeriodDuration.new([0,0,-dow])
+          date.events = [event_name]
+          date
+        end
+
+        alias :#{name}_delta :_delta
+      }
+    end
+
+    alias :week :saturday
+
+    # オブジェクトの正規化
+    # @private
+    def _normalize(args=[], options={})
+      @event ||= 'saturday'
+      super
+    end
+
+    #
+    # イベントを取得する Enumerator
+    #
+    class Enumerator < When::CalendarNote::Enumerator
+
+      #
+      # 次のイベントを得る
+      #
+      # @return [When::TM::TemporalPosition]
+      #
+      def succ
+        value = @current
+        plus  = @delta.sign > 0
+        if @current==:first
+          @first   = event_eval(@first) unless plus
+          @current = @first
+        else
+          if plus
+            @current = event_eval(@current + @delta)
+          else
+            @last    = event_eval(@current - When.Duration('P1D'))
+            @current = event_eval(@current + @delta)
+            unless [@current.to_i, value.to_i].include?(@last.to_i) 
+              @current = @last
+              return value
+            end
+          end
+          @current = event_eval(@current + @delta * 2) if @current.to_i == value.to_i
+        end
+        return value
+      end
+    end
+  end
+
+  module CalendarTypes
     #
     # Shire Calendar based on summer solstice date
     #

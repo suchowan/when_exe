@@ -111,12 +111,12 @@ module When
     end
   end
 
-  module CalendarTypes
+  class CalendarNote
 
     #
     # Darian Week
     #
-    class CalendarNote::DarianWeek < CalendarNote::WorldWeek
+    class DarianWeek < WorldWeek
 
       NoteObjects = [When::BasicTypes::M17n, [
         "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
@@ -182,6 +182,9 @@ module When
         super
       end
     end
+  end
+
+  module CalendarTypes
 
     #
     # Martian Time, Coordinated

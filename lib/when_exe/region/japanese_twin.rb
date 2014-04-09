@@ -27,6 +27,7 @@ module When
       ['[宝暦暦]1755.01.01',       '@CR', "1755-01-01^JapaneseTwin::宝暦暦"    ],
       ['[修正宝暦暦=]1771.01.01',  '@CR', "1771-01-01^JapaneseTwin::修正宝暦暦"],
       ['[寛政暦]1798.01.01',       '@CR', "1798-01-01^JapaneseTwin::寛政暦"    ], # 京都平均太陽時
+      ['[寛政丁亥暦]1827.01.01',   '@CR', "1827-01-01^JapaneseTwin::寛政丁亥暦"], # 京都平均太陽時
       ['[天保暦]1844.01.01',       '@CR', "1844-01-01^JapaneseTwin::天保暦"    ], # 京都真太陽時
       ['[JLSO=,旧々暦=]1872.12.03','@CR', "1872-12-03^JapaneseTwin::旧々暦"    ], # 東京平均太陽時
       ['[JLS=,旧暦]1887.11.18',    '@CR', "1887-11-18^JapaneseTwin::旧暦"      ]  # 日本標準時
@@ -50,6 +51,7 @@ module When
       ['[宝暦暦]1755.01.07',       '@CR', "1755-01-07^JapaneseTwin::宝暦暦(節月)"    ],
       ['[修正宝暦暦=]1771.01.11',  '@CR', "1771-01-11^JapaneseTwin::修正宝暦暦(節月)"],
       ['[寛政暦]1798.01.12',       '@CR', "1798-01-12^JapaneseTwin::寛政暦(節月)"    ],
+      ['[寛政丁亥暦]1826.12.22',   '@CR', "1826-12-22^JapaneseTwin::寛政丁亥暦(節月)"],
       ['[天保暦]1844.01.14',       '@CR', "1844-01-14^JapaneseTwin::天保暦(節月)"    ], # 京都真太陽時
       ['[JSO=,旧々暦=]1872.11.26', '@CR', "1872-11-26^JapaneseTwin::旧々暦(節月)"    ], # 東京平均太陽時
       ['[JS=,旧暦]1887.11.26',     '@CR', "1887-11-26^JapaneseTwin::旧暦(節月)"      ]  # 日本標準時
@@ -192,6 +194,13 @@ module When
 
       [ChineseLuniSolar,
         'name:[寛政暦]',
+        'time_basis:+00,+09:03:01',          # 寛政9天正冬至.107112
+         {'formula'=>['ChineseTrueLunation?day_epoch=2377391.107112&year_epoch=1797&year_length=365.242347071&year_delta=-0.217685&year_span=1000',
+                      'Formula']}
+      ],
+
+      [ChineseLuniSolar,
+        'name:[寛政丁亥暦]',
         'time_basis:+00,+09:03:01',          # 寛政9天正冬至.107112
          {'formula'=>['ChineseTrueLunation?day_epoch=2377391.107112&year_epoch=1797&year_length=365.242347071&year_delta=-0.217685&year_span=10',
                       'Formula']}

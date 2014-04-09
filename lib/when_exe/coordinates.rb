@@ -527,17 +527,21 @@ module When::Coordinates
       #
       def succ
         value = @current
-        if (@z==@k) ||
-           (@count_limit.kind_of?(Numeric) && @count >= @count_limit) ||
+        if (@count_limit.kind_of?(Numeric) && @count >= @count_limit) ||
            (@error.kind_of?(Numeric) && @e && @error >= @e.abs)
           @current = nil
         else
-          @z = 1.0/(@z-@k)
-          @k = @z.floor
-          @e = @p[1].to_f/@q[1]-@x.to_f/@y
-          @current = [@p[1], @q[1], @e]
-          @p = [@p[1], @p[1]*@k + @p[0]]
-          @q = [@q[1], @q[1]*@k + @q[0]]
+          if @z==@k
+            @e = 0
+            @current = [@p[1], @q[1], 0]
+          else
+            @z = 1.0/(@z-@k)
+            @k = @z.floor
+            @e = @p[1].to_f/@q[1]-@x.to_f/@y
+            @current = [@p[1], @q[1], @e]
+            @p = [@p[1], @p[1]*@k + @p[0]]
+            @q = [@q[1], @q[1]*@k + @q[0]]
+          end
           @count += 1
         end
         return value
@@ -1666,10 +1670,10 @@ module When::Coordinates
 
     # 代表暦注
     #
-    # @return [When::CalendarTypes::CalendarNote]
+    # @return [When::CalendarNote]
     # @return [Array<Array<klass, Array<klass, method, block>>>] 最外側のArray要素は年・月・日に対応
     #
-    #   klass  [String, When::CalendarTypes::CalendarNote, When::Coordinates::Residue]
+    #   klass  [String, When::CalendarNote, When::Coordinates::Residue]
     #
     #   method [String, Symbol] (デフォルト 'day', 'month' or 'year' (対応する桁による))
     #

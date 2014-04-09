@@ -40,7 +40,7 @@ module When::Coordinates
       # 日の九星のインデックス
       #
       # @param [When::TM::TemporalPosition] date 節月による日付
-      # @param [When::CalendarTypes::CalendarNote::JapaneseNote::SolarTerms] s_terms
+      # @param [When::CalendarNote::JapaneseNote::SolarTerms] s_terms
       #
       # @return [Integer]
       #
@@ -69,7 +69,7 @@ module When::Coordinates
   #
   class Stem < Residue
 
-    Notes = {
+    Rules = {
       '歳徳' => %w(東宮甲 西宮庚 南宮丙 北宮壬 南宮丙 東宮甲 西宮庚 南宮丙 北宮壬 南宮丙),
       '金神' => %w(午未申酉 辰巳 子丑寅卯午未 寅卯戌亥 子丑申酉)
     }
@@ -78,8 +78,8 @@ module When::Coordinates
     # 年の十干で決まる暦注
     # @private
     def _year_notes(notes={}, dates=nil, conditions={})
-      notes['歳徳']     ||= Notes['歳徳'][@remainder]
-      notes['金神']     ||= Notes['金神'][@remainder % 5]
+      notes['歳徳']     ||= Rules['歳徳'][@remainder]
+      notes['金神']     ||= Rules['金神'][@remainder % 5]
       notes
     end
 
@@ -124,7 +124,7 @@ module When::Coordinates
   #
   class Branch < Residue
 
-    Notes = {
+    Rules = {
       '大將軍' => %w(酉 酉 子 子 子 卯 卯 卯 午 午 午 酉),
       '大陰'   => %w(戌 亥 子 丑 寅 卯 辰 巳 午 未 申 酉),
 
@@ -158,18 +158,18 @@ module When::Coordinates
     # 年の十二支で決まる暦注
     # @private
     def _year_notes(notes={}, dates=nil, conditions={})
-      notes['大將軍']   ||= Notes['大將軍'][@remainder]
-      notes['大陰'  ]   ||= Notes['大陰'  ][@remainder]
-      notes['歳刑'  ]   ||= Notes['歳刑'  ][@remainder]
-      notes['歳破'  ]   ||= Notes['破'    ][@remainder]
-      notes['歳煞'  ]   ||= Notes['煞'    ][@remainder % 4]
-      notes['黄幡'  ]   ||= Notes['黄幡'  ][@remainder]
-      notes['豹尾'  ]   ||= Notes['豹尾'  ][@remainder]
+      notes['大將軍']   ||= Rules['大將軍'][@remainder]
+      notes['大陰'  ]   ||= Rules['大陰'  ][@remainder]
+      notes['歳刑'  ]   ||= Rules['歳刑'  ][@remainder]
+      notes['歳破'  ]   ||= Rules['破'    ][@remainder]
+      notes['歳煞'  ]   ||= Rules['煞'    ][@remainder % 4]
+      notes['黄幡'  ]   ||= Rules['黄幡'  ][@remainder]
+      notes['豹尾'  ]   ||= Rules['豹尾'  ][@remainder]
       if dates.range < 2
-        notes['天道']   ||= Notes['天道'  ][@remainder % 6]
-        notes['人道']   ||= Notes['人道'  ][@remainder % 6]
+        notes['天道']   ||= Rules['天道'  ][@remainder % 6]
+        notes['人道']   ||= Rules['人道'  ][@remainder % 6]
       else
-        notes['歳次']   ||= Notes['歳次'  ][@remainder]
+        notes['歳次']   ||= Rules['歳次'  ][@remainder]
       end
       notes
     end
@@ -179,22 +179,22 @@ module When::Coordinates
     # @private
     def _month_notes(notes={}, dates=nil, conditions={})
       if dates.range < 2
-        notes['天氣']   ||= Notes['天氣'  ][@remainder] + '行'
-        notes['天道']   ||= Notes['天道'  ][@remainder % 6]
-        notes['人道']   ||= Notes['人道'  ][@remainder % 6]
-        notes['月破']   ||= Notes['破'    ][@remainder]
+        notes['天氣']   ||= Rules['天氣'  ][@remainder] + '行'
+        notes['天道']   ||= Rules['天道'  ][@remainder % 6]
+        notes['人道']   ||= Rules['人道'  ][@remainder % 6]
+        notes['月破']   ||= Rules['破'    ][@remainder]
       else
-        notes['天道']   ||= Notes['天氣'  ][@remainder] + '行'
+        notes['天道']   ||= Rules['天氣'  ][@remainder] + '行'
       end
-      notes['天徳'  ]   ||= Notes['天徳'  ][@remainder]
-      notes['月煞'  ]   ||= Notes['煞'    ][@remainder % 4]
-      notes['用時'  ]   ||= Notes['用時'  ][@remainder % 3]
-      notes['月徳'  ]   ||= Notes['月徳'  ][@remainder % 4]
-      notes['月徳合']   ||= Notes['月徳合'][@remainder % 4]
-      notes['月空'  ]   ||= Notes['月空'  ][@remainder % 4]
-      notes['三鏡'  ]   ||= Notes['三鏡'  ][@remainder]
-      notes['土府'  ]   ||= Notes['土府'  ][@remainder]
-      notes['土公'  ]   ||= Notes['土公'  ][@remainder]
+      notes['天徳'  ]   ||= Rules['天徳'  ][@remainder]
+      notes['月煞'  ]   ||= Rules['煞'    ][@remainder % 4]
+      notes['用時'  ]   ||= Rules['用時'  ][@remainder % 3]
+      notes['月徳'  ]   ||= Rules['月徳'  ][@remainder % 4]
+      notes['月徳合']   ||= Rules['月徳合'][@remainder % 4]
+      notes['月空'  ]   ||= Rules['月空'  ][@remainder % 4]
+      notes['三鏡'  ]   ||= Rules['三鏡'  ][@remainder]
+      notes['土府'  ]   ||= Rules['土府'  ][@remainder]
+      notes['土公'  ]   ||= Rules['土公'  ][@remainder]
       notes
     end
 
@@ -205,10 +205,10 @@ module When::Coordinates
 
       # 節月
       month = dates.s_date.cal_date[1]
-      born  = Notes['三禍'][month-1] + '年'
+      born  = Rules['三禍'][month-1] + '年'
 
       # 具注暦(元嘉暦以来)
-      notes['十二直']   ||= Notes['十二直'][(@remainder-month-1) % 12]
+      notes['十二直']   ||= Rules['十二直'][(@remainder-month-1) % 12]
       notes['歸忌'  ]   ||= @remainder == (month % 3) ? '歸忌' : nil
       notes['血忌'  ]   ||= @remainder == [1,7,2,8,3,9,4,10,5,11,6,0][month-1] ? '血忌' : nil
       notes['九坎'  ]   ||= @remainder == [4,1,10,7,3,0,9,6,2,11,8,5][month-1] ? '九坎' : nil
@@ -225,7 +225,7 @@ module When::Coordinates
       notes['狼藉'  ]   ||= @remainder == (dates.range >= 14 ? ((month-1) % 4) * 3 :                      #  - wikipedia 「天火」におなじ
                                                [0,3,6,6,0,3,9,9,3,3,6,9][month-1]) ?  born + '狼藉' : nil # %w(...酉..午.子...)
       notes['滅門'  ]   ||= @remainder == (month * 7 + 10) % 12 ?  born + '滅門' : nil
-      notes['下食時']   ||= @remainder == [7,10,4,2,6,0,8,9,5,11,1,3][month-1] ? Notes['下食時'][month-1] : nil
+      notes['下食時']   ||= @remainder == [7,10,4,2,6,0,8,9,5,11,1,3][month-1] ? Rules['下食時'][month-1] : nil
       notes['下食時']     = dates.range < 11 ? notes['下食時' ].sub(/\+/, '') : nil if /\+/ =~ notes['下食時'].to_s # '+' は貞享改暦以降記さない
       notes['無翹'  ]   ||= @remainder == (12-month) % 12 ? '無翹' : nil
       notes['不弔人']   ||= [4,6].include?(@remainder) ? '不弔人' : nil # 不断
@@ -266,9 +266,9 @@ module When::Coordinates
     # @private
     def _year_notes(notes={}, dates=nil, conditions={})
       unless dates.range < 2
-        notes['大歳壇'] ||= '干' + Notes['大歳壇干'][(@remainder / 2) % 5] + '支' + Notes['大歳壇支'][@remainder % 12]
+        notes['大歳壇'] ||= '干' + Rules['大歳壇干'][(@remainder / 2) % 5] + '支' + Rules['大歳壇支'][@remainder % 12]
       end
-      notes['納音']     ||= Notes['納音'][@remainder / 2]
+      notes['納音']     ||= Rules['納音'][@remainder / 2]
       notes['大歳']     ||= self
       notes
     end
@@ -289,15 +289,16 @@ module When::Coordinates
       year, month = dates.s_date.cal_date
 
       # 具注暦(元嘉暦以来)
-      notes['納音']     ||= Notes['納音'][@remainder / 2]
-      notes['日遊']     ||= dates.range < 2 ? Notes['日遊'][@remainder] :
+      notes['納音']     ||= Rules['納音'][@remainder / 2]
+      notes['日遊']     ||= dates.range < 2 ? Rules['日遊'][@remainder] :
                             [4,5,14,15,24,25,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,54,55].include?(@remainder) ? '内' : nil
       notes['天赦']     ||= @remainder == [14,30,44,00][(month-1)/3] ? '天赦' : nil
 
       #   宣明暦以前は節月、貞享暦以後は暦月
-      m  = dates.range < 11 ? month : (dates.m_date.cal_date[1] * 1)
+    # m  = dates.range < 11 ? month : (dates.m_date.cal_date[1] * 1)
+      m  = month
       #   凶会日
-      kue = Notes['凶会'][m-1][@remainder]
+      kue = Rules['凶会'][m-1][@remainder]
       #   貞享暦で廃止された凶会日を除外
       kue = dates.range < 11 ? kue.sub(/\+/, '') : nil if /\+/ =~ kue
       notes['凶会'] = kue
@@ -307,18 +308,18 @@ module When::Coordinates
 
       # 具注暦(大衍暦以来)
       notes['天一']     ||= begin
-        note = Notes['天一'][@remainder]
+        note = Rules['天一'][@remainder]
         dates.range >= 15 ?  note.dup.sub!(/天上始/, '天上') :
         dates.range >= 11 ?  note : note.dup.sub!(/始/, '')
       end
-      notes['土公']     ||= Notes['土公'][@remainder]
+      notes['土公']     ||= Rules['土公'][@remainder]
       notes['五墓']     ||= [4,22,28,31,37].include?(@remainder) ? '五墓' : nil
       notes['伐'  ]     ||= [6,12,14,15,17,19,20,21,23,28,49,58].include?(@remainder) ? '伐' : nil
 
       #   節年に依存する暦注
       div, mod = @remainder.divmod(12)
-      base_dir = Notes['環'][year % 12]
-      move_dir = Notes['遊'][div]
+      base_dir = Rules['環'][year % 12]
+      move_dir = Rules['遊'][div]
       unless base_dir == move_dir
 	event  = '遊' + move_dir if mod == 0
 	event  = '環' + base_dir if mod == 5
@@ -334,51 +335,51 @@ module When::Coordinates
       notes['六蛇']     ||= (month-1) / 3 == 3 && [48,59].include?(@remainder)  ? '六蛇' : nil
 
       #   宣明暦以前は節月、貞享暦以後は暦月？
-      notes['三寶吉'], notes['神吉'], notes['雑事吉'], notes['小字注'] = Notes['吉事注'][m-1][@remainder]
+      notes['三寶吉'], notes['神吉'], notes['雑事吉'], notes['小字注'] = Rules['吉事注'][m-1][@remainder]
 
       # 仮名暦
       unless notes['金神遊行']
         div, mod   = @remainder.divmod(12)
-        note       = (2..6).include?(mod) ? '平素' + Notes['平素遊行'][div] : ''
-        range, dir = Notes['四季遊行'][(month-1) / 3]
+        note       = (2..6).include?(mod) ? '平素' + Rules['平素遊行'][div] : ''
+        range, dir = Rules['四季遊行'][(month-1) / 3]
         note      += range.include?(@remainder) ? '四季' + dir : ''
         notes['金神遊行'] = note == '' ? nil : note
       end
       notes['甲子待']   ||= @remainder == 0  ? '甲子待' : nil
       notes['己巳'  ]   ||= @remainder == 5  ? '己巳'   : nil
       notes['庚申待']   ||= @remainder == 56 ? '庚申待' : nil
-      notes['大明'  ]   ||= [5,6,7,8,9,13,15,18,20,23,28,31,38,40,41,42,43,45,46,47,52,54,55,56,57].include?(@remainder) ? '大明' : nil
       notes['犯土'  ]   ||= [7,8,9,10,11].include?(@remainder)    ? '大犯土' : {6 =>'大犯土始', 12=>'大犯土終', 13=>'犯土間日'}[@remainder]
       notes['犯土'  ]   ||= [15,16,17,18,19].include?(@remainder) ? '小犯土' : {14=>'小犯土始', 20=>'小犯土終'}[@remainder]
       notes['十方暮']   ||= [21,22,23,24,25,26,27,28].include?(@remainder) ? '十方暮' : {20=>'十方暮始', 29=>'十方暮終'}[@remainder]
       unless notes['八專']
-        note = Notes['八專'][@remainder]
+        note = Rules['八專'][@remainder]
         note = note.sub('始','入') if note && (9..10).include?(dates.range)
         notes['八專'] = note
       end
-      notes['八專間日'] ||= [49,52,54,58,59].include?(@remainder) ? '八專間日' : nil
+      notes['八專間日'] ||= [49,52,54,58].include?(@remainder) ? '八專間日' : nil
     end
 
     private
 
     def _notes_without_kue(notes, month, daisai, variation)
       notes['天恩']     ||= [0,3,9].include?(@remainder / 5) ? '天恩' : nil
+      notes['大明']     ||= [5,6,7,8,9,13,15,18,20,23,28,31,38,40,41,42,43,45,46,47,52,54,55,56,57].include?(@remainder) ? '大明' : nil
 
       return notes if notes['大小歳']
 
       if variation
-        note = Notes['大小歳差分'][[month, @remainder]]
+        note = Rules['大小歳差分'][[month, @remainder]]
         if note
           notes['大小歳'] = daisai + note
           return
         end
       end
 
-      index = Notes['大小歳'][0].map {|pattern|
+      index = Rules['大小歳'][0].map {|pattern|
 	        k = 4.times {|i|
-	          break i if Notes['大小歳'][1][@remainder] =~ pattern[i]
+	          break i if Rules['大小歳'][1][@remainder] =~ pattern[i]
 	        }
-	        k == 4 ? nil : Notes['大小歳'][2][(k+(month-1)/3) % 4]
+	        k == 4 ? nil : Rules['大小歳'][2][(k+(month-1)/3) % 4]
 	      }
       notes['大小歳'] = (index[0] ? '大小歳' + index[0] : '') + 
 	                (index[1] ?  daisai  + index[1] : '') + 
@@ -386,7 +387,7 @@ module When::Coordinates
       notes.delete('大小歳') if notes['大小歳'] == ''
     end
 
-    Notes = {
+    Rules = {
       '大歳壇干' => %w(木 火 土 金 水),
       '大歳壇支' => %w(水 土 木 木 土 火 火 土 金 金 土 水),
       '納音'     => %w(海中金 爐中火 大林木 路傍土 釼鋒金 山頭火 澗下水 城頭土 白鑞金 楊柳木

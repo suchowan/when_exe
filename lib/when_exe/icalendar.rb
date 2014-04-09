@@ -29,7 +29,7 @@
 #     他のソフトウェアとの互換性を損なう可能性があるが、本ライブラリは両方の動作の違いを
 #     記述できる必要があると判断。
 # * BYDAY/c=n*e±s(,..)
-#     c で指定したWhen::CalendarTypes::CalendarNoteオブジェクトのイベントeのうち、
+#     c で指定したWhen::CalendarNoteオブジェクトのイベントeのうち、
 #     n番目のものについて、その±s日目
 #     デフォルトは n=all, s=0, cとeは省略不可(eはcのメソッドとして定義されている必要がある)
 #     example: 'BYDAY/Christian=easter-2' は、キリスト教の聖金曜日
@@ -505,6 +505,7 @@ module When::V
       }
       return copy
     end
+    alias :subset :intersection
 
     # @private
     def _enumerator_list(args)

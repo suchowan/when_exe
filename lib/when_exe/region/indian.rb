@@ -765,305 +765,305 @@ module When
         super
       end
     end
+  end
 
-    class CalendarNote
-      #
-      # ヒンドゥー系の暦注
-      #
-      class HinduNote < self
+  class CalendarNote
+    #
+    # ヒンドゥー系の暦注
+    #
+    class HinduNote < self
 
-        NoteObjects = [When::BasicTypes::M17n, [
-          "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
-          "locale:[=en:, ja=ja:, alias=ja:]",
-          "names:[Hindu]",
+      NoteObjects = [When::BasicTypes::M17n, [
+        "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
+        "locale:[=en:, ja=ja:, alias=ja:]",
+        "names:[Hindu]",
 
-          # 年の暦注 ----------------------------
+        # 年の暦注 ----------------------------
+        [When::BasicTypes::M17n,
+          "names:[year]"
+        ],
+
+        # 月の暦注 ----------------------------
+        [When::BasicTypes::M17n,
+          "names:[month]",
           [When::BasicTypes::M17n,
-            "names:[year]"
-          ],
-
-          # 月の暦注 ----------------------------
-          [When::BasicTypes::M17n,
-            "names:[month]",
-            [When::BasicTypes::M17n,
-              "names:[Month]"
-            ]
-          ],
-
-          # 日の暦注 ----------------------------
-          [When::BasicTypes::M17n,
-            "names:[day]",
-
-            [When::BasicTypes::M17n,
-              "names:[tithi=, ティティ=ja:%%<ティティ>]",
-              "[Amavasya                  ]", # 新月
-              "[Pratipad=en:Prathama_(day)]", #  1
-              "[Dwitiya                   ]", #  2
-              "[Tritiya                   ]", #  3
-              "[Chaturthi                 ]", #  4
-              "[Panchami                  ]", #  5
-              "[Ṣaṣṭhī=en:Shashti         ]", #  6
-              "[Saptami                   ]", #  7
-              "[Ashtami                   ]", #  8
-              "[Navami                    ]", #  9
-              "[Dashami                   ]", # 10
-              "[Ekadashi                  ]", # 11
-              "[Dwadashi                  ]", # 12
-              "[Thrayodashi               ]", # 13
-              "[Chaturdashi               ]", # 14
-              "[Purnima                   ]"  # 満月
-            ],
-
-            [When::BasicTypes::M17n,
-              "names:[vāra=, ヴァーラ=, *vara=]",
-              "[Ravi=en:S%C5%ABrya, 日曜日]",
-              "[Soma,               月曜日]",
-              "[Maṅgala=en:Mangala, 火曜日]",
-              "[Budha,              水曜日]",
-              "[Guru,               木曜日]",
-              "[Śukra=en:Shukra,    金曜日]",
-              "[Śani=en:Shani,      土曜日]" 
-            ],
-
-            [When::BasicTypes::M17n,
-              "names:[nakṣatra=, ナクシャトラ=, *naksatra=]",
-              "[Aśvinī=en:Ashvin%C4%AB,                           アシュヴィニー=,     婁宿]", #  1
-              "[Bharaṇī=en:Bharan%C4%AB,                          バラニー=,           胃宿]", #  2
-              "[Kṛttikā=en:Krittik%C4%81,                         クリッティカー=,     昴宿]", #  3
-              "[Rohiṇī=en:Rohini_(nakshatra),                     ローヒニ―=,         畢宿]", #  4
-              "[Mṛgaśiras=en:Mrigash%C4%ABrsha,                   ムリガシラス=,       觜宿]", #  5
-              "[Ārdrā=en:Ardra_(nakshatra),                       アールドラー=,       參宿]", #  6
-              "[Punarvasu=en:Punarvasu,                           プナルヴァス=,       井宿]", #  7
-              "[Puṣya=en:Pushya,                                  プシュヤ=,           鬼宿]", #  8
-              "[Aśleṣā=en:%C4%80shlesh%C4%81,                     アーシュレーシャー=, 柳宿]", #  9
-              "[Maghā=en:Magh%C4%81,                              マガー=,             星宿]", # 10
-              "[P. Phalguṇī=en:P%C5%ABrva_Phalgun%C4%AB,          P. パールグニー=,    張宿]", # 11
-              "[U. Phalguṇī=en:Uttara_Phalgun%C4%AB,              U. パールグニー=,    翼宿]", # 12
-              "[Hasta=en:Nakshatra#Divisions,                     ハスタ=,             軫宿]", # 13
-              "[Citrā=en:Nakshatra#Divisions,                     チトラー=,           角宿]", # 14
-              "[Svāti=en:Sv%C4%81t%C4%AB,                         スヴァーティー=,     亢宿]", # 15
-              "[Viśākha=en:Vish%C4%81kh%C4%81,                    ヴィシャーカー=,     氐宿]", # 16
-              "[Anurādhā=en:Anur%C4%81dh%C4%81,                   アヌラーダー=,       房宿]", # 17
-              "[Jyeṣṭha=en:Jyeshtha,                              ジェーシュター=,     心宿]", # 18
-              "[Mūla=en:Mula_(astrology),                         ムーラ=,             尾宿]", # 19
-              "[P. āṣāḍha=en:P%C5%ABrva_Ash%C4%81dh%C4%81,        P. アーシャーダー=,  箕宿]", # 20
-              "[U. āṣāḍha=en:Uttara_Ash%C4%81dh%C4%81,            U. アーシャーダー=,  斗宿]", # 21
-              "[Śravaṇa=en:Shravana,                              シュラヴァナ=,       女宿]", # 22
-              "[Śraviṣṭhā=en:Dhanishta,                           ダニシュター=,       虛宿]", # 23
-              "[Śatabhiṣak=en:Shatabhish%C4%81,                   シャタビシャジュ=,   危宿]", # 24
-              "[P. Bhādrapadā=en:P%C5%ABrva_Bh%C4%81drapad%C4%81, P. バードラパダー=,  室宿]", # 25
-              "[U. Bhādrapadā=en:Uttara_Bh%C4%81drapad%C4%81,     U. バードラパダー=,  壁宿]", # 26
-              "[Revatī=en:Revati_(nakshatra),                     レーヴァティー=,     奎宿]"  # 27
-            ],
-
-            [When::BasicTypes::M17n,
-              "names:[yoga=, ヨーガ=]",
-              "[iṣkambha=]", #  1
-              "[rīti=    ]", #  2
-              "[yuśmān=  ]", #  3
-              "[aubhāgya=]", #  4
-              "[obhana=  ]", #  5
-              "[tigaṇḍa= ]", #  6
-              "[ukarma=  ]", #  7
-              "[hṛti=    ]", #  8
-              "[ūla=     ]", #  9
-              "[aṇḍa=    ]", # 10
-              "[ṛddhi=   ]", # 11
-              "[hruva=   ]", # 12
-              "[yāghatā= ]", # 13
-              "[arṣaṇa=  ]", # 14
-              "[ajra=    ]", # 15
-              "[iddhi=   ]", # 16
-              "[yatipāta=]", # 17
-              "[ariyas=  ]", # 18
-              "[arigha=  ]", # 19
-              "[iva=     ]", # 20
-              "[iddha=   ]", # 21
-              "[ādhya=   ]", # 22
-              "[ubha=    ]", # 23
-              "[ukla=    ]", # 24
-              "[rahma=   ]", # 25
-              "[āhendra= ]", # 26
-              "[aidhṛti= ]"  # 27
-            ],
-
-            [When::BasicTypes::M17n,
-              "names:[Karaṇa=, カラナ=, *karana]",
-              "[Bava=,      バヴァ=        ]", # 1
-              "[Bālava=,    バーラヴァ=    ]", # 2
-              "[Kaulava=,   カウラヴァ=    ]", # 3
-              "[Taitila=,   タイティラ=    ]", # 4
-              "[Gara=,      ガラ=          ]", # 5
-              "[Vaṇija=,    ヴァニジュ=    ]", # 6
-              "[Viṣṭi=,     ヴィシュティ=  ]", # 7
-              "[Kiṃtughna=, キンストゥグナ=]", # A
-              "[Śakuni=,    シャクニ=      ]", # B
-              "[Catuṣpāda=, チャトシュパダ=]", # C
-              "[Nāga=,      ナーガ=        ]"  # D
-            ]
+            "names:[Month]"
           ]
-        ]]
+        ],
 
-        NoteConsts = {
-          'tithi' => {
-            :formula => 15,
-            :range   => (-1..2),
-            :index   => [ 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,
-                         15,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
-          },
-          'naksatra' => {
-            :formula => '27M',
-            :range   => (-1..2),
-            :index   => (0...27).to_a
-          },
-          'yoga' => {
-            :formula => '27M+27S',
-            :range   => (-1..2),
-            :index   => (0...27).to_a
-          },
-          'karana' => {
-            :formula => 30,
-            :range   => (-2..3),
-            :index   => [7] + (0...7).to_a * 8 + [8,9,10]
-          }
+        # 日の暦注 ----------------------------
+        [When::BasicTypes::M17n,
+          "names:[day]",
+
+          [When::BasicTypes::M17n,
+            "names:[tithi=, ティティ=ja:%%<ティティ>]",
+            "[Amavasya                  ]", # 新月
+            "[Pratipad=en:Prathama_(day)]", #  1
+            "[Dwitiya                   ]", #  2
+            "[Tritiya                   ]", #  3
+            "[Chaturthi                 ]", #  4
+            "[Panchami                  ]", #  5
+            "[Ṣaṣṭhī=en:Shashti         ]", #  6
+            "[Saptami                   ]", #  7
+            "[Ashtami                   ]", #  8
+            "[Navami                    ]", #  9
+            "[Dashami                   ]", # 10
+            "[Ekadashi                  ]", # 11
+            "[Dwadashi                  ]", # 12
+            "[Thrayodashi               ]", # 13
+            "[Chaturdashi               ]", # 14
+            "[Purnima                   ]"  # 満月
+          ],
+
+          [When::BasicTypes::M17n,
+            "names:[vāra=, ヴァーラ=, *vara=]",
+            "[Ravi=en:S%C5%ABrya, 日曜日]",
+            "[Soma,               月曜日]",
+            "[Maṅgala=en:Mangala, 火曜日]",
+            "[Budha,              水曜日]",
+            "[Guru,               木曜日]",
+            "[Śukra=en:Shukra,    金曜日]",
+            "[Śani=en:Shani,      土曜日]" 
+          ],
+
+          [When::BasicTypes::M17n,
+            "names:[nakṣatra=, ナクシャトラ=, *naksatra=]",
+            "[Aśvinī=en:Ashvin%C4%AB,                           アシュヴィニー=,     婁宿]", #  1
+            "[Bharaṇī=en:Bharan%C4%AB,                          バラニー=,           胃宿]", #  2
+            "[Kṛttikā=en:Krittik%C4%81,                         クリッティカー=,     昴宿]", #  3
+            "[Rohiṇī=en:Rohini_(nakshatra),                     ローヒニ―=,         畢宿]", #  4
+            "[Mṛgaśiras=en:Mrigash%C4%ABrsha,                   ムリガシラス=,       觜宿]", #  5
+            "[Ārdrā=en:Ardra_(nakshatra),                       アールドラー=,       參宿]", #  6
+            "[Punarvasu=en:Punarvasu,                           プナルヴァス=,       井宿]", #  7
+            "[Puṣya=en:Pushya,                                  プシュヤ=,           鬼宿]", #  8
+            "[Aśleṣā=en:%C4%80shlesh%C4%81,                     アーシュレーシャー=, 柳宿]", #  9
+            "[Maghā=en:Magh%C4%81,                              マガー=,             星宿]", # 10
+            "[P. Phalguṇī=en:P%C5%ABrva_Phalgun%C4%AB,          P. パールグニー=,    張宿]", # 11
+            "[U. Phalguṇī=en:Uttara_Phalgun%C4%AB,              U. パールグニー=,    翼宿]", # 12
+            "[Hasta=en:Nakshatra#Divisions,                     ハスタ=,             軫宿]", # 13
+            "[Citrā=en:Nakshatra#Divisions,                     チトラー=,           角宿]", # 14
+            "[Svāti=en:Sv%C4%81t%C4%AB,                         スヴァーティー=,     亢宿]", # 15
+            "[Viśākha=en:Vish%C4%81kh%C4%81,                    ヴィシャーカー=,     氐宿]", # 16
+            "[Anurādhā=en:Anur%C4%81dh%C4%81,                   アヌラーダー=,       房宿]", # 17
+            "[Jyeṣṭha=en:Jyeshtha,                              ジェーシュター=,     心宿]", # 18
+            "[Mūla=en:Mula_(astrology),                         ムーラ=,             尾宿]", # 19
+            "[P. āṣāḍha=en:P%C5%ABrva_Ash%C4%81dh%C4%81,        P. アーシャーダー=,  箕宿]", # 20
+            "[U. āṣāḍha=en:Uttara_Ash%C4%81dh%C4%81,            U. アーシャーダー=,  斗宿]", # 21
+            "[Śravaṇa=en:Shravana,                              シュラヴァナ=,       女宿]", # 22
+            "[Śraviṣṭhā=en:Dhanishta,                           ダニシュター=,       虛宿]", # 23
+            "[Śatabhiṣak=en:Shatabhish%C4%81,                   シャタビシャジュ=,   危宿]", # 24
+            "[P. Bhādrapadā=en:P%C5%ABrva_Bh%C4%81drapad%C4%81, P. バードラパダー=,  室宿]", # 25
+            "[U. Bhādrapadā=en:Uttara_Bh%C4%81drapad%C4%81,     U. バードラパダー=,  壁宿]", # 26
+            "[Revatī=en:Revati_(nakshatra),                     レーヴァティー=,     奎宿]"  # 27
+          ],
+
+          [When::BasicTypes::M17n,
+            "names:[yoga=, ヨーガ=]",
+            "[iṣkambha=]", #  1
+            "[rīti=    ]", #  2
+            "[yuśmān=  ]", #  3
+            "[aubhāgya=]", #  4
+            "[obhana=  ]", #  5
+            "[tigaṇḍa= ]", #  6
+            "[ukarma=  ]", #  7
+            "[hṛti=    ]", #  8
+            "[ūla=     ]", #  9
+            "[aṇḍa=    ]", # 10
+            "[ṛddhi=   ]", # 11
+            "[hruva=   ]", # 12
+            "[yāghatā= ]", # 13
+            "[arṣaṇa=  ]", # 14
+            "[ajra=    ]", # 15
+            "[iddhi=   ]", # 16
+            "[yatipāta=]", # 17
+            "[ariyas=  ]", # 18
+            "[arigha=  ]", # 19
+            "[iva=     ]", # 20
+            "[iddha=   ]", # 21
+            "[ādhya=   ]", # 22
+            "[ubha=    ]", # 23
+            "[ukla=    ]", # 24
+            "[rahma=   ]", # 25
+            "[āhendra= ]", # 26
+            "[aidhṛti= ]"  # 27
+          ],
+
+          [When::BasicTypes::M17n,
+            "names:[Karaṇa=, カラナ=, *karana]",
+            "[Bava=,      バヴァ=        ]", # 1
+            "[Bālava=,    バーラヴァ=    ]", # 2
+            "[Kaulava=,   カウラヴァ=    ]", # 3
+            "[Taitila=,   タイティラ=    ]", # 4
+            "[Gara=,      ガラ=          ]", # 5
+            "[Vaṇija=,    ヴァニジュ=    ]", # 6
+            "[Viṣṭi=,     ヴィシュティ=  ]", # 7
+            "[Kiṃtughna=, キンストゥグナ=]", # A
+            "[Śakuni=,    シャクニ=      ]", # B
+            "[Catuṣpāda=, チャトシュパダ=]", # C
+            "[Nāga=,      ナーガ=        ]"  # D
+          ]
+        ]
+      ]]
+
+      NoteConsts = {
+        'tithi' => {
+          :formula => 15,
+          :range   => (-1..2),
+          :index   => [ 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,
+                       15,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
+        },
+        'naksatra' => {
+          :formula => '27M',
+          :range   => (-1..2),
+          :index   => (0...27).to_a
+        },
+        'yoga' => {
+          :formula => '27M+27S',
+          :range   => (-1..2),
+          :index   => (0...27).to_a
+        },
+        'karana' => {
+          :formula => 30,
+          :range   => (-2..3),
+          :index   => [7] + (0...7).to_a * 8 + [8,9,10]
         }
+      }
 
-        #
-        # pancanga 計算に必要となる情報をまとめた内部クラス
-        #
-        class Dates
-
-          # @private
-          attr_reader :o_date, :l_date, :root, :formula, :iri, :rises
-
-          # 初期設定
-          # @private
-          def initialize(date)
-            @o_date  = date
-            clock    = date.clock
-            frame    = date.frame if date.frame.kind_of?(When::CalendarTypes::HinduLuniSolar)
-            @l_date  = (frame || When.Calendar('HinduLuniSolar?note=HinduNote')).jul_trans(date.to_i, {:clock=>'+05:30'})
-            @root    = When.CalendarNote('HinduNote/NoteObjects')['day']
-            @formula = @l_date.frame.formula[-1]
-            @iri     = @formula.iri
-            @rises   = [@formula.sunrise(@l_date), @formula.sunrise(@l_date+When.Duration('P1D'))]
-          end
-
-          # その他のメソッドは @l_date に移譲する
-          def method_missing(name, *args, &block)
-            self.class.module_eval %Q{
-              def #{name}(*args, &block)
-                @l_date.send("#{name}", *args, &block)
-              end
-            } unless When::Parts::MethodCash.escape(name)
-            @l_date.send(name, *args, &block)
-          end
-        end
-
-        #
-        # 任意の暦をインド太陰太陽暦日に変換
-        # @private
-        def _to_date_for_note(date)
-          Dates.new(date)
-        end
-
-        #
-        # ヴァーラ (七曜)
-        #
-        # @param [Dates] dates
-        #
-        # @return [Array<When::TM::TemporalPosition>] 日の出の時刻をイベント時刻とする
-        #
-        def vara(dates)
-          rise        =  dates.rises[0]
-          rise.events = [dates.root['vara'][(rise.to_i+1) % 7]]
-          [rise]
-        end
-
-        #
-        # ヴァーラ以外
-        #
-
-        # 当該日付中でティティが変わる日時
-        # @method tithi(dates)
-        #   @param [Dates] dates
-        #   @return [Array<When::TM::TemporalPosition>] イベント日時
-
-        # 当該日付中でナクシャトラが変わる日時
-        # @method naksatra(dates)
-        #   @param [Dates] dates
-        #   @return [Array<When::TM::TemporalPosition>] イベント日時
-
-        # 当該日付中でヨーガが変わる日時
-        # @method yoga(dates)
-        #   @param [Dates] dates
-        #   @return [Array<When::TM::TemporalPosition>] イベント日時
-
-        # 当該日付中でカラナが変わる日時
-        # @method karana(dates)
-        #   @param [Dates] dates
-        #   @return [Array<When::TM::TemporalPosition>] イベント日時
-        #
+      #
+      # pancanga 計算に必要となる情報をまとめた内部クラス
+      #
+      class Dates
 
         # @private
-        NoteConsts.keys.each do |key|
-          module_eval %Q{
-            def #{key}(dates)
-              pancanga(dates, '#{key}')
+        attr_reader :o_date, :l_date, :root, :formula, :iri, :rises
+
+        # 初期設定
+        # @private
+        def initialize(date)
+          @o_date  = date
+          clock    = date.clock
+          frame    = date.frame if date.frame.kind_of?(When::CalendarTypes::HinduLuniSolar)
+          @l_date  = (frame || When.Calendar('HinduLuniSolar?note=HinduNote')).jul_trans(date.to_i, {:clock=>'+05:30'})
+          @root    = When.CalendarNote('HinduNote/NoteObjects')['day']
+          @formula = @l_date.frame.formula[-1]
+          @iri     = @formula.iri
+          @rises   = [@formula.sunrise(@l_date), @formula.sunrise(@l_date+When.Duration('P1D'))]
+        end
+
+        # その他のメソッドは @l_date に移譲する
+        def method_missing(name, *args, &block)
+          self.class.module_eval %Q{
+            def #{name}(*args, &block)
+              @l_date.send("#{name}", *args, &block)
             end
-          }
-        end
-
-        #
-        # ヴァーラ以外のイベント日時
-        #
-        # @param [Dates] dates
-        # @param [String] key 'tithi', 'naksatra', 'yoga', 'karana' のいずれか
-        # @return [Array<When::TM::TemporalPosition>] イベント日時
-        #
-        def pancanga(dates, key)
-          pattern = NoteConsts[key]
-          note    = dates.root[key]
-          if pattern[:formula].kind_of?(Numeric)
-            factor  = pattern[:formula].to_f
-            formula = dates.formula
-          else
-            factor  = 1.0
-            formula = When.Resource(dates.iri.sub(/formula=2L/, "formula=#{pattern[:formula]}"))
-          end
-          cn      = (formula.time_to_cn(dates.l_date) * factor).floor
-          events  = []
-          pattern[:range].each do |i|
-            event = formula._to_seed_type(formula.cn_to_time((cn+i)/factor), dates.l_date)
-            break if +event >= +dates.rises[1]
-            next  if +event <  +dates.rises[0]
-            event.events = [note[pattern[:index][(cn+i) % pattern[:index].length]]]
-            events << event
-          end
-          events
+          } unless When::Parts::MethodCash.escape(name)
+          @l_date.send(name, *args, &block)
         end
       end
 
       #
-      # 日の出の九惑星の位置まで計算
+      # 任意の暦をインド太陰太陽暦日に変換
+      # @private
+      def _to_date_for_note(date)
+        Dates.new(date)
+      end
+
       #
-      class HinduNoteDetailed < HinduNote
-        #
-        # ヴァーラ (七曜)と九惑星の位置
-        #
-        # @param [Dates] dates
-        # @return [Array<When::TM::TemporalPosition, Hash{ 惑星シンボル=>惑星の真黄経 }>]
-        #   日の出の時刻をイベント時刻とし、その時刻での九惑星の位置を計算
-        #
-        def vara(dates)
-          rise        =  dates.rises[0]
-          rise.events = [dates.root['vara'][(rise.to_i+1) % 7]]
-          t           = dates.formula.is_dynamical ? +rise : rise.to_f
-          [rise, dates.formula.graha.keys.inject({}) {|h,p|
-            h.store(p, dates.formula.graha[p].true_longitude(t))
-            h
-          }]
+      # ヴァーラ (七曜)
+      #
+      # @param [Dates] dates
+      #
+      # @return [Array<When::TM::TemporalPosition>] 日の出の時刻をイベント時刻とする
+      #
+      def vara(dates)
+        rise        =  dates.rises[0]
+        rise.events = [dates.root['vara'][(rise.to_i+1) % 7]]
+        [rise]
+      end
+
+      #
+      # ヴァーラ以外
+      #
+
+      # 当該日付中でティティが変わる日時
+      # @method tithi(dates)
+      #   @param [Dates] dates
+      #   @return [Array<When::TM::TemporalPosition>] イベント日時
+
+      # 当該日付中でナクシャトラが変わる日時
+      # @method naksatra(dates)
+      #   @param [Dates] dates
+      #   @return [Array<When::TM::TemporalPosition>] イベント日時
+
+      # 当該日付中でヨーガが変わる日時
+      # @method yoga(dates)
+      #   @param [Dates] dates
+      #   @return [Array<When::TM::TemporalPosition>] イベント日時
+
+      # 当該日付中でカラナが変わる日時
+      # @method karana(dates)
+      #   @param [Dates] dates
+      #   @return [Array<When::TM::TemporalPosition>] イベント日時
+      #
+
+      # @private
+      NoteConsts.keys.each do |key|
+        module_eval %Q{
+          def #{key}(dates)
+            pancanga(dates, '#{key}')
+          end
+        }
+      end
+
+      #
+      # ヴァーラ以外のイベント日時
+      #
+      # @param [Dates] dates
+      # @param [String] key 'tithi', 'naksatra', 'yoga', 'karana' のいずれか
+      # @return [Array<When::TM::TemporalPosition>] イベント日時
+      #
+      def pancanga(dates, key)
+        pattern = NoteConsts[key]
+        note    = dates.root[key]
+        if pattern[:formula].kind_of?(Numeric)
+          factor  = pattern[:formula].to_f
+          formula = dates.formula
+        else
+          factor  = 1.0
+          formula = When.Resource(dates.iri.sub(/formula=2L/, "formula=#{pattern[:formula]}"))
         end
+        cn      = (formula.time_to_cn(dates.l_date) * factor).floor
+        events  = []
+        pattern[:range].each do |i|
+          event = formula._to_seed_type(formula.cn_to_time((cn+i)/factor), dates.l_date)
+          break if +event >= +dates.rises[1]
+          next  if +event <  +dates.rises[0]
+          event.events = [note[pattern[:index][(cn+i) % pattern[:index].length]]]
+          events << event
+        end
+        events
+      end
+    end
+
+    #
+    # 日の出の九惑星の位置まで計算
+    #
+    class HinduNoteDetailed < HinduNote
+      #
+      # ヴァーラ (七曜)と九惑星の位置
+      #
+      # @param [Dates] dates
+      # @return [Array<When::TM::TemporalPosition, Hash{ 惑星シンボル=>惑星の真黄経 }>]
+      #   日の出の時刻をイベント時刻とし、その時刻での九惑星の位置を計算
+      #
+      def vara(dates)
+        rise        =  dates.rises[0]
+        rise.events = [dates.root['vara'][(rise.to_i+1) % 7]]
+        t           = dates.formula.is_dynamical ? +rise : rise.to_f
+        [rise, dates.formula.graha.keys.inject({}) {|h,p|
+          h.store(p, dates.formula.graha[p].true_longitude(t))
+          h
+        }]
       end
     end
   end
