@@ -325,7 +325,7 @@ module When::Parts
         when String
           target = source.dup
           tags.each_pair do |key, value|
-            target.gsub!(/#\{(\?[^=#}]+?=)?#{key}(:.*?)?\}/, '\1' + value) if value.kind_of?(String)
+            target.gsub!(/#\{([?&][^=#}]+?=)?#{key}(:.*?)?\}/, '\1' + value) if value.kind_of?(String)
           end
           target.gsub(/#\{.+?(:(.*?))?\}/, '\2')
         when Array

@@ -360,7 +360,7 @@ module When::CalendarTypes
         rule['Offset'] << (k == 0 ? 0 : rule['Offset'][k-1]+rule['Length'][k-1])
         trunk  = key.upcase[k]
         branch = (trunk == key.upcase[k-1]) ? 1 : 0
-        trunk  = trunk.ord if (trunk.kind_of?(String))
+        trunk  = trunk.ord if trunk.kind_of?(String)
         trunk -= 64
         rule['IDs'] << ((branch==0) ? trunk : When::Coordinates::Pair.new(trunk, branch))
       end
@@ -455,6 +455,56 @@ module When::CalendarTypes
     def _normalize(args=[], options={})
       @note ||= When.CalendarNote('ChineseNotes') # See when.rb
       super
+    end
+  end
+
+  # 表引きにより実現する太陰太陽暦(29,30日以外の月がある場合)
+  #
+  #   Luni-Solar calendar which uses year / month /day table
+  #
+  class PatternTableBasedLuniSolarExtended < PatternTableBasedLuniSolar
+
+    private
+
+    # rule の遅延生成
+    def _rule_(key)
+      key.kind_of?(Hash) ? key : super
+    end
+
+    #  new で指定された月日配当規則をプログラムで利用可能にします。
+    # 
+    #    key  年月日配当規則のハッシュキー
+    #    rule 年月日配当規則
+    #
+    #    インスタンス変数 ハッシュのハッシュ@rule_table の要素
+    #      Years  =>  the period length / year
+    #      Months =>  the period length / month
+    #      Days   =>  the period length / day 
+    #      Rule   =>  Array of sub rules' key and offset
+    def _make_rule(key, rule, unit=nil)
+
+      mm, dd = 0, 0
+      rule['Rule'].each_index do |k|
+        subkey = rule['Rule'][k]
+        case subkey
+        when String, Hash ; rule['Rule'][k] = [subkey, dd, mm]
+        when Array        ; subkey, dd, mm  = rule['Rule'][k]
+        else              ; raise TypeError, "Irregal subkey type"
+        end
+        if subkey.kind_of?(String)
+          mm += subkey.length
+          dd += subkey.length * 29 + subkey.gsub(/[a-z]/,'').length
+        else
+          mm += subkey['Months']
+          dd += subkey['Days']
+        end
+      end
+
+      rule['Years']  ||= rule['Rule'].length
+      rule['Months'] ||= mm
+      rule['Days']   ||= dd
+
+      @entry_key ||= key
     end
   end
 
