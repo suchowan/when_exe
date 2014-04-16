@@ -388,23 +388,28 @@ module When::CalendarTypes
     #      Rule   =>  Array of sub rules' key and offset
     def _make_rule(key, rule, unit=nil)
 
-      mm, dd = 0, 0
+      offsets = [0, 0]
       rule['Rule'].each_index do |k|
         subkey = rule['Rule'][k]
-        case subkey
-        when String ; rule['Rule'][k] = [subkey, dd, mm]
-        when Array  ; subkey, dd, mm  = rule['Rule'][k]
-        else        ; raise TypeError, "Irregal subkey type"
+        if subkey.kind_of?(Array)
+          subkey, *offsets = rule['Rule'][k]
+        else
+          rule['Rule'][k] = [subkey] + offsets
         end
-        mm += subkey.length
-        dd += subkey.length * 29 + subkey.gsub(/[a-z]/,'').length
+        _increment_offsets(offsets, subkey)
       end
 
-      rule['Years']  ||= rule['Rule'].length
-      rule['Months'] ||= mm
-      rule['Days']   ||= dd
+      rule['Years']  ||= rule['Rule'].length # 年数
+      rule['Months'] ||= offsets[1]          # 月数
+      rule['Days']   ||= offsets[0]          # 日数
 
-      @entry_key ||= key
+      @entry_key     ||= key
+    end
+
+    # オフセットの更新
+    def _increment_offsets(offsets, subkey)
+      offsets[1] += subkey.length                                       # 月のオフセットを月数分進める
+      offsets[0] += subkey.length * 29 + subkey.gsub(/[a-z]/,'').length # 日のオフセットを日数分進める
     end
 
     # 年初の通日によるセットアップ
@@ -471,40 +476,11 @@ module When::CalendarTypes
       key.kind_of?(Hash) ? key : super
     end
 
-    #  new で指定された月日配当規則をプログラムで利用可能にします。
-    # 
-    #    key  年月日配当規則のハッシュキー
-    #    rule 年月日配当規則
-    #
-    #    インスタンス変数 ハッシュのハッシュ@rule_table の要素
-    #      Years  =>  the period length / year
-    #      Months =>  the period length / month
-    #      Days   =>  the period length / day 
-    #      Rule   =>  Array of sub rules' key and offset
-    def _make_rule(key, rule, unit=nil)
-
-      mm, dd = 0, 0
-      rule['Rule'].each_index do |k|
-        subkey = rule['Rule'][k]
-        case subkey
-        when String, Hash ; rule['Rule'][k] = [subkey, dd, mm]
-        when Array        ; subkey, dd, mm  = rule['Rule'][k]
-        else              ; raise TypeError, "Irregal subkey type"
-        end
-        if subkey.kind_of?(String)
-          mm += subkey.length
-          dd += subkey.length * 29 + subkey.gsub(/[a-z]/,'').length
-        else
-          mm += subkey['Months']
-          dd += subkey['Days']
-        end
-      end
-
-      rule['Years']  ||= rule['Rule'].length
-      rule['Months'] ||= mm
-      rule['Days']   ||= dd
-
-      @entry_key ||= key
+    # オフセットの更新
+    def _increment_offsets(offsets, subkey)
+      return super unless subkey.kind_of?(Hash)
+      offsets[1] += subkey['Months'] # 月のオフセットを月数分進める
+      offsets[0] += subkey['Days']   # 日のオフセットを日数分進める
     end
   end
 

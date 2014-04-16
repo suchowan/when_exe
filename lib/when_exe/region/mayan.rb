@@ -117,8 +117,7 @@ module When
     #
     LongCount =  [{'Epoch' => Hash.new {|hash, key|
                                 hash[key] = {
-                                  'origin_of_LSC' => 584283 + key.to_i,
-                                  'Epoch'         => key
+                                  'origin_of_LSC' => 584283 + key.to_i
                                 }}}, CyclicTableBased, {
       'origin_of_LSC' => 584283,
       'rule_table'    => {

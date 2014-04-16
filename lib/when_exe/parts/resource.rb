@@ -457,7 +457,7 @@ module When::Parts
           top = list[0][0]
           if top.kind_of?(Hash)
             top.each_pair do |key, value|
-              replace.update(value[replace.delete(key)]) if value.kind_of?(Hash) && value[replace[key]]
+              replace.update(value[replace[key]]) if value.kind_of?(Hash) && value[replace[key]]
             end
             list[0] = list[0][1..-1]
             list[0] = _replace_tags(list[0], top.merge(replace))
