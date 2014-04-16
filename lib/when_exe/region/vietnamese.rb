@@ -57,10 +57,10 @@ module When
 	AbcDEFgHiJkL	aBcdEfGHiJKl	AbCddEfGhIJKl	AbCdeFghIJKL	aBcDefGhiJKl
 	ABcCDefGhiJKl	ABcDeFgHiJkL	aBcDEfGhIjJkL	aBcDeFGhIjKl	AbcDeFGhIJkL
 	aBcdEfFgHIJkL	aBcdEfgHIJKl	AbCdeFghIJkL	ABcDdeFghIJkL	ABcDefGhiJkL
-	ABcDeFgHijKlL	AbCDeFgHiJkl	AbCDeFgHIjKl	AbcDeFgHHIjKl	AbcDeFgHIjKL
+	ABcDeFgHijKkL	AbCDeFgHiJkl	AbCDeFgHIjKl	AbcDeFgHHIjKl	AbcDeFgHIjKL
 	aBcdEfgHIjKL	AbCddEfgHiJKL	AbCdeFghIjKL	AbCdEfGhiJkL	AaBCdEfGhiJkL
 	aBCdEFgHiJkL	abCdEFgHIjKkL	abCdEfGHiJKl	AbcDefGHiJKL	aBcdEffGhIJKL
-	aBcdEfgHiJKL	aBCdeFghIjKL	aBCcDeFghIjKl	ABcDEfGhiJkL	aBCdEfGHiJkkL
+	aBcdEfgHiJKL	aBCdeFghIjKL	aBCdDeFghIjKl	ABcDEfGhiJkL	aBCdEfGHiJkkL
 
 	aBcDeFGhIJkL	abCdEfGhIJKl	AbcDefGgHIJkL	AbcDefGhIJKl	ABcdEfgHiJKl
 	ABcDeEfgHiJkL	ABcDeFghIjKl	ABcDEfGhiJkL	aAbCDeFgHiJkL	aBcDeFGhIjKl
@@ -113,7 +113,7 @@ module When
 	ABcDeFgHiJklL	AbCDeFgHiJkL	aBcDeFGhIjKl	AbcDeFGhHIjKl	AbcDeFgHIjKL
 	aBcdEfgHIjKL	AbCddEfgHiJKL	AbCdeFghIjKL	AbCDefGhiJkL	AaBCdEfGhIjkL
 	AbCdEFgHiJkL	abCdEFgHIjKkL	abCdEfGHiJKl	AbcDeFgHiJKL	aBcdEffGhIJKL
-	aBcdEfgHiJKL	aBCdeFghIjKL	aBCcDeFghIjKL	aBCdEfGhIjkL	aBCdEfGHiJKkl
+	aBcdEfgHiJKL	aBCdeFghIjKL	aBCdDeFghIjKL	aBCdEfGhIjkL	aBCdEfGHiJKkl
 
 	aBcDeFGhIJkL	abCdEfGHiJKl	AbcDefgGHIJkL	AbcDefGhIJKl	ABcdEfgHiJKl
 	ABCdeEfgHiJkL	ABcDeFghIjKl	ABcDEfGhiJkL	AabCDeFgHiJkL	aBcDeFGhIjKL
