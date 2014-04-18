@@ -70,7 +70,7 @@ module When
 	aBCdEfGhIjKl	AbCdEfGHiJkL	aBbcDeFGHiJkL	aBcdEfGHiJKl	AbCdeFgHiJJKl
 	AbCdeFghIJKL	aBcDefGhiJKl	ABCdEffGhiJKl	ABcDeFgHijKL	aBcDEfGhIjKl
 	AbCcDeFGhIjKl	AbcDeFGhIJkL	aBcdEfGhIJKl	AaBcdEfgHIJKl	AbCdeFghIJkL
-	ABcDefGhhIJkL	ABCdefGhiJkL	AbCDeFgHijKl	ABcDeEFgHiJkl	AbCdEFgHIjKl
+	ABcDefGhhIJkL	AbCDefGhiJkL	AbCDeFgHijKl	ABcDeEFgHiJkl	AbCdEFgHIjKl
 	AbcDeFgHIJkL	aBbcDeFgHIjKL	aBcdEfgHIjKL	AbCdeFghIiJKL	AbCdeFghIjKL
 
 	AbCdEfGhiJkL	AbCDeFgGhiJkL	aBCdEfGHiJkl	AbCdEFgHIjKl	aBccDEfGHiJKl
@@ -88,7 +88,7 @@ module When
 	ABcDeFGhIjKkl	AbCdEFgHIjKl	aBcDeFgHIJkL	aBcdEffGHIjKL	aBcdeFgHIjKL
 	AbCdefGhIjKL	ABcDdefGhIjKL	AbCdEfGhiJkL	AbCDeFgHijKlL	aBCdEfGHijKl
 	AbCdEFgHiJKl	aBcDeFgHIiJKl	AbcDefGHiJKL	aBcdeFgHiJKL	AbCdeeFgHiJKL
-	aBcDefGhIjKL	aBCdEfGhiJkL	aBBcDEfgHiJkL	aBcDEfGhIjKl	AbCdEfGHiJKkl
+	aBcDefGhIjKL	aBCdEfGhiJkL	aBBcDEfGhiJkL	aBcDEfGhIjKl	AbCdEfGHiJKkl
 	AbCdeFGhIJKl	AbcDefGhIJKl	ABcdeFfGhIJKl	AbCdeFgHiJKl	ABcDeFghIjKl
 	ABCdEefGhIjKl	ABcDeFgHiJkL	aBcDeFGhIjKl	AaBcDeFgHIjKl	AbCdeFgHIJkL
 	aBcDefGhIIJkL	aBcDefGhIjKL	AbCdEfgHiJkL)
@@ -116,14 +116,14 @@ module When
 	aBcdEfgHiJKL	aBCdeFghIjKL	aBCdDeFghIjKL	aBCdEfGhIjkL	aBCdEfGHiJKkl
 
 	aBcDeFGhIJkL	abCdEfGHiJKl	AbcDefgGHIJkL	AbcDefGhIJKl	ABcdEfgHiJKl
-	ABCdeEfgHiJkL	ABcDeFghIjKl	ABcDEfGhiJkL	AabCDeFgHiJkL	aBcDeFGhIjKL
+	ABCdeEfgHiJkL	ABcDeFghIjKl	ABcDEfGhiJkL	AabCDeFgHIjkL	aBcDeFGhIJkL
 	abCdEfGhIJjKL	abCdeFgHIJkL	AbcDefGhIJkL	ABcdEffGhIjKL	AbCdEfgHiJkL
 	AbCDeFghIjKl	AbCDdEfGhIjKl	AbCdEFgHiJkL	aBcDeFgHIjKlL	aBcdEfGHIjKl
 	AbCdeFgHIjKL	aBcDefGhHiJKL	aBcDefGhIjKL	AbCdEfgHiJkL	aBCDefFgHiJkL
 	aBCdEfGhIjKl	AbCdEfGHiJkL	aBbCdEfGHiJkL	aBcdEfGHiJKl	AbCdeFgHiJJKl
 	AbCdeFghIJKL	aBcDefGhiJKl	ABCdEffGhiJKl	ABcDeFgHijKl	ABcDEfGhIjKl
 	aBCdDeFGhIjKl	AbcDeFGhIJkL	aBcdEfGhIJKl	AbCcdEfgHIJkL	AbCdeFghIJkL
-	ABcDefGghIjKL	ABCdefGhiJkL	AbCDeFgHijKl	ABcDeEFgHiJkl	AbCDeFgHIjKl
+	ABcDefGghIjKL	AbCDefGhiJkL	AbCDeFgHijKl	ABcDeEFgHiJkl	AbCDeFgHIjKl
 	AbcDeFgHIJkL	aBccDeFgHIjKL	aBcdEfgHIjKL	AbCdeFggHiJKL	AbCdeFghIjKL
 
 	AbCdEfGhiJkL	AbCDeFgGhiJkL	aBCdEfGHiJkl	AbCdEFgHIjKl	aBccDEfGHiJKl
@@ -179,8 +179,8 @@ module When
 
 	aBcdEfGhIJKl	AbCdeFgHiJKL	aBcDeeFghIJkL	ABcDefGhiJKl	ABcDEfgHiJkL
 	aBCdDeFgHiJkL	aBcDeFGhIjKl	AbcDEfGhIJkL	aBbcDeFgHIJkL	aBcdEfGhIJKl
-	AbCdeFfgHIjKL	AbCdeFghIJkL	ABcDefGhiJkL	ABcDeEfGhIjkL	AbCDeFgHiJkL
-	aBcDeFGhIjKl	AbbCdEFgHIjKl	AbcDeFgHIjKL	aBcdEfgGHiJKL	aBcdEfgHIjKL
+	AbCdeFfgHIjKL	AbCdeFghIJkL	ABcDefGhiJkL	ABcDeEfGhiJkL	AbCDeFgHiJkl
+	ABcDeFGhIjKl	AbbCdEFgHIjKl	AbcDeFgHIjKL	aBcdEfgGHiJKL	aBcdEfgHiJKL
 	AbCdeFghIjKL	AbCDeeFghIjKL	aBCdEfGhiJkL	aBCdEFgHiJkL	abCdDEfGHiJkL
 	abCdEfGHiJKl	AbcDeFgHIjKL	aBbcDefGhIJKL	aBcdEfgHiJKL	aBCdeFfgHiJKl
 	ABcDeFghIjKl	ABCdEfGhiJkL	aBCdEEfGhIjkL	aBcDEfGhIJkL	abCdEfGHiJKl
@@ -191,7 +191,7 @@ module When
 	AbCDeFgHiJkL	aBcDeEfGHiJkL	aBcdEfGHIjKl	AbCdeFgHIjKL	aBcCdeFgHiJKL
 	aBcDefGhIjKL	AbCdEfgHhIjKl	ABCdEfgHiJkL	aBCdEfGhIjKl	AbCdEFfGhIjKl
 	AbCdEfGHiJkL	aBcdEfGHiJKl	AbCddEfGhIJKl	AbCdeFgHiJKL	aBcDefGhiJKl
-	ABCcDefGhiJKl	ABcDEfgHijKl	ABcDEfGgHiJkl	ABcDeFGhIjKl	AbcDeFGhIJkL
+	ABCcDefGhiJKl	ABcDEfgHiJkl	ABcDEfGgHiJkl	ABcDeFGhIjKl	AbcDeFGhIJkL
 	aBcdEeFgHIJkL	aBcdEfGhIJkL	AbCdeFghIJkL	ABcDdeFghIjKL	AbCDefGhiJkL
 	ABcDeFgHhiJkL	AbCDeFgHiJkl	AbCDeFgHIjKl	aBcDeFFgHIjKl	AbcDeFgHIjKL
 	aBcdEfgHIjKL	AbCddEfgHiJKL	AbCdeFghIjKL	AbCdEfGhiJkL	AbBCdEfGhiJkL
@@ -219,10 +219,10 @@ module When
     # 歴代紀元編（台湾中華書局）
     # wikipedia 元号一覧 (ベトナム)
     #
-    Vietnamese = [{'LY'=>{'DVSK'  => {'L'=>'1140'},
-                          'VSL'   => {'L'=>'1138'}},
-                   'DN'=>{'KDVNT' => {'D'=>'Chinese1645',  },
-                          'LDNK'  => {'D'=>'Vietnamese1813'}}}, self, [
+    Vietnamese = [{'LY'=>{'TT'    => {'A'=>'1072', 'B'=>'1076', 'C'=>'1138',    'D'=>'1140.02', 'E'=>'1224.10'},
+                          'VSL'   => {'A'=>'1073', 'B'=>'1075', 'C'=>'1137.09', 'D'=>'1140.01', 'E'=>'1225.06'}},
+                   'DN'=>{'KDVNT' => {'Z'=>'Chinese1645',  },
+                          'LDNK'  => {'Z'=>'Vietnamese1813'}}}, self, [
       "namespace:[ja=http://ja.wikipedia.org/wiki/, en=http://en.wikipedia.org/wiki/]",
       "locale:[=ja:, en=en:, alias]",
       'area:[ベトナム#{?LY=LY}#{&DN=DN}=ja:%%<元号>#%.<ベトナム>,Vietnam#{?LY=LY}#{&DN=DN}=en:Vietnam]',
@@ -265,8 +265,8 @@ module When
 	["[龍彰天嗣]1",	"",		    "1066"],
 	["[天貺宝象,alias:天祝宝象]1","",   "1068"],
 	["[神武]1",	"",		    "1069"],
-	["[太寧,alias:泰寧]1","@A","name=[仁宗];1072"],
-	["[英武昭聖,alias:英武昭聖]1","",   "1076"],
+	["[太寧,alias:泰寧]1","@A",'name=[仁宗];#{A:1072}'],
+	["[英武昭聖,alias:英武昭勝]1","",'#{B:1076}'],
 	["[広祐,alias:広佑]1","",	    "1085"],
 	["[会豊]1",	"",		    "1092"],
 	["[龍符,alias:龍符元化,alias:乾符]1","","1101"],
@@ -275,8 +275,8 @@ module When
 	["[天符慶寿]1",	"",		    "1127"],
 	["[天順,alias:大順]1","@A","name=[神宗];1128"],
 	["[天彰宝嗣]1",	"",		    "1133.01.01"],
-	["[紹明]1",	"@A",	"name=[英宗];1138"],
-	["[大定]1",	"",		'#{L:1140}.02'],
+	["[紹明]1",    "@A",'name=[英宗];#{C:1138}'],
+	["[大定]1",	"",		'#{D:1140.02}'],
 	["[政隆宝応]1",	"",		    "1163.01.01"],
 	["[天感至宝]1",	"",		    "1174.02"],
 	["[貞符,alias:宝符]1","@A","name=[高宗];1176"],
@@ -284,7 +284,7 @@ module When
 	["[天嘉宝祐]1",	"",		    "1202.08"],
 	["[治平龍応]1",	"",		    "1205.03"],
 	["[建嘉]1",	"@A",	"name=[恵宗];1211"],
-	["[天彰有道]1",	"@A",	"name=[昭皇];1224.10", "1225.12.11="]
+	["[天彰有道]1","@A",'name=[昭皇];#{E:1224.10}', "1225.12.11="]
       ],
       [self,
 	"period:[陳朝]",
@@ -423,7 +423,7 @@ module When
 	["[嘉隆]1",	"@F",	"name=[世祖];1802^Vietnamese1631", "1813^Vietnamese1813", ""],
 	["[明命]1",	"@A",	"name=[聖祖];1820"],
 	["[紹治]1",	"@A",	"name=[憲祖];1841"],
-	["[嗣徳]1",	"@A",	"name=[翼宗];1848", '1849^#{D:Chinese1645}', "1850^Vietnamese1813", ""],
+	["[嗣徳]1",	"@A",	"name=[翼宗];1848", '1849^#{Z:Chinese1645}', "1850^Vietnamese1813", ""],
 	["[育徳]1",	"@A",	"name=[恭宗];1883"],
 	["[協和]1",	"@A",	"name=[廃帝];1883"],
 	["[建福]1",	"@A",	"name=[簡宗];1884"],
