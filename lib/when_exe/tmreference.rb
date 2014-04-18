@@ -1433,7 +1433,7 @@ module When::TM
           f.domain_of_validity = When::EX::Extent.new(
                                    When::TM::Period.new(
                                      When::TM::Instant.new(first),
-                                     When::TM::Instant.new(last))) if first
+                                     When::TM::Instant.new(last))) if first && first <= last
         end
       end
 
@@ -1469,7 +1469,7 @@ module When::TM
       # other attributes
       if (@child && @child.length>0)
         _non_leaf_era(args, term_options)
-        #_register_calendar_era unless _pool['..'].kind_of?(CalendarEra)
+        _register_calendar_era unless _pool['..'].kind_of?(CalendarEra)
         @child.each do |era|
           era._register_calendar_era
         end
@@ -1480,7 +1480,7 @@ module When::TM
     end
 
     def _non_leaf_era(args, term_options)
-      @label = m17n(@label, nil, nil, term_options) if (@label.instance_of?(String))
+      @label = m17n(@label, nil, nil, term_options) if @label.instance_of?(String)
       if @label
         @label._pool['..']  = self # TODO ここを ||= にすると leaf? の判定がおかしくなる
         @_pool[@label.to_s] = @label

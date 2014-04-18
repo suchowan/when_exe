@@ -399,8 +399,14 @@ module When::Parts
         options['..'] = iri
 
         # internal Resource
-        list = _class(path)
-        return _internal(list, replace, options) if list
+        if path.index(Resource.base_uri) == 0
+          list = _class(path)
+          if list
+            return _internal(list, replace, options)
+          else
+            raise IOError, 'IRI not found - ' + path
+          end
+        end
 
         # external Resource
         begin
@@ -434,7 +440,6 @@ module When::Parts
 
       # 内部形式定義の取得
       def _class(path)
-        return nil unless path.index(Resource.base_uri) == 0
         list = [When]
         path[Resource.base_uri.length..-1].split(/\//).each do |mod|
           if list[0].const_defined?(mod)
