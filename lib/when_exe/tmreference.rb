@@ -1298,7 +1298,7 @@ module When::TM
           next_ref = next_era.reference_date if next_era.respond_to?(:reference_date)
           next_ref &&
           next_ref.precision == YEAR &&
-          next_ref.cal_date[YEAR-1] == 0 ? @epoch[-1].ceil(YEAR).to_i :
+          next_ref.cal_date[YEAR-1] == 0 ? @epoch[-1].ceil(YEAR).to_i - 1 :
           case type
           when true            ;  @epoch[-1].to_i - 1
           when :reference_date ;  @reference_date.to_i

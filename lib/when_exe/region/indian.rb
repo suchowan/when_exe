@@ -780,7 +780,72 @@ module When
 
         # 年の暦注 ----------------------------
         [When::BasicTypes::M17n,
-          "names:[year]"
+          "names:[year]",
+=begin
+          [When::BasicTypes::M17n,
+            "names:[samvatsara, 木星年=]",
+            "[Prabhava=,      プラバヴァ=        ]", #  1
+            "[Vibhava=,       ヴィバヴァ=        ]", #  2
+            "[Śukla=,         シュクラ=          ]", #  3
+            "[Pramodadūta=,   プラモダドゥータ=  ]", #  4
+            "[Prajāpati=,     プラジャーパティ=  ]", #  5
+            "[Āṅgīrasa=,      アーンジーラサ=    ]", #  6
+            "[Śrīmukha=,      シュリームカ=      ]", #  7
+            "[Bhāva=,         バーヴァ=          ]", #  8
+            "[Yuva=,          ユヴァ=            ]", #  9
+            "[Dhātṛ=,         ダートル=          ]", # 10
+            "[Īśvara=,        イーシュヴァラ=    ]", # 11
+            "[Bahudhānya=,    バフダーニャ=      ]", # 12
+            "[Pramāthi=,      プラマーティ=      ]", # 13
+            "[Vikrama=,       ヴィクラマ=        ]", # 14
+            "[Vṛṣa=,          ヴルシャ=          ]", # 15
+            "[Chitrabhānu=,   チトラバーヌ=      ]", # 16
+            "[Subhānu=,       スバーヌ=          ]", # 17
+            "[Tāraṇa=,        ターラナ=          ]", # 18
+            "[Pārthiva=,      パールティヴァ=    ]", # 19
+            "[Vyaya=,         ヴヤヤ=            ]", # 20
+            "[Sarvajit=,      サルヴァジト=      ]", # 21
+            "[Sarvadhārin=,   サルヴァダーリン=  ]", # 22
+            "[Virodhin=,      ヴィロディン=      ]", # 23
+            "[Vikṛti=,        ヴィキティ=        ]", # 24
+            "[Khara=,         カラ=              ]", # 25
+            "[Nandana=,       ナンダナ=          ]", # 26
+            "[Vijaya=,        ヴィジャヤ=        ]", # 27
+            "[Jaya=,          ジャヤ=            ]", # 28
+            "[Manmatha=,      マンマタ=          ]", # 29
+            "[Durmukha=,      ドゥルムカ=        ]", # 30
+            "[Hemalambin=,    ヘマラムビン=      ]", # 31
+            "[Vilambin=,      ヴィラムビン=      ]", # 32
+            "[Vikārin=,       ヴィカーリン=      ]", # 33
+            "[Śārvarin=,      シャールヴァリン=  ]", # 34
+            "[Plava=,         プラヴァ=          ]", # 35
+            "[Śubhakṛt=,      シュバクルト=      ]", # 36
+            "[Śobhana=,       ショバナ=          ]", # 37
+            "[Krodhin=,       クロディン=        ]", # 38
+            "[Viśvāvasu=,     ヴィシュヴァヴァス=]", # 39
+            "[Parābhava=,     パラーバヴァ=      ]", # 40
+            "[Plavaṅga=,      プラヴァンガ=      ]", # 41
+            "[Kīlaka=,        キーラカ=          ]", # 42
+            "[Saumya=,        サウムヤ=          ]", # 43
+            "[Sādhāraṇa=,     サーダーランガ=    ]", # 44
+            "[Virodhakṛt=,    ヴィロダクルト=    ]", # 45
+            "[Paridhāvin=,    パリダーヴィン=    ]", # 46
+            "[Pramādin=,      プラマーディン=    ]", # 47
+            "[Ānanda=,        チーナンダ=        ]", # 48
+            "[Rākṣasa=,       ラーシャサ=        ]", # 49
+            "[Anala=,         アナラ=            ]", # 50
+            "[Piṅgala=,       ピンガラ=          ]", # 51
+            "[Kālayukta=,     カーラユクタ=      ]", # 52
+            "[Siddhārthin=,   シッダールティン=  ]", # 53
+            "[Raudra=,        ラウドラ=          ]", # 54
+            "[Durmati=,       ドゥルマティ=      ]", # 55
+            "[Dundubhi=,      ジゥンドゥビ=      ]", # 56
+            "[Rudhirodgārin=, ルディロドガーリン=]", # 57
+            "[Raktākṣin=,     ラクタークシン=    ]", # 58
+            "[Krodhana=,      クロダナ=          ]", # 59
+            "[Kṣaya=,         クサーヤ=          ]"  # 60
+          ]
+=end
         ],
 
         # 月の暦注 ----------------------------
@@ -797,22 +862,22 @@ module When
 
           [When::BasicTypes::M17n,
             "names:[tithi=, ティティ=ja:%%<ティティ>]",
-            "[Amavasya                  ]", # 新月
-            "[Pratipad=en:Prathama_(day)]", #  1
-            "[Dwitiya                   ]", #  2
-            "[Tritiya                   ]", #  3
-            "[Chaturthi                 ]", #  4
-            "[Panchami                  ]", #  5
-            "[Ṣaṣṭhī=en:Shashti         ]", #  6
-            "[Saptami                   ]", #  7
-            "[Ashtami                   ]", #  8
-            "[Navami                    ]", #  9
-            "[Dashami                   ]", # 10
-            "[Ekadashi                  ]", # 11
-            "[Dwadashi                  ]", # 12
-            "[Thrayodashi               ]", # 13
-            "[Chaturdashi               ]", # 14
-            "[Purnima                   ]"  # 満月
+            "[Amavasya,                   新月 ]", # 新月
+            "[Pratipad=en:Prathama_(day), １日=]", #  1
+            "[Dwitiya,                    ２日=]", #  2
+            "[Tritiya,                    ３日=]", #  3
+            "[Chaturthi,                  ４日=]", #  4
+            "[Panchami,                   ５日=]", #  5
+            "[Ṣaṣṭhī=en:Shashti,          ６日=]", #  6
+            "[Saptami,                    ７日=]", #  7
+            "[Ashtami,                    ８日=]", #  8
+            "[Navami,                     ９日=]", #  9
+            "[Dashami,                    10日=]", # 10
+            "[Ekadashi,                   11日=]", # 11
+            "[Dwadashi,                   12日=]", # 12
+            "[Thrayodashi,                13日=]", # 13
+            "[Chaturdashi,                14日=]", # 14
+            "[Purnima,                    満月 ]"  # 満月
           ],
 
           [When::BasicTypes::M17n,
@@ -859,33 +924,33 @@ module When
 
           [When::BasicTypes::M17n,
             "names:[yoga=, ヨーガ=]",
-            "[iṣkambha=]", #  1
-            "[rīti=    ]", #  2
-            "[yuśmān=  ]", #  3
-            "[aubhāgya=]", #  4
-            "[obhana=  ]", #  5
-            "[tigaṇḍa= ]", #  6
-            "[ukarma=  ]", #  7
-            "[hṛti=    ]", #  8
-            "[ūla=     ]", #  9
-            "[aṇḍa=    ]", # 10
-            "[ṛddhi=   ]", # 11
-            "[hruva=   ]", # 12
-            "[yāghatā= ]", # 13
-            "[arṣaṇa=  ]", # 14
-            "[ajra=    ]", # 15
-            "[iddhi=   ]", # 16
-            "[yatipāta=]", # 17
-            "[ariyas=  ]", # 18
-            "[arigha=  ]", # 19
-            "[iva=     ]", # 20
-            "[iddha=   ]", # 21
-            "[ādhya=   ]", # 22
-            "[ubha=    ]", # 23
-            "[ukla=    ]", # 24
-            "[rahma=   ]", # 25
-            "[āhendra= ]", # 26
-            "[aidhṛti= ]"  # 27
+            "[Viṣkambha=, ヴィシュカムバ=]", #  1
+            "[Prīti=,     プリーティ=    ]", #  2
+            "[Āyuśmān=,   アーユシュマー=]", #  3
+            "[Saubhāgya=, サウバーギャ=  ]", #  4
+            "[Śobhana=,   ショバーナ=    ]", #  5
+            "[Atigaṇḍa=,  アティガンダ=  ]", #  6
+            "[Sukarma=,   スカルマ=      ]", #  7
+            "[Dhṛti,      ドリーティ=    ]", #  8
+            "[Śūla=,      シューラ=      ]", #  9
+            "[Gaṇḍa=,     ガンダ=        ]", # 10
+            "[Vṛddhi=,    ヴルッディ=    ]", # 11
+            "[Dhruva=,    ドルヴァ=      ]", # 12
+            "[Vyāghatā=,  ヴヤーガター=  ]", # 13
+            "[Harṣaṇa=,   ハルシャナ=    ]", # 14
+            "[Vajra=,     ヴァジュラ=    ]", # 15
+            "[Siddhi=,    シッディ=      ]", # 16
+            "[Vyatipāta=, ヴヤティパータ=]", # 17
+            "[Variyas=,   ヴァリヤス=    ]", # 18
+            "[Parigha=,   パリガ=        ]", # 19
+            "[Śiva=,      シヴァ=        ]", # 20
+            "[Siddha=,    シッダ=        ]", # 21
+            "[Sādhya=,    サーディヤ=    ]", # 22
+            "[Śubha=,     シュバ=        ]", # 23
+            "[Śukla=,     シュクラ=      ]", # 24
+            "[Brahma=,    ブラーマ=      ]", # 25
+            "[Māhendra=,  マーヘンドラ=  ]", # 26
+            "[Vaidhṛti=,  ヴァイドルティ=]"  # 27
           ],
 
           [When::BasicTypes::M17n,

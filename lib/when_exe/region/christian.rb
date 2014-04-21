@@ -15,7 +15,7 @@ module When
       "names:[ChristianTerms=]",
       "[Julian=en:Julian_calendar,       ユリウス暦  ]",
       "[Gregorian=en:Gregorian_calendar, グレゴリオ暦]",
-      "[Civil=en:Civil_calendar,         西暦        ]"
+      "[Civil in the West=en:Civil_calendar, 西暦, *alias:Civil]"
     ]]
   end
 
