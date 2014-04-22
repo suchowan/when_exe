@@ -1147,35 +1147,7 @@ module When::Ephemeris
     #
     # 天体暦機能を When::TM::Calendar クラスに提供する
     #
-    module Methods
-
-      # 月の位相が指定の周期番号パターンになる最も近い過去の日時
-      #
-      # @param [Numeric] date ユリウス日(Terrestrial Time)
-      # @param [When::TM::TemporalPosition] date
-      # @param [Numeric] n 相対周期番号(n=0 なら date または date の直前が基準)
-      # @param [Numeric] d 単位周期数
-      #
-      # @return [Numeric, When::TM::TemporalPosition] 周期番号が d で割って n になる日時
-      #
-      def nearest_past_from_lunar_phase(date, n=0, d=1)
-        @formula ||= When.Resource(['_ep:Formula?formula=12S', '_ep:Formula?formula=1L'])
-        @formula[-1].nearest_past(date, n, d)
-      end
-
-      # 二十四節気が指定の周期番号パターンになる最も近い過去の日時
-      #
-      # @param [Numeric] date ユリウス日(Terrestrial Time)
-      # @param [When::TM::TemporalPosition] date
-      # @param [Numeric] n 相対周期番号(n=0 なら date または date の直前が基準)
-      # @param [Numeric] d 単位周期数
-      #
-      # @return [Numeric, When::TM::TemporalPosition] 周期番号が d で割って n になる日時
-      #
-      def nearest_past_from_solar_term(date, n=0, d=1)
-        @formula ||= When.Resource(['_ep:Formula?formula=12S', '_ep:Formula?formula=1L'])
-        @formula[0].nearest_past(date, n, d)
-      end
+    module ForwardedFormula
 
       private
 

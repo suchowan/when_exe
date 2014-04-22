@@ -604,6 +604,20 @@ module When
       # @return [Numeric]
       #attr_reader :anomalistic_month_shift
 
+      # 日時 -> 周期番号(唐代の定朔の暦法用 cn_to_time(1L) を使用する)
+      #
+      # @param [Numeric] t ユリウス日(Terrestrial Time)
+      # @param [When::TM::TemporalPosition] t
+      #
+      # @return [Numeric] 周期番号
+      #
+      def time_to_cn(t)
+        return super unless @cycle_number_1m
+        time = @is_dynamical ? +t : t.to_f
+        cn0  = time * @cycle_number_1m + @cycle_number_0m
+        root(cn0, time) {|cn| cn_to_time(cn)}
+      end
+
       # 当該日付の月の位相の変化範囲(唐代の定朔の暦法用 cn_to_time(1L) を使用する)
       #
       # @param [When::TM::TemporalPosition] date 日付

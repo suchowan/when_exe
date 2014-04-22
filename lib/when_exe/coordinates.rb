@@ -1585,7 +1585,7 @@ module When::Coordinates
         # Formula
         instance_eval('class << self; attr_reader :formula; end') if @location && @border
         if respond_to?(:formula)
-          instance_eval('class << self; include When::Ephemeris::Formula::Methods; end')
+          instance_eval('class << self; include When::Ephemeris::Formula::ForwardedFormula; end')
           @formula ||= When::Ephemeris::Formula.new({:location=>@location})
           @formula   = When.Resource(Array(@formula), '_ep:')
         end
@@ -2036,7 +2036,13 @@ module When::Coordinates
 
     # その他のメソッド
     #   When::Coordinates::Temporal で定義されていないメソッドは
-    #   処理を @note or @formula[0] (When::Ephemeris::Formula) に委譲する
+    #   処理を下記に移譲する(番号は優先順位)
+    #     When::CalendarNote
+    #       (1) @note
+    #       (2) SolarTerms
+    #       (3) LunarPhases
+    #     When::Ephemeris::Formula
+    #       (4)@formula[0]
     #
     def method_missing(name, *args, &block)
       unless When::Parts::MethodCash::Escape.key?(name)
@@ -2047,9 +2053,20 @@ module When::Coordinates
             end
           } unless When::Parts::MethodCash.escape(name)
           return @note.send(name, *(args + [self]), &block)
-        elsif When::Ephemeris::Formula.method_defined?(name)
+        end
+        ['SolarTerms', 'LunarPhases'].each do |note|
+          if When.CalendarNote(note).respond_to?(name)
+            instance_eval %Q{
+              def #{name}(*args, &block)
+                When.CalendarNote("#{note}").send("#{name}", *args, &block)
+              end
+            } unless When::Parts::MethodCash.escape(name)
+            return When.CalendarNote(note).send(name, *args, &block)
+          end
+        end
+        if When::Ephemeris::Formula.method_defined?(name)
           unless respond_to?(:forwarded_formula, true)
-            instance_eval('class << self; include When::Ephemeris::Formula::Methods; end')
+            instance_eval('class << self; include When::Ephemeris::Formula::ForwardedFormula; end')
             @formula ||= When::Ephemeris::Formula.new({:location=>@location})
             @formula   = When.Resource(Array(@formula), '_ep:')
           end

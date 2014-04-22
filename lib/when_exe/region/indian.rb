@@ -784,66 +784,66 @@ module When
 =begin
           [When::BasicTypes::M17n,
             "names:[samvatsara, 木星年=]",
-            "[Prabhava=,      プラバヴァ=        ]", #  1
-            "[Vibhava=,       ヴィバヴァ=        ]", #  2
-            "[Śukla=,         シュクラ=          ]", #  3
-            "[Pramodadūta=,   プラモダドゥータ=  ]", #  4
-            "[Prajāpati=,     プラジャーパティ=  ]", #  5
-            "[Āṅgīrasa=,      アーンジーラサ=    ]", #  6
-            "[Śrīmukha=,      シュリームカ=      ]", #  7
-            "[Bhāva=,         バーヴァ=          ]", #  8
-            "[Yuva=,          ユヴァ=            ]", #  9
-            "[Dhātṛ=,         ダートル=          ]", # 10
-            "[Īśvara=,        イーシュヴァラ=    ]", # 11
-            "[Bahudhānya=,    バフダーニャ=      ]", # 12
-            "[Pramāthi=,      プラマーティ=      ]", # 13
-            "[Vikrama=,       ヴィクラマ=        ]", # 14
-            "[Vṛṣa=,          ヴルシャ=          ]", # 15
-            "[Chitrabhānu=,   チトラバーヌ=      ]", # 16
-            "[Subhānu=,       スバーヌ=          ]", # 17
-            "[Tāraṇa=,        ターラナ=          ]", # 18
-            "[Pārthiva=,      パールティヴァ=    ]", # 19
-            "[Vyaya=,         ヴヤヤ=            ]", # 20
-            "[Sarvajit=,      サルヴァジト=      ]", # 21
-            "[Sarvadhārin=,   サルヴァダーリン=  ]", # 22
-            "[Virodhin=,      ヴィロディン=      ]", # 23
-            "[Vikṛti=,        ヴィキティ=        ]", # 24
-            "[Khara=,         カラ=              ]", # 25
-            "[Nandana=,       ナンダナ=          ]", # 26
-            "[Vijaya=,        ヴィジャヤ=        ]", # 27
-            "[Jaya=,          ジャヤ=            ]", # 28
-            "[Manmatha=,      マンマタ=          ]", # 29
-            "[Durmukha=,      ドゥルムカ=        ]", # 30
-            "[Hemalambin=,    ヘマラムビン=      ]", # 31
-            "[Vilambin=,      ヴィラムビン=      ]", # 32
-            "[Vikārin=,       ヴィカーリン=      ]", # 33
-            "[Śārvarin=,      シャールヴァリン=  ]", # 34
-            "[Plava=,         プラヴァ=          ]", # 35
-            "[Śubhakṛt=,      シュバクルト=      ]", # 36
-            "[Śobhana=,       ショバナ=          ]", # 37
-            "[Krodhin=,       クロディン=        ]", # 38
-            "[Viśvāvasu=,     ヴィシュヴァヴァス=]", # 39
-            "[Parābhava=,     パラーバヴァ=      ]", # 40
-            "[Plavaṅga=,      プラヴァンガ=      ]", # 41
-            "[Kīlaka=,        キーラカ=          ]", # 42
-            "[Saumya=,        サウムヤ=          ]", # 43
-            "[Sādhāraṇa=,     サーダーランガ=    ]", # 44
-            "[Virodhakṛt=,    ヴィロダクルト=    ]", # 45
-            "[Paridhāvin=,    パリダーヴィン=    ]", # 46
-            "[Pramādin=,      プラマーディン=    ]", # 47
-            "[Ānanda=,        チーナンダ=        ]", # 48
-            "[Rākṣasa=,       ラーシャサ=        ]", # 49
-            "[Anala=,         アナラ=            ]", # 50
-            "[Piṅgala=,       ピンガラ=          ]", # 51
-            "[Kālayukta=,     カーラユクタ=      ]", # 52
-            "[Siddhārthin=,   シッダールティン=  ]", # 53
-            "[Raudra=,        ラウドラ=          ]", # 54
-            "[Durmati=,       ドゥルマティ=      ]", # 55
-            "[Dundubhi=,      ジゥンドゥビ=      ]", # 56
-            "[Rudhirodgārin=, ルディロドガーリン=]", # 57
-            "[Raktākṣin=,     ラクタークシン=    ]", # 58
-            "[Krodhana=,      クロダナ=          ]", # 59
-            "[Kṣaya=,         クサーヤ=          ]"  # 60
+            "[Prabhava=,      プラバヴァ=          ]", #  1
+            "[Vibhava=,       ヴィバヴァ=          ]", #  2
+            "[Sukha=,         スカ=                ]", #  3
+            "[Pramoda=,       プラモーダ=          ]", #  4
+            "[Prajāpati=,     プラジャーパティ=    ]", #  5
+            "[Aṅgiras=,       アンギラス=          ]", #  6
+            "[Śrīmukha=,      シュリームカ=        ]", #  7
+            "[Bhāva=,         バーヴァ=            ]", #  8
+            "[Yuvan=,         ユヴァン=            ]", #  9
+            "[Dhātṛ=,         ダートリ=            ]", # 10
+            "[Īśvara=,        イーシュヴァラ=      ]", # 11
+            "[Bahudhānya=,    バフダーニャ=        ]", # 12
+            "[Pramāthin=,     プラマーティン=      ]", # 13
+            "[Vikrama=,       ヴィクラマ=          ]", # 14
+            "[Vṛṣa=,          ヴリシャ=            ]", # 15
+            "[Chitrabhānu=,   チトラバーヌ=        ]", # 16
+            "[Subhānu=,       スバーヌ=            ]", # 17
+            "[Tāraṇa=,        ターラナ=            ]", # 18
+            "[Pārthiva=,      パールティヴァ=      ]", # 19
+            "[Vyaya=,         ヴヤヤ=              ]", # 20
+            "[Sarvajit=,      サルヴァジト=        ]", # 21
+            "[Sarvadhārin=,   サルヴァダーリン=    ]", # 22
+            "[Virodhin=,      ヴィローディン=      ]", # 23
+            "[Vikṛta=,        ヴィクリタ=          ]", # 24
+            "[Khara=,         カラ=                ]", # 25
+            "[Nandana=,       ナンダナ=            ]", # 26
+            "[Vijaya=,        ヴィジャヤ=          ]", # 27
+            "[Jaya=,          ジャヤ=              ]", # 28
+            "[Manmatha=,      マンマタ=            ]", # 29
+            "[Durmukha=,      ドゥルムカ=          ]", # 30
+            "[Hemalamba=,     ヘマラムバ=          ]", # 31
+            "[Vilambin=,      ヴィラムビン=        ]", # 32
+            "[Vikārin=,       ヴィカーリン=        ]", # 33
+            "[Śārvarin=,      シャールヴァリン=    ]", # 34
+            "[Plava=,         プラヴァ=            ]", # 35
+            "[Śubhakṛt=,      シュバクリト=        ]", # 36
+            "[Śobhana=,       ショバナ=            ]", # 37
+            "[Krodhin=,       クロディン=          ]", # 38
+            "[Viśvāvasu=,     ヴィシュヴァーヴァス=]", # 39
+            "[Parābhava=,     パラーバヴァ=        ]", # 40
+            "[Plavaṅga=,      プラヴァンガ=        ]", # 41
+            "[Kīlaka=,        キーラカ=            ]", # 42
+            "[Saumya=,        サウムヤ=            ]", # 43
+            "[Sādhāraṇa=,     サーダーラナ=        ]", # 44
+            "[Virodhakṛt=,    ヴィローダクリト=    ]", # 45
+            "[Paridhāvin=,    パリダーヴィン=      ]", # 46
+            "[Pramādin=,      プラマーディン=      ]", # 47
+            "[Ānanda=,        アーナンダ=          ]", # 48
+            "[Rākṣasa=,       ラークシャサ=        ]", # 49
+            "[Anala=,         アナラ=              ]", # 50
+            "[Piṅgala=,       ピンガラ=            ]", # 51
+            "[Kālayukta=,     カーラユクタ=        ]", # 52
+            "[Siddhārthin=,   シッダールティン=    ]", # 53
+            "[Raudra=,        ラウドラ=            ]", # 54
+            "[Durmati=,       ドゥルマティ=        ]", # 55
+            "[Dundubhi=,      ドゥンドゥビ=        ]", # 56
+            "[Rudhirodgārin=, ルディロードガーリン=]", # 57
+            "[Raktākṣin=,     ラクタークシン=      ]", # 58
+            "[Krodhana=,      クローダナ=          ]", # 59
+            "[Kṣaya=,         クシャヤ=            ]"  # 60
           ]
 =end
         ],
@@ -924,33 +924,33 @@ module When
 
           [When::BasicTypes::M17n,
             "names:[yoga=, ヨーガ=]",
-            "[Viṣkambha=, ヴィシュカムバ=]", #  1
-            "[Prīti=,     プリーティ=    ]", #  2
-            "[Āyuśmān=,   アーユシュマー=]", #  3
-            "[Saubhāgya=, サウバーギャ=  ]", #  4
-            "[Śobhana=,   ショバーナ=    ]", #  5
-            "[Atigaṇḍa=,  アティガンダ=  ]", #  6
-            "[Sukarma=,   スカルマ=      ]", #  7
-            "[Dhṛti,      ドリーティ=    ]", #  8
-            "[Śūla=,      シューラ=      ]", #  9
-            "[Gaṇḍa=,     ガンダ=        ]", # 10
-            "[Vṛddhi=,    ヴルッディ=    ]", # 11
-            "[Dhruva=,    ドルヴァ=      ]", # 12
-            "[Vyāghatā=,  ヴヤーガター=  ]", # 13
-            "[Harṣaṇa=,   ハルシャナ=    ]", # 14
-            "[Vajra=,     ヴァジュラ=    ]", # 15
-            "[Siddhi=,    シッディ=      ]", # 16
-            "[Vyatipāta=, ヴヤティパータ=]", # 17
-            "[Variyas=,   ヴァリヤス=    ]", # 18
-            "[Parigha=,   パリガ=        ]", # 19
-            "[Śiva=,      シヴァ=        ]", # 20
-            "[Siddha=,    シッダ=        ]", # 21
-            "[Sādhya=,    サーディヤ=    ]", # 22
-            "[Śubha=,     シュバ=        ]", # 23
-            "[Śukla=,     シュクラ=      ]", # 24
-            "[Brahma=,    ブラーマ=      ]", # 25
-            "[Māhendra=,  マーヘンドラ=  ]", # 26
-            "[Vaidhṛti=,  ヴァイドルティ=]"  # 27
+            "[Viṣkambha=, ヴィシュカムバ=  ]", #  1
+            "[Prīti=,     プリーティ=      ]", #  2
+            "[Āyuśmān=,   アーユシュマー=  ]", #  3
+            "[Saubhāgya=, サウバーギャ=    ]", #  4
+            "[Śobhana=,   ショーバナ=      ]", #  5
+            "[Atigaṇḍa=,  アティガンダ=    ]", #  6
+            "[Sukarma=,   スカルマ=        ]", #  7
+            "[Dhṛti,      ドゥリティ=      ]", #  8
+            "[Śūla=,      シューラ=        ]", #  9
+            "[Gaṇḍa=,     ガンダ=          ]", # 10
+            "[Vṛddhi=,    ヴリッディ=      ]", # 11
+            "[Dhruva=,    ドルヴァ=        ]", # 12
+            "[Vyāghāta=,  ヴヤーガータ=    ]", # 13
+            "[Harṣaṇa=,   ハルシャナ=      ]", # 14
+            "[Vajra=,     ヴァジュラ=      ]", # 15
+            "[Siddhi=,    シッディ=        ]", # 16
+            "[Vyatīpāta=, ヴヤティーパータ=]", # 17
+            "[Varīyas=,   ヴァリーヤス=    ]", # 18
+            "[Parigha=,   パリガ=          ]", # 19
+            "[Śiva=,      シヴァ=          ]", # 20
+            "[Siddha=,    シッダ=          ]", # 21
+            "[Sādhya=,    サーディヤ=      ]", # 22
+            "[Śubha=,     シュバ=          ]", # 23
+            "[Śukla=,     シュクラ=        ]", # 24
+            "[Brahman=,   ブラフマン=      ]", # 25
+            "[Māhendra=,  マーヘンドラ=    ]", # 26
+            "[Vaidhṛti=,  ヴァイドリティ=  ]"  # 27
           ],
 
           [When::BasicTypes::M17n,
@@ -1043,7 +1043,7 @@ module When
       def vara(dates)
         rise        =  dates.rises[0]
         rise.events = [dates.root['vara'][(rise.to_i+1) % 7]]
-        [rise]
+        ['V:-', rise]
       end
 
       #
@@ -1075,7 +1075,7 @@ module When
       NoteConsts.keys.each do |key|
         module_eval %Q{
           def #{key}(dates)
-            pancanga(dates, '#{key}')
+            pancanga(dates, '#{key}').map {|event| ['#{key[0..0].upcase}:-', event]}
           end
         }
       end
@@ -1125,7 +1125,7 @@ module When
         rise        =  dates.rises[0]
         rise.events = [dates.root['vara'][(rise.to_i+1) % 7]]
         t           = dates.formula.is_dynamical ? +rise : rise.to_f
-        [rise, dates.formula.graha.keys.inject({}) {|h,p|
+        [['V:-', rise], dates.formula.graha.keys.inject({}) {|h,p|
           h.store(p, dates.formula.graha[p].true_longitude(t))
           h
         }]

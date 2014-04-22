@@ -58,7 +58,7 @@ class When::CalendarNote
     #
     # @return [When::TM::CalDate] date またはその直後のイベントの日時
     #
-    def term(date, parameter=nil, precision=date.precision)
+    def event(date, parameter=nil, precision=date.precision)
       num, den  = parameter.kind_of?(String) ? parameter.split(/\//, 2) : parameter
       num = (num || @num).to_f
       den = (den || @den).to_f
@@ -99,7 +99,7 @@ class When::CalendarNote
     # @param [String] parameter 座標の分子と分母("#{ num }/#{ den }" の形式)
     #
     # @return [When::TM::IntervalLength]
-    def term_delta(parameter=nil)
+    def event_delta(parameter=nil)
       return @delta unless parameter
       num, den = parameter.split(/\//, 2)
       When::TM::IntervalLength.new([(den || @den).to_f,1].max*0.9, 'day')
@@ -111,7 +111,15 @@ class When::CalendarNote
   #
   class SolarTerms < LuniSolarPositions
 
+    # 二十四節気のための event の別名
+    #
+    # @return [When::TM::CalDate] date またはその直後のイベントの日時
+    alias :term :event
+
     private
+
+    # 二十四節気のための event_delta の別名
+    alias :term_delta :event_delta
 
     # オブジェクトの正規化
     #   num     - 太陽黄経/度の分子 (デフォルト   0 - 春分)
@@ -135,12 +143,15 @@ class When::CalendarNote
   #
   class LunarPhases < LuniSolarPositions
 
-    # 月の位相のための term の別名
+    # 月の位相のための event の別名
     #
     # @return [When::TM::CalDate] date またはその直後のイベントの日時
-    alias :phase :term
+    alias :phase :event
 
     private
+
+    # 月の位相のための event_delta の別名
+    alias :phase_delta :event_delta
 
     # オブジェクトの正規化
     #   num     - 月の位相/12度の分子 (デフォルト  0 - 朔)
@@ -245,7 +256,7 @@ class When::CalendarNote
     def moon_age(date, options={})
       @phase ||= When.CalendarNote('LunarPhases')
       noon = date.floor(When::DAY,When::SYSTEM) + 0.5
-      @root['Moon_Age'][noon.to_f - @phase.term(noon, [-30.0,30.0]).to_f]
+      @root['Moon_Age'][noon.to_f - @phase.phase(noon, [-30.0,30.0]).to_f]
     end
 
     #
