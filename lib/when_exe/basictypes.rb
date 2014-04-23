@@ -337,9 +337,11 @@ module When
         def _to_string_clock(clock)
           return nil unless clock
           return clock if (clock =~ /^[A-Z]+(\?.+)?$/)
-          raise ArgumentError, "Wrong clock format: #{clock}" unless (clock =~ /^([-+])(\d{2})(?::?(\d{2}))?$/)
-          s, h, m = $~[1..3]
-          return s + h + ':' + (m||'00')
+          raise ArgumentError, "Wrong clock format: #{clock}" unless clock =~ /^([-+])(\d{2})(?::?(\d{2}))?(?::?(\d{2}))?$/
+          sgn, h, m, s = $~[1..4]
+          zone  = sgn + h + ':' + (m||'00')
+          zone += s if s
+          return zone
         end
       end
     end

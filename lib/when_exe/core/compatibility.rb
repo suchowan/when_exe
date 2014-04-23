@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2013 Takashi SUGA
+  Copyright (C) 2013-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -33,9 +33,7 @@ class String
     def to_r
       case self
       when /\.|E/i
-        it  = When::Coordinates::Residue.new(to_f, 1).enum_for
-        res = it.succ while it.has_next?
-        Rational(*res[0..1])
+        to_f.to_r
       when /\//
         Rational
         Rational(*split(/\//).map {|v| v.to_i})
@@ -52,6 +50,26 @@ class String
     # @return [Integer]
     def ord
       self[0]
+    end
+  end
+end
+
+#
+# 浮動小数点数
+#
+class Float
+  unless const_defined?(:INFINITY)
+    # @private
+    INFINITY = MAX
+  end
+
+  unless method_defined?(:to_r)
+    Rational
+    # @private
+    def to_r
+      it  = When::Coordinates::Residue.new(self, 1).enum_for
+      res = it.succ while it.has_next?
+      Rational(*res[0..1])
     end
   end
 end

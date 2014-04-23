@@ -781,7 +781,6 @@ module When
         # 年の暦注 ----------------------------
         [When::BasicTypes::M17n,
           "names:[year]",
-=begin
           [When::BasicTypes::M17n,
             "names:[samvatsara, 木星年=]",
             "[Prabhava=,      プラバヴァ=          ]", #  1
@@ -845,7 +844,6 @@ module When
             "[Krodhana=,      クローダナ=          ]", # 59
             "[Kṣaya=,         クシャヤ=            ]"  # 60
           ]
-=end
         ],
 
         # 月の暦注 ----------------------------
@@ -1031,6 +1029,32 @@ module When
       # @private
       def _to_date_for_note(date)
         Dates.new(date)
+      end
+
+      #
+      # 木星年
+      #
+      # @param [Dates] dates
+      #
+      # @return [When::BasicTypes::M17n] 木星年の名称
+      #
+      # see {http://en.wikipedia.org/wiki/Samvatsara Samvatsara}
+      #
+      def samvatsara(dates)
+        year_kali = dates.l_date.most_significant_coordinate + dates.l_date.frame._diff_to_CE + 3101
+        year_mod  = year_kali >= jovian ? (year_kali + 12) % 60 :
+                                         ((year_kali * 211 - 108).div(18000) + year_kali + 26) % 60
+        When.CalendarNote('HinduNote/NoteObjects')['year']['samvatsara'][year_mod]
+      end
+
+      #
+      # 木星年の計算方式に“South”を適用開始する年
+      #
+      # @return [Integer] 年(カリユガ紀元)
+      #
+      def jovian
+        return @jovian if @jovian.kind_of?(Integer)
+        @jovian = @jovian ? @jovian.to_i : 4009
       end
 
       #

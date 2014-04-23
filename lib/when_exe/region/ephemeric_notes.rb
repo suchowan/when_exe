@@ -64,7 +64,7 @@ class When::CalendarNote
       den = (den || @den).to_f
       date      = date.floor(precision) if precision < date.precision
       options   = date._attr
-      is_date_and_time = options.key?(:clock)
+      is_date_and_time = options.key?(:clock) || precision > When::DAY
       options[:precision] = precision
       options[:clock]   ||= date.frame.time_basis || When::TM::Clock.local_time
       quot, mod = (@formula.time_to_cn(date)*30.0).divmod(den)

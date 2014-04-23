@@ -481,8 +481,19 @@ class When::CalendarNote
     # @return [When::TM::CalDate] date またはその直後に太陽の位置が指定の値になる日時
     #
     def term(date, parameter=nil, precision=date.precision, frame=nil)
-      dates = _to_date_for_note(date)
-      dates.cal4note.s_terms.term(date, parameter)
+      dates  = _to_date_for_note(date)
+      result = dates.cal4note.s_terms.term(date, parameter)
+      patch  = SolarTerms::Patch[result.to_i]
+      return result unless patch
+      num, den  = parameter.kind_of?(String) ? parameter.split(/\//, 2) : parameter
+      num  = (num ||   0).to_f
+      den  = (den || 360).to_f
+      diff = (num - patch[0] + 1) % den - 1
+      return result if diff == 0
+      patched = result + When::DurationP1D * diff
+      result.cal_date[0..-2] = patched.cal_date[0..-2]
+      result.cal_date[-1]    = When::Coordinates::Pair.new(patched.cal_date[-1], -diff)
+      result
     end
 
     # 月の位相 => 日時
@@ -501,8 +512,30 @@ class When::CalendarNote
     # @return [When::TM::CalDate] date またはその直後に月の位相が指定の値になる日時
     #
     def phase(date, parameter=nil, precision=date.precision, frame=nil)
-      dates = _to_date_for_note(date)
-      dates.cal4note.l_phases.phase(date, parameter)
+      dates  = _to_date_for_note(date)
+      note   = dates.cal4note.l_phases
+      result = note.phase(date, parameter)
+      return result if dates.o_date.frame.kind_of?(When::CalendarTypes::Christian)
+      num, den  = parameter.kind_of?(String) ? parameter.split(/\//, 2) : parameter
+      num  = (num ||  0).to_f
+      den  = (den || 30).to_f
+      return result unless den == 30
+      case num % 30
+      when 0     # 朔
+        return result if result.cal_date[-1] == 1
+        diff = result.cal_date[-1] < 15 ? -1 : +1
+      when 5..25 # 弦、望
+        return result unless note.formula.kind_of?(When::Ephemeris::ChineseTrueLunation)
+        time = result.kind_of?(When::TM::DateAndTime) ? result : note.phase(date, [num,den], When::SYSTEM)
+        return result if time.clk_time.universal_time >= When::TM::Duration::DAY/4 # 午前6時以降
+        diff = -1
+      else       # その他
+        return result
+      end
+      patched = result + When::DurationP1D * diff
+      result.cal_date[0..-2] = patched.cal_date[0..-2]
+      result.cal_date[-1]    = When::Coordinates::Pair.new(patched.cal_date[-1], -diff)
+      result
     end
 
     private
@@ -908,7 +941,7 @@ class When::CalendarNote
         # イベントの判定
         formula = dates.cal4note.l_phases.formula
         clock   = formula.kind_of?(When::Ephemeris::ChineseTrueLunation) &&
-          (3..27).include?(dates.l_date.cal_date[2]) ?
+          (5..25).include?(dates.l_date.cal_date[2]) ?
             When.Clock(-21600) :               # 唐代暦法の望弦は午前6時を日の境界とする
             dates.l_date.frame._time_basis[-1] # その他(進朔も考慮した時刻)
         odate   = When.when?(dates.o_date.to_cal_date.to_s, {:frame=>dates.o_date.frame, :clock=>clock})
