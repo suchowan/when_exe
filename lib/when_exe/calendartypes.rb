@@ -374,6 +374,39 @@ module When::CalendarTypes
   #
   class PatternTableBasedLuniSolar < TableBased
 
+    #
+    # ひな型朔閏表からの差分で朔閏表を生成する
+    #
+    # @param [Array] definition ひな型朔閏表
+    # @param [Range] range 生成する朔閏表の年代範囲
+    # @param [Hash{Integer=>(String or Hash{String or Regexp=>String})}] difference 差分情報
+    #
+    # @return [Array] 生成された朔閏表
+    #
+    # @private
+    def self.patch(definition, range=nil, difference={})
+      When.Calendar(definition)
+      base    = When::CalendarTypes.const_get(definition)
+      hash    = base[-1].dup
+      range ||= hash['origin_of_MSC']...(hash['origin_of_MSC']+hash['rule_table'].size)
+      range   = range.to_a
+      hash['origin_of_LSC'] += hash['rule_table'][range[0]-hash['origin_of_MSC']][1]
+      hash['rule_table']     = range.map {|year|
+        original = hash['rule_table'][year-hash['origin_of_MSC']][0]
+        case difference[year]
+        when String ; next difference[year]
+        when nil    ; next original
+        end
+        original = original.dup
+        difference[year].each_pair {|key,value|
+          raise ArgumentError, "Can't patch \"#{original}\" by {#{key}=>#{value}} at #{year}" unless original.sub!(key,value)
+        }
+        original
+      }
+      hash['origin_of_MSC']  = range[0]
+      base[0..-2] + [hash]
+    end
+
     private
 
     #  new で指定された月日配当規則をプログラムで利用可能にします。

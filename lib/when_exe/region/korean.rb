@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2013 Takashi SUGA
+  Copyright (C) 2013-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -9,7 +9,7 @@ require 'when_exe/region/chinese'
 require 'when_exe/region/chinese_calendar'
 
 #
-#  朝鮮王位年号一覧表
+#  朝鮮朔閏表および王位年号一覧表
 #
 # （参考文献）
 # 東洋史辞典（東京創元社）
@@ -20,8 +20,40 @@ require 'when_exe/region/chinese_calendar'
 # 観象授時（月刊『言語』1991.12 特集・暦の記号学）
 # 増補改訂中国の天文暦法（平凡社）P156
 # 現代こよみ読み解き事典（柏書房）
+# 韓國年暦大典（嶺南大学校出版部）[朝鮮王朝部分のみ使用]
 #
 module When
+  module CalendarTypes
+
+    # 朝鮮::       大統暦  (1392)- 1653
+    Korean1392 = PatternTableBasedLuniSolar.patch('Chinese0939', 1392..1653, {
+      1399 => {'De' =>'dE' },  1437 => {'kL' =>'Kl' },
+      1462 => {'Jk' =>'jK' },  1495 => {'fG' =>'Fg' },
+      1530 => {'Ab' =>'aB' },  1581 => {'Ij' =>'iJ' },
+      1588 => {'bCD'=>'BCd', 'Kl' =>'kL'},
+      1597 => {'Hi' =>'hI',  'L'  =>'l' },
+      1598 => {'a'  =>'A'  },
+      1599 => {'l'  =>'L'  },  1600 => {'A'  =>'a'  },
+      1602 => {'hI' =>'Hi' },  1608 => {'l'  =>'L'  },
+      1609 => {'A'  =>'a'  },  1615 => {'Fg' =>'fG','Hh' =>'hH'},
+      1619 => {'L'  =>'l'  },
+      1620 => {'a'  =>'A'  },  1642 => {'Fg' =>'fG' },
+      1644 => {'fG' =>'Fg' },  1649 => {'iJ' =>'Ij' },
+      1650 => {'kL' =>'Kl' },  1652 => {'hIJ'=>'HIj'}
+    })
+
+    # 朝鮮::       時憲暦   1654 - 1895
+    Korean1653 = PatternTableBasedLuniSolar.patch('Chinese1645', 1653..1911, {
+      1653 => {'FGh'=>'GgH', 'kL' =>'Kl' },
+      1664 => {'bC' =>'Bc' },  1674 => {'aB' =>'Ab' },
+      1677 => {'iJ' =>'Ij' },  1698 => {'jK' =>'Jk' },
+      1709 => {'aB' =>'Ab', 'jK' =>'Jk' },
+      1727 => {'cC' =>'Cc' },  1730 => {'Cd' =>'cD' },
+      1751 => {'Jk' =>'jK' },  1778 => {'Cd' =>'cD' },
+      1841 => {'kL' =>'Kl' }
+    })
+  end
+
   class TM::CalendarEra
 
     #
@@ -228,7 +260,7 @@ module When
       ],
       [self,
 	"period:[朝鮮]",
-	["[太祖]1.07.17","@F",	"name=[太祖];1392-07-17^Chinese0939"],	# コンサイスによる
+	["[太祖]1.07.17","@F",	"name=[太祖];1392-07-17^Korean1392"],	# コンサイスによる
 	["[定宗]1",	"@A",	"name=[定宗];1399"],
 	["[太宗]1",	"@A",	"name=[太宗];1401"],
 	["[世宗]1",	"@A",	"name=[世宗];1419"],
@@ -244,7 +276,7 @@ module When
 	["[宣祖]1",	"@A",	"name=[宣祖];1568"],
 	["[光海君]8",	"@A", "name=[光海君];1616"],
 	["[仁祖]1",	"@A",	"name=[仁祖];1623"],
-	["[孝宗]1",	"@A",	"name=[孝宗];1650", "1653^Chinese1645", ""],
+	["[孝宗]1",	"@A",	"name=[孝宗];1650", "1654^Korean1653", ""],
 	["[顕宗]1",	"@A",	"name=[顕宗];1660"],
 	["[粛宗]1",	"@A",	"name=[粛宗];1675"],
 	["[景宗]1",	"@A",	"name=[景宗];1721"],
