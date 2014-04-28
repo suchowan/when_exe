@@ -410,18 +410,6 @@ module When
       include Parts::Resource
 
       # @private
-      def self._get_locale(locale, access_key)
-        return nil unless access_key
-        access_key = access_key.split(/\//).map {|key| key =~ /^[0-9]+$/ ? key.to_i : key}
-        locale = locale.sub(/\..*/, '').sub(/-/,'_')
-        [locale, locale.sub(/_.*/, '')].each do |loc|
-          symbol = ('Locale_' + loc).to_sym
-          return {loc=>access_key.inject(const_get(symbol)) {|hash, key| hash = hash[key]}} if (const_defined?(symbol))
-        end
-        return nil
-      end
-
-      # @private
       HashProperty = [:label, :names, :link, :access_key, :code_space]
 
       #
@@ -445,6 +433,38 @@ module When
       #
       def to_m17n
         self
+      end
+
+      # 
+      # 内部エンコーディング文字列化
+      #
+      def to_internal_encoding
+        hash = names.dup
+        hash.each_pair do |key, value|
+          hash[key] = When::Parts.to_internal_encoding(value)
+        end
+        _copy({:label      => When::Parts.to_internal_encoding(to_s),
+               :names      => hash,
+               :link       => link,
+               :access_key => access_key,
+               :code_space => code_space
+              })
+      end
+
+      # 
+      # 外部エンコーディング文字列化
+      #
+      def to_external_encoding
+        hash = names.dup
+        hash.each_pair do |key, value|
+          hash[key] = When::Parts.to_external_encoding(value)
+        end
+        _copy({:label      => When::Parts.to_external_encoding(to_s),
+               :names      => hash,
+               :link       => link,
+               :access_key => access_key,
+               :code_space => code_space
+              })
       end
 
       # オブジェクトの生成

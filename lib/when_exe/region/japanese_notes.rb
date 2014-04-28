@@ -474,13 +474,15 @@ class When::CalendarNote
     #
     #   den 分母 (デフォルト 360 : 検索範囲の長さ)
     #
-    # @param [String] parameter   太陽の位置の分子と分母("#{ num }/#{ den }" の形式)
+    # @param [String] parameter   太陽の位置の分子と分母("#{ num }/#{ den }" の形式, デフォルト 0(春分))
     # @param [Integer] precision  取得したい時間位置の分解能(デフォルト date の分解能)
     # @param [When::TM::Calendar] frame 暦法(ダミー)
     #
     # @return [When::TM::CalDate] date またはその直後に太陽の位置が指定の値になる日時
     #
     def term(date, parameter=nil, precision=date.precision, frame=nil)
+      parameter = nil if parameter.kind_of?(When::TM::Calendar)
+      precision = date.precision if precision.kind_of?(When::TM::Calendar)
       dates  = _to_date_for_note(date)
       result = dates.cal4note.s_terms.term(date, parameter)
       patch  = SolarTerms::Patch[result.to_i]
@@ -505,13 +507,15 @@ class When::CalendarNote
     #
     #   den 分母 (デフォルト 30 : 検索範囲の長さ)
     #
-    # @param [String] parameter   月の位相の分子と分母("#{ num }/#{ den }" の形式)
+    # @param [String] parameter   月の位相の分子と分母("#{ num }/#{ den }" の形式, デフォルト 0(朔))
     # @param [Integer] precision  取得したい時間位置の分解能(デフォルト date の分解能)
     # @param [When::TM::Calendar] frame 暦法(ダミー)
     #
     # @return [When::TM::CalDate] date またはその直後に月の位相が指定の値になる日時
     #
     def phase(date, parameter=nil, precision=date.precision, frame=nil)
+      parameter = nil if parameter.kind_of?(When::TM::Calendar)
+      precision = date.precision if precision.kind_of?(When::TM::Calendar)
       dates  = _to_date_for_note(date)
       note   = dates.cal4note.l_phases
       result = note.phase(date, parameter)

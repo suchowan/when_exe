@@ -10,6 +10,55 @@
 #
 module When::Parts
 
+  class << self
+    if String.method_defined?(:encode)
+      #
+      # 内部エンコーディング文字列化
+      #
+      # @param [String] string もとにする String または M17n
+      #
+      # @return [String] 内部エンコーディング化した String または M17n
+      #
+      def to_internal_encoding(string)
+        return string.to_internal_encoding if string.kind_of?(When::BasicTypes::M17n)
+        (string.encoding == (Encoding.default_internal||'UTF-8')) ? string : string.encode(Encoding.default_internal||'UTF-8')
+      end
+
+      #
+      # 外部エンコーディング文字列化
+      #
+      # @param [String] string もとにする String または M17n
+      #
+      # @return [String] 外部エンコーディング化した String または M17n
+      #
+      def to_external_encoding(string)
+        return string.to_external_encoding if string.kind_of?(When::BasicTypes::M17n)
+        (string.encoding == Encoding.default_external) ? string : string.encode(Encoding.default_external)
+      end
+
+    else
+      # 内部エンコーディング文字列化(ダミー)
+      #
+      # @param [String] string もとにする String または M17n
+      #
+      # @return [String] そのまま返す
+      #
+      def to_internal_encoding(string)
+        string
+      end
+      #
+      # 外部エンコーディング文字列化(ダミー)
+      #
+      # @param [String] string もとにする String または M17n
+      #
+      # @return [String] そのまま返す
+      #
+      def to_external_encoding(string)
+        string
+      end
+    end
+  end
+
   #
   # Multilingualization(M17n) 対応モジュール
   #
@@ -248,6 +297,18 @@ module When::Parts
       # @private
       def _unification
         @unifications ||= DefaultUnification
+      end
+
+      # @private
+      def _get_locale(locale, access_key)
+        return nil unless access_key
+        access_key = access_key.split(/\//).map {|key| key =~ /^[0-9]+$/ ? key.to_i : key}
+        locale = locale.sub(/\..*/, '').sub(/-/,'_')
+        [locale, locale.sub(/_.*/, '')].each do |loc|
+          symbol = ('Locale_' + loc).to_sym
+          return {loc=>access_key.inject(const_get(symbol)) {|hash, key| hash = hash[key]}} if const_defined?(symbol)
+        end
+        return nil
       end
 
       private
@@ -632,10 +693,10 @@ module When::Parts
     def _label_value(locale)
       label = Locale._hash_value(@names, locale, nil)
       return label if label
-      foreign  = When::BasicTypes::M17n._get_locale(locale, @access_key)
+      foreign  = Locale._get_locale(locale, @access_key)
       return @names[''] unless foreign
       english  = @names['en'] || @names['']
-      addition = english.dup.sub!(/^#{When::BasicTypes::M17n._get_locale('en', @access_key)['en']}/, '')
+      addition = english.dup.sub!(/^#{Locale._get_locale('en', @access_key)['en']}/, '')
       foreign[locale] += addition if addition
       update(foreign)
       return Locale._hash_value(@names, locale)

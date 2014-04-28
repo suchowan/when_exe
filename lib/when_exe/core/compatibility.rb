@@ -6,12 +6,13 @@
 =end
 
 #
-# Ruby .8.x 系のためのための互換性確保用コード
+# Ruby 1.8.x 系のためのための互換性確保用コード
 #
 
 class String
-  unless "1".respond_to?(:encode)
+  unless method_defined?(:encode)
     require('iconv')
+    #
     # encode
     #
     # @param [String] code 文字コード
@@ -23,11 +24,11 @@ class String
     end
   end
 
-  unless "1".respond_to?(:to_r)
+  unless method_defined?(:to_r)
+    #
     # to_r(もどき)
     #
-    # 文字列を numeric に変換する
-    # (できるだけ情報が落ちない型を選択)
+    # 文字列を Rational or Integer に変換する
     #
     # @return [Numeric]
     def to_r
@@ -43,7 +44,8 @@ class String
     end
   end
 
-  unless "1".respond_to?(:ord)
+  unless method_defined?(:ord)
+    #
     # 文字列の先頭文字のコードを取得する
     # (多バイト文字非対応)
     #

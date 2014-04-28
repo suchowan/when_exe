@@ -177,7 +177,11 @@ module When
     autoload :WorldTerms,            'when_exe/region/world'
     autoload :ShireTerms,            'when_exe/region/shire'
     autoload :MartianTerms,          'when_exe/region/martian'
+  end
+
+  module Parts::Locale
     autoload :WikipediaLinks,        'when_exe/locales/links'
+    autoload :IAST,                  'when_exe/region/indian'
   end
 
   module CalendarTypes
@@ -379,7 +383,7 @@ module When
     when /^today$/i   ; today(options)
     when /^now$/i     ; now(options)
     when /[\n\r]+/    ; when?(specification.split(/[\n\r]+/), options)
-    when String       ; TM::TemporalPosition._instance(specification, options)
+    when String       ; TM::TemporalPosition._instance(Parts.to_internal_encoding(specification), options)
     when Numeric      ; TM::JulianDate.new(+specification, TM::TemporalPosition._options(options))
     else              ; Calendar(options[:frame] || 'Gregorian').jul_trans(specification, options)
     end

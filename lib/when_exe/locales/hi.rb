@@ -5,8 +5,7 @@
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
 
-module When::BasicTypes
-  class M17n
+module When::Parts::Locale
 
     # from https://raw.github.com/svenfuchs/rails-i18n/master/rails/locale/hi.yml
 
@@ -76,5 +75,4 @@ module When::BasicTypes
      "month"=>"माह",
      "second"=>"सेकेंड",
      "year"=>"वर्ष"}}}
-  end
 end

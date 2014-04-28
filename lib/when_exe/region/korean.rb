@@ -25,6 +25,11 @@ require 'when_exe/region/chinese_calendar'
 module When
   module CalendarTypes
 
+    # 正月:A, ２月:B, ３月:C, ４月:D, ５月:E, ６月:F,
+    # ７月:G, ８月:H, ９月:I, 10月:J, 11月:K, 12月:L
+    # 大の月:大文字, 小の月:小文字
+    # 同じアルファベットの連続:閏月
+
     # 朝鮮::       大統暦  (1392)- 1653
     Korean1392 = PatternTableBasedLuniSolar.patch('Chinese0939', 1392..1653, {
       1399 => {'De' =>'dE' },  1437 => {'kL' =>'Kl' },

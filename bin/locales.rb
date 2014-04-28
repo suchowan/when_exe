@@ -19,8 +19,7 @@ HEADER = <<HEADER
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
 
-module When::BasicTypes
-  class M17n
+module When::Parts::Locale
 HEADER
 
 if "1".respond_to?(:force_encoding)
@@ -62,9 +61,9 @@ end
 open("locales/locales/locales.rb", 'w') do |script|
   script.puts HEADER
   yamls.each_key do |key|
-    script.puts "    autoload :Locale_%-8s 'when_exe/locales/%s'" % [key + ',', key]
+    script.puts "  autoload :Locale_%-8s 'when_exe/locales/%s'" % [key + ',', key]
   end
-  script.puts "  end\nend"
+  script.puts "end"
 end
 
 yamls.each_pair do |key, value|
@@ -73,6 +72,6 @@ yamls.each_pair do |key, value|
     script.puts "\n    # from https://raw.github.com/svenfuchs/rails-i18n/master/rails/locale/#{key.sub(/_/,'-')}.yml"
     script.puts "\n    Locale_#{key} ="
     script.write(value.pretty_inspect)
-    script.puts "  end\nend"
+    script.puts "end"
   end
 end
