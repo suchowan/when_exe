@@ -520,22 +520,21 @@ class When::CalendarNote
       note   = dates.cal4note.l_phases
       result = note.phase(date, parameter)
       return result if dates.o_date.frame.kind_of?(When::CalendarTypes::Christian)
-      num, den  = parameter.kind_of?(String) ? parameter.split(/\//, 2) : parameter
-      num  = (num ||  0).to_f
-      den  = (den || 30).to_f
-      return result unless den == 30
-      case num % 30
-      when 0     # 朔
+
+      time   = note.phase(date, parameter, When::SYSTEM)
+      cn     = note.formula.time_to_cn(time) % 1
+      case cn
+      when 0..0.0001, 0.9999..1 # 朔
         return result if result.cal_date[-1] == 1
         diff = result.cal_date[-1] < 15 ? -1 : +1
-      when 5..25 # 弦、望
+      when 0.2..0.8             # 弦、望
         return result unless note.formula.kind_of?(When::Ephemeris::ChineseTrueLunation)
-        time = result.kind_of?(When::TM::DateAndTime) ? result : note.phase(date, [num,den], When::SYSTEM)
         return result if time.clk_time.universal_time >= When::TM::Duration::DAY/4 # 午前6時以降
         diff = -1
-      else       # その他
+      else                      # その他
         return result
       end
+
       patched = result + When::DurationP1D * diff
       result.cal_date[0..-2] = patched.cal_date[0..-2]
       result.cal_date[-1]    = When::Coordinates::Pair.new(patched.cal_date[-1], -diff)

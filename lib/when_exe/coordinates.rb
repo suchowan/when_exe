@@ -115,7 +115,7 @@ module When::Coordinates
         week  = When.Resource('_co:CommonResidue::Week').child
         case day
         when Numeric ; return week[day]
-        when String  ;
+        when String  ; day = When::Parts::Encoding.to_internal_encoding(day)
         else         ; return nil
         end
 

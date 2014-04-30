@@ -383,7 +383,7 @@ module When
     when /^today$/i   ; today(options)
     when /^now$/i     ; now(options)
     when /[\n\r]+/    ; when?(specification.split(/[\n\r]+/), options)
-    when String       ; TM::TemporalPosition._instance(Parts.to_internal_encoding(specification), options)
+    when String       ; TM::TemporalPosition._instance(Parts::Encoding.to_internal_encoding(specification), options)
     when Numeric      ; TM::JulianDate.new(+specification, TM::TemporalPosition._options(options))
     else              ; Calendar(options[:frame] || 'Gregorian').jul_trans(specification, options)
     end
@@ -414,7 +414,13 @@ module When
     options  = TM::TemporalPosition._options(options)
     options[:frame]  ||= 'Gregorian'
     options[:frame]    = Resource(options[:frame], '_c:') if options[:frame].kind_of?(String)
-    options[:era_name] = args.shift if args[0].kind_of?(String) || args[0].kind_of?(Array)
+    case args[0]
+    when String
+      options[:era_name]    = Parts::Encoding.to_internal_encoding(args.shift)
+    when Array
+      options[:era_name]    = args.shift
+      options[:era_name][0] = Parts::Encoding.to_internal_encoding(options[:era_name][0])
+    end
 
     # 時間位置の生成
     date = Array.new(options[:frame].indices.length+1) {args.shift}
@@ -553,12 +559,12 @@ module When
 
   # When::CalendarNote の生成/参照
   #
-  # @param [String] notes 暦注リストを表す文字列
+  # @param [String] note 暦注リストを表す文字列
   #
-  # @return [When::CalendarNote] notes に対応する When::CalendarNote オブジェクト
+  # @return [When::CalendarNote] note に対応する When::CalendarNote オブジェクト
   #
-  def CalendarNote(notes)
-    Parts::Resource._instance(notes, '_n:')
+  def CalendarNote(note)
+    Parts::Resource._instance(note, '_n:')
   end
 
   # When::TM::CalendarEra の生成/参照
@@ -726,6 +732,7 @@ module When
     when Array            ; BasicTypes::M17n.new(source, namespace, locale, options)
     when BasicTypes::M17n ; source
     when String
+      source = Parts::Encoding.to_internal_encoding(source)
       return self[$1] if source =~ /^\s*\[((\.{1,2}|::)+[^\]]+)\]/ && self.kind_of?(When::Parts::Resource)
       return Parts::Resource[$1] if source =~ /^\s*\[::([^\]]+)\]/
       BasicTypes::M17n.new(source, namespace, locale, options)
@@ -748,6 +755,7 @@ module When
   #
   def Wikipedia(title, options={})
     locale = options.delete(:locale) || 'en'
+    title  = Parts::Encoding.to_internal_encoding(title)
     entry, query = title.split('?', 2)
     url  = "http://#{locale}.wikipedia.org/wiki/#{URI.encode(entry).gsub(' ', '_')}"
     Parts::Locale.send(:wikipedia_object, url, options) unless options.empty?

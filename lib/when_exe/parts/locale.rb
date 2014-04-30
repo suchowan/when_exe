@@ -10,52 +10,114 @@
 #
 module When::Parts
 
-  class << self
-    if String.method_defined?(:encode)
-      #
-      # 内部エンコーディング文字列化
-      #
-      # @param [String] string もとにする String または M17n
-      #
-      # @return [String] 内部エンコーディング化した String または M17n
-      #
-      def to_internal_encoding(string)
-        return string.to_internal_encoding if string.kind_of?(When::BasicTypes::M17n)
-        (string.encoding == (Encoding.default_internal||'UTF-8')) ? string : string.encode(Encoding.default_internal||'UTF-8')
-      end
+  #
+  # エンコーディングの変換
+  #
+  module Encoding
 
-      #
-      # 外部エンコーディング文字列化
-      #
-      # @param [String] string もとにする String または M17n
-      #
-      # @return [String] 外部エンコーディング化した String または M17n
-      #
-      def to_external_encoding(string)
-        return string.to_external_encoding if string.kind_of?(When::BasicTypes::M17n)
-        (string.encoding == Encoding.default_external) ? string : string.encode(Encoding.default_external)
-      end
+    class << self
+      if String.method_defined?(:encode)
+        #
+        # 内部エンコーディング文字列化
+        #
+        # @param [Object] source もとにする Object
+        #
+        # @return [Object] 内部エンコーディング化した Object
+        #
+        # @private
+        def to_internal_encoding(source)
+          default_internal = ::Encoding.default_internal||'UTF-8'
+          case source
+          when Locale ;  source.to_internal_encoding
+          when String ; (source.encoding == default_internal) ?
+                         source :
+                         source.encode(default_internal)
+          when Regexp ; (source.encoding == default_internal) ?
+                         source :
+                         Regexp.new(source.to_s.encode(default_internal))
+          when Array  ;  source.map {|e| to_internal_encoding(e)}
+          when Hash   ;  Hash[*(source.keys.map {|k|
+                           [to_internal_encoding(k), to_internal_encoding(source[k])]
+                         }).flatten]
+          else        ;  source.respond_to?(:to_internal_encoding) ? source.to_internal_encoding : source
+          end
+        end
 
-    else
-      # 内部エンコーディング文字列化(ダミー)
-      #
-      # @param [String] string もとにする String または M17n
-      #
-      # @return [String] そのまま返す
-      #
-      def to_internal_encoding(string)
-        string
+        #
+        # 外部エンコーディング文字列化
+        #
+        # @param [Object] source もとにする Object
+        #
+        # @return [Object] 外部エンコーディング化した Object
+        #
+        # @private
+        def to_external_encoding(source)
+          default_external = ::Encoding.default_external
+          case source
+          when Locale ;  source.to_external_encoding
+          when String ; (source.encoding == default_external) ?
+                         source :
+                         source.encode(default_external)
+          when Regexp ; (source.encoding == default_external) ?
+                         source :
+                         Regexp.new(source.to_s.encode(default_external))
+          when Array  ;  source.map {|e| to_external_encoding(e)}
+          when Hash   ;  Hash[*(source.keys.map {|k|
+                           [to_external_encoding(k), to_external_encoding(source[k])]
+                         }).flatten]
+          else        ;  source.respond_to?(:to_external_encoding) ? source.to_external_encoding : source
+          end
+        end
+
+      else
+        # 内部エンコーディング文字列化(ダミー)
+        #
+        # @param [String] string もとにする String または M17n
+        #
+        # @return [String] そのまま返す
+        #
+        def to_internal_encoding(string)
+          string
+        end
+        #
+        # 外部エンコーディング文字列化(ダミー)
+        #
+        # @param [String] string もとにする String または M17n
+        #
+        # @return [String] そのまま返す
+        #
+        def to_external_encoding(string)
+          string
+        end
       end
-      #
-      # 外部エンコーディング文字列化(ダミー)
-      #
-      # @param [String] string もとにする String または M17n
-      #
-      # @return [String] そのまま返す
-      #
-      def to_external_encoding(string)
-        string
-      end
+    end
+
+    # 
+    # 内部エンコーディング文字列化
+    #
+    def to_internal_encoding
+      Encoding.to_internal_encoding(self)
+    end
+
+    # 
+    # 外部エンコーディング文字列化
+    #
+    def to_external_encoding
+      Encoding.to_external_encoding(self)
+    end
+
+    # 
+    # 内部エンコーディング文字列化(単項)
+    #
+    def +@
+      to_internal_encoding
+    end
+
+    # 
+    # 外部エンコーディング文字列化(単項)
+    #
+    def -@
+      to_external_encoding
     end
   end
 
@@ -738,6 +800,7 @@ module When::Parts
           mark[0]  = locale if asterisk[0]
           mark[1]  = locale if asterisk[1]
           mark[2]  = locale unless mark[2]
+          name = _replacement($1, locale, ($3 || @names['en'] || @names[''])) if name =~ /^_([A-Z]+)_(\((.+)\))?$/
           @names[locale] = name
           if (ref =~ /^(.+):/)
             prefix = namespace[$1]
@@ -767,6 +830,15 @@ module When::Parts
 
       # 代表名
       @names[mark[0] || mark[1] || mark[2]]
+    end
+
+    #
+    # 英語表記を現地表記に置き換える
+    #
+    def _replacement(table, locale, name)
+      Locale.const_get(table)[locale] ?
+        Locale.send(table.downcase, name, locale) :
+        name
     end
 
     # encode URI from patterns %%(...) or %.(...)

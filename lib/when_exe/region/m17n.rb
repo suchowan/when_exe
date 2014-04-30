@@ -25,6 +25,7 @@ module When
         abbrs  = When.Resource('_m:CalendarTerms::Abbr_Month').child
         return name > 0 ? months[name-1] : abbrs[-name-1] if name.kind_of?(Numeric)
 
+        name   = When::Parts::Encoding.to_internal_encoding(name)
         match  = name[/^...|^..$/]
         if match
           (months+abbrs).each do |month|

@@ -439,12 +439,8 @@ module When
       # 内部エンコーディング文字列化
       #
       def to_internal_encoding
-        hash = names.dup
-        hash.each_pair do |key, value|
-          hash[key] = When::Parts.to_internal_encoding(value)
-        end
-        _copy({:label      => When::Parts.to_internal_encoding(to_s),
-               :names      => hash,
+        _copy({:label      => When::Parts::Encoding.to_internal_encoding(to_s),
+               :names      => Hash[*(names.keys.map {|name| [name, When::Parts::Encoding.to_internal_encoding(names[name])]}).flatten],
                :link       => link,
                :access_key => access_key,
                :code_space => code_space
@@ -455,12 +451,8 @@ module When
       # 外部エンコーディング文字列化
       #
       def to_external_encoding
-        hash = names.dup
-        hash.each_pair do |key, value|
-          hash[key] = When::Parts.to_external_encoding(value)
-        end
-        _copy({:label      => When::Parts.to_external_encoding(to_s),
-               :names      => hash,
+        _copy({:label      => When::Parts::Encoding.to_external_encoding(to_s),
+               :names      => Hash[*(names.keys.map {|name| [name, When::Parts::Encoding.to_external_encoding(names[name])]}).flatten],
                :link       => link,
                :access_key => access_key,
                :code_space => code_space

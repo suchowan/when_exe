@@ -225,6 +225,9 @@ module When::Parts
         # 文字列以外はそのまま返す
         return iri unless iri.instance_of?(String)
 
+        # 内部文字列化
+        iri = When::Parts::Encoding.to_internal_encoding(iri)
+
         # 階層がある場合は、階層をたどる
         iri = Resource._decode(iri)
         iri = $1 while iri =~ /^\((.*)\)$/

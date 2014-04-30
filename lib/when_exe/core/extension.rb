@@ -204,33 +204,7 @@ end
 #
 class String
 
-  # 
-  # 内部エンコーディング文字列化
-  #
-  def to_internal_encoding
-    When::Parts.to_internal_encoding(self)
-  end
-
-  # 
-  # 外部エンコーディング文字列化
-  #
-  def to_external_encoding
-    When::Parts.to_external_encoding(self)
-  end
-
-  # 
-  # 内部エンコーディング文字列化(単項)
-  #
-  def +@
-    to_internal_encoding
-  end
-
-  # 
-  # 外部エンコーディング文字列化(単項)
-  #
-  def -@
-    to_external_encoding
-  end
+  include When::Parts::Encoding
 
   #
   # self を When::BasicTypes::M17n に変換する
@@ -438,6 +412,9 @@ end
 # Extensions to Regexp class
 #
 class Regexp
+
+  include When::Parts::Encoding
+
   #
   # self を検索する暦年代にマッチする正規表現とみなして登録された When::TM::CalendarEraを検索
   #

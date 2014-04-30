@@ -173,6 +173,7 @@ module When
         when Range   ; arg.each {|d| dates << d}
         when Symbol  ; output = [arg]
         when String
+          arg = When::Parts::Encoding.to_internal_encoding(arg)
           case arg
           when /^:(.+?)(?:\[(..)\])?$/             ; output  = [$1.to_sym, $2].compact
           when /^(year|month|week)(?:\[(..)\])?$/i ; methods << [$1.downcase + '_included', $2||'SU']
