@@ -36,9 +36,12 @@ module When::Parts
                          source :
                          Regexp.new(source.to_s.encode(default_internal))
           when Array  ;  source.map {|e| to_internal_encoding(e)}
-          when Hash   ;  Hash[*(source.keys.map {|k|
-                           [to_internal_encoding(k), to_internal_encoding(source[k])]
-                         }).flatten]
+          when Hash
+            hash = {}
+            source.each_pair do |key, value|
+              hash[to_internal_encoding(key)] = to_internal_encoding(value)
+            end
+            hash
           else        ;  source.respond_to?(:to_internal_encoding) ? source.to_internal_encoding : source
           end
         end
@@ -62,9 +65,12 @@ module When::Parts
                          source :
                          Regexp.new(source.to_s.encode(default_external))
           when Array  ;  source.map {|e| to_external_encoding(e)}
-          when Hash   ;  Hash[*(source.keys.map {|k|
-                           [to_external_encoding(k), to_external_encoding(source[k])]
-                         }).flatten]
+          when Hash
+            hash = {}
+            source.each_pair do |key, value|
+              hash[to_external_encoding(key)] = to_external_encoding(value)
+            end
+            hash
           else        ;  source.respond_to?(:to_external_encoding) ? source.to_external_encoding : source
           end
         end
