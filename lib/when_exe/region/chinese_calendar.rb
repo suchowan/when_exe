@@ -28,7 +28,7 @@ module When
       Coordinates::DefaultDayIndex
     ]
 
-    # 秦・漢::      顓頊暦  -221 - -162 （冬至を１１月に固定） (歳首 建亥月)
+    # 秦・漢::      顓頊暦  -221 - -162 （冬至を11月に固定）   (歳首 建亥月)
     # 漢::          顓頊暦  -161 - -103 （雨水を１月に固定）   (歳首 建亥月)
     Chinese_221 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>-222, 'origin_of_LSC'=>1640021, 'border'=>'0*10-01',
@@ -297,7 +297,7 @@ module When
 	AbCdEfGHiJkL	aBcDeFgHiJKlL	aBcDeFgHiJkL	aBCdEfGhIjKl	AbCdEfGHiIjKl
 	AbCdEfGhIJkL	aBcDeFgHiJkL	aBCdEeFgHiJkL	aBcDeFGhIjKl	AbCdEfGhIJkL
 	aBbCdEfGhIjKl	ABcDeFgHiJkL	aBcDeFGhIjKkL	aBcDeFgHIjKl	AbCdEfGhIjKl
-	ABcDeFgGhIjKl	AbCdEFgHiJkL	aBcDeFgHIjKl	AbCdDEfGhIjKl	)
+	ABcDeFgGhIjKl	AbCdEFgHiJkL	aBcDeFgHIjKl	AbCcDeFgHiJkL	)
       }
     ]
 
