@@ -615,7 +615,7 @@ module When
         return super unless @cycle_number_1m
         time = @is_dynamical ? +t : t.to_f
         cn0  = time * @cycle_number_1m + @cycle_number_0m
-        root(cn0, time) {|cn| cn_to_time(cn)}
+        root(cn0, time, 0, 5) {|cn| cn_to_time(cn)}
       end
 
       # 当該日付の月の位相の変化範囲(唐代の定朔の暦法用 cn_to_time(1L) を使用する)
@@ -633,7 +633,10 @@ module When
           loop do
             t0 = cn_to_time( c   / 60.0)
             t1 = cn_to_time((c+1)/ 60.0)
-            if t0 > t
+            d  = ((t-t0) / (t1-t0)).round
+            if d.abs > 1
+              c += d
+            elsif t0 > t
               c -= 1
             elsif t1 <= t
               c += 1

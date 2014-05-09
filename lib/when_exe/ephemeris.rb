@@ -336,8 +336,9 @@ module When::Ephemeris
       y.shift
       i -= 1
     end
-    raise RangeError, "The result does not converge." if i<=0
-    return t[2]
+    return t[2] if i > 0
+    return t[1] + (t[0]-t[1]) / (y[0]-y[1]) * (y0-y[1]) if y0 && count < 6
+    raise RangeError, "The result does not converge - #{t}->#{y}."
   end
 
   # y が周期量である場合の周期の補正
