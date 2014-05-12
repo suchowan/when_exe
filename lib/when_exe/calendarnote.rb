@@ -543,9 +543,10 @@ module When
       end
 
       # update notes
-      notes = yield(dates, focused_notes, notes)
+      focused_notes_actual = focused_notes.dup
+      notes = yield(dates, focused_notes_actual, notes)
       notes.keys.each do |note|
-        notes.delete(note) unless focused_notes.include?(note)
+        notes.delete(note) unless focused_notes_actual.include?(note)
       end
 
       # return Array of Hash

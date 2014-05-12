@@ -13,8 +13,6 @@ module When
     #
     IAST = {
       'hi' => {
-        '%s' => '%s',
-
         "a"  => "अ",     "A"  => "अ",
         "ā"  => "आ",     "Ā"  => "आ",
         "i"  => "इ",      "I"  => "इ",
@@ -71,7 +69,7 @@ module When
 
     # @private
     IAST_keys = Hash[*(IAST.keys.map {|locale|
-      [locale, Regexp.new(IAST[locale].keys.sort_by {|key| -key.length}.join('|'))]
+      [locale, Regexp.new((IAST[locale].keys.sort_by {|key| -key.length} + ['%.*?[A-Za-z]']).join('|'))]
     }).flatten]
 
     #
@@ -80,7 +78,7 @@ module When
     # @private
     def self.iast(string, locale)
       string.gsub(IAST_keys[locale]) {|code|
-        IAST[locale][code]
+        IAST[locale][code] || code
       }
     end
   end
@@ -980,7 +978,7 @@ module When
             "[Puṣya=en:Pushya,                                  プシュヤ=,           _IAST_, 鬼宿]", #  8
             "[Aśleṣā=en:%C4%80shlesh%C4%81,                     アーシュレーシャー=, _IAST_, 柳宿]", #  9
             "[Maghā=en:Magh%C4%81,                              マガー=,             _IAST_, 星宿]", # 10
-            "[P. Phalguṇī=en:P%C5%ABrva_Phalgun%C4%AB,          P. パールグニー=,    _IAST_, 張宿]", # 11
+            "[Pū. Phalguṇī=en:P%C5%ABrva_Phalgun%C4%AB,         P. パールグニー=,    _IAST_, 張宿]", # 11
             "[U. Phalguṇī=en:Uttara_Phalgun%C4%AB,              U. パールグニー=,    _IAST_, 翼宿]", # 12
             "[Hasta=en:Nakshatra#Divisions,                     ハスタ=,             _IAST_, 軫宿]", # 13
             "[Citrā=en:Nakshatra#Divisions,                     チトラー=,           _IAST_, 角宿]", # 14
@@ -989,12 +987,12 @@ module When
             "[Anurādhā=en:Anur%C4%81dh%C4%81,                   アヌラーダー=,       _IAST_, 房宿]", # 17
             "[Jyeṣṭha=en:Jyeshtha,                              ジェーシュター=,     _IAST_, 心宿]", # 18
             "[Mūla=en:Mula_(astrology),                         ムーラ=,             _IAST_, 尾宿]", # 19
-            "[P. āṣāḍha=en:P%C5%ABrva_Ash%C4%81dh%C4%81,        P. アーシャーダー=,  _IAST_, 箕宿]", # 20
+            "[Pū. āṣāḍha=en:P%C5%ABrva_Ash%C4%81dh%C4%81,       P. アーシャーダー=,  _IAST_, 箕宿]", # 20
             "[U. āṣāḍha=en:Uttara_Ash%C4%81dh%C4%81,            U. アーシャーダー=,  _IAST_, 斗宿]", # 21
             "[Śravaṇa=en:Shravana,                              シュラヴァナ=,       _IAST_, 女宿]", # 22
             "[Śraviṣṭhā=en:Dhanishta,                           ダニシュター=,       _IAST_, 虛宿]", # 23
             "[Śatabhiṣak=en:Shatabhish%C4%81,                   シャタビシャジュ=,   _IAST_, 危宿]", # 24
-            "[P. Bhādrapadā=en:P%C5%ABrva_Bh%C4%81drapad%C4%81, P. バードラパダー=,  _IAST_, 室宿]", # 25
+            "[Pū. Bhādrapadā=en:P%C5%ABrva_Bh%C4%81drapad%C4%81,P. バードラパダー=,  _IAST_, 室宿]", # 25
             "[U. Bhādrapadā=en:Uttara_Bh%C4%81drapad%C4%81,     U. バードラパダー=,  _IAST_, 壁宿]", # 26
             "[Revatī=en:Revati_(nakshatra),                     レーヴァティー=,     _IAST_, 奎宿]"  # 27
           ],

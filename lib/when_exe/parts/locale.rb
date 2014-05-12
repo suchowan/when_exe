@@ -353,10 +353,10 @@ module When::Parts
       # locale 指定を解析して Hash の値を取り出す
       # @private
       def _hash_value(hash, locale, default='')
-        locale = locale.sub(/\..*/, '').sub(/-/,'_')
+        locale = locale.sub(/\..*/, '')
         return hash[locale] if (hash[locale])
         return _hash_value(hash, _alias[locale], default) if _alias[locale]
-        language = locale.sub(/_.*/, '')
+        language = locale.sub(/-.*/, '')
         return hash[language] if (hash[language])
         return hash[default]
       end
@@ -371,9 +371,9 @@ module When::Parts
       def _get_locale(locale, access_key)
         return nil unless access_key
         access_key = access_key.split(/\//).map {|key| key =~ /^[0-9]+$/ ? key.to_i : key}
-        locale = locale.sub(/\..*/, '').sub(/-/,'_')
-        [locale, locale.sub(/_.*/, '')].each do |loc|
-          symbol = ('Locale_' + loc).to_sym
+        locale = locale.sub(/\..*/, '')
+        [locale, locale.sub(/-.*/, '')].each do |loc|
+          symbol = ('Locale_' + loc.sub(/-/,'_')).to_sym
           return {loc=>access_key.inject(const_get(symbol)) {|hash, key| hash = hash[key]}} if const_defined?(symbol)
         end
         return nil
@@ -518,6 +518,7 @@ module When::Parts
     #
     def translate(loc='')
       return to_s unless loc
+      loc = loc.sub('_', '-')
       lang, code = loc.split(/\./)
       result = _label_value(loc)
       return result if !code || @names.member?(loc)
@@ -533,7 +534,7 @@ module When::Parts
     #
     def reference(loc='')
       loc ||= ''
-      return Locale._hash_value(@link, loc)
+      return Locale._hash_value(@link, loc.sub('_', '-'))
     end
 
     # 部分文字列
