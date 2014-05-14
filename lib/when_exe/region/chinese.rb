@@ -139,10 +139,6 @@ module When
           # 近点月
           @anomalistic_month_length =  @anomalistic_month_length.to_r
 
-          # 通法
-          @denominator = @year_length.denominator if @year_length.kind_of?(Rational)
-          @denominator = [@denominator||0, @lunation_length.denominator].max if @lunation_length.kind_of?(Rational)
-
           # 計算式 C) のための繰り返し回数
           @repeat_count ||= @method.upcase == 'C' ? 2 : 1
           @repeat_count   = @repeat_count.to_i
@@ -653,6 +649,11 @@ module When
       # オブジェクトの正規化
       def _normalize(args=[], options={})
         super
+
+        # 通法
+        @denominator = @year_length.denominator if @year_length.kind_of?(Rational)
+        @denominator = [@denominator||0, @lunation_length.denominator].max if @lunation_length.kind_of?(Rational)
+
         if @formula == '1L'
 
           # 月の位相の計算

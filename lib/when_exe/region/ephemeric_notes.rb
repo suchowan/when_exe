@@ -99,10 +99,30 @@ class When::CalendarNote
     # @param [String] parameter 座標の分子と分母("#{ num }/#{ den }" の形式)
     #
     # @return [When::TM::IntervalLength]
+    #
+    # @private
     def event_delta(parameter=nil)
       return @delta unless parameter
       num, den = parameter.split(/\//, 2)
       When::TM::IntervalLength.new([(den || @den).to_f,1].max*0.9, 'day')
+    end
+
+    #
+    # イベント日付(時刻付)
+    #
+    # @private
+    def event_time(date, event_name, event)
+      etime = term(date - When.Duration('P3D'), event, When::SYSTEM)
+      if formula.respond_to?(:year_length) && formula.denominator && formula.denominator < 100000
+        fraction  =  etime.clk_time.universal_time
+        fraction +=  When::TM::Duration::DAY * (etime.to_i - date.to_i)
+        fraction  = (fraction  / When::TM::Duration::DAY * formula.denominator * 1000 + 0.5).floor / 1000.0
+        fraction  =  fraction.to_i if fraction == fraction.to_i
+        event_name + "(#{fraction}/#{formula.denominator})"
+      else
+        etime.events = [event_name]
+        etime
+      end
     end
   end
 

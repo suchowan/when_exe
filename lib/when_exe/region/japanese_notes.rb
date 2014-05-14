@@ -1243,11 +1243,19 @@ class When::CalendarNote
                                                      [longitude, motsu]
           if _motsu != 0 && _longitude % 90 == 27
             notes['土用事'] =
-              case dates.range
-              when 0     ; '土用'   # 元嘉暦以前
-              when 1     ; '土王'   # 麟徳暦
-              when 2..10 ; '土用事' # 大衍暦～宣明暦
-              else       ; '土用入' # 貞享暦以降
+              begin
+                event_name =
+                  case dates.range
+                  when 0     ; '土用'   # 元嘉暦以前
+                  when 1     ; '土王'   # 麟徳暦
+                  when 2..10 ; '土用事' # 大衍暦～宣明暦
+                  else       ; '土用入' # 貞享暦以降
+                  end
+                if conditions[:shoyo]
+                  dates.cal4note.s_terms.event_time(date, event_name, [27-(dates.cal4note.doyo||0), 90])
+                else
+                  event_name
+                end
               end
           end
         end
@@ -1301,21 +1309,9 @@ class When::CalendarNote
           notes['節中']     ||= Notes12[div] + %w(節 中)[mod]
           notes['廿四節気'] ||= 
             begin
-              root      = When.Resource(dates.range == 1 ? '_co:CommonResidue?V=0618' : '_co:CommonResidue')
-              residue   = root['二十四節気::*'][(note-3) % 24]
+              residue = When.Resource(dates.range == 1 ? '_co:CommonResidue?V=0618' : '_co:CommonResidue')['二十四節気::*'][(note-3) % 24]
               if conditions[:shoyo]
-                formula = dates.cal4note.s_terms.formula
-                etime   = dates.cal4note.s_terms.term(date - When.Duration('P3D'), [0,15], When::SYSTEM)
-                if formula.respond_to?(:year_length) && formula.denominator
-                  shoyo  =  etime.clk_time.universal_time
-                  shoyo +=  When::TM::Duration::DAY * (etime.to_i - date.to_i)
-                  shoyo  = (shoyo  / When::TM::Duration::DAY * formula.denominator * 1000 + 0.5).floor / 1000.0
-                  shoyo  =  shoyo.to_i if shoyo == shoyo.to_i
-                  residue.label + "(#{shoyo}/#{formula.denominator})"
-                else
-                  etime.events = [residue.label]
-                  etime
-                end
+                dates.cal4note.s_terms.event_time(date, residue.label, [0,15])
               else
                 residue
               end
