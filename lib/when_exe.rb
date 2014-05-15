@@ -182,6 +182,7 @@ module When
   module Parts::Locale
     autoload :WikipediaLinks,        'when_exe/locales/links'
     autoload :IAST,                  'when_exe/region/indian'
+    autoload :AKT,                   'when_exe/region/japanese'
   end
 
   module CalendarTypes
