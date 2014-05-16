@@ -407,6 +407,27 @@ module When::CalendarTypes
       base[0..-2] + [hash]
     end
 
+    # 朔閏表を生成する
+    #
+    # @param  [Range] range 生成範囲(西暦年)
+    #
+    # @return [Hash] 朔閏表
+    #
+    def luni_solar_table(range)
+      last  = range.last
+      last -= 1 if range.exclude_end?
+      [range.first, last].each do |edge|
+        raise RangeError, 'Range exceeded: ' + range.to_s unless (@origin_of_MSC...(@origin_of_MSC+@rule_table['T']['Rule'].length)).include?(edge)
+      end
+      {
+        'origin_of_MSC' => range.first,
+        'origin_of_LSC' => @origin_of_LSC + @rule_table['T']['Rule'][range.first-@origin_of_MSC][1],
+        'rule_table'    => {'T'=> {'Rule'=>range.to_a.map {|year|
+          @rule_table['T']['Rule'][year-@origin_of_MSC][0]
+        }}}
+      }
+    end
+
     private
 
     #  new で指定された月日配当規則をプログラムで利用可能にします。
@@ -866,9 +887,42 @@ module When::CalendarTypes
   #
   class EphemerisBasedLuniSolar < EphemerisBasedSolar
 
+    # @private
+    Pattern = ' ABCDEFGHIJKL'
+
     # 計算方法
     # @return [Array<When::Ephemeris::Formula>]
     attr_reader :formula
+
+    # 朔閏表を生成する
+    #
+    # @param  [Range] range 生成範囲(西暦年)
+    #
+    # @return [Hash] 朔閏表
+    #
+    def luni_solar_table(range)
+      date  = When.TemporalPosition(range.first, {:frame=>self}).floor
+      table = []
+      hash  = {
+        'origin_of_MSC' => range.first,
+        'origin_of_LSC' => date.to_i,
+        'rule_table'    => {'T'=>{'Rule'=>table}}
+      }
+      list  = ''
+      while range.include?(date[YEAR])
+        month = date[MONTH] * 1
+        char  = Pattern[month..month]
+        char  = char.downcase if date.length(MONTH) == 29
+        list += char
+        succ  = date + When::DurationP1M
+        unless date[YEAR] == succ[YEAR]
+          table << list
+          list = ''
+        end
+        date = succ
+      end
+      hash
+    end
 
     #protected
 

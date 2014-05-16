@@ -214,10 +214,6 @@ module When::Coordinates
       notes['九坎'  ]   ||= @remainder == [4,1,10,7,3,0,9,6,2,11,8,5][month-1] ? '九坎' : nil
       notes['厭'    ]   ||= @remainder == (17-month) % 12 ? '厭對' : nil
       notes['厭'    ]   ||= @remainder == (11-month) % 12 ? '厭'   : nil
-      unless conditions[:kana]
-        notes['母倉']   ||= [[0,11],    [0,11],    [5,6], [2,3], [2,3], [5,6],
-	                     [1,4,7,10],[1,4,7,10],[5,6], [8,9], [8,9], [5,6]][month-1].include?(@remainder) ? '母倉' : nil unless notes['凶会']
-      end
       notes['天倉'  ]   ||= @remainder == (3-month) % 12  ? '天倉' : nil
 
       # 具注暦(大衍暦以来)
@@ -297,9 +293,6 @@ module When::Coordinates
       notes['日遊']     ||= dates.range < 2 ? Rules['日遊'][@remainder] :
                             [4,5,14,15,24,25,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,54,55].include?(@remainder) ? '内' : nil
       notes['天赦']     ||= @remainder == [14,30,44,00][(month-1)/3] ? '天赦' : nil
-      if conditions[:kana]
-        notes['母倉']   ||= Rules['母倉'][@remainder][12-month] == 1 ? '母倉' : nil
-      end
 
       #   宣明暦以前は節月、貞享暦以後は暦月
     # m  = dates.range < 11 ? month : (dates.m_date.cal_date[1] * 1)
@@ -311,7 +304,7 @@ module When::Coordinates
       notes['凶会'] = kue
 
       #   凶会日に省略される吉日
-      _notes_without_kue(notes, month, dates.range < 2 ? '歳' : '大歳', conditions[:sai] ? conditions[:sai].to_s != '0' : nil) unless notes['凶会']
+      _notes_without_kue(notes, month, dates.range < 2 ? '歳' : '大歳', conditions) unless notes['凶会']
 
       # 具注暦(大衍暦以来)
       notes['天一']     ||= begin
@@ -343,8 +336,8 @@ module When::Coordinates
 
       #   宣明暦以前は節月、貞享暦以後は暦月？
       notes['三寶吉'], notes['神吉'], notes['雑事吉'], notes['小字注'] = Rules['吉事注'][m-1][@remainder]
-      if conditions[:kana]
-        notes['神吉']     = Rules['神吉'][@remainder][12-month] == 1 ? '神吉' : nil
+      if conditions[:kana] && notes['神吉']
+        notes['神吉']     = '(' + notes['神吉'] + ')' if Rules['神吉'][@remainder][12-month] == 0
       end
 
       # 仮名暦
@@ -373,12 +366,20 @@ module When::Coordinates
 
     private
 
-    def _notes_without_kue(notes, month, daisai, variation)
+    def _notes_without_kue(notes, month, daisai, conditions)
       notes['天恩']     ||= [0,3,9].include?(@remainder / 5) ? '天恩' : nil
+
+      unless notes['母倉']
+        note1 = [[0,11],    [0,11],    [5,6], [2,3], [2,3], [5,6],
+                 [1,4,7,10],[1,4,7,10],[5,6], [8,9], [8,9], [5,6]][month-1].include?(@remainder % 12)
+        note2 = conditions[:kana] ? Rules['母倉'][@remainder][12-month] == 1 : note1
+        notes['母倉'] =  '母倉'  if note1 && note2
+        notes['母倉'] = '(母倉)' unless note1 == note2
+      end
 
       return notes if notes['大小歳']
 
-      if variation
+      if conditions[:sai] && conditions[:sai].to_s != '0'
         note = Rules['大小歳差分'][[month, @remainder]]
         if note
           notes['大小歳'] = daisai + note
