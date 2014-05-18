@@ -1119,7 +1119,7 @@ module When::Ephemeris
     #
     def eclipse(t, target, base=Earth)
       t = +t
-      distance      = self.coords(t, base).spherical_law_of_cosines(target.coords(t, base)) / CIRCLE
+      distance      = acos(self.coords(t, base).spherical_law_of_cosines(target.coords(t, base))) / CIRCLE
       self_radius   = self.apparent_radius(t, base)
       target_radius = target.apparent_radius(t, base)
       return (self_radius + target_radius - distance) / (2.0 * target_radius)

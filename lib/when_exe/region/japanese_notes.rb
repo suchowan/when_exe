@@ -264,11 +264,11 @@ class When::CalendarNote
         [Note, 0xF800, "label:[不成就=ja:%%<不成就日>]",
                                              'position:仮名暦', 'suffix:日'],                # 98: 暦月 暦日/晦日
         [Note, 0x3FFF, "label:[三寶吉=ja:%%<三宝吉>]",
-                                             'position:上段 上段 上段 上段'],                # 99: 干支 節月(宣明暦以前)/暦月(貞享暦以降)
+                                             'position:上段 上段 上段 上段'],                # 99: 干支 節月
         [Note, 0x3FFF, "label:[神吉=ja:%%<暦注下段>#%.<神日>]",
                                              'position:上段 上段 中段 中段上', 'suffix:日'], #100: 干支 節月
-        [Note, 0x3FFF, "label:[雑事吉=]",    'position:雑事吉'],                             #101: 干支 節月(宣明暦以前)/暦月(貞享暦以降)
-        [Note, 0x07FF, "label:[小字注=]",    'position:下段小字 下段小字 下段小字 下段小字'],#102: 干支 節月(宣明暦以前)/暦月(貞享暦以降)
+        [Note, 0x3FFF, "label:[雑事吉=]",    'position:雑事吉'],                             #101: 干支 節月
+        [Note, 0x3FFF, "label:[小字注=]",    'position:下段小字 下段小字 下段小字 下段小字'],#102: 干支 節月
         [Note, 0x3800, "label:[鬼宿]",       'position:仮名暦'],                             #103: 廿八宿
       ]
     ]]
