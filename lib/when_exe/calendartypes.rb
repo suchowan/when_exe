@@ -375,15 +375,14 @@ module When::CalendarTypes
   class PatternTableBasedLuniSolar < TableBased
 
     #
-    # ひな型朔閏表からの差分で朔閏表を生成する
+    # ひとつのひな型朔閏表からの差分で朔閏表を生成する
     #
     # @param [Array] definition ひな型朔閏表
     # @param [Range] range 生成する朔閏表の年代範囲
     # @param [Hash{Integer=>(String or Hash{String or Regexp=>String})}] difference 差分情報
     #
-    # @return [Array] 生成された朔閏表
+    # @return [Array] 生成された朔閏表定義
     #
-    # @private
     def self.patch(definition, range=nil, difference={})
       When.Calendar(definition)
       base    = When::CalendarTypes.const_get(definition)
@@ -407,25 +406,75 @@ module When::CalendarTypes
       base[0..-2] + [hash]
     end
 
+    #
+    # 複数のひな型朔閏表からの差分で朔閏表を生成する
+    #
+    # @param [[Array<Array<String, Range>>]] definitions ひな型朔閏表
+    #     - String - もとにする太陰太陽暦のIRI文字列
+    #     - Range  - 朔閏表の年代範囲(デフォルトはもとにする太陰太陽暦の年代範囲)
+    # @param [Hash{Integer=>(String or Hash{String or Regexp=>String})}] difference 差分情報
+    #
+    # @return [Array] 生成された朔閏表定義
+    #
+    def self.join(definitions, difference={})
+      if definitions.first.kind_of?(Array)
+        base = When::CalendarTypes.const_get(definitions.first[0]).dup
+      else
+        base = []
+        base << definitions.shift until definitions.first.kind_of?(Array)
+      end
+      tables = definitions.map {|definition|
+        When.Calendar(definition[0]).luni_solar_table(definition[1])
+      }
+      hash   = base.pop.merge({
+        'origin_of_MSC' => tables.first['origin_of_MSC'],
+        'origin_of_LSC' => tables.first['origin_of_LSC'],
+        'rule_table'    => tables.inject([]) {|rules, table| rules += table['rule_table']}
+      })
+      difference.each_pair do |year, pattern|
+        offset = year - hash['origin_of_MSC']
+        hash['rule_table'][offset] =
+         if pattern.kind_of?(Hash)
+            rule = hash['rule_table'][offset].dup
+            pattern.each_pair do |key,value|
+              raise ArgumentError, "Can't patch \"#{rule}\" by {#{key}=>#{value}} at #{year}" unless rule.sub!(key,value)
+            end
+            rule
+          else
+            pattern
+          end
+      end
+      base << hash
+    end
+
     # 朔閏表を生成する
     #
-    # @param  [Range] range 生成範囲(西暦年)
+    # @param  [Range] sub_range 生成範囲(西暦年) デフォルトは self.range
     #
     # @return [Hash] 朔閏表
     #
-    def luni_solar_table(range)
-      last  = range.last
-      last -= 1 if range.exclude_end?
-      [range.first, last].each do |edge|
-        raise RangeError, 'Range exceeded: ' + range.to_s unless (@origin_of_MSC...(@origin_of_MSC+@rule_table['T']['Rule'].length)).include?(edge)
+    def luni_solar_table(sub_range=nil)
+      sub_range ||= range
+      last  = sub_range.last
+      last -= 1 if sub_range.exclude_end?
+      [sub_range.first, last].each do |edge|
+        raise RangeError, 'Range exceeded: ' + sub_range.to_s unless range.include?(edge)
       end
       {
-        'origin_of_MSC' => range.first,
-        'origin_of_LSC' => @origin_of_LSC + @rule_table['T']['Rule'][range.first-@origin_of_MSC][1],
-        'rule_table'    => {'T'=> {'Rule'=>range.to_a.map {|year|
+        'origin_of_MSC' => sub_range.first,
+        'origin_of_LSC' => @origin_of_LSC + @rule_table['T']['Rule'][sub_range.first-@origin_of_MSC][1],
+        'rule_table'    => sub_range.to_a.map {|year|
           @rule_table['T']['Rule'][year-@origin_of_MSC][0]
-        }}}
+        }
       }
+    end
+
+    # 朔閏表の有効範囲
+    #
+    # @return [Range] 有効範囲(西暦年)
+    #
+    def range
+       @origin_of_MSC...(@origin_of_MSC+@rule_table['T']['Rule'].length)
     end
 
     private
@@ -906,7 +955,7 @@ module When::CalendarTypes
       hash  = {
         'origin_of_MSC' => range.first,
         'origin_of_LSC' => date.to_i,
-        'rule_table'    => {'T'=>{'Rule'=>table}}
+        'rule_table'    => table
       }
       list  = ''
       while range.include?(date[YEAR])

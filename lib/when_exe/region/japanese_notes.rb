@@ -137,139 +137,141 @@ class When::CalendarNote
         [Note, 0xF800, "label:[初午]",       'position:雑節'],                               # 14: 支 節月 or 暦月
         [Note, 0xF800, "label:[八十八夜]",   'position:雑節'],                               # 15: 立春からの日数
         [Note, 0xF800, "label:[入梅]",       'position:雑節'],                               # 16: 干 太陽黄経
-        [Note, 0xF800, "label:[二百十日]",   'position:雑節'],                               # 17: 立春からの日数
-        [Note, 0xF800, "label:[二百廿日]",   'position:雑節'],                               # 18: 立春からの日数
+        [Note, 0xF800, "label:[半夏生]",     'position:雑節'],                               # 17: 干 太陽黄経
+        [Note, 0xF800, "label:[二百十日]",   'position:雑節'],                               # 18: 立春からの日数
+        [Note, 0xF800, "label:[二百廿日]",   'position:雑節'],                               # 19: 立春からの日数
 
         [Note, 0x3FFC, "label:[大禍=ja:%%<暦注下段>#%.<大禍日>]",
-                                             'position:上段 上段 欄外 欄外', 'suffix:日'],   # 19: 支 節月
-        [Note, 0x3FFC, "label:[滅門=ja:%%<暦注下段>#%.<滅門日>]",
                                              'position:上段 上段 欄外 欄外', 'suffix:日'],   # 20: 支 節月
-        [Note, 0x3FFC, "label:[狼藉=ja:%%<暦注下段>#%.<狼藉日>]",
+        [Note, 0x3FFC, "label:[滅門=ja:%%<暦注下段>#%.<滅門日>]",
                                              'position:上段 上段 欄外 欄外', 'suffix:日'],   # 21: 支 節月
+        [Note, 0x3FFC, "label:[狼藉=ja:%%<暦注下段>#%.<狼藉日>]",
+                                             'position:上段 上段 欄外 欄外', 'suffix:日'],   # 22: 支 節月
 
-        [Note, 0x07F8, "label:[甘露=]",      'position:上段 上段 上段 上段', 'suffix:日'],   # 22: 七曜 廿七宿
-        [Note, 0x07F8, "label:[金剛峯=]",    'position:上段 上段 上段 上段'],                # 23: 七曜 廿七宿
-        [Note, 0x07F8, "label:[羅刹=]",      'position:上段 上段 上段 上段'],                # 24: 七曜 廿七宿
+        [Note, 0x07F8, "label:[甘露=]",      'position:上段 上段 上段 上段', 'suffix:日'],   # 23: 七曜 廿七宿
+        [Note, 0x07F8, "label:[金剛峯=]",    'position:上段 上段 上段 上段'],                # 24: 七曜 廿七宿
+        [Note, 0x07F8, "label:[羅刹=]",      'position:上段 上段 上段 上段'],                # 25: 七曜 廿七宿
 
         [Note, 0x3FFC, "label:[大將軍=ja:%%<大将軍_(方位神)>]",
-                                             'position:上段 上段 上段 上段',   'suffix:-'],  # 25: 干支 節年
+                                             'position:上段 上段 上段 上段',   'suffix:-'],  # 26: 干支 節年
         [Note, 0xFFFC, "label:[天一=ja:%%<天一神>]",
-                                             'position:上段 上段 上段 上段',   'suffix:-'],  # 26: 干支
-        [Note, 0x3FFC, "label:[土公=ja:%%<土公神>]",
                                              'position:上段 上段 上段 上段',   'suffix:-'],  # 27: 干支
+        [Note, 0x3FFC, "label:[土公=ja:%%<土公神>]",
+                                             'position:上段 上段 上段 上段',   'suffix:-'],  # 28: 干支
         [Note, 0x3FFC, "label:[歳下食=ja:%%<暦注下段>#%.<歳下食>]",
-                                             'position:上段 上段 上段 上段'],                # 28: 干支 節年
-        [Note, 0x3FFC, "label:[忌遠行=]",    'position:上段 上段 上段 上段'],                # 29: 支 節月
-        [Note, 0x3FFC, "label:[忌夜行=]",    'position:上段 上段 上段 上段'],                # 30: 支 節月
+                                             'position:上段 上段 上段 上段'],                # 29: 干支 節年
+        [Note, 0x3FFC, "label:[忌遠行=]",    'position:上段 上段 上段 上段'],                # 30: 支 節月
+        [Note, 0x3FFC, "label:[忌夜行=]",    'position:上段 上段 上段 上段'],                # 31: 支 節月
         [Note, 0x3FFC, "label:[下食時=ja:%%<暦注下段>#%.<時下食>]",
-                                             'position:上段 上段 上段 上段',   'suffix:-'],  # 31: 支 節月 貞享暦で一部廃止
-        [Note, 0x3FFC, "label:[天間=]",      'position:上段 上段 上段 中段上'],              # 32: 干支 節月
-        [Note, 0x3FFC, "label:[不視病=]",    'position:上段 上段 上段 上段'],                # 33: 干
-        [Note, 0x3FFC, "label:[不問疾=]",    'position:上段 上段 上段 上段'],                # 34: 干
-        [Note, 0x3FFC, "label:[不弔人=]",    'position:上段 上段 上段 上段'],                # 35: 支
-        [Note, 0xFFFC, "label:[彼岸]",       'position:仮名暦'],                             # 36: 太陽黄経
+                                             'position:上段 上段 上段 上段',   'suffix:-'],  # 32: 支 節月 貞享暦で一部廃止
+        [Note, 0x3FFC, "label:[天間=]",      'position:上段 上段 上段 中段上'],              # 33: 干支 節月
+        [Note, 0x3FFC, "label:[不視病=]",    'position:上段 上段 上段 上段'],                # 34: 干
+        [Note, 0x3FFC, "label:[不問疾=]",    'position:上段 上段 上段 上段'],                # 35: 干
+        [Note, 0x3FFC, "label:[不弔人=]",    'position:上段 上段 上段 上段'],                # 36: 支
+        [Note, 0xFFFC, "label:[彼岸]",       'position:仮名暦'],                             # 37: 太陽黄経
         [Note, 0xFFFF, "label:[社=ja:%%<社日>]",
-                                             'position:中段 中段 中段 中段', 'suffix:日'],   # 37: 干 太陽黄経
-        [Note, 0xFFFF, "label:[三伏]",       'position:中段 中段 中段 中段'],                # 38: 干 太陽黄経
-        [Note, 0x3FFC, "label:[除手足甲=]",  'position:中段 中段 中段 中段'],                # 39: 晦(除手足甲)、支(片方のみ), 没滅凶会日×
-        [Note, 0x3FFC, "label:[沐浴=]",      'position:中段 中段 中段 中段'],                # 40: 支 没滅凶会日×
+                                             'position:中段 中段 中段 中段', 'suffix:日'],   # 38: 干 太陽黄経
+        [Note, 0xFFFF, "label:[三伏]",       'position:中段 中段 中段 中段'],                # 39: 干 太陽黄経
+        [Note, 0x3FFC, "label:[除手足甲=]",  'position:中段 中段 中段 中段'],                # 40: 晦(除手足甲)、支(片方のみ), 没滅凶会日×
+        [Note, 0x3FFC, "label:[沐浴=]",      'position:中段 中段 中段 中段'],                # 41: 支 没滅凶会日×
         [Note, 0x3FFD, "label:[臘=ja:%%<臘日>]",
-                                             'position:中段 中段 中段 中段', 'suffix:日'],   # 41: 支 太陽黄経
-        [Note, 0x3FFC, "label:[伐=]",        'position:中段 中段 中段 中段上', 'suffix:日'], # 42: 干支
+                                             'position:中段 中段 中段 中段', 'suffix:日'],   # 42: 支 太陽黄経
+        [Note, 0x3FFC, "label:[伐=]",        'position:中段 中段 中段 中段上', 'suffix:日'], # 43: 干支
         [Note, 0x3FFC, "label:[五墓=ja:%%<暦注下段>#%.<五墓日>]",
-                                             'position:中段 中段 中段 中段下', 'suffix:日'], # 43: 干支
-        [Note, 0x3FFC, "label:[六蛇=]",      'position:中段 中段 中段 中段上'],              # 44: 干支 節月
-        [Note, 0x3FFC, "label:[七鳥=]",      'position:中段 中段 中段 中段上'],              # 45: 干支 節月
-        [Note, 0x3FFC, "label:[八龍=]",      'position:中段 中段 中段 中段上'],              # 46: 干支 節月
-        [Note, 0x3FFC, "label:[九虎=]",      'position:中段 中段 中段 中段上'],              # 47: 干支 節月
+                                             'position:中段 中段 中段 中段下', 'suffix:日'], # 44: 干支
+        [Note, 0x3FFC, "label:[六蛇=]",      'position:中段 中段 中段 中段上'],              # 45: 干支 節月
+        [Note, 0x3FFC, "label:[七鳥=]",      'position:中段 中段 中段 中段上'],              # 46: 干支 節月
+        [Note, 0x3FFC, "label:[八龍=]",      'position:中段 中段 中段 中段上'],              # 47: 干支 節月
+        [Note, 0x3FFC, "label:[九虎=]",      'position:中段 中段 中段 中段上'],              # 48: 干支 節月
         [Note, 0x07FF, "label:[没=ja:%%<没日>]",
-                                             'position:中段 中段 中段 中段', 'suffix:日'],   # 48: 太陽黄経
-        [Note, 0xFFF8, "label:[日食]",       'position:中段 中段 中段 中段'],                # 49: 日食表
+                                             'position:中段 中段 中段 中段', 'suffix:日'],   # 49: 太陽黄経
+        [Note, 0xFFF8, "label:[日食]",       'position:中段 中段 中段 中段'],                # 50: 日食表
         [Note, 0x07FC, "label:[滅=ja:%%<滅日]",
-                                             'position:中段 中段 中段 中段', 'suffix:日'],   # 50: 月の位相
-        [Note, 0xFFF8, "label:[月食]",       'position:中段 中段 中段 中段'],                # 51: 月食表
-        [Note, 0xC7FD, "label:[月相]",       'position:中段 中段 中段 中段'],                # 52: 月の位相
+                                             'position:中段 中段 中段 中段', 'suffix:日'],   # 51: 月の位相
+        [Note, 0xFFF8, "label:[月食]",       'position:中段 中段 中段 中段'],                # 52: 月食表
+        [Note, 0xC7FD, "label:[月相]",       'position:中段 中段 中段 中段'],                # 53: 月の位相
         [Note, 0xFFFF, "label:[土用事=ja:%%<土用>]",
-                                             'position:中段 中段 中段 中段'],                # 53: 太陽黄経
-        [Note, 0x3FF0, "label:[伏龍=]",      'position:上段 上段 下段 下段', 'suffix:在'],   # 54: 太陽黄経
+                                             'position:中段 中段 中段 中段'],                # 54: 太陽黄経
+        [Note, 0x3FF0, "label:[伏龍=]",      'position:上段 上段 下段 下段', 'suffix:在'],   # 55: 太陽黄経
 
         [Note, 0x3FFF, "label:[凶会=ja:%%<暦注下段>#%.<凶会日>]",
-                                             'position:下段 下段 下段 下段', 'suffix:日'],   # 55: 干支 節月(宣明暦以前)/暦月(貞享暦以降)
-        [Note, 0x3FFF, "label:[大小歳=]",    'position:下段 下段 下段 下段'],                # 56: 干支 節月
+                                             'position:下段 下段 下段 下段', 'suffix:日'],   # 56: 干支 節月(宣明暦以前)/暦月(貞享暦以降)
+        [Note, 0x3FFF, "label:[大小歳=]",    'position:下段 下段 下段 下段'],                # 57: 干支 節月
         [Note, 0x3FFC, "label:[歳徳=ja:%%<歳徳神>]",
-                                             'position:下段 下段 下段 下段'],                # 57: 干 節年 凶会日× ～合も
-        [Note, 0x0003, "label:[天倉=]",      'position:古注'],                               # 58: 干支 節月
+                                             'position:下段 下段 下段 下段'],                # 58: 干 節年 凶会日× ～合も
+        [Note, 0x0003, "label:[天倉=]",      'position:古注'],                               # 59: 干支 節月
       # [Note, 0x0003, "label:[天李=]",      'position:古注'],                               #     干支 節月?
         [Note, 0x37FF, "label:[天恩=ja:%%<暦注下段>#%.<天恩日>]",
-                                             'position:下段 下段 下段 下段', 'suffix:日'],   # 59: 干支 節月 凶会日×
+                                             'position:下段 下段 下段 下段', 'suffix:日'],   # 60: 干支 節月 凶会日×
         [Note, 0xFFFF, "label:[天赦=ja:%%<暦注下段>#%.<天赦日>]",
-                                             'position:下段 下段 下段 下段'],                # 60: 干支 節月
+                                             'position:下段 下段 下段 下段'],                # 61: 干支 節月
         [Note, 0x37FF, "label:[母倉=ja:%%<暦注下段>#%.<母倉日>]",
-                                             'position:下段 下段 下段 下段', 'suffix:日'],   # 61: 支 節月 凶会日×
-        [Note, 0x37FC, "label:[月徳=]",      'position:下段 下段 下段 下段'],                # 62: 干 節月 凶会日× ～合も
-        [Note, 0x3FFF, "label:[九坎=]",      'position:下段 下段 下段 下段'],                # 63: 支 節月
+                                             'position:下段 下段 下段 下段', 'suffix:日'],   # 62: 支 節月 凶会日×
+        [Note, 0x37FC, "label:[月徳=]",      'position:下段 下段 下段 下段'],                # 63: 干 節月 凶会日× ～合も
+        [Note, 0x3FFF, "label:[九坎=]",      'position:下段 下段 下段 下段'],                # 64: 支 節月
         [Note, 0x3FFF, "label:[歸忌=ja:%%<暦注下段>#%.<帰忌日>]",
-                                             'position:下段 下段 下段 下段', 'suffix:日'],   # 64: 支 節月
-        [Note, 0x3FFF, "label:[血忌=ja:%%<暦注下段>#%.<血忌日>]",
                                              'position:下段 下段 下段 下段', 'suffix:日'],   # 65: 支 節月
-        [Note, 0x3FFC, "label:[無翹=]",      'position:下段 下段 下段 下段'],                # 66: 支 節月
-        [Note, 0x3FFF, "label:[厭=]",        'position:下段 下段 下段 下段'],                # 67: 支 節月
+        [Note, 0x3FFF, "label:[血忌=ja:%%<暦注下段>#%.<血忌日>]",
+                                             'position:下段 下段 下段 下段', 'suffix:日'],   # 66: 支 節月
+        [Note, 0x3FFC, "label:[無翹=]",      'position:下段 下段 下段 下段'],                # 67: 支 節月
+        [Note, 0x3FFF, "label:[厭=]",        'position:下段 下段 下段 下段'],                # 68: 支 節月
         [Note, 0x3FFC, "label:[重=ja:%%<暦注下段>#%.<重日>]",
-                                             'position:下段 下段 下段 下段', 'suffix:日'],   # 68: 支
+                                             'position:下段 下段 下段 下段', 'suffix:日'],   # 69: 支
         [Note, 0x3FFD, "label:[復=ja:%%<暦注下段>#%.<復日>]",
-                                             'position:下段 下段 下段 下段', 'suffix:日'],   # 69: 干 節月
-        [Note, 0x3FFC, "label:[月煞=]",      'position:下段 下段 下段 下段'],                # 70: 支 節月
+                                             'position:下段 下段 下段 下段', 'suffix:日'],   # 70: 干 節月
+        [Note, 0x3FFC, "label:[月煞=]",      'position:下段 下段 下段 下段'],                # 71: 支 節月
         [Note, 0x3FFF, "label:[往亡=ja:%%<暦注下段>#%.<往亡日>]",
-                                             'position:下段 下段 下段 下段', 'suffix:日'],   # 71: 太陽黄経
+                                             'position:下段 下段 下段 下段', 'suffix:日'],   # 72: 太陽黄経
         [Note, 0x3FFF, "label:[日遊=ja:%%<日遊神>]",
-                                             'position:最下段', 'suffix:在'],                # 72: 干支
-        [Note, 0x07FF, "label:[人神配当=]",  'position:最下段孟月', 'suffix:-'],             # 73: 暦日
+                                             'position:最下段', 'suffix:在'],                # 73: 干支
+        [Note, 0x07FF, "label:[人神配当=]",  'position:最下段孟月', 'suffix:-'],             # 74: 暦日
 
         [Note, 0x3E00, "label:[受死=ja:%%<暦注下段>#%.<受死日>]",
-                                             'position:仮名暦', 'suffix:日'],                # 74: 支 節月
-        [Note, 0xFFF0, "label:[八專]",       'position:仮名暦'],                             # 75: 干支
+                                             'position:仮名暦', 'suffix:日'],                # 75: 支 節月
+        [Note, 0xFFF0, "label:[八專]",       'position:仮名暦'],                             # 76: 干支
         [Note, 0x3E00, "label:[八專間日=ja:%%<八専>]",
-                                             'position:仮名暦'],                             # 76: 干支
+                                             'position:仮名暦'],                             # 77: 干支
         [Note, 0xC000, "label:[金神間日=ja:%%<金神>#%.<金神の遊行・間日>]",
-                                             'position:仮名暦'],                             # 77: 支 節月
-        [Note, 0xC000, "label:[金神遊行=ja:%%<金神>#%.<金神の遊行・間日>]",
                                              'position:仮名暦'],                             # 78: 支 節月
+        [Note, 0xC000, "label:[金神遊行=ja:%%<金神>#%.<金神の遊行・間日>]",
+                                             'position:仮名暦'],                             # 79: 支 節月
         [Note, 0x3FF0, "label:[天火=ja:%%<暦注下段>#%.<天火日>]",
-                                             'position:仮名暦', 'suffix:日'],                # 79: 支 節月
-        [Note, 0x3FF0, "label:[地火=ja:%%<暦注下段>#%.<地火日>]",
                                              'position:仮名暦', 'suffix:日'],                # 80: 支 節月
-        [Note, 0x3800, "label:[人火=]",      'position:仮名暦'],                             # 81: 支 節月
-        [Note, 0x3800, "label:[雷火=]",      'position:仮名暦'],                             # 82: 支 節月
+        [Note, 0x3FF0, "label:[地火=ja:%%<暦注下段>#%.<地火日>]",
+                                             'position:仮名暦', 'suffix:日'],                # 81: 支 節月
+        [Note, 0x3800, "label:[人火=]",      'position:仮名暦'],                             # 82: 支 節月
+        [Note, 0x3800, "label:[雷火=]",      'position:仮名暦'],                             # 83: 支 節月
         [Note, 0x3FF0, "label:[赤舌=ja:%%<赤舌日>]",
-                                             'position:仮名暦', 'suffix:日'],                # 83: 暦月 暦日
+                                             'position:仮名暦', 'suffix:日'],                # 84: 暦月 暦日
         [Note, 0x3E00, "label:[十死=ja:%%<暦注下段>#%.<十死日>]",
-                                             'position:仮名暦', 'suffix:日'],                # 84: 支 節月
-        [Note, 0x3E00, "label:[道虚=]",      'position:仮名暦', 'suffix:日'],                # 85: 暦日
+                                             'position:仮名暦', 'suffix:日'],                # 85: 支 節月
+        [Note, 0x3E00, "label:[道虚=]",      'position:仮名暦', 'suffix:日'],                # 86: 暦日
         [Note, 0x3E00, "label:[大明=ja:%%<暦注下段>#%.<大明日>]",
-                                             'position:仮名暦', 'suffix:日'],                # 86: 干支
+                                             'position:仮名暦', 'suffix:日'],                # 87: 干支
         [Note, 0x0600, "label:[大赤=ja:%%<赤口日>]",
-                                             'position:仮名暦', 'suffix:日'],                # 87: 暦月 暦日
+                                             'position:仮名暦', 'suffix:日'],                # 88: 暦月 暦日
         [Note, 0xF800, "label:[甲子待=ja:%%<甲子>]",
-                                             'position:仮名暦'],                             # 88: 干支
-        [Note, 0xC000, "label:[己巳]",       'position:仮名暦'],                             # 89: 干支
-        [Note, 0xF800, "label:[庚申待]",     'position:仮名暦'],                             # 90: 干支
-        [Note, 0x3800, "label:[犯土]",       'position:仮名暦'],                             # 91: 干支
-        [Note, 0xF800, "label:[十方暮]",     'position:仮名暦'],                             # 92: 干支
+                                             'position:仮名暦'],                             # 89: 干支
+        [Note, 0xC000, "label:[己巳]",       'position:仮名暦'],                             # 90: 干支
+        [Note, 0xF800, "label:[庚申待]",     'position:仮名暦'],                             # 91: 干支
+        [Note, 0x3800, "label:[犯土]",       'position:仮名暦'],                             # 92: 干支
+        [Note, 0xF800, "label:[十方暮]",     'position:仮名暦'],                             # 93: 干支
         [Note, 0xF800, "label:[一粒万倍=ja:%%<一粒万倍日>]",
-                                             'position:仮名暦', 'suffix:日'],                # 93: 支 節月
-        [Note, 0x3800, "label:[天福=]",      'position:仮名暦'],                             # 94: 支 節月
-        [Note, 0x3800, "label:[地福=]",      'position:仮名暦'],                             # 95: 支 節月
-        [Note, 0x3800, "label:[地五福=]",    'position:仮名暦'],                             # 96: 支 節月
-        [Note, 0xB800, "label:[三隣亡]",     'position:仮名暦'],                             # 97: 支 節月
+                                             'position:仮名暦', 'suffix:日'],                # 94: 支 節月
+        [Note, 0x3800, "label:[天福=]",      'position:仮名暦'],                             # 95: 支 節月
+        [Note, 0x3800, "label:[地福=]",      'position:仮名暦'],                             # 96: 支 節月
+        [Note, 0x3800, "label:[地五福=]",    'position:仮名暦'],                             # 97: 支 節月
+        [Note, 0xB800, "label:[三隣亡]",     'position:仮名暦'],                             # 98: 支 節月
         [Note, 0xF800, "label:[不成就=ja:%%<不成就日>]",
-                                             'position:仮名暦', 'suffix:日'],                # 98: 暦月 暦日/晦日
+                                             'position:仮名暦', 'suffix:日'],                # 99: 暦月 暦日/晦日
+        [Note, 0x3800, "label:[鬼宿]",       'position:仮名暦'],                             #100: 廿八宿
+        [Note, 0x3800, "label:[金性=]",      'position:仮名暦'],                             #101: 支 節月 支 節年
         [Note, 0x3FFF, "label:[三寶吉=ja:%%<三宝吉>]",
-                                             'position:上段 上段 上段 上段'],                # 99: 干支 節月
+                                             'position:上段 上段 上段 上段'],                #102: 干支 節月
         [Note, 0x3FFF, "label:[神吉=ja:%%<暦注下段>#%.<神日>]",
-                                             'position:上段 上段 中段 中段上', 'suffix:日'], #100: 干支 節月
-        [Note, 0x3FFF, "label:[雑事吉=]",    'position:雑事吉'],                             #101: 干支 節月
-        [Note, 0x3FFF, "label:[小字注=]",    'position:下段小字 下段小字 下段小字 下段小字'],#102: 干支 節月
-        [Note, 0x3800, "label:[鬼宿]",       'position:仮名暦'],                             #103: 廿八宿
+                                             'position:上段 上段 中段 中段上', 'suffix:日'], #103: 干支 節月
+        [Note, 0x3FFF, "label:[雑事吉=]",    'position:雑事吉'],                             #104: 干支 節月
+        [Note, 0x3FFF, "label:[小字注=]",    'position:下段小字 下段小字 下段小字 下段小字'],#105: 干支 節月
       ]
     ]]
 
@@ -1278,6 +1280,11 @@ class When::CalendarNote
           end
         end
 
+        # 半夏生
+        #
+        # 太陽黄経100度
+        notes['半夏生'] ||= '半夏生' if longitude == 100 && motsu == 1
+
         # 立春を起算日とする雑節
         #
         unless notes['節分'] && notes['八十八夜'] && notes['二百十日'] && notes['二百廿日']
@@ -1323,9 +1330,14 @@ class When::CalendarNote
         notes['七十二候'] ||= mod == 0  ? Notes72[(div - 63) % 72][dates.index_s]  : nil
 
         # 往亡
-        month    = dates.s_date.cal_date[1] - 1
-        div, mod = month.divmod(3)
-        notes['往亡']     ||= ((div+7)*(mod+1) + month * 30 + 314 - longitude) % 360 == 0 ? '往亡'  : nil
+        unless notes['往亡'] && notes['神吉']
+          month    = dates.s_date.cal_date[-2] - 1
+          day      = dates.s_date.cal_date[-1] - 1
+          div, mod = month.divmod(3)
+          deg      = (div+7)*(mod+1) + month * 30 + 314
+          notes['往亡'] = (dates.range < 11 ? (deg - longitude) % 360 == 0  :               # 没を含まない
+                                              (deg - 315      ) %  30 == day)? '往亡' : nil # 没を含む
+        end
 
         # 伏龍
         notes['伏龍']     ||= {
