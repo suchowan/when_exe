@@ -89,7 +89,7 @@ module When
         when 353,383 ; e0['T'] -= 1
         when 385     ; e0['T'] += 1
         end
-        return @origin_of_LSC + e0['T'] - 30*3 - 29*2
+        return @origin_of_LSC - 1 + e0['T'] - 30*3 - 29*2
       end
 
       # y で指定した年の暦定数を返します。
