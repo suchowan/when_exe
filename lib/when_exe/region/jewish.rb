@@ -58,6 +58,8 @@ module When
     #
     class Jewish < TableBased
 
+      include Lunar
+
       private
 
       # オブジェクトの正規化

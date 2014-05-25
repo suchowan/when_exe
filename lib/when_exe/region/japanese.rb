@@ -23,7 +23,7 @@ module When
         "za" =>"ザ",   "zi" =>"ヂ",   "zu" =>"ズ",   "ze" =>"ゼ",   "zo" =>"ゾ",   "z" =>"ズ",
         "ja" =>"ジャ", "ji" =>"ジ",   "ju" =>"ジュ", "je" =>"ジェ", "jo" =>"ジョ", "j" =>"ジュ",
         "ca" =>"カ",   "ci" =>"チ",   "cu" =>"ク",   "ce" =>"セ",   "co" =>"コ",   "c" =>"ク",
-        "ta" =>"タ",   "ti" =>"ティ", "tu" =>"ト",   "te" =>"テ",   "to" =>"ト",   "t" =>"ト",
+        "ta" =>"タ",   "ti" =>"ティ", "tu" =>"トゥ", "te" =>"テ",   "to" =>"ト",   "t" =>"ト",
         "tsa"=>"ツァ", "tsi"=>"ツィ", "tsu"=>"ツ",   "tse"=>"ツェ", "tso"=>"ツォ", "ts"=>"ツ",
         "da" =>"ダ",   "di" =>"ディ", "du" =>"ドゥ", "de" =>"デ",   "do" =>"ド",   "d" =>"ド",
         "na" =>"ナ",   "ni" =>"ニ",   "nu" =>"ヌ",   "ne" =>"ネ",   "no" =>"ノ",   "n" =>"ン",
@@ -111,9 +111,9 @@ module When
     #
     # @private
     def self.akt(string, locale='ja')
-      string.downcase.gsub(/(.)\1/) { |code|
-        "aeiou".index($1) ? code : 'ッ' + $1
-      }.gsub(AKT_keys[locale]) {|code|
+      string.gsub(/([^aeiou])\1/, 'ッ\1').
+             gsub(/m([fpb])/, 'n\1').
+             gsub(AKT_keys[locale]) {|code|
         AKT[locale][code] || code
       }
     end

@@ -154,7 +154,7 @@ module Test
                                {:clock=>dates.s_date.frame.time_basis})
               long  = dates.cal4note.s_terms.position(date)
               notes = date.notes(:indices => When::DAY,
-                                 :notes   => (13<<9|1<<48|1<<71),
+                                 :notes   => (13<<9|1<<49|1<<72),
                                  :locale  => 'ja').simplify[:value].compact
               result << [date.to_m17n/'ja', notes]
             end

@@ -23,6 +23,8 @@ module When
     #
     class ThaiC < TableBased
 
+      include Lunar
+
       NormalIDs    =  '1,1<,2,2<,3,3<,4,4<,5,5<,6,6<,7,7<,8,8<,9,9<,10,10<,11,11<,12,12<'
       LeapIDs      =  '1,1<,2,2<,3,3<,4,4<,5,5<,6,6<,7,7<,8,8<,9&,9*,9,9<,10,10<,11,11<,12,12<'
 
@@ -67,8 +69,6 @@ module When
         @rule_table  ||=  {
           354 => {'Length'=>[15,15,15,14]*6,                            'IDs' => NormalIDs},
           355 => {'Length'=>[15,15,15,14]*3 + [15]*4 + [15,15,15,14]*2, 'IDs' => NormalIDs},
-          356 => {'Length'=>[15,15,15,14]*3 + [15]*7 + [14] + [15]*4,   'IDs' => NormalIDs},
-          383 => {'Length'=>[15,14,15,15]*6 + [15,14],                  'IDs' => LeapIDs},
           384 => {'Length'=>[15,15,15,14]*4 + [15]*2 + [15,15,15,14]*2, 'IDs' => LeapIDs}
         }
 
@@ -85,8 +85,11 @@ module When
         y  = +date[0]
         e0 = _thai(y,  0)[0]
         e1 = _thai(y+1,0)[0]
-        e0['T'] -= 1 if (e1['T']-e0['T'] == 353)
-        return @origin_of_LSC - 1 + e0['T'] - 30*3 - 29*2
+        case e1['T']-e0['T']
+        when 353,383 ; e0['T'] -= 1
+        when 385     ; e0['T'] += 1
+        end
+        return @origin_of_LSC + e0['T'] - 30*3 - 29*2
       end
 
       # y で指定した年の暦定数を返します。

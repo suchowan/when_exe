@@ -144,6 +144,108 @@ module When::CalendarTypes
     end
   end
 
+  # 
+  # 太陰(太陽)暦の朔閏パターンを扱うモジュール
+  #
+  module Lunar
+
+    # @private
+    Pattern = ' ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+    # 朔閏表を生成する
+    #
+    # @param  [Range] range 生成範囲(西暦年)
+    # @param  [Integer] length 大の月の日数
+    # @param  [When::TM::Duration] duration チェックする月の間隔
+    #
+    # @return [Hash] 朔閏表
+    #
+    def lunar_table(range, length=30, duration=When::DurationP1M)
+      date  = When.TemporalPosition(range.first, {:frame=>self}).floor
+      table = []
+      hash  = {
+        'origin_of_MSC' => range.first,
+        'origin_of_LSC' => date.to_i,
+        'rule_table'    => table
+      }
+      list  = ''
+      while range.include?(date[YEAR])
+        month = date[MONTH] * 1
+        char  = Pattern[month..month]
+        char  = char.downcase unless date.length(MONTH) == length
+        list += char
+        succ  = date + duration
+        unless date[YEAR] == succ[YEAR]
+          table << list
+          list = ''
+        end
+        date = succ
+      end
+      hash
+    end
+
+    # 朔閏表を比較する
+    #
+    # @param  [When::TM::Calendar] base 基準とする暦法
+    # @param  [Range] range 比較範囲(西暦年)
+    # @param  [Integer] length 大の月の日数
+    # @param  [When::TM::Duration] duration チェックする月の間隔
+    #
+    # @return [Hash] 朔閏表の差分
+    #
+    def verify(base, range=base.range, length=30, duration=When::DurationP1M)
+      range = When::Parts::GeometricComplex.new(range) & When::Parts::GeometricComplex.new(self.range) if respond_to?(:range)
+      base_table = base.lunar_table(range, length, duration)
+      self_table = self.lunar_table(range, length, duration)
+      hash = {}
+      range.each do |year|
+        difference = _verify(base_table['rule_table'][year-range.first],
+                             self_table['rule_table'][year-range.first])
+        hash[year] = difference if difference
+      end
+      hash
+    end
+
+    # @private
+    def _verify(source, target)
+      return nil if source == target
+      return {source => target} unless source.length == target.length
+      indices = []
+      index   = []
+      source.length.times do |i|
+        if source[i..i] == target[i..i]
+          unless index.empty?
+            indices << index
+            index = []
+          end
+        else
+          index << i
+        end
+      end
+      indices << index unless index.empty?
+      ranges = []
+      indices.each do |index|
+        if ranges.empty? || index.first > ranges.last.last + 2
+          ranges << index
+        else
+          ranges[-1] = [ranges.last.first,index.last]
+        end
+      end
+      hash = {}
+      ranges.each do |index|
+        range = index.first..index.last
+        hash[source[range]] = target[range]
+      end
+      test = source.dup
+      hash.each_pair do |key, value|
+        test.sub!(key, value)
+      end
+    # raise ArgumentError, "can't replace '#{source}'=>'#{target}' by #{hash}." unless test == target
+      return hash if test == target
+      {source => target}
+    end
+  end
+
   # 月日の配当パターンの種類が限定されている暦の抽象基底クラス
   #
   #   Calendar which has some fixed arrangement rules for under year
@@ -374,6 +476,8 @@ module When::CalendarTypes
   #
   class PatternTableBasedLuniSolar < TableBased
 
+    include Lunar
+
     #
     # ひとつのひな型朔閏表からの差分で朔閏表を生成する
     #
@@ -424,7 +528,7 @@ module When::CalendarTypes
         base << definitions.shift until definitions.first.kind_of?(Array)
       end
       tables = definitions.map {|definition|
-        When.Calendar(definition[0]).luni_solar_table(definition[1])
+        When.Calendar(definition[0]).lunar_table(definition[1])
       }
       hash   = base.pop.merge({
         'origin_of_MSC' => tables.first['origin_of_MSC'],
@@ -450,10 +554,12 @@ module When::CalendarTypes
     # 朔閏表を生成する
     #
     # @param  [Range] sub_range 生成範囲(西暦年) デフォルトは self.range
+    # @param  [Integer] length 大の月の日数(ダミー)
+    # @param  [When::TM::Duration] duration チェックする月の間隔(ダミー)
     #
     # @return [Hash] 朔閏表
     #
-    def luni_solar_table(sub_range=nil)
+    def lunar_table(sub_range=nil, length=nil, duration=nil)
       sub_range ||= range
       last  = sub_range.last
       last -= 1 if sub_range.exclude_end?
@@ -907,6 +1013,8 @@ module When::CalendarTypes
   #
   class EphemerisBasedLunar < EphemerisBased
 
+    include Lunar
+
     #protected
 
     # 月初の通日
@@ -928,7 +1036,7 @@ module When::CalendarTypes
       @cycle_offset ||= 1671 * 12 + 4
       super
     end
- end
+  end
 
   # 月日の配当が太陽および月の位置によって決定される太陰太陽暦
   #
@@ -936,42 +1044,11 @@ module When::CalendarTypes
   #
   class EphemerisBasedLuniSolar < EphemerisBasedSolar
 
-    # @private
-    Pattern = ' ABCDEFGHIJKL'
+    include Lunar
 
     # 計算方法
     # @return [Array<When::Ephemeris::Formula>]
     attr_reader :formula
-
-    # 朔閏表を生成する
-    #
-    # @param  [Range] range 生成範囲(西暦年)
-    #
-    # @return [Hash] 朔閏表
-    #
-    def luni_solar_table(range)
-      date  = When.TemporalPosition(range.first, {:frame=>self}).floor
-      table = []
-      hash  = {
-        'origin_of_MSC' => range.first,
-        'origin_of_LSC' => date.to_i,
-        'rule_table'    => table
-      }
-      list  = ''
-      while range.include?(date[YEAR])
-        month = date[MONTH] * 1
-        char  = Pattern[month..month]
-        char  = char.downcase if date.length(MONTH) == 29
-        list += char
-        succ  = date + When::DurationP1M
-        unless date[YEAR] == succ[YEAR]
-          table << list
-          list = ''
-        end
-        date = succ
-      end
-      hash
-    end
 
     #protected
 

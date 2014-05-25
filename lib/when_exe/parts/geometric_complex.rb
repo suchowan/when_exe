@@ -150,6 +150,16 @@ module When::Parts
       return GeometricComplex.new(copy, self.reverse)
     end
 
+    # 共通集合
+    #
+    # @param [Range, When::Parts::GeometricComplex] other
+    #
+    # @return [When::Parts::GeometricComplex] self と other の共通集合を返す
+    #
+    def &(other)
+      -(-self | -other)
+    end
+
     # ISO19108 の TM オブジェクトに変換する
     #
     # @param [Hash] options When::TM::TemporalPosition の生成を行う場合に使用する

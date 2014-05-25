@@ -52,6 +52,10 @@ module When
     # The Sun
     #
     class Sun < Datum
+
+      # @private
+      Radius = 696000.0
+
       class << self
 
         include Ephemeris
@@ -144,9 +148,9 @@ module When
       def initialize(*args)
         options = [args.pop] if args[-1].kind_of?(Hash)
         surface_radius, aberration, luminosity, *rest = args
-        surface_radius ||= 696000.0
-        aberration     ||=      0.00000
-        luminosity     ||=      4.58
+        surface_radius ||= Radius
+        aberration     ||= 0.00000
+        luminosity     ||= 4.58
         args  = [surface_radius, aberration, luminosity] + rest
         args += options if options
         super(*args)

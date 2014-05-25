@@ -324,9 +324,9 @@ module When
       def apparent_radius(t, base=nil)
         t  = +t
         radius = Sun.pi(t) * AU
-        (asin(Ephemeris::Shadow.surface_radius/AU/Moon.pi(t)) -
-         asin(Ephemeris::Sun.surface_radius/radius)               +
-         asin(Ephemeris::Shadow.surface_radius/radius)) * 1.02 / CIRCLE
+        (asin(surface_radius/Moon.pi(t)) -
+         asin(Ephemeris::Sun::Radius/radius) +
+         asin(surface_radius/radius)) * 1.02 / CIRCLE
       end
     end
   end
