@@ -5,6 +5,9 @@
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
 
+require 'when_exe/parts/method_cash'
+require 'when_exe/tmduration'
+
 #
 # 本ライブラリのための諸々の部品
 #
@@ -105,7 +108,7 @@ module When::Parts
     #   分解能がない場合は、When::SYSTEM を返す
     #
     def precision
-      @node[0] && @node[0][0].respond_to?(:precision) ? @node[0][0].precision : Coordinates::SYSTEM
+      @node[0] && @node[0][0].respond_to?(:precision) ? @node[0][0].precision : When::SYSTEM
     end
 
     # 範囲を反転する
@@ -182,6 +185,8 @@ module When::Parts
       end
       return objects[0] if objects.length==1
       return When::TM::TopologicalComplex.new(objects)
+    rescue NameError
+      raise NameError, "Please require 'when_exe' to use Temporal Objects Package"
     end
 
     # 範囲に含まれるか?

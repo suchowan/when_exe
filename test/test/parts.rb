@@ -75,11 +75,6 @@ module Test::Parts
     end
   end
 
-  class SnapShot < Test::Unit::TestCase
-    def test_nothing
-    end
-  end
-
   class Locale < Test::Unit::TestCase
     Term1 = When.m17n('Tokyo', 'zip')
     Term2 = When.m17n(<<LABEL, <<NS, <<LOCALE)
