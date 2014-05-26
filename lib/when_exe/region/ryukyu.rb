@@ -5,8 +5,8 @@
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
 
-require 'when_exe/region/japanese'
-require 'when_exe/region/chinese_calendar'
+require 'when_exe/region/japanese/calendars'
+require 'when_exe/region/chinese/calendars'
 
 #
 #  琉球王位一覧表

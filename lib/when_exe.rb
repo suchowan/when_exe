@@ -181,14 +181,15 @@ module When
 
   module Parts::Locale
     autoload :WikipediaLinks,        'when_exe/locales/links'
-    autoload :IAST,                  'when_exe/region/indian'
-    autoload :AKT,                   'when_exe/region/japanese'
+    autoload :IAST,                  'when_exe/region/indian/iast'
+    autoload :IASTR,                 'when_exe/region/indian/iast'
+    autoload :AKT,                   'when_exe/region/japanese/akt'
   end
 
   module CalendarTypes
-    autoload :Japanese,              'when_exe/region/japanese'
-    autoload :JapaneseTwin,          'when_exe/region/japanese_twin'
-    autoload :ChineseTwin,           'when_exe/region/chinese_twin'
+    autoload :Japanese,              'when_exe/region/japanese/calendars'
+    autoload :JapaneseTwin,          'when_exe/region/japanese/twins'
+    autoload :ChineseTwin,           'when_exe/region/chinese/twins'
     autoload :ChineseSolar,          'when_exe/region/chinese'
     autoload :ChineseLuniSolar,      'when_exe/region/chinese'
     autoload :Yi,                    'when_exe/region/chinese'
@@ -233,7 +234,7 @@ module When
     autoload :SolarTerms,            'when_exe/region/ephemeric_notes'
     autoload :LunarPhases,           'when_exe/region/ephemeric_notes'
     autoload :EphemericNote,         'when_exe/region/ephemeric_notes'
-    autoload :JapaneseNote,          'when_exe/region/japanese_notes'
+    autoload :JapaneseNote,          'when_exe/region/japanese/notes'
     autoload :BalineseNote,          'when_exe/region/balinese'
     autoload :RomanNote,             'when_exe/region/roman'
     autoload :WorldWeek,             'when_exe/region/world'
@@ -283,15 +284,15 @@ module When
     end
 
     class CalendarEra
-      autoload :Japanese,                'when_exe/region/japanese'
-      autoload :JapanesePrimeMinister,   'when_exe/region/japanese'
-      autoload :NihonKoki,               'when_exe/region/nihon_shoki'
-      autoload :NihonShoki,              'when_exe/region/nihon_shoki'
-      autoload :JapaneseSolarSeries,     'when_exe/region/japanese_twin'
-      autoload :JapaneseLuniSolarSeries, 'when_exe/region/japanese_twin'
-      autoload :Chinese,                 'when_exe/region/chinese_epoch'
-      autoload :ChineseSolarSeries,      'when_exe/region/chinese_twin'
-      autoload :ChineseLuniSolarSeries,  'when_exe/region/chinese_twin'
+      autoload :Japanese,                'when_exe/region/japanese/epochs'
+      autoload :JapanesePrimeMinister,   'when_exe/region/japanese/epochs'
+      autoload :NihonKoki,               'when_exe/region/japanese/nihon_shoki'
+      autoload :NihonShoki,              'when_exe/region/japanese/nihon_shoki'
+      autoload :JapaneseSolarSeries,     'when_exe/region/japanese/twins'
+      autoload :JapaneseLuniSolarSeries, 'when_exe/region/japanese/twins'
+      autoload :Chinese,                 'when_exe/region/chinese/epochs'
+      autoload :ChineseSolarSeries,      'when_exe/region/chinese/twins'
+      autoload :ChineseLuniSolarSeries,  'when_exe/region/chinese/twins'
       autoload :Ryukyu,                  'when_exe/region/ryukyu'
       autoload :Korean,                  'when_exe/region/korean'
       autoload :Vietnamese,              'when_exe/region/vietnamese'

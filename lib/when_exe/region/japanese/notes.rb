@@ -6,7 +6,7 @@
 =end
 
 require 'when_exe/region/ephemeric_notes'
-require 'when_exe/region/japanese_residues'
+require 'when_exe/region/japanese/residues'
 
 class When::CalendarNote
 

@@ -6,7 +6,7 @@
 =end
 
 require 'when_exe/region/chinese'
-require 'when_exe/region/chinese_calendar'
+require 'when_exe/region/chinese/calendars'
 
 module When
   class TM::CalendarEra
