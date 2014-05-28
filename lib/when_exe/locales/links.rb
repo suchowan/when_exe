@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2013 Takashi SUGA
+  Copyright (C) 2013-2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
 
-module When::Parts::Locale
+module When
+  module Locale
 
     WikipediaLinks =
 {"ja"=>
@@ -2337,4 +2338,5 @@ module When::Parts::Locale
      "92%E1%83%B7%E1%83%9B%E1%83%90%E1%83%97%E1%83%A3%E1%83%97%E1%83%90",
      "92%E1%83%94%E1%83%A0%E1%83%92%E1%83%9D%E1%83%91%E1%83%90%E1%83%97%E1%83%A3%E1%83%97%E1%83%90",
      "A5%E1%83%98%E1%83%A0%E1%83%A1%E1%83%94%E1%83%97%E1%83%A3%E1%83%97%E1%83%90"]}}
+  end
 end

@@ -77,7 +77,7 @@ module When
       @multi_thread = options[:multi_thread]
       Parts::MethodCash._setup_(options)
       Parts::Resource._setup_(options)
-      Parts::Locale._setup_(options)
+      Locale._setup_(options)
       Coordinates::Spatial._setup_(options[:location])
       TM::CalendarEra._setup_(options[:order])
       TM::Calendar._setup_
@@ -97,13 +97,23 @@ module When
       {:multi_thread => @multi_thread}.
       update(Parts::MethodCash._setup_info).
       update(Parts::Resource._setup_info).
-      update(Parts::Locale._setup_info).
+      update(Locale._setup_info).
       update(Coordinates::Spatial._setup_info).
       update(TM::CalendarEra._setup_info).
       update(TM::Clock._setup_info).
       update(TM::TemporalPosition._setup_info).
       update(V::Event._setup_info).
       update(TimeStandard._setup_info)
+    end
+
+    alias :_const_missing :const_missing
+
+    #
+    # When 直下に定数として定義する時法・暦法(暗黙的追加)
+    #
+    def const_missing(name)
+      return _const_missing(name) unless CalendarTypes.const_defined?(name)
+      const_set(name, Parts::Resource._instance(name.to_s, '_c:'))
     end
   end
 
@@ -118,8 +128,9 @@ module When
   RootDir   = File.dirname(__FILE__).sub(/\/[^\/]*$/,'')
 
   require 'when_exe/version'
+  require 'when_exe/locales/locale'
+  require 'when_exe/locales/autoload'
   require 'when_exe/parts/enumerator'
-  require 'when_exe/parts/locale'
   require 'when_exe/parts/resource'
   require 'when_exe/parts/geometric_complex'
   require 'when_exe/parts/timezone'
@@ -134,7 +145,6 @@ module When
   require 'when_exe/tmreference'
   require 'when_exe/calendartypes'
   require 'when_exe/calendarnote'
-  require 'when_exe/locales/locales'
   require 'when_exe/region/m17n'
   require 'when_exe/region/residue'
   require 'when_exe/region/christian'
@@ -169,6 +179,7 @@ module When
     autoload :IranianTerms,          'when_exe/region/iranian'
     autoload :IslamicTerms,          'when_exe/region/islamic'
     autoload :JewishTerms,           'when_exe/region/jewish'
+    autoload :ArmenianTerms,         'when_exe/region/Armenian'
     autoload :RomanTerms,            'when_exe/region/roman'
     autoload :CopticTerms,           'when_exe/region/coptic'
     autoload :FrenchTerms,           'when_exe/region/french'
@@ -177,11 +188,11 @@ module When
     autoload :MartianTerms,          'when_exe/region/martian'
   end
 
-  module Parts::Locale
+  module Locale
     autoload :WikipediaLinks,        'when_exe/locales/links'
-    autoload :IAST,                  'when_exe/region/indian/iast'
-    autoload :IASTR,                 'when_exe/region/indian/iast'
-    autoload :AKT,                   'when_exe/region/japanese/akt'
+    autoload :IAST,                  'when_exe/locales/iast'
+    autoload :IASTR,                 'when_exe/locales/iast'
+    autoload :AKT,                   'when_exe/locales/akt'
   end
 
   module CalendarTypes
@@ -192,8 +203,10 @@ module When
     autoload :ChineseLuniSolar,      'when_exe/region/chinese'
     autoload :Yi,                    'when_exe/region/chinese'
     autoload :Tibetan,               'when_exe/region/tibetan'
-    autoload :ThaiB,                 'when_exe/region/thai'
+    autoload :Thai,                  'when_exe/region/thai'
+    autoload :ThaiP,                 'when_exe/region/thai'
     autoload :ThaiC,                 'when_exe/region/thai'
+    autoload :ThaiT,                 'when_exe/region/thai'
     autoload :Tenganan,              'when_exe/region/balinese'
     autoload :Pranatamangsa,         'when_exe/region/javanese'
     autoload :IndianNationalSolar,   'when_exe/region/indian'
@@ -204,6 +217,7 @@ module When
     autoload :TabularIslamic,        'when_exe/region/islamic'
     autoload :EphemerisBasedIslamic, 'when_exe/region/islamic'
     autoload :Jewish,                'when_exe/region/jewish'
+    autoload :Armenian,              'when_exe/region/armenian'
     autoload :Coptic,                'when_exe/region/coptic'
     autoload :JulianA,               'when_exe/region/roman'
     autoload :JulianB,               'when_exe/region/roman'
@@ -383,7 +397,7 @@ module When
     when /^today$/i   ; today(options)
     when /^now$/i     ; now(options)
     when /[\n\r]+/    ; when?(specification.split(/[\n\r]+/), options)
-    when String       ; TM::TemporalPosition._instance(Parts::Encoding.to_internal_encoding(specification), options)
+    when String       ; TM::TemporalPosition._instance(EncodingConversion.to_internal_encoding(specification), options)
     when Numeric      ; TM::JulianDate.new(+specification, TM::TemporalPosition._options(options))
     else              ; Calendar(options[:frame] || 'Gregorian').jul_trans(specification, options)
     end
@@ -416,10 +430,10 @@ module When
     options[:frame]    = Resource(options[:frame], '_c:') if options[:frame].kind_of?(String)
     case args[0]
     when String
-      options[:era_name]    = Parts::Encoding.to_internal_encoding(args.shift)
+      options[:era_name]    = EncodingConversion.to_internal_encoding(args.shift)
     when Array
       options[:era_name]    = args.shift
-      options[:era_name][0] = Parts::Encoding.to_internal_encoding(options[:era_name][0])
+      options[:era_name][0] = EncodingConversion.to_internal_encoding(options[:era_name][0])
     end
 
     # 時間位置の生成
@@ -608,7 +622,7 @@ module When
   def Clock(clock)
     case clock
     when Parts::Timezone::Base            ; return clock
-    when 'Z', 0                           ; return utc
+    when 'Z', 0                           ; return UTC
     when Numeric                          ; return Parts::Resource._instance("_tm:Clock?label=" + TM::Clock.to_hms(clock))
     when /^#{CalendarTypes::TimeSystems}/ ; return Parts::Resource._instance('_c:' + clock)
     when String                           ;
@@ -622,14 +636,6 @@ module When
     iri  = "_tm:Clock?label=" + hms
     iri += "&" + options if options
     Parts::Resource._instance(iri)
-  end
-
-  # When::CalendarTypes::UTC の生成/参照
-  #
-  # @return [When::CalendarTypes::UTC]
-  #
-  def utc
-    Parts::Resource._instance("_c:UTC")
   end
 
   # When::Coordinates::Spatial の生成/参照
@@ -732,7 +738,7 @@ module When
     when Array            ; BasicTypes::M17n.new(source, namespace, locale, options)
     when BasicTypes::M17n ; source
     when String
-      source = Parts::Encoding.to_internal_encoding(source)
+      source = EncodingConversion.to_internal_encoding(source)
       return self[$1] if source =~ /^\s*\[((\.{1,2}|::)+[^\]]+)\]/ && self.kind_of?(When::Parts::Resource)
       return Parts::Resource[$1] if source =~ /^\s*\[::([^\]]+)\]/
       BasicTypes::M17n.new(source, namespace, locale, options)
@@ -745,7 +751,7 @@ module When
   # @param [String] title Wikipedia の項目名
   # @param [Hash] options 以下の通り
   # @option options [String]       :locale   Wikipedia の言語(デフォルト 'en' - 英語)
-  # @option options [Numeric, nil] :interval Wikipedia サイトへのアクセス制御(デフォルト When::Parts::Locale.wikipedia_interval)
+  # @option options [Numeric, nil] :interval Wikipedia サイトへのアクセス制御(デフォルト When::Locale.wikipedia_interval)
   # @option options [Object]       :その他   キャッシュファイルへの追加書き出し要素
   #
   # @return [When::BasicTypes::M17n] 項目に対応する多言語対応文字列
@@ -755,10 +761,10 @@ module When
   #
   def Wikipedia(title, options={})
     locale = options.delete(:locale) || 'en'
-    title  = Parts::Encoding.to_internal_encoding(title)
+    title  = EncodingConversion.to_internal_encoding(title)
     entry, query = title.split('?', 2)
     url  = "http://#{locale}.wikipedia.org/wiki/#{URI.encode(entry).gsub(' ', '_')}"
-    Parts::Locale.send(:wikipedia_object, url, options) unless options.empty?
+    Locale.send(:wikipedia_object, url, options) unless options.empty?
     url += '?' + query if query
     object = Parts::Resource._instance(url)
     object.kind_of?(BasicTypes::M17n) ? object : object.label
@@ -786,5 +792,12 @@ module When
   #
   def Pair(trunk, branch=nil)
     Coordinates::Pair._force_pair(trunk, branch)
+  end
+
+  #
+  # When 直下に定数として定義する時法・暦法(明示的的追加)
+  #
+  %w(UTC Julian Gregorian Civil).each do |calendar|
+    const_set(calendar, Parts::Resource._instance(calendar, '_c:'))
   end
 end

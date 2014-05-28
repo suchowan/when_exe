@@ -5,7 +5,8 @@
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
 
-module When::Parts::Locale
+module When
+  module Locale
 
     # from https://raw.github.com/svenfuchs/rails-i18n/master/rails/locale/zh-HK.yml
 
@@ -44,32 +45,33 @@ module When::Parts::Locale
      "十二月"],
    "order"=>[:year, :month, :day]},
  "time"=>
-  {"am"=>"上晝",
+  {"am"=>"上午",
    "formats"=>
-    {"default"=>"%Y年%b%d號 %A %H:%M:%S %Z",
-     "long"=>"%Y年%b%d號 %H:%M",
-     "short"=>"%b%d號 %H:%M",
+    {"default"=>"%Y年%b%d日 %A %H:%M:%S %Z",
+     "long"=>"%Y年%b%d日 %H:%M",
+     "short"=>"%b%d日 %H:%M",
      "time"=>"%H:%M:%S %Z"},
-   "pm"=>"下晝"},
+   "pm"=>"下午"},
  "datetime"=>
   {"distance_in_words"=>
-    {"about_x_hours"=>{"one"=>"大概一個鐘", "other"=>"大概%{count}個鐘"},
-     "about_x_months"=>{"one"=>"大概一個月", "other"=>"大概%{count}個月"},
-     "about_x_years"=>{"one"=>"大概一年", "other"=>"大概%{count}年"},
-     "almost_x_years"=>{"one"=>"差唔多一年", "other"=>"差唔多%{count}年"},
+    {"about_x_hours"=>{"one"=>"約一小時", "other"=>"約%{count}小時"},
+     "about_x_months"=>{"one"=>"約一個月", "other"=>"約%{count}個月"},
+     "about_x_years"=>{"one"=>"約一年", "other"=>"約%{count}年"},
+     "almost_x_years"=>{"one"=>"接近一年", "other"=>"接近%{count}年"},
      "half_a_minute"=>"半分鐘",
-     "less_than_x_minutes"=>{"one"=>"唔夠一分鐘", "other"=>"唔夠%{count}分鐘"},
-     "less_than_x_seconds"=>{"one"=>"唔夠一秒", "other"=>"唔夠%{count}秒"},
+     "less_than_x_minutes"=>{"one"=>"不到一分鐘", "other"=>"不到%{count}分鐘"},
+     "less_than_x_seconds"=>{"one"=>"不到一秒", "other"=>"不到%{count}秒"},
      "over_x_years"=>{"one"=>"超過一年", "other"=>"超過%{count}年"},
-     "x_days"=>{"one"=>"一日", "other"=>"%{count}日"},
+     "x_days"=>{"one"=>"一天", "other"=>"%{count}天"},
      "x_minutes"=>{"one"=>"一分鐘", "other"=>"%{count}分鐘"},
      "x_months"=>{"one"=>"一個月", "other"=>"%{count}個月"},
      "x_seconds"=>{"one"=>"一秒", "other"=>"%{count}秒"}},
    "prompts"=>
     {"day"=>"日",
-     "hour"=>"點",
+     "hour"=>"時",
      "minute"=>"分",
      "month"=>"月",
      "second"=>"秒",
      "year"=>"年"}}}
+  end
 end

@@ -226,7 +226,7 @@ module When::Parts
         return iri unless iri.instance_of?(String)
 
         # 内部文字列化
-        iri = When::Parts::Encoding.to_internal_encoding(iri)
+        iri = When::EncodingConversion.to_internal_encoding(iri)
 
         # 階層がある場合は、階層をたどる
         iri = Resource._decode(iri)
@@ -281,9 +281,9 @@ module When::Parts
       def _parse(line, type=nil)
         return line unless line.kind_of?(String)
         line.sub!(/\s#.*$/, '')
-        return Locale._split($1) if type && /^#{type}:(.+)$/i =~ line
+        return When::Locale._split($1) if type && /^#{type}:(.+)$/i =~ line
         tokens = line.scan(/((?:[^\\:]|\\.)+)(?::(?!\z))?|:/).flatten
-        return Locale._split(line) unless tokens.size > 1 && /^(\*)?([A-Z][-A-Z_]{0,255})(?:;(.+))?$/i =~ tokens[0]
+        return When::Locale._split(line) unless tokens.size > 1 && /^(\*)?([A-Z][-A-Z_]{0,255})(?:;(.+))?$/i =~ tokens[0]
         marked, key, property = $~[1..3]
         values = tokens[1..-1]
         value  = values.join(':') unless values == [nil]
@@ -413,7 +413,7 @@ module When::Parts
 
         # external Resource
         begin
-          object = When::Parts::Locale.send(:wikipedia_object, path, {:query=>query})
+          object = When::Locale.send(:wikipedia_object, path, {:query=>query})
           return object if object
           OpenURI
           args  = [path, "1".respond_to?(:force_encoding) ? 'r:utf-8' : 'r']
@@ -869,8 +869,8 @@ module When::Parts
       options.each_pair do |key,value|
         unless (key =~ /^options$|^\.|^[A-Z]/)
           case "#{key}"
-          when 'namespace' ; value = Locale._namespace(value)
-          when 'locale'    ; value = Locale._locale(value)
+          when 'namespace' ; value = When::Locale._namespace(value)
+          when 'locale'    ; value = When::Locale._locale(value)
           end
           instance_variable_set("@#{key}", value)
         end
@@ -899,10 +899,10 @@ module When::Parts
           if content.attribute['altid']
             options[key][content.attribute['prefix'].object] = content.object
           else
-            options[key] = options[key].update(Locale._namespace(value))
+            options[key] = options[key].update(When::Locale._namespace(value))
           end
         when 'locale'
-          options[key] = Locale._locale(value)
+          options[key] = When::Locale._locale(value)
         else
           _parse_altid(properties, content)
           key_list << key unless key_list.include?(key)

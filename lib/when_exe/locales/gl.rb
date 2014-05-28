@@ -5,7 +5,8 @@
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
 
-module When::Parts::Locale
+module When
+  module Locale
 
     # from https://raw.github.com/svenfuchs/rails-i18n/master/rails/locale/gl.yml
 
@@ -76,4 +77,5 @@ module When::Parts::Locale
      "x_minutes"=>{"one"=>"1 minuto", "other"=>"%{count} minuto"},
      "x_months"=>{"one"=>"1 mes", "other"=>"%{count} meses"},
      "x_seconds"=>{"one"=>"1 segundo", "other"=>"%{count} segundos"}}}}
+  end
 end

@@ -10,7 +10,7 @@ module Test::CalendarTypes
 
   class UTC < Test::Unit::TestCase
     def test__utc
-      assert_equal("+00:00", When.utc.tzname[0].to_s)
+      assert_equal("+00:00", When::UTC.tzname[0].to_s)
     end
   end
 

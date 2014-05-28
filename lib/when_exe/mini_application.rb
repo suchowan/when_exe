@@ -61,10 +61,10 @@ module When
           Thread.start(socket.accept) do |client|
             query = client.gets.chomp.force_encoding("UTF-8")
             start = Time.now
-            puts start._log_('%FT%X.%L') + ': Query - ' + When::Parts::Locale.translate(query, config['!'])
+            puts start._log_('%FT%X.%L') + ': Query - ' + When::Locale.translate(query, config['!'])
             begin
               result = free_conv(*query.split(/\s+/))
-              result = When::Parts::Locale.translate(result, config['!'])
+              result = When::Locale.translate(result, config['!'])
               client.puts JSON.generate(Array(_to_string(result))).to_s
               stop = Time.now
               puts stop._log_('%FT%X.%L') + ": Respond (%7.0f ms)" % (1000 * (stop.to_f - start.to_f))
@@ -173,7 +173,7 @@ module When
         when Range   ; arg.each {|d| dates << d}
         when Symbol  ; output = [arg]
         when String
-          arg = When::Parts::Encoding.to_internal_encoding(arg)
+          arg = When::EncodingConversion.to_internal_encoding(arg)
           case arg
           when /^:(.+?)(?:\[(..)\])?$/             ; output  = [$1.to_sym, $2].compact
           when /^(year|month|week)(?:\[(..)\])?$/i ; methods << [$1.downcase + '_included', $2||'SU']

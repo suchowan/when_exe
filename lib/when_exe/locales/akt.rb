@@ -6,7 +6,7 @@
 =end
 
 module When
-  module Parts::Locale
+  module Locale
 
     #
     # AKT: Alphabet of Katakana Transliteration

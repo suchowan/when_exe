@@ -204,7 +204,7 @@ end
 #
 class String
 
-  include When::Parts::Encoding
+  include When::EncodingConversion
 
   #
   # self を When::BasicTypes::M17n に変換する
@@ -237,8 +237,8 @@ class String
   #
   # @return [String] 包摂結果
   #
-  def ideographic_unification(pattern=When::Parts::Locale._unification)
-    When::Parts::Locale.ideographic_unification(self, pattern)
+  def ideographic_unification(pattern=When::Locale._unification)
+    When::Locale.ideographic_unification(self, pattern)
   end
 
   #
@@ -413,7 +413,7 @@ end
 #
 class Regexp
 
-  include When::Parts::Encoding
+  include When::EncodingConversion
 
   #
   # self を検索する暦年代にマッチする正規表現とみなして登録された When::TM::CalendarEraを検索
@@ -441,8 +441,8 @@ class Regexp
   #
   # @return [Regexp] 包摂結果
   #
-  def ideographic_unification(pattern=When::Parts::Locale._unification)
-    When::Parts::Locale.ideographic_unification(self, pattern)
+  def ideographic_unification(pattern=When::Locale._unification)
+    When::Locale.ideographic_unification(self, pattern)
   end
 end
 

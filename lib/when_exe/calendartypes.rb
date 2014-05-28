@@ -1308,7 +1308,7 @@ module When::CalendarTypes
     #
     # @note 属性 @event によって境界を計算する (see {When::Ephemeris::Formula#day_event})
     #
-    def border(date=[], clock=When.utc)
+    def border(date=[], clock=When::UTC)
       return @border unless date[0] && clock.formula
 
       clock._encode(

@@ -634,7 +634,7 @@ module When::TM
     #
     # @return [::DateTime]
     #
-    def to_date_time(option={:frame=>When.utc}, start=_default_start)
+    def to_date_time(option={:frame=>When::UTC}, start=_default_start)
       return JulianDate.dynamical_time(dynamical_time, option).to_date_time unless time_standard.rate_of_clock == 1.0
       raise TypeError, "Clock not assigned" unless clock
       Rational
@@ -1076,7 +1076,7 @@ module When::TM
         options[:frame] = Clock.get_clock_option(options)
         case time
         when Numeric
-          options[:frame] ||= When.utc unless time.kind_of?(Integer)
+          options[:frame] ||= When::UTC unless time.kind_of?(Integer)
           universal_time     = (2*time - (2*JulianDate::JD19700101-1)) * Duration::DAY.to_i / 2.0
         when ClockTime
           options[:frame] ||= time.clock

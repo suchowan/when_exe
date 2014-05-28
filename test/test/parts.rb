@@ -127,12 +127,12 @@ LOCALE
     end
 
     def test__split
-      assert_equal([''        ], When::Parts::Locale._split(''))
-      assert_equal(['3.14'    ], When::Parts::Locale._split('3.14'))
-      assert_equal(['3.14', ''], When::Parts::Locale._split('3.14,'))
-      assert_equal(['', '3.14'], When::Parts::Locale._split(',3.14'))
-      assert_equal(['3.14', ' "3.14,159"'], When::Parts::Locale._split('3.14, "3.14,159"'))
-      assert_equal(['3.14', ' "3.14\\"159"'], When::Parts::Locale._split('3.14, "3.14\\"159"'))
+      assert_equal([''        ], When::Locale._split(''))
+      assert_equal(['3.14'    ], When::Locale._split('3.14'))
+      assert_equal(['3.14', ''], When::Locale._split('3.14,'))
+      assert_equal(['', '3.14'], When::Locale._split(',3.14'))
+      assert_equal(['3.14', ' "3.14,159"'], When::Locale._split('3.14, "3.14,159"'))
+      assert_equal(['3.14', ' "3.14\\"159"'], When::Locale._split('3.14, "3.14\\"159"'))
     end
   end
 

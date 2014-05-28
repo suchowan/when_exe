@@ -403,10 +403,10 @@ module When
     #  代表的な authority の URI
     #   @namespace[''] である
     #
-    # see {When::Parts::Locale}, {When::Parts::Resource}
+    # see {When::Locale}, {When::Parts::Resource}
     #
     class M17n < Code
-      include Parts::Locale
+      include When::Locale
       include Parts::Resource
 
       # @private
@@ -439,8 +439,8 @@ module When
       # 内部エンコーディング文字列化
       #
       def to_internal_encoding
-        _copy({:label      => When::Parts::Encoding.to_internal_encoding(to_s),
-               :names      => Hash[*(names.keys.map {|name| [name, When::Parts::Encoding.to_internal_encoding(names[name])]}).flatten],
+        _copy({:label      => When::EncodingConversion.to_internal_encoding(to_s),
+               :names      => Hash[*(names.keys.map {|name| [name, When::EncodingConversion.to_internal_encoding(names[name])]}).flatten],
                :link       => link,
                :access_key => access_key,
                :code_space => code_space
@@ -451,8 +451,8 @@ module When
       # 外部エンコーディング文字列化
       #
       def to_external_encoding
-        _copy({:label      => When::Parts::Encoding.to_external_encoding(to_s),
-               :names      => Hash[*(names.keys.map {|name| [name, When::Parts::Encoding.to_external_encoding(names[name])]}).flatten],
+        _copy({:label      => When::EncodingConversion.to_external_encoding(to_s),
+               :names      => Hash[*(names.keys.map {|name| [name, When::EncodingConversion.to_external_encoding(names[name])]}).flatten],
                :link       => link,
                :access_key => access_key,
                :code_space => code_space
@@ -524,8 +524,8 @@ module When
         else
           names, namespace, locale = rest
           @names       = names if names
-          @namespace ||= Parts::Locale._namespace(namespace) if namespace
-          @locale    ||= Parts::Locale._locale(locale)       if locale
+          @namespace ||= When::Locale._namespace(namespace) if namespace
+          @locale    ||= When::Locale._locale(locale)       if locale
         end
         @namespace ||= {}
         @locale    ||= []

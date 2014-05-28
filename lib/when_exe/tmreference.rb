@@ -188,7 +188,7 @@ module When::TM
       cal_options.delete(:era)
       unless rate_of_clock == jdt.time_standard.rate_of_clock
         cal_options.delete(:time_standard)
-        cal_options[:clock] = @time_basis || When.utc
+        cal_options[:clock] = @time_basis || When::UTC
         jdt = JulianDate.dynamical_time(jdt.dynamical_time, {:time_standard=>time_standard})
       end
 
@@ -244,7 +244,7 @@ module When::TM
     #
     # @return [Numeric] Universal Time
     #
-    def to_universal_time(cal_date, clk_time, clock=When.utc)
+    def to_universal_time(cal_date, clk_time, clock=When::UTC)
       time     = clk_time.dup
       time[0] += _coordinates_to_number(*_decode(cal_date))
       clock.to_universal_time(time) - When::TM::JulianDate::JD19700101 * When::TM::Duration::DAY
@@ -371,7 +371,7 @@ module When::TM
       def _local_time
         case @local_time
         when Array  ; @local_time
-        when nil    ; @local_time = [false, When.utc]
+        when nil    ; @local_time = [false, When::UTC]
         when String ; @local_time = [true,  When::Parts::Timezone[@local_time] ||
                                             When::V::Timezone[@local_time]     ||
                                             When.Clock(@local_time)]
@@ -530,7 +530,7 @@ module When::TM
     # @return [When::TM::ClockTime]
     #
     def utc_trans(u_time)
-      return When.utc.to_clk_time(self.to_universal_time(u_time.clk_time))
+      return When::UTC.to_clk_time(self.to_universal_time(u_time.clk_time))
     end
     alias :utcTrans :utc_trans
 
@@ -541,7 +541,7 @@ module When::TM
     # @return [When::TM::ClockTime]
     #
     def clk_trans(clk_time)
-      return self.to_clk_time(When.utc.to_universal_time(u_time.clk_time))
+      return self.to_clk_time(When::UTC.to_universal_time(u_time.clk_time))
     end
     alias :clkTrans :clk_trans
 
@@ -735,7 +735,7 @@ module When::TM
       @time_standard   = When.Resource(@time_standard||'UniversalTime', '_t:') unless @time_standard.kind_of?(When::TimeStandard)
 
       # utc_reference
-      @utc_reference ||= @zone ? ClockTime.new(@zone.to_s, {:frame=>When.utc}) : Clock.local_time
+      @utc_reference ||= @zone ? ClockTime.new(@zone.to_s, {:frame=>When::UTC}) : Clock.local_time
 
       # reference_time & origin_of_LSC
       case @reference_time
@@ -782,7 +782,7 @@ module When::TM
     # @return [When::TM::DateAndTime] (When::TM::BasicTypes::DateTimeはまちがい)
     #
     def transform_coord(c_value)
-      When.Resource('_c:Gregorian').jul_trans(JulianDate.universal_time(c_value.universal_time, {:frame=>When.utc}))
+      When.Resource('_c:Gregorian').jul_trans(JulianDate.universal_time(c_value.universal_time, {:frame=>When::UTC}))
     end
     alias :transformCoord :transform_coord
 
@@ -987,7 +987,7 @@ module When::TM
         args    = args.dup
         options = (args[-1].kind_of?(Hash)) ? args.pop.dup : {}
         key, epoch, reverse = options.delete(:label) || args
-        key = When::Parts::Locale.ideographic_unification(key)
+        key = When::Locale.ideographic_unification(key)
         if key.kind_of?(String)
           key, *parents = key.split(/::/).reverse
         else

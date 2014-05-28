@@ -6,7 +6,7 @@
 =end
 
 module When
-  module Parts::Locale
+  module Locale
 
     _IAST_Part_I = {
         "A"  => "अ",      "a"  => "अ",

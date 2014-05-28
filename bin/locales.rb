@@ -19,7 +19,8 @@ HEADER = <<HEADER
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
 
-module When::Parts::Locale
+module When
+  module Locale
 HEADER
 
 if "1".respond_to?(:force_encoding)
@@ -41,7 +42,7 @@ site.get('/svenfuchs/rails-i18n/tree/master/rails/locale').body.scan(/>([^> ]+?)
       locale = source.read
     end
   rescue Errno::ENOENT
-    http = Net::HTTP.new('raw.github.com', '443')
+    http = Net::HTTP.new('raw.githubusercontent.com', '443')
     http.use_ssl = true
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     sleep(1)
@@ -58,11 +59,12 @@ site.get('/svenfuchs/rails-i18n/tree/master/rails/locale').body.scan(/>([^> ]+?)
   yamls[code.sub(/-/,'_')] = {'date'=>yaml[code]['date'], 'time'=>yaml[code]['time'], 'datetime'=>yaml[code]['datetime']}
 end
 
-open("locales/locales/locales.rb", 'w') do |script|
+open("locales/locales/autoload.rb", 'w') do |script|
   script.puts HEADER
   yamls.each_key do |key|
-    script.puts "  autoload :Locale_%-8s 'when_exe/locales/%s'" % [key + ',', key]
+    script.puts "    autoload :Locale_%-8s 'when_exe/locales/%s'" % [key + ',', key]
   end
+  script.puts "  end"
   script.puts "end"
 end
 
@@ -72,6 +74,7 @@ yamls.each_pair do |key, value|
     script.puts "\n    # from https://raw.github.com/svenfuchs/rails-i18n/master/rails/locale/#{key.sub(/_/,'-')}.yml"
     script.puts "\n    Locale_#{key} ="
     script.write(value.pretty_inspect)
+    script.puts "  end"
     script.puts "end"
   end
 end

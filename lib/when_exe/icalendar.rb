@@ -198,7 +198,7 @@ module When::V
             @namespace[content.attribute['prefix'].object] = content.object
           end while (content = content.same_altid)
         else
-          @namespace.update(When::Parts::Locale._namespace(content.object))
+          @namespace.update(When::Locale._namespace(content.object))
         end
       end
 
@@ -315,7 +315,7 @@ module When::V
 
       # locale の登録
       @locale = @_pool['..'].respond_to?(:locale) ? @_pool['..'].locale : []
-      @locale = When::Parts::Locale._locale(@property['locale'].object) if @property['locale']
+      @locale = When::Locale._locale(@property['locale'].object) if @property['locale']
 
       # tzoffsetfrom の登録
       if @property['tzoffsetfrom']

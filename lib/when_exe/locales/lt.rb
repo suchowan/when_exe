@@ -5,7 +5,8 @@
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
 
-module When::Parts::Locale
+module When
+  module Locale
 
     # from https://raw.github.com/svenfuchs/rails-i18n/master/rails/locale/lt.yml
 
@@ -72,6 +73,10 @@ module When::Parts::Locale
       {"one"=>"apie %{count} metus",
        "few"=>"apie %{count} metus",
        "other"=>"apie %{count} metų"},
+     "almost_x_years"=>
+      {"one"=>"beveik 1 metai",
+       "few"=>"beveik %{count} metai",
+       "other"=>"beveik %{count} metų"},
      "half_a_minute"=>"pusė minutės",
      "less_than_x_minutes"=>
       {"one"=>"mažiau nei %{count} minutė",
@@ -108,4 +113,5 @@ module When::Parts::Locale
      "month"=>"Mėnuo",
      "second"=>"Sekundės",
      "year"=>"Metai"}}}
+  end
 end

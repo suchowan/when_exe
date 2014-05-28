@@ -5,7 +5,8 @@
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
 
-module When::Parts::Locale
+module When
+  module Locale
 
     # from https://raw.github.com/svenfuchs/rails-i18n/master/rails/locale/hu.yml
 
@@ -55,9 +56,10 @@ module When::Parts::Locale
    "pm"=>"du."},
  "datetime"=>
   {"distance_in_words"=>
-    {"about_x_hours"=>{"one"=>"kb 1 órája", "other"=>"kb %{count} órája"},
-     "about_x_months"=>{"one"=>"kb 1 hónapja", "other"=>"kb %{count} hónapja"},
-     "about_x_years"=>{"one"=>"kb 1 éve", "other"=>"kb %{count} éve"},
+    {"about_x_hours"=>{"one"=>"kb. 1 órája", "other"=>"kb. %{count} órája"},
+     "about_x_months"=>
+      {"one"=>"kb. 1 hónapja", "other"=>"kb. %{count} hónapja"},
+     "about_x_years"=>{"one"=>"kb. 1 éve", "other"=>"kb. %{count} éve"},
      "almost_x_years"=>
       {"one"=>"majdnem 1 éve", "other"=>"majdnem %{count} éve"},
      "half_a_minute"=>"fél perce",
@@ -80,4 +82,5 @@ module When::Parts::Locale
      "month"=>"Hónap",
      "second"=>"Másodperc",
      "year"=>"Év"}}}
+  end
 end

@@ -5,7 +5,8 @@
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
 
-module When::Parts::Locale
+module When
+  module Locale
 
     # from https://raw.github.com/svenfuchs/rails-i18n/master/rails/locale/fi.yml
 
@@ -35,7 +36,7 @@ module When::Parts::Locale
      "perjantai",
      "lauantai"],
    "formats"=>
-    {"default"=>"%e. %Bta %Y", "long"=>"%A %e. %Bta %Y", "short"=>"%e.%m.%Y"},
+    {"default"=>"%-d.%-m.%Y", "long"=>"%A %e. %Bta %Y", "short"=>"%d. %b"},
    "month_names"=>
     [nil,
      "tammikuu",
@@ -84,4 +85,5 @@ module When::Parts::Locale
      "month"=>"kuukausi",
      "second"=>"sekunti",
      "year"=>"vuosi"}}}
+  end
 end

@@ -150,16 +150,16 @@ module Test::Coordinates
       sample =[
         ["明治", "http://ja.wikipedia.org/wiki/%E6%98%8E%E6%B2%BB"],
         ["Meiji", "http://en.wikipedia.org/wiki/Meiji_period"],
-        ["M", ""],
+        ["M", "http://ja.wikipedia.org/wiki/%E6%98%8E%E6%B2%BB"],
         ["大正", "http://ja.wikipedia.org/wiki/%E5%A4%A7%E6%AD%A3"],
         ["Taishō", "http://en.wikipedia.org/wiki/Taish%C5%8D_period"],
-        ["T", ""],
+        ["T", "http://ja.wikipedia.org/wiki/%E5%A4%A7%E6%AD%A3"],
         ["昭和", "http://ja.wikipedia.org/wiki/%E6%98%AD%E5%92%8C"],
         ["Shōwa", "http://en.wikipedia.org/wiki/Sh%C5%8Dwa_period"],
-        ["S", ""],
+        ["S", "http://ja.wikipedia.org/wiki/%E6%98%AD%E5%92%8C"],
         ["平成", "http://ja.wikipedia.org/wiki/%E5%B9%B3%E6%88%90"],
         ["Heisei", "http://en.wikipedia.org/wiki/Heisei_period"],
-        ["H", ""]
+        ["H", "http://ja.wikipedia.org/wiki/%E5%B9%B3%E6%88%90"]
       ]
       ['明治', '大正', '昭和', '平成'].each do |nengo|
          era = When::era(nengo)

@@ -5,15 +5,12 @@
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
 
-#
-# 本ライブラリのための諸々の部品
-#
-module When::Parts
+module When
 
   #
   # エンコーディングの変換
   #
-  module Encoding
+  module EncodingConversion
 
     class << self
       if String.method_defined?(:encode)
@@ -26,7 +23,7 @@ module When::Parts
         #
         # @private
         def to_internal_encoding(source)
-          default_internal = ::Encoding.default_internal||'UTF-8'
+          default_internal = Encoding.default_internal||'UTF-8'
           case source
           when Locale ;  source.to_internal_encoding
           when String ; (source.encoding == default_internal) ?
@@ -55,7 +52,7 @@ module When::Parts
         #
         # @private
         def to_external_encoding(source)
-          default_external = ::Encoding.default_external
+          default_external = Encoding.default_external
           case source
           when Locale ;  source.to_external_encoding
           when String ; (source.encoding == default_external) ?
@@ -102,14 +99,14 @@ module When::Parts
     # 内部エンコーディング文字列化
     #
     def to_internal_encoding
-      Encoding.to_internal_encoding(self)
+      EncodingConversion.to_internal_encoding(self)
     end
 
     # 
     # 外部エンコーディング文字列化
     #
     def to_external_encoding
-      Encoding.to_external_encoding(self)
+      EncodingConversion.to_external_encoding(self)
     end
 
     # 
@@ -187,7 +184,7 @@ module When::Parts
       #
       attr_accessor :wikipedia_interval
 
-      # When::Parts::Locale Module のグローバルな設定を行う
+      # When::Locale Module のグローバルな設定を行う
       #
       # @param [Hash] options 下記の通り
       # @option options [Hash]    :alias              Locale の読み替えパターンを Hash で指定する。
@@ -249,18 +246,18 @@ module When::Parts
 
       # 包摂リストに登録されている文字を包摂する
       #
-      # @param [When::Parts::Locale] source 文字を包摂しようとする国際化文字列
+      # @param [When::Locale] source 文字を包摂しようとする国際化文字列
       # @param [String] source 文字を包摂しようとする文字列
       # @param [Regexp] source 文字を包摂しようとする正規表現
       # @param [Hash] pattern 包摂ルール
       #
-      # @return [When::Parts::Locale] 文字を包摂した国際化文字列
+      # @return [When::Locale] 文字を包摂した国際化文字列
       # @return [String] 文字を包摂した文字列
       # @return [Regexp] 文字を包摂した正規表現
       #
       def ideographic_unification(source, pattern=_unification)
         case source
-        when When::Parts::Locale
+        when When::Locale
           source.ideographic_unification(pattern)
         when Regexp
           Regexp.compile(ideographic_unification(source.source.encode('UTF-8'), pattern), source.options)
@@ -352,13 +349,16 @@ module When::Parts
 
       # locale 指定を解析して Hash の値を取り出す
       # @private
-      def _hash_value(hash, locale, default='')
+      def _hash_value(hash, locale, defaults=['', 'en'])
         locale = locale.sub(/\..*/, '')
-        return hash[locale] if (hash[locale])
-        return _hash_value(hash, _alias[locale], default) if _alias[locale]
+        return hash[locale] if hash[locale]
+        return _hash_value(hash, _alias[locale], defaults) if _alias[locale]
         language = locale.sub(/-.*/, '')
-        return hash[language] if (hash[language])
-        return hash[default]
+        return hash[language] if hash[language]
+        defaults.each do |default|
+          return hash[default] if hash[default]
+        end
+        return nil
       end
 
       # 漢字の包摂パターン
@@ -399,7 +399,7 @@ module When::Parts
         # 採取済みデータ
         title = URI.decode(file.gsub('_', ' '))
         mode  = "".respond_to?(:force_encoding) ? ':utf-8' : ''
-        dir   = Resource.root_dir + '/data/wikipedia/' + locale
+        dir   = When::Parts::Resource.root_dir + '/data/wikipedia/' + locale
         FileUtils.mkdir_p(dir) unless FileTest.exist?(dir)
 
         open("#{dir}/#{file}.json", 'r'+mode) do |source|
@@ -541,7 +541,7 @@ module When::Parts
     #
     # @param [Range] range String#[] と同様の指定方法で範囲を指定する
     #
-    # @return [When::Parts::Locale] 指定範囲に対応した部分文字列
+    # @return [When::Locale] 指定範囲に対応した部分文字列
     #
     def [](range)
       dup._copy({
@@ -685,7 +685,7 @@ module When::Parts
     #
     # @param [Hash] pattern 包摂ルール
     #
-    # @return [When::Parts::Locale] self
+    # @return [When::Locale] self
     # @private
     def ideographic_unification!(pattern=_unification)
       names = {}
@@ -703,7 +703,7 @@ module When::Parts
     #
     # @param [Hash] pattern 包摂ルール
     #
-    # @return [When::Parts::Locale] 包摂結果
+    # @return [When::Locale] 包摂結果
     #
     def ideographic_unification(pattern=_unification)
       dup.ideographic_unification!(pattern)
@@ -760,7 +760,7 @@ module When::Parts
     # locale 指定を解析して @names の値を取り出す
     # @private
     def _label_value(locale)
-      label = Locale._hash_value(@names, locale, nil)
+      label = Locale._hash_value(@names, locale, [])
       return label if label
       foreign  = Locale._get_locale(locale, @access_key)
       return @names[''] unless foreign
@@ -807,14 +807,14 @@ module When::Parts
           mark[0]  = locale if asterisk[0]
           mark[1]  = locale if asterisk[1]
           mark[2]  = locale unless mark[2]
-          name = _replacement($1, locale, ($3 || @names['en'] || @names[''])) if name =~ /^_([A-Z]+)_(\((.+)\))?$/
+          name = _replacement($1, locale, ($3 || @names['en'] || @names[''])) if name =~ /^_([A-Z_]+)_(\((.+)\))?$/
           @names[locale] = name
           if (ref =~ /^(.+):/)
             prefix = namespace[$1]
             ref.sub!(/^.+:/, prefix) if (prefix)
           end
           ref += '%%<' + name + '>' if (ref =~ /[\/#:]$/)
-          @link[locale] = _encode(ref)
+          @link[locale] = _encode(ref) unless ref == ''
         else ; raise ArgumentError, "Irregal locale format: " + v
         end
       end
@@ -843,7 +843,7 @@ module When::Parts
     # 英語表記を現地表記に置き換える
     #
     def _replacement(table, locale, name)
-      Locale.const_get(table)[locale] ?
+      Locale.const_get(table.split('_')[-1])[locale] ?
         Locale.send(table.downcase, name, locale) :
         name
     end

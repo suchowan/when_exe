@@ -8,9 +8,9 @@
 module When
   module Locale
 
-    # from https://raw.github.com/svenfuchs/rails-i18n/master/rails/locale/es-419.yml
+    # from https://raw.github.com/svenfuchs/rails-i18n/master/rails/locale/es-US.yml
 
-    Locale_es_419 =
+    Locale_es_US =
 {"date"=>
   {"abbr_day_names"=>["dom", "lun", "mar", "mié", "jue", "vie", "sáb"],
    "abbr_month_names"=>

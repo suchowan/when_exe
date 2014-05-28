@@ -5,7 +5,8 @@
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
 
-module When::Parts::Locale
+module When
+  module Locale
 
     # from https://raw.github.com/svenfuchs/rails-i18n/master/rails/locale/uk.yml
 
@@ -34,21 +35,21 @@ module When::Parts::Locale
      "четвер",
      "п'ятниця",
      "субота"],
-   "formats"=>{"default"=>"%d.%m.%Y", "long"=>"%-d %B %Y", "short"=>"%-d %b"},
+   "formats"=>{"default"=>"%d.%m.%Y", "long"=>"%d %B %Y", "short"=>"%d %b"},
    "month_names"=>
     [nil,
-     "Січень",
-     "Лютий",
-     "Березень",
-     "Квітень",
-     "Травень",
-     "Червень",
-     "Липень",
-     "Серпень",
-     "Вересень",
-     "Жовтень",
-     "Листопад",
-     "Грудень"],
+     "Січня",
+     "Лютого",
+     "Березня",
+     "Квітня",
+     "Травня",
+     "Червня",
+     "Липня",
+     "Серпня",
+     "Вересня",
+     "Жовтня",
+     "Листопада",
+     "Грудня"],
    "order"=>[:day, :month, :year]},
  "time"=>
   {"am"=>"до полудня",
@@ -123,4 +124,5 @@ module When::Parts::Locale
      "month"=>"Місяць",
      "second"=>"Секунда",
      "year"=>"Рік"}}}
+  end
 end

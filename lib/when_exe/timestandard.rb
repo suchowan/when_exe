@@ -376,8 +376,8 @@ module When::TimeStandard
     #
     def _normalize_time_basis
 
-      @_time_basis ||= @time_basis || (@location ? @location.long / When::Coordinates::Spatial::DEGREE * 240 : When.utc)
-      @_time_basis   = When::Parts::Locale._split(@_time_basis) if @_time_basis.kind_of?(String)
+      @_time_basis ||= @time_basis || (@location ? @location.long / When::Coordinates::Spatial::DEGREE * 240 : When::UTC)
+      @_time_basis   = When::Locale._split(@_time_basis) if @_time_basis.kind_of?(String)
       @_time_basis   = [@_time_basis] unless @_time_basis.kind_of?(Array)
       @_time_basis   = @_time_basis.map {|clock| When.Clock(clock)}
       @_time_basis_offset = @_time_basis.map {|clock| -clock.universal_time / When::TM::Duration::DAY}

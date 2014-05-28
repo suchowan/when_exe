@@ -12,21 +12,40 @@ module When
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[ThaiTerms=]",
-      "[ThaiLuniSolar=en:Thai_lunar_calendar, タイ太陰太陽暦=ja:%%<チャントラカティ>]"
+      "[ThaiLuniSolar=en:Thai_lunar_calendar, タイ太陰太陽暦=ja:%%<チャントラカティ>]",
+
+      [self,
+        "names:[IntercalaryMonth=en:Intercalation, 閏月]",
+        "[%s Śuklapakṣa=,        %s 白分=,   _IAST_]",
+        "[%s Kṛṣṇapakṣa=,        %s 黒分=,   _IAST_]",
+        "[adhika %s Śuklapakṣa=, 閏%s 白分=, _IAST_]",
+        "[adhika %s Kṛṣṇapakṣa=, 閏%s 黒分=, _IAST_]"
+      ],
+
+      [self,
+        "names:[LunarMonth=, 太陰月=ja:%%<月_(暦)>]",
+        "[Mārgaśīra=en:Margashirsha,   マールガシールシャ=, _IAST_]",
+        "[Pauṣa=en:Pausha,             パウシャ=,           _IAST_]",
+        "[Māgha=en:Maagha,             マーガ=,             _IAST_]",
+        "[Phālguna=en:Phalguna,        パールグナ=,         _IAST_]",
+        "[Caitra=en:Chaitra,           チャイトラ=,         _IAST_]",
+        "[Vaiśākha=en:Vaisakha,        ヴァイシャーカ=,     _IAST_]",
+        "[Jyaiṣṭha=en:Jyeshta,         ジャイシュタ=,       _IAST_]",
+        "[Āṣāḍha=en:Aashaadha,         アーシャーダ=,       _IAST_]",
+        "[Śrāvaṇa=en:Shraavana,        シュラーヴァナ=,     _IAST_]",
+        "[Bhādrapada=en:Bhadrapada,    バードラパダ=,       _IAST_]",
+        "[Āśvina=en:Ashwin,            アーシュヴィナ=,     _IAST_]",
+        "[Kārttika=en:Kartika_(month), カールッティカ=,     _IAST_]"
+      ]
     ]]
   end
 
   module CalendarTypes
 
     #
-    # The Calendar of Thai people in China
+    # ソンクラーンとタイ暦の暦定数
     #
-    class ThaiC < TableBased
-
-      include Lunar
-
-      NormalIDs    =  '1,1<,2,2<,3,3<,4,4<,5,5<,6,6<,7,7<,8,8<,9,9<,10,10<,11,11<,12,12<'
-      LeapIDs      =  '1,1<,2,2<,3,3<,4,4<,5,5<,6,6<,7,7<,8,8<,9&,9*,9,9<,10,10<,11,11<,12,12<'
+    module Songkran
 
       # ソンクラーン - 太陽の白羊宮入り
       #
@@ -39,10 +58,53 @@ module When
         return @origin_of_LSC - 1 + e['H'][0]
       end
 
+      # y で指定した年の暦定数を返します。
+      #
+      # @param [Integer] y 年
+      #
+      # @return [Hash]
+      #
+      def _eph(y) # C
+        h  = (y+4).divmod(9)[0]                   # y
+        h  = (y-h).divmod(3)[0]                   # z
+        h  = (y+1-h).divmod(2)[0]                 # r (2 => h?)
+        h  = (36525876*y+149049-h).divmod(100000) # s
+        a  = (h[0]*11+633-((h[0]+7368).divmod(8878))[0]).divmod(692)
+        m  = (h[0]+a[0]+0).divmod(30)
+        return {'H'=>h, 'A'=>a, 'M'=>m}
+      end
+    end
+
+    #
+    # The Calendar of Thai (Prototype)
+    #
+    class ThaiP < TableBased
+
+      include Lunar
+      include Songkran
+
+      # 月番号
+      _intercalary_month = When.Resource('_m:ThaiTerms::IntercalaryMonth::*')
+      Indices = [
+        Coordinates::Index.new({:branch=>{0   => _intercalary_month[0],
+                                          0.5 => _intercalary_month[1],
+                                         -1.5 => _intercalary_month[2],
+                                         -1   => _intercalary_month[3]},
+                                :trunk =>When.Resource('_m:ThaiTerms::LunarMonth::*')}),
+        Coordinates::DefaultDayIndex
+      ]
+
+      # 月の大小と閏
+      _NormalIDs =  '1,1<,2,2<,3,3<,4,4<,5,5<,6,6<,7,7<,8,8<,9,9<,10,10<,11,11<,12,12<'
+      _LeapIDs   =  '1,1<,2,2<,3,3<,4,4<,5,5<,6,6<,7,7<,8,8<,9&,9*,9,9<,10,10<,11,11<,12,12<'
+      RuleTable = {
+        354 => {'Length'=>[15,15,15,14]*6,                            'IDs' => _NormalIDs},
+        355 => {'Length'=>[15,15,15,14]*3 + [15]*4 + [15,15,15,14]*2, 'IDs' => _NormalIDs},
+        384 => {'Length'=>[15,15,15,14]*4 + [15]*2 + [15,15,15,14]*2, 'IDs' => _LeapIDs}
+      }
+
       private
 
-      # ThaiC+オブジェクトの性質定義を初期設定します。
-      #
       # オブジェクトの正規化
       # @private
       def _normalize(args=[], options={})
@@ -56,22 +118,8 @@ module When
         @origin_of_LSC ||=  1954168
         @origin_of_MSC   =  @origin_of_MSC.to_i
         @origin_of_LSC   =  @origin_of_LSC.to_i
-
-        intercalary_month = When.Resource('_m:IndianTerms::IntercalaryMonth::*')
-        @indices ||= [
-          Coordinates::Index.new({:branch=>{0   =>  intercalary_month[0],
-                                            0.5 =>  intercalary_month[1],
-                                           -1.5 =>  intercalary_month[2],
-                                           -1   =>  intercalary_month[3]},
-                                  :trunk =>When.Resource('_m:IndianTerms::LunarMonth::*')}),
-          Coordinates::DefaultDayIndex
-        ]
-        @rule_table  ||=  {
-          354 => {'Length'=>[15,15,15,14]*6,                            'IDs' => NormalIDs},
-          355 => {'Length'=>[15,15,15,14]*3 + [15]*4 + [15,15,15,14]*2, 'IDs' => NormalIDs},
-          384 => {'Length'=>[15,15,15,14]*4 + [15]*2 + [15,15,15,14]*2, 'IDs' => LeapIDs}
-        }
-
+        @indices       ||= Indices
+        @rule_table    ||= RuleTable
         super
       end
 
@@ -90,22 +138,6 @@ module When
         when 385     ; e0['T'] += 1
         end
         return @origin_of_LSC - 1 + e0['T'] - 30*3 - 29*2
-      end
-
-      # y で指定した年の暦定数を返します。
-      #
-      # @param [Integer] y 年
-      #
-      # @return [Hash]
-      #
-      def _eph(y) # C
-        h  = (y+4).divmod(9)[0]                   # y
-        h  = (y-h).divmod(3)[0]                   # z
-        h  = (y+1-h).divmod(2)[0]                 # r (2 => h?)
-        h  = (36525876*y+149049-h).divmod(100000) # s
-        a  = (h[0]*11+633-((h[0]+7368).divmod(8878))[0]).divmod(692)
-        m  = (h[0]+a[0]+0).divmod(30)
-        return {'H'=>h, 'A'=>a, 'M'=>m}
       end
 
       #  y で指定した年の平閏、8月の大小を判定します。
@@ -141,26 +173,101 @@ module When
     end
 
     #
+    # The Calendar of Thai people in China (Calculation)
+    #
+    class ThaiC < ThaiP
+
+      # オブジェクトの正規化
+      # @private
+      def _normalize(args=[], options={})
+        super
+        @thoreshold    = (@mean_month * 13) % 1
+        @eoch_new_moon = (@origin_of_LSC - 18.90409 + 12 * @mean_month / 19)
+      end
+
+      # 年初の通日
+      #
+      # @param [Array<Numeric>] date ( 年 )
+      #
+      # @return [Integer] 年初の通日
+      #
+      def _sdn_(date)
+        year  = +date[0]
+        prev  = _meton(year-1)
+        this  = _meton(year)
+        this += 1 if this.floor - prev.floor > 360 && this % 1 > @thoreshold
+        this.floor
+      end
+
+      private
+
+      def _meton(year)
+        (((year + 9) * 235 / 19) - 111) * @mean_month + @eoch_new_moon
+      end
+    end
+
+    #
+    # The Calendar of Thai people in China (Table based)
+    #
+    class ThaiT < CyclicTableBased
+
+      include Lunar
+      include Songkran
+
+      Pattern = %w(
+        B A C A C B A C A B  C A A C B C A A C B  A C A C B A C A A C
+        B A C A C A B C A A  C B C A A C B A C A  C B A C A B C A A C
+        B C A A C B A C A C  B A C A B C A A C A  C B A C A B C A A C
+        A C B B C A A C A C  A A C B A C A B C A  C A B C A A C B C A
+        A C B A C A A C B C  A A C B A C A C B A  C A A C B A C A C B
+        A C A B C A C A B C  A A C A B C A C A B  C A A C B C A A C B
+        A C A A C B C A A C  B A C A C B A C A A  C B A C A C B A C A)
+
+      # オブジェクトの正規化
+      # @private
+      def _normalize(args=[], options={})
+        @origin_of_LSC =  2393198
+        @origin_of_MSC =     1202
+        @epoch_in_CE   =     1840
+        @indices       = ThaiP::Indices
+        pattern        = Pattern.dup
+        if @patch
+          @patch.scan(/\d+[ABC]/i) do |patch|
+            pattern[patch[0..-2].to_i-@epoch_in_CE] = patch[-1..-1].upcase
+          end
+        end
+        @rule_table    = {
+          'T' => {'Rule' => pattern},
+          'A' => {'Rule' => [354]},
+          'B' => {'Rule' => [355]},
+          'C' => {'Rule' => [384]}}.merge(ThaiP::RuleTable)
+        super
+      end
+    end
+
+    #
     # The Calendar of central Thailand
     #
-    class ThaiB < ThaiC
+    class Thai < ThaiP
 
+      # 年の朔閏パターン
       YEAR_TYPE = {'A'=>354, 'B'=>355, 'C'=>384, 'D'=>384, 'E'=>384}
 
-      NormalIDs    =  '1,1<,2,2<,3,3<,4,4<,5,5<,6,6<,7,7<,8,8<,9,9<,10,10<,11,11<,12,12<'
-      LeapIDs      =  '1,1<,2,2<,3,3<,4,4<,5,5<,6,6<,7,7<,8&,8*,8,8<,9,9<,10,10<,11,11<,12,12<'
+      # 月の大小と閏
+      _NormalIDs    =  '1,1<,2,2<,3,3<,4,4<,5,5<,6,6<,7,7<,8,8<,9,9<,10,10<,11,11<,12,12<'
+      _LeapIDs      =  '1,1<,2,2<,3,3<,4,4<,5,5<,6,6<,7,7<,8&,8*,8,8<,9,9<,10,10<,11,11<,12,12<'
+      RuleTable = {
+          354 => {'Length'=>[15,14,15,15]*6,    'IDs' => _NormalIDs},
+          355 => {'Length'=>[15,14,15,15]*3 + [15]*4 + [15,14,15,15]*2, 'IDs' => _NormalIDs},
+          384 => {'Length'=>[15,14,15,15]*4 + [15]*2 + [15,14,15,15]*2, 'IDs' => _LeapIDs  }
+      }
 
       private
 
       # オブジェクトの正規化
       #
       def _normalize(args=[], options={})
-        @rule_table ||= {
-          354 => {'Length'=>[15,14,15,15]*6,    'IDs' => NormalIDs},
-          355 => {'Length'=>[15,14,15,15]*3 + [15]*4 + [15,14,15,15]*2, 'IDs' => NormalIDs},
-          384 => {'Length'=>[15,14,15,15]*4 + [15]*2 + [15,14,15,15]*2, 'IDs' => LeapIDs  }
-        }
-
+        @rule_table ||= RuleTable
         super
       end
 

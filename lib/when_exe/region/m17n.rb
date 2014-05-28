@@ -25,7 +25,7 @@ module When
         abbrs  = When.Resource('_m:CalendarTerms::Abbr_Month').child
         return name > 0 ? months[name-1] : abbrs[-name-1] if name.kind_of?(Numeric)
 
-        name   = When::Parts::Encoding.to_internal_encoding(name)
+        name   = When::EncodingConversion.to_internal_encoding(name)
         match  = name[/^...|^..$/]
         if match
           (months+abbrs).each do |month|
@@ -41,7 +41,7 @@ module When
       end
 
       Namespace = "[ja=http://ja.wikipedia.org/wiki/, en=http://en.wikipedia.org/wiki/]"
-      Locale    = "[=ja:, en=en:]"
+      Locales   = "[=ja:, en=en:]"
 
       # Terms
       CalendarTerms = [M17n, [

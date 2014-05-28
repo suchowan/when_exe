@@ -83,7 +83,7 @@ module When
         # @private
         def verify(pattern, value)
           value = value.label if !value.kind_of?(When::BasicTypes::M17n) && value.respond_to?(:label)
-          pattern = When::Parts::Encoding.to_internal_encoding(pattern)
+          pattern = When::EncodingConversion.to_internal_encoding(pattern)
           pattern.kind_of?(Regexp) ? value =~ pattern : value == pattern
         end
       end
@@ -458,8 +458,8 @@ module When
     def _parse_note(date, options)
       options = 
         case options
-        when Hash    ; When::Parts::Encoding.to_internal_encoding(options)
-        when String  ; {:notes   => When::Parts::Encoding.to_internal_encoding(options)}
+        when Hash    ; When::EncodingConversion.to_internal_encoding(options)
+        when String  ; {:notes   => When::EncodingConversion.to_internal_encoding(options)}
         when Integer ; {:indices => options}
         else         ; {}
         end
@@ -480,7 +480,7 @@ module When
     # @return [Hash] options for note String
     #
     def _find_note(note)
-      note = When::Parts::Encoding.to_internal_encoding(note)
+      note = When::EncodingConversion.to_internal_encoding(note)
       _elements.each_index do |index|
         return {:notes=>note, :indices => [-index]} if _elements[-1-index]._pool[note]
       end

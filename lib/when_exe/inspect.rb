@@ -107,7 +107,7 @@ module When
         when Numeric, FalseClass, TrueClass ; element
         else        ; element.to_s
         end
-      result = When::Parts::Locale.translate(result,options[:locale]) if options[:locale] && result.kind_of?(String)
+      result = When::Locale.translate(result,options[:locale]) if options[:locale] && result.kind_of?(String)
       result
     end
   end
@@ -649,7 +649,7 @@ module When
       # @return [designator に依存]
       #
       def _term(designator, locale=nil, d=0, e=3)
-        designator = When::Parts::Locale.translate(designator,locale)
+        designator = When::Locale.translate(designator,locale)
         case designator
                                                                 # 現在のロケールにおける曜日の省略名
         when 'a' ; When.Resource('_co:CommonResidue::Abbr_Day')[to_i % 7].translate(locale)
@@ -680,7 +680,7 @@ module When
         when 'y' ; year(d) % 100                                # 西暦の下2桁 (世紀部分を含まない年)
         when 'Y' ; year(d)                                      # 世紀部分を含めた ( 4 桁の) 西暦年
         when 'z' ; clock.to_basic                               # +hhmm や -hhmm の形式のタイムゾーン
-        when 'Z' ; When::Parts::Locale.translate(clock.tzname[0],locale) # タイムゾーンまたはゾーン名または省略名
+        when 'Z' ; When::Locale.translate(clock.tzname[0],locale) # タイムゾーンまたはゾーン名または省略名
         else     ; designator
         end
       end

@@ -5,7 +5,8 @@
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
 
-module When::Parts::Locale
+module When
+  module Locale
 
     # from https://raw.github.com/svenfuchs/rails-i18n/master/rails/locale/pl.yml
 
@@ -123,4 +124,5 @@ module When::Parts::Locale
      "month"=>"Miesiąc",
      "second"=>"Sekundy",
      "year"=>"Rok"}}}
+  end
 end

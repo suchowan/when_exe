@@ -5,7 +5,7 @@
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
 
-require 'when_exe/region/indian/iast'
+require 'when_exe/locales/iast'
 
 module When
   class BasicTypes::M17n
@@ -20,10 +20,10 @@ module When
 
       [self,
         "names:[IntercalaryMonth=en:Intercalation, 閏月]",
-        "[%s Śuklapakṣa=,        %s 白分=,   _IAST_]",
-        "[%s Kṛṣṇapakṣa=,        %s 黒分=,   _IAST_]",
-        "[adhika %s Śuklapakṣa=, 閏%s 白分=, _IAST_]",
-        "[adhika %s Kṛṣṇapakṣa=, 閏%s 黒分=, _IAST_]"
+        "[%s Śuklapakṣa=,        %s 白分=,   _IAST_=]",
+        "[%s Kṛṣṇapakṣa=,        %s 黒分=,   _IAST_=]",
+        "[adhika %s Śuklapakṣa=, 閏%s 白分=, _IAST_=]",
+        "[adhika %s Kṛṣṇapakṣa=, 閏%s 黒分=, _IAST_=]"
       ],
 
       [self,
@@ -34,34 +34,34 @@ module When
 
       [self,
         "names:[LunarMonth=, 太陰月=ja:%%<月_(暦)>]",
-        "[Mārgaśīra=en:Margashirsha,   マールガシールシャ=, _IAST_]",
-        "[Pauṣa=en:Pausha,             パウシャ=,           _IAST_]",
-        "[Māgha=en:Maagha,             マーガ=,             _IAST_]",
-        "[Phālguna=en:Phalguna,        パールグナ=,         _IAST_]",
-        "[Caitra=en:Chaitra,           チャイトラ=,         _IAST_]",
-        "[Vaiśākha=en:Vaisakha,        ヴァイシャーカ=,     _IAST_]",
-        "[Jyaiṣṭha=en:Jyeshta,         ジャイシュタ=,       _IAST_]",
-        "[Āṣāḍha=en:Aashaadha,         アーシャーダ=,       _IAST_]",
-        "[Śrāvaṇa=en:Shraavana,        シュラーヴァナ=,     _IAST_]",
-        "[Bhādrapada=en:Bhadrapada,    バードラパダ=,       _IAST_]",
-        "[Āśvina=en:Ashwin,            アーシュヴィナ=,     _IAST_]",
-        "[Kārttika=en:Kartika_(month), カールッティカ=,     _IAST_]"
+        "[Mārgaśīra=en:Margashirsha,   マールガシールシャ=, _IAST_=]",
+        "[Pauṣa=en:Pausha,             パウシャ=,           _IAST_=]",
+        "[Māgha=en:Maagha,             マーガ=,             _IAST_=]",
+        "[Phālguna=en:Phalguna,        パールグナ=,         _IAST_=]",
+        "[Caitra=en:Chaitra,           チャイトラ=,         _IAST_=]",
+        "[Vaiśākha=en:Vaisakha,        ヴァイシャーカ=,     _IAST_=]",
+        "[Jyaiṣṭha=en:Jyeshta,         ジャイシュタ=,       _IAST_=]",
+        "[Āṣāḍha=en:Aashaadha,         アーシャーダ=,       _IAST_=]",
+        "[Śrāvaṇa=en:Shraavana,        シュラーヴァナ=,     _IAST_=]",
+        "[Bhādrapada=en:Bhadrapada,    バードラパダ=,       _IAST_=]",
+        "[Āśvina=en:Ashwin,            アーシュヴィナ=,     _IAST_=]",
+        "[Kārttika=en:Kartika_(month), カールッティカ=,     _IAST_=]"
       ],
 
       [self,
         "names:[SolarMonth=, 太陽月=ja:%%<月_(暦)>]",
-        "[Maysha=,                     白羊宮,              _IAST_]",
-        "[Vrushabha=,                  金牛宮,              _IAST_]",
-        "[Mithuna=,                    双児宮,              _IAST_]",
-        "[Karka=,                      巨蟹宮,              _IAST_]",
-        "[Simha=,                      獅子宮,              _IAST_]",
-        "[Kanya=,                      処女宮,              _IAST_]",
-        "[Tula=,                       天秤宮,              _IAST_]",
-        "[Vrushchika=,                 天蝎宮,              _IAST_]",
-        "[Dhanu=,                      人馬宮,              _IAST_]",
-        "[Makar=,                      磨羯宮,              _IAST_]",
-        "[Kumbha=,                     宝瓶宮,              _IAST_]",
-        "[Meena=,                      双魚宮,              _IAST_]"
+        "[Maysha=,                     白羊宮,              _IAST_=]",
+        "[Vrushabha=,                  金牛宮,              _IAST_=]",
+        "[Mithuna=,                    双児宮,              _IAST_=]",
+        "[Karka=,                      巨蟹宮,              _IAST_=]",
+        "[Simha=,                      獅子宮,              _IAST_=]",
+        "[Kanya=,                      処女宮,              _IAST_=]",
+        "[Tula=,                       天秤宮,              _IAST_=]",
+        "[Vrushchika=,                 天蝎宮,              _IAST_=]",
+        "[Dhanu=,                      人馬宮,              _IAST_=]",
+        "[Makar=,                      磨羯宮,              _IAST_=]",
+        "[Kumbha=,                     宝瓶宮,              _IAST_=]",
+        "[Meena=,                      双魚宮,              _IAST_=]"
       ]
     ]]
   end
@@ -785,66 +785,66 @@ module When
           "names:[year]",
           [When::BasicTypes::M17n,
             "names:[samvatsara, 木星年=]",
-            "[Prabhava=,      プラバヴァ=,           _IAST_]", #  1
-            "[Vibhava=,       ヴィバヴァ=,           _IAST_]", #  2
-            "[Sukha=,         スカ=,                 _IAST_]", #  3
-            "[Pramoda=,       プラモーダ=,           _IAST_]", #  4
-            "[Prajāpati=,     プラジャーパティ=,     _IAST_]", #  5
-            "[Aṅgiras=,       アンギラス=,           _IAST_]", #  6
-            "[Śrīmukha=,      シュリームカ=,         _IAST_]", #  7
-            "[Bhāva=,         バーヴァ=,             _IAST_]", #  8
-            "[Yuvan=,         ユヴァン=,             _IAST_]", #  9
-            "[Dhātṛ=,         ダートリ=,             _IAST_]", # 10
-            "[Īśvara=,        イーシュヴァラ=,       _IAST_]", # 11
-            "[Bahudhānya=,    バフダーニャ=,         _IAST_]", # 12
-            "[Pramāthin=,     プラマーティン=,       _IAST_]", # 13
-            "[Vikrama=,       ヴィクラマ=,           _IAST_]", # 14
-            "[Vṛṣa=,          ヴリシャ=,             _IAST_]", # 15
-            "[Chitrabhānu=,   チトラバーヌ=,         _IAST_]", # 16
-            "[Subhānu=,       スバーヌ=,             _IAST_]", # 17
-            "[Tāraṇa=,        ターラナ=,             _IAST_]", # 18
-            "[Pārthiva=,      パールティヴァ=,       _IAST_]", # 19
-            "[Vyaya=,         ヴヤヤ=,               _IAST_]", # 20
-            "[Sarvajit=,      サルヴァジト=,         _IAST_]", # 21
-            "[Sarvadhārin=,   サルヴァダーリン=,     _IAST_]", # 22
-            "[Virodhin=,      ヴィローディン=,       _IAST_]", # 23
-            "[Vikṛta=,        ヴィクリタ=,           _IAST_]", # 24
-            "[Khara=,         カラ=,                 _IAST_]", # 25
-            "[Nandana=,       ナンダナ=,             _IAST_]", # 26
-            "[Vijaya=,        ヴィジャヤ=,           _IAST_]", # 27
-            "[Jaya=,          ジャヤ=,               _IAST_]", # 28
-            "[Manmatha=,      マンマタ=,             _IAST_]", # 29
-            "[Durmukha=,      ドゥルムカ=,           _IAST_]", # 30
-            "[Hemalamba=,     ヘマラムバ=,           _IAST_]", # 31
-            "[Vilambin=,      ヴィラムビン=,         _IAST_]", # 32
-            "[Vikārin=,       ヴィカーリン=,         _IAST_]", # 33
-            "[Śārvarin=,      シャールヴァリン=,     _IAST_]", # 34
-            "[Plava=,         プラヴァ=,             _IAST_]", # 35
-            "[Śubhakṛt=,      シュバクリト=,         _IAST_]", # 36
-            "[Śobhana=,       ショバナ=,             _IAST_]", # 37
-            "[Krodhin=,       クロディン=,           _IAST_]", # 38
-            "[Viśvāvasu=,     ヴィシュヴァーヴァス=, _IAST_]", # 39
-            "[Parābhava=,     パラーバヴァ=,         _IAST_]", # 40
-            "[Plavaṅga=,      プラヴァンガ=,         _IAST_]", # 41
-            "[Kīlaka=,        キーラカ=,             _IAST_]", # 42
-            "[Saumya=,        サウムヤ=,             _IAST_]", # 43
-            "[Sādhāraṇa=,     サーダーラナ=,         _IAST_]", # 44
-            "[Virodhakṛt=,    ヴィローダクリト=,     _IAST_]", # 45
-            "[Paridhāvin=,    パリダーヴィン=,       _IAST_]", # 46
-            "[Pramādin=,      プラマーディン=,       _IAST_]", # 47
-            "[Ānanda=,        アーナンダ=,           _IAST_]", # 48
-            "[Rākṣasa=,       ラークシャサ=,         _IAST_]", # 49
-            "[Anala=,         アナラ=,               _IAST_]", # 50
-            "[Piṅgala=,       ピンガラ=,             _IAST_]", # 51
-            "[Kālayukta=,     カーラユクタ=,         _IAST_]", # 52
-            "[Siddhārthin=,   シッダールティン=,     _IAST_]", # 53
-            "[Raudra=,        ラウドラ=,             _IAST_]", # 54
-            "[Durmati=,       ドゥルマティ=,         _IAST_]", # 55
-            "[Dundubhi=,      ドゥンドゥビ=,         _IAST_]", # 56
-            "[Rudhirodgārin=, ルディロードガーリン=, _IAST_]", # 57
-            "[Raktākṣin=,     ラクタークシン=,       _IAST_]", # 58
-            "[Krodhana=,      クローダナ=,           _IAST_]", # 59
-            "[Kṣaya=,         クシャヤ=,             _IAST_]"  # 60
+            "[Prabhava=,      プラバヴァ=,           _IAST_=]", #  1
+            "[Vibhava=,       ヴィバヴァ=,           _IAST_=]", #  2
+            "[Sukha=,         スカ=,                 _IAST_=]", #  3
+            "[Pramoda=,       プラモーダ=,           _IAST_=]", #  4
+            "[Prajāpati=,     プラジャーパティ=,     _IAST_=]", #  5
+            "[Aṅgiras=,       アンギラス=,           _IAST_=]", #  6
+            "[Śrīmukha=,      シュリームカ=,         _IAST_=]", #  7
+            "[Bhāva=,         バーヴァ=,             _IAST_=]", #  8
+            "[Yuvan=,         ユヴァン=,             _IAST_=]", #  9
+            "[Dhātṛ=,         ダートリ=,             _IAST_=]", # 10
+            "[Īśvara=,        イーシュヴァラ=,       _IAST_=]", # 11
+            "[Bahudhānya=,    バフダーニャ=,         _IAST_=]", # 12
+            "[Pramāthin=,     プラマーティン=,       _IAST_=]", # 13
+            "[Vikrama=,       ヴィクラマ=,           _IAST_=]", # 14
+            "[Vṛṣa=,          ヴリシャ=,             _IAST_=]", # 15
+            "[Chitrabhānu=,   チトラバーヌ=,         _IAST_=]", # 16
+            "[Subhānu=,       スバーヌ=,             _IAST_=]", # 17
+            "[Tāraṇa=,        ターラナ=,             _IAST_=]", # 18
+            "[Pārthiva=,      パールティヴァ=,       _IAST_=]", # 19
+            "[Vyaya=,         ヴヤヤ=,               _IAST_=]", # 20
+            "[Sarvajit=,      サルヴァジト=,         _IAST_=]", # 21
+            "[Sarvadhārin=,   サルヴァダーリン=,     _IAST_=]", # 22
+            "[Virodhin=,      ヴィローディン=,       _IAST_=]", # 23
+            "[Vikṛta=,        ヴィクリタ=,           _IAST_=]", # 24
+            "[Khara=,         カラ=,                 _IAST_=]", # 25
+            "[Nandana=,       ナンダナ=,             _IAST_=]", # 26
+            "[Vijaya=,        ヴィジャヤ=,           _IAST_=]", # 27
+            "[Jaya=,          ジャヤ=,               _IAST_=]", # 28
+            "[Manmatha=,      マンマタ=,             _IAST_=]", # 29
+            "[Durmukha=,      ドゥルムカ=,           _IAST_=]", # 30
+            "[Hemalamba=,     ヘマラムバ=,           _IAST_=]", # 31
+            "[Vilambin=,      ヴィラムビン=,         _IAST_=]", # 32
+            "[Vikārin=,       ヴィカーリン=,         _IAST_=]", # 33
+            "[Śārvarin=,      シャールヴァリン=,     _IAST_=]", # 34
+            "[Plava=,         プラヴァ=,             _IAST_=]", # 35
+            "[Śubhakṛt=,      シュバクリト=,         _IAST_=]", # 36
+            "[Śobhana=,       ショバナ=,             _IAST_=]", # 37
+            "[Krodhin=,       クロディン=,           _IAST_=]", # 38
+            "[Viśvāvasu=,     ヴィシュヴァーヴァス=, _IAST_=]", # 39
+            "[Parābhava=,     パラーバヴァ=,         _IAST_=]", # 40
+            "[Plavaṅga=,      プラヴァンガ=,         _IAST_=]", # 41
+            "[Kīlaka=,        キーラカ=,             _IAST_=]", # 42
+            "[Saumya=,        サウムヤ=,             _IAST_=]", # 43
+            "[Sādhāraṇa=,     サーダーラナ=,         _IAST_=]", # 44
+            "[Virodhakṛt=,    ヴィローダクリト=,     _IAST_=]", # 45
+            "[Paridhāvin=,    パリダーヴィン=,       _IAST_=]", # 46
+            "[Pramādin=,      プラマーディン=,       _IAST_=]", # 47
+            "[Ānanda=,        アーナンダ=,           _IAST_=]", # 48
+            "[Rākṣasa=,       ラークシャサ=,         _IAST_=]", # 49
+            "[Anala=,         アナラ=,               _IAST_=]", # 50
+            "[Piṅgala=,       ピンガラ=,             _IAST_=]", # 51
+            "[Kālayukta=,     カーラユクタ=,         _IAST_=]", # 52
+            "[Siddhārthin=,   シッダールティン=,     _IAST_=]", # 53
+            "[Raudra=,        ラウドラ=,             _IAST_=]", # 54
+            "[Durmati=,       ドゥルマティ=,         _IAST_=]", # 55
+            "[Dundubhi=,      ドゥンドゥビ=,         _IAST_=]", # 56
+            "[Rudhirodgārin=, ルディロードガーリン=, _IAST_=]", # 57
+            "[Raktākṣin=,     ラクタークシン=,       _IAST_=]", # 58
+            "[Krodhana=,      クローダナ=,           _IAST_=]", # 59
+            "[Kṣaya=,         クシャヤ=,             _IAST_=]"  # 60
           ]
         ],
 
@@ -862,110 +862,110 @@ module When
 
           [When::BasicTypes::M17n,
             "names:[tithi=, ティティ=ja:%%<ティティ>]",
-            "[Amavasya,                   新月,  _IAST_]", # 新月
-            "[Pratipad=en:Prathama_(day), １日=, _IAST_]", #  1
-            "[Dwitiya,                    ２日=, _IAST_]", #  2
-            "[Tritiya,                    ３日=, _IAST_]", #  3
-            "[Chaturthi,                  ４日=, _IAST_]", #  4
-            "[Panchami,                   ５日=, _IAST_]", #  5
-            "[Ṣaṣṭhī=en:Shashti,          ６日=, _IAST_]", #  6
-            "[Saptami,                    ７日=, _IAST_]", #  7
-            "[Ashtami,                    ８日=, _IAST_]", #  8
-            "[Navami,                     ９日=, _IAST_]", #  9
-            "[Dashami,                    10日=, _IAST_]", # 10
-            "[Ekadashi,                   11日=, _IAST_]", # 11
-            "[Dwadashi,                   12日=, _IAST_]", # 12
-            "[Thrayodashi,                13日=, _IAST_]", # 13
-            "[Chaturdashi,                14日=, _IAST_]", # 14
-            "[Purnima,                    満月,  _IAST_]"  # 満月
+            "[Amavasya,                   新月,  _IAST_=]", # 新月
+            "[Pratipad=en:Prathama_(day), １日=, _IAST_=]", #  1
+            "[Dwitiya,                    ２日=, _IAST_=]", #  2
+            "[Tritiya,                    ３日=, _IAST_=]", #  3
+            "[Chaturthi,                  ４日=, _IAST_=]", #  4
+            "[Panchami,                   ５日=, _IAST_=]", #  5
+            "[Ṣaṣṭhī=en:Shashti,          ６日=, _IAST_=]", #  6
+            "[Saptami,                    ７日=, _IAST_=]", #  7
+            "[Ashtami,                    ８日=, _IAST_=]", #  8
+            "[Navami,                     ９日=, _IAST_=]", #  9
+            "[Dashami,                    10日=, _IAST_=]", # 10
+            "[Ekadashi,                   11日=, _IAST_=]", # 11
+            "[Dwadashi,                   12日=, _IAST_=]", # 12
+            "[Thrayodashi,                13日=, _IAST_=]", # 13
+            "[Chaturdashi,                14日=, _IAST_=]", # 14
+            "[Purnima,                    満月,  _IAST_=]"  # 満月
           ],
 
           [When::BasicTypes::M17n,
-            "names:[vāra=, ヴァーラ=, _IAST_, *vara=]",
-            "[Ravi=en:S%C5%ABrya, 日曜日, _IAST_]",
-            "[Soma,               月曜日, _IAST_]",
-            "[Maṅgala=en:Mangala, 火曜日, _IAST_]",
-            "[Budha,              水曜日, _IAST_]",
-            "[Guru,               木曜日, _IAST_]",
-            "[Śukra=en:Shukra,    金曜日, _IAST_]",
-            "[Śani=en:Shani,      土曜日, _IAST_]" 
+            "names:[vāra=, ヴァーラ=, _IAST_=, *vara=]",
+            "[Ravi=en:S%C5%ABrya, 日曜日, _IAST_=]",
+            "[Soma,               月曜日, _IAST_=]",
+            "[Maṅgala=en:Mangala, 火曜日, _IAST_=]",
+            "[Budha,              水曜日, _IAST_=]",
+            "[Guru,               木曜日, _IAST_=]",
+            "[Śukra=en:Shukra,    金曜日, _IAST_=]",
+            "[Śani=en:Shani,      土曜日, _IAST_=]" 
           ],
 
           [When::BasicTypes::M17n,
-            "names:[nakṣatra=, ナクシャトラ=, _IAST_, *naksatra=]",
-            "[Aśvinī=en:Ashvin%C4%AB,                           アシュヴィニー=,     _IAST_, 婁宿]", #  1
-            "[Bharaṇī=en:Bharan%C4%AB,                          バラニー=,           _IAST_, 胃宿]", #  2
-            "[Kṛttikā=en:Krittik%C4%81,                         クリッティカー=,     _IAST_, 昴宿]", #  3
-            "[Rohiṇī=en:Rohini_(nakshatra),                     ローヒニ―=,         _IAST_, 畢宿]", #  4
-            "[Mṛgaśiras=en:Mrigash%C4%ABrsha,                   ムリガシラス=,       _IAST_, 觜宿]", #  5
-            "[Ārdrā=en:Ardra_(nakshatra),                       アールドラー=,       _IAST_, 參宿]", #  6
-            "[Punarvasu=en:Punarvasu,                           プナルヴァス=,       _IAST_, 井宿]", #  7
-            "[Puṣya=en:Pushya,                                  プシュヤ=,           _IAST_, 鬼宿]", #  8
-            "[Aśleṣā=en:%C4%80shlesh%C4%81,                     アーシュレーシャー=, _IAST_, 柳宿]", #  9
-            "[Maghā=en:Magh%C4%81,                              マガー=,             _IAST_, 星宿]", # 10
-            "[Pū. Phalguṇī=en:P%C5%ABrva_Phalgun%C4%AB,         P. パールグニー=,    _IAST_, 張宿]", # 11
-            "[U. Phalguṇī=en:Uttara_Phalgun%C4%AB,              U. パールグニー=,    _IAST_, 翼宿]", # 12
-            "[Hasta=en:Nakshatra#Divisions,                     ハスタ=,             _IAST_, 軫宿]", # 13
-            "[Citrā=en:Nakshatra#Divisions,                     チトラー=,           _IAST_, 角宿]", # 14
-            "[Svāti=en:Sv%C4%81t%C4%AB,                         スヴァーティー=,     _IAST_, 亢宿]", # 15
-            "[Viśākha=en:Vish%C4%81kh%C4%81,                    ヴィシャーカー=,     _IAST_, 氐宿]", # 16
-            "[Anurādhā=en:Anur%C4%81dh%C4%81,                   アヌラーダー=,       _IAST_, 房宿]", # 17
-            "[Jyeṣṭha=en:Jyeshtha,                              ジェーシュター=,     _IAST_, 心宿]", # 18
-            "[Mūla=en:Mula_(astrology),                         ムーラ=,             _IAST_, 尾宿]", # 19
-            "[Pū. āṣāḍha=en:P%C5%ABrva_Ash%C4%81dh%C4%81,       P. アーシャーダー=,  _IAST_, 箕宿]", # 20
-            "[U. āṣāḍha=en:Uttara_Ash%C4%81dh%C4%81,            U. アーシャーダー=,  _IAST_, 斗宿]", # 21
-            "[Śravaṇa=en:Shravana,                              シュラヴァナ=,       _IAST_, 女宿]", # 22
-            "[Śraviṣṭhā=en:Dhanishta,                           ダニシュター=,       _IAST_, 虛宿]", # 23
-            "[Śatabhiṣak=en:Shatabhish%C4%81,                   シャタビシャジュ=,   _IAST_, 危宿]", # 24
-            "[Pū. Bhādrapadā=en:P%C5%ABrva_Bh%C4%81drapad%C4%81,P. バードラパダー=,  _IAST_, 室宿]", # 25
-            "[U. Bhādrapadā=en:Uttara_Bh%C4%81drapad%C4%81,     U. バードラパダー=,  _IAST_, 壁宿]", # 26
-            "[Revatī=en:Revati_(nakshatra),                     レーヴァティー=,     _IAST_, 奎宿]"  # 27
+            "names:[nakṣatra=, ナクシャトラ=, _IAST_=, *naksatra=]",
+            "[Aśvinī=en:Ashvin%C4%AB,                           アシュヴィニー=,     _IAST_=, 婁宿]", #  1
+            "[Bharaṇī=en:Bharan%C4%AB,                          バラニー=,           _IAST_=, 胃宿]", #  2
+            "[Kṛttikā=en:Krittik%C4%81,                         クリッティカー=,     _IAST_=, 昴宿]", #  3
+            "[Rohiṇī=en:Rohini_(nakshatra),                     ローヒニ―=,         _IAST_=, 畢宿]", #  4
+            "[Mṛgaśiras=en:Mrigash%C4%ABrsha,                   ムリガシラス=,       _IAST_=, 觜宿]", #  5
+            "[Ārdrā=en:Ardra_(nakshatra),                       アールドラー=,       _IAST_=, 參宿]", #  6
+            "[Punarvasu=en:Punarvasu,                           プナルヴァス=,       _IAST_=, 井宿]", #  7
+            "[Puṣya=en:Pushya,                                  プシュヤ=,           _IAST_=, 鬼宿]", #  8
+            "[Aśleṣā=en:%C4%80shlesh%C4%81,                     アーシュレーシャー=, _IAST_=, 柳宿]", #  9
+            "[Maghā=en:Magh%C4%81,                              マガー=,             _IAST_=, 星宿]", # 10
+            "[Pū. Phalguṇī=en:P%C5%ABrva_Phalgun%C4%AB,         P. パールグニー=,    _IAST_=, 張宿]", # 11
+            "[U. Phalguṇī=en:Uttara_Phalgun%C4%AB,              U. パールグニー=,    _IAST_=, 翼宿]", # 12
+            "[Hasta=en:Nakshatra#Divisions,                     ハスタ=,             _IAST_=, 軫宿]", # 13
+            "[Citrā=en:Nakshatra#Divisions,                     チトラー=,           _IAST_=, 角宿]", # 14
+            "[Svāti=en:Sv%C4%81t%C4%AB,                         スヴァーティー=,     _IAST_=, 亢宿]", # 15
+            "[Viśākha=en:Vish%C4%81kh%C4%81,                    ヴィシャーカー=,     _IAST_=, 氐宿]", # 16
+            "[Anurādhā=en:Anur%C4%81dh%C4%81,                   アヌラーダー=,       _IAST_=, 房宿]", # 17
+            "[Jyeṣṭha=en:Jyeshtha,                              ジェーシュター=,     _IAST_=, 心宿]", # 18
+            "[Mūla=en:Mula_(astrology),                         ムーラ=,             _IAST_=, 尾宿]", # 19
+            "[Pū. āṣāḍha=en:P%C5%ABrva_Ash%C4%81dh%C4%81,       P. アーシャーダー=,  _IAST_=, 箕宿]", # 20
+            "[U. āṣāḍha=en:Uttara_Ash%C4%81dh%C4%81,            U. アーシャーダー=,  _IAST_=, 斗宿]", # 21
+            "[Śravaṇa=en:Shravana,                              シュラヴァナ=,       _IAST_=, 女宿]", # 22
+            "[Śraviṣṭhā=en:Dhanishta,                           ダニシュター=,       _IAST_=, 虛宿]", # 23
+            "[Śatabhiṣak=en:Shatabhish%C4%81,                   シャタビシャジュ=,   _IAST_=, 危宿]", # 24
+            "[Pū. Bhādrapadā=en:P%C5%ABrva_Bh%C4%81drapad%C4%81,P. バードラパダー=,  _IAST_=, 室宿]", # 25
+            "[U. Bhādrapadā=en:Uttara_Bh%C4%81drapad%C4%81,     U. バードラパダー=,  _IAST_=, 壁宿]", # 26
+            "[Revatī=en:Revati_(nakshatra),                     レーヴァティー=,     _IAST_=, 奎宿]"  # 27
           ],
 
           [When::BasicTypes::M17n,
-            "names:[yoga=, ヨーガ=, _IAST_]",
-            "[Viṣkambha=, ヴィシュカムバ=,   _IAST_]", #  1
-            "[Prīti=,     プリーティ=,       _IAST_]", #  2
-            "[Āyuśmān=,   アーユシュマー=,   _IAST_]", #  3
-            "[Saubhāgya=, サウバーギャ=,     _IAST_]", #  4
-            "[Śobhana=,   ショーバナ=,       _IAST_]", #  5
-            "[Atigaṇḍa=,  アティガンダ=,     _IAST_]", #  6
-            "[Sukarma=,   スカルマ=,         _IAST_]", #  7
-            "[Dhṛti,      ドゥリティ=,       _IAST_]", #  8
-            "[Śūla=,      シューラ=,         _IAST_]", #  9
-            "[Gaṇḍa=,     ガンダ=,           _IAST_]", # 10
-            "[Vṛddhi=,    ヴリッディ=,       _IAST_]", # 11
-            "[Dhruva=,    ドルヴァ=,         _IAST_]", # 12
-            "[Vyāghāta=,  ヴヤーガータ=,     _IAST_]", # 13
-            "[Harṣaṇa=,   ハルシャナ=,       _IAST_]", # 14
-            "[Vajra=,     ヴァジュラ=,       _IAST_]", # 15
-            "[Siddhi=,    シッディ=,         _IAST_]", # 16
-            "[Vyatīpāta=, ヴヤティーパータ=, _IAST_]", # 17
-            "[Varīyas=,   ヴァリーヤス=,     _IAST_]", # 18
-            "[Parigha=,   パリガ=,           _IAST_]", # 19
-            "[Śiva=,      シヴァ=,           _IAST_]", # 20
-            "[Siddha=,    シッダ=,           _IAST_]", # 21
-            "[Sādhya=,    サーディヤ=,       _IAST_]", # 22
-            "[Śubha=,     シュバ=,           _IAST_]", # 23
-            "[Śukla=,     シュクラ=,         _IAST_]", # 24
-            "[Brahman=,   ブラフマン=,       _IAST_]", # 25
-            "[Māhendra=,  マーヘンドラ=,     _IAST_]", # 26
-            "[Vaidhṛti=,  ヴァイドリティ=,   _IAST_]"  # 27
+            "names:[yoga=, ヨーガ=, _IAST_=]",
+            "[Viṣkambha=, ヴィシュカムバ=,   _IAST_=]", #  1
+            "[Prīti=,     プリーティ=,       _IAST_=]", #  2
+            "[Āyuśmān=,   アーユシュマー=,   _IAST_=]", #  3
+            "[Saubhāgya=, サウバーギャ=,     _IAST_=]", #  4
+            "[Śobhana=,   ショーバナ=,       _IAST_=]", #  5
+            "[Atigaṇḍa=,  アティガンダ=,     _IAST_=]", #  6
+            "[Sukarma=,   スカルマ=,         _IAST_=]", #  7
+            "[Dhṛti,      ドゥリティ=,       _IAST_=]", #  8
+            "[Śūla=,      シューラ=,         _IAST_=]", #  9
+            "[Gaṇḍa=,     ガンダ=,           _IAST_=]", # 10
+            "[Vṛddhi=,    ヴリッディ=,       _IAST_=]", # 11
+            "[Dhruva=,    ドルヴァ=,         _IAST_=]", # 12
+            "[Vyāghāta=,  ヴヤーガータ=,     _IAST_=]", # 13
+            "[Harṣaṇa=,   ハルシャナ=,       _IAST_=]", # 14
+            "[Vajra=,     ヴァジュラ=,       _IAST_=]", # 15
+            "[Siddhi=,    シッディ=,         _IAST_=]", # 16
+            "[Vyatīpāta=, ヴヤティーパータ=, _IAST_=]", # 17
+            "[Varīyas=,   ヴァリーヤス=,     _IAST_=]", # 18
+            "[Parigha=,   パリガ=,           _IAST_=]", # 19
+            "[Śiva=,      シヴァ=,           _IAST_=]", # 20
+            "[Siddha=,    シッダ=,           _IAST_=]", # 21
+            "[Sādhya=,    サーディヤ=,       _IAST_=]", # 22
+            "[Śubha=,     シュバ=,           _IAST_=]", # 23
+            "[Śukla=,     シュクラ=,         _IAST_=]", # 24
+            "[Brahman=,   ブラフマン=,       _IAST_=]", # 25
+            "[Māhendra=,  マーヘンドラ=,     _IAST_=]", # 26
+            "[Vaidhṛti=,  ヴァイドリティ=,   _IAST_=]"  # 27
           ],
 
           [When::BasicTypes::M17n,
-            "names:[Karaṇa=, カラナ=, _IAST_, *karana]",
-            "[Bava=,      バヴァ=,           _IAST_]", # 1
-            "[Bālava=,    バーラヴァ=,       _IAST_]", # 2
-            "[Kaulava=,   カウラヴァ=,       _IAST_]", # 3
-            "[Taitila=,   タイティラ=,       _IAST_]", # 4
-            "[Gara=,      ガラ=,             _IAST_]", # 5
-            "[Vaṇija=,    ヴァニジュ=,       _IAST_]", # 6
-            "[Viṣṭi=,     ヴィシュティ=,     _IAST_]", # 7
-            "[Kiṃtughna=, キンストゥグナ=,   _IAST_]", # A
-            "[Śakuni=,    シャクニ=,         _IAST_]", # B
-            "[Catuṣpāda=, チャトシュパダ=,   _IAST_]", # C
-            "[Nāga=,      ナーガ=,           _IAST_]"  # D
+            "names:[Karaṇa=, カラナ=, _IAST_=, *karana]",
+            "[Bava=,      バヴァ=,           _IAST_=]", # 1
+            "[Bālava=,    バーラヴァ=,       _IAST_=]", # 2
+            "[Kaulava=,   カウラヴァ=,       _IAST_=]", # 3
+            "[Taitila=,   タイティラ=,       _IAST_=]", # 4
+            "[Gara=,      ガラ=,             _IAST_=]", # 5
+            "[Vaṇija=,    ヴァニジュ=,       _IAST_=]", # 6
+            "[Viṣṭi=,     ヴィシュティ=,     _IAST_=]", # 7
+            "[Kiṃtughna=, キンストゥグナ=,   _IAST_=]", # A
+            "[Śakuni=,    シャクニ=,         _IAST_=]", # B
+            "[Catuṣpāda=, チャトシュパダ=,   _IAST_=]", # C
+            "[Nāga=,      ナーガ=,           _IAST_=]"  # D
           ]
         ]
       ]]

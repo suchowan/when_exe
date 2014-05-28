@@ -8,9 +8,9 @@
 module When
   module Locale
 
-    # from https://raw.github.com/svenfuchs/rails-i18n/master/rails/locale/en-IN.yml
+    # from https://raw.github.com/svenfuchs/rails-i18n/master/rails/locale/en-ZA.yml
 
-    Locale_en_IN =
+    Locale_en_ZA =
 {"date"=>
   {"abbr_day_names"=>["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
    "abbr_month_names"=>
@@ -35,7 +35,7 @@ module When
      "Thursday",
      "Friday",
      "Saturday"],
-   "formats"=>{"default"=>"%d-%m-%Y", "long"=>"%B %d, %Y", "short"=>"%b %d"},
+   "formats"=>{"default"=>"%Y-%m-%d", "long"=>"%B %d, %Y", "short"=>"%b %d"},
    "month_names"=>
     [nil,
      "January",

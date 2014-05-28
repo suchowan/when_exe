@@ -5,7 +5,8 @@
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
 
-module When::Parts::Locale
+module When
+  module Locale
 
     # from https://raw.github.com/svenfuchs/rails-i18n/master/rails/locale/he.yml
 
@@ -14,7 +15,7 @@ module When::Parts::Locale
   {"abbr_day_names"=>["א", "ב", "ג", "ד", "ה", "ו", "ש"],
    "abbr_month_names"=>
     [nil,
-     "יאנ",
+     "ינו",
      "פבר",
      "מרץ",
      "אפר",
@@ -79,4 +80,5 @@ module When::Parts::Locale
      "month"=>"חודש",
      "second"=>"שניות",
      "year"=>"שנה"}}}
+  end
 end

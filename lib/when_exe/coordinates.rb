@@ -115,7 +115,7 @@ module When::Coordinates
         week  = When.Resource('_co:CommonResidue::Week').child
         case day
         when Numeric ; return week[day]
-        when String  ; day = When::Parts::Encoding.to_internal_encoding(day)
+        when String  ; day = When::EncodingConversion.to_internal_encoding(day)
         else         ; return nil
         end
 
@@ -718,7 +718,7 @@ module When::Coordinates
         end
         raise TypeError, "Trunk must be Hash" unless @trunk.kind_of?(Hash)
         @trunk.values.each do |v|
-          @keys |= v.keys if v.kind_of?(When::Parts::Locale)
+          @keys |= v.keys if v.kind_of?(When::Locale)
         end
       end
       if (@branch)
@@ -731,7 +731,7 @@ module When::Coordinates
         end
         raise TypeError, "Branch must be Hash" unless @branch.kind_of?(Hash)
         @branch.values.each do |v|
-          @keys |= v.keys if v.kind_of?(When::Parts::Locale)
+          @keys |= v.keys if v.kind_of?(When::Locale)
         end
       end
       @trunk_branch = {}
@@ -1976,7 +1976,7 @@ module When::Coordinates
       @note ||= 'DefaultNotes'
 
       # keys
-      @keys = @indices.inject(label.instance_of?(When::Parts::Locale) ? label.keys : []) {|key, index| key |= index.keys}
+      @keys = @indices.inject(label.instance_of?(When::Locale) ? label.keys : []) {|key, index| key |= index.keys}
     end
 
     # 何もしない

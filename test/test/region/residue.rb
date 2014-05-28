@@ -105,7 +105,7 @@ module Test
      #  'HinduLuniSolar?type=SBSZA',
         'SolarHejri',
         'Jewish',
-        'ThaiB',
+        'Thai',
       # 'ThaiC',
         'Tibetan',
       ]

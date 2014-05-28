@@ -5,7 +5,8 @@
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
 
-module When::Parts::Locale
+module When
+  module Locale
 
     # from https://raw.github.com/svenfuchs/rails-i18n/master/rails/locale/tl.yml
 
@@ -79,7 +80,7 @@ module When::Parts::Locale
      "about_x_months"=>
       {"one"=>"humigit-kumulang isang buwan",
        "other"=>"humigit-kumulang %{count} buwan"},
-     "x_months"=>{"one"=>"isang buwan", "other"=>"%{count} buwang"},
+     "x_months"=>{"one"=>"isang buwan", "other"=>"%{count} buwan"},
      "about_x_years"=>
       {"one"=>"humigit-kumulang isang taon",
        "other"=>"humigit-kumulang %{count} taon"},
@@ -94,4 +95,5 @@ module When::Parts::Locale
      "hour"=>"oras",
      "minute"=>"minuto",
      "second"=>"segundo"}}}
+  end
 end

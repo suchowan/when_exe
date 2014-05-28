@@ -123,7 +123,7 @@ module Test
       end
 
       def test__x0301_5_3_1
-        When::TM::Clock.local_time = When.utc
+        When::TM::Clock.local_time = When::UTC
 
         [                                                             # 5.3.1 地方時の時刻
          ["T232050",                [ 3, "T23:20:50"          ]],     #  1 完全表記 基本形式
