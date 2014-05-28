@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
+
+require 'when_exe/locales/transliteration_table'
 
 module When
   module Locale
@@ -84,32 +86,5 @@ module When
       'hi' => _IAST_Part_I.invert
     }
 
-    # @private
-    IAST_keys = Hash[*(IAST.keys.map {|locale|
-      [locale, Regexp.new((IAST[locale].keys.sort_by {|key| -key.length} + ['%.*?[A-Za-z]']).join('|'))]
-    }).flatten]
-
-    #
-    # Convert IAST string to indic scripts
-    #
-    def self.iast(string, locale='hi')
-      string.gsub(IAST_keys[locale]) {|code|
-        IAST[locale][code] || code
-      }
-    end
-
-    # @private
-    IASTR_keys = Hash[*(IASTR.keys.map {|locale|
-      [locale, Regexp.new((IASTR[locale].keys.sort_by {|key| -key.length} + ['%.*?[A-Za-z]']).join('|'))]
-    }).flatten]
-
-    #
-    # Convert indic scripts to IAST string
-    #
-    def self.iastr(string, locale='hi')
-      string.gsub(IASTR_keys[locale]) {|code|
-        IASTR[locale][code] || code
-      }
-    end
   end
 end

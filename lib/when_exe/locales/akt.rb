@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2014 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
+
+require 'when_exe/locales/transliteration_table'
 
 module When
   module Locale
@@ -140,12 +142,10 @@ module When
     }
 
     # @private
-    AKT_keys = Hash[*(AKT.keys.map {|locale|
-      [locale, Regexp.new((AKT[locale].keys.sort_by {|key| -key.length} + ['%.*?[A-Za-z]']).join('|'))]
-    }).flatten]
+    AKT_keys    = transliteration_keys_hash(AKT)
 
     # @private
-    IAST_K_keys = Regexp.new((IAST_K.keys.sort_by {|key| -key.length} + ['%.*?[A-Za-z]']).join('|'))
+    IAST_K_keys = transliteration_keys(IAST_K)
 
     #
     # Convert AKT string to katakana scripts
