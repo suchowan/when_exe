@@ -1060,7 +1060,7 @@ module When::CalendarTypes
     #
     # @return [Integer] 通日
     #
-    def _coordinates_to_number(yy, mm=0, dd=0)
+    def _coordinates_to_number(yy, mm, dd)
       _new_month(_new_year_month(+yy) + mm) + dd
     end
 

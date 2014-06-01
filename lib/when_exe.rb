@@ -106,6 +106,16 @@ module When
       update(TimeStandard._setup_info)
     end
 
+    #
+    # When 直下に定数として定義する時法・暦法(明示的的追加)
+    #
+    # @private
+    def _define_common_calendar_types(list=%w(UTC Gregorian Julian Civil))
+      list.each do |calendar|
+        const_set(calendar, Parts::Resource._instance(calendar, '_c:'))
+      end
+    end
+
     alias :_const_missing :const_missing
 
     #
@@ -147,7 +157,6 @@ module When
   require 'when_exe/calendarnote'
   require 'when_exe/region/m17n'
   require 'when_exe/region/residue'
-  require 'when_exe/region/christian'
   require 'when_exe/inspect'
 
   #
@@ -185,6 +194,7 @@ module When
     autoload :FrenchTerms,           'when_exe/region/french'
     autoload :WorldTerms,            'when_exe/region/world'
     autoload :ShireTerms,            'when_exe/region/shire'
+    autoload :YermTerms,             'when_exe/region/yerm'
     autoload :MartianTerms,          'when_exe/region/martian'
   end
 
@@ -213,6 +223,10 @@ module When
     autoload :HinduSolar,            'when_exe/region/indian'
     autoload :HinduLuniSolar,        'when_exe/region/indian'
     autoload :SolarHejri,            'when_exe/region/iranian'
+    autoload :Zoroastrian,           'when_exe/region/zoroastrian'
+    autoload :Qadimi,                'when_exe/region/zoroastrian'
+    autoload :Shahanshahi,           'when_exe/region/zoroastrian'
+    autoload :Fasli,                 'when_exe/region/zoroastrian'
     autoload :Bahai,                 'when_exe/region/bahai'
     autoload :TabularIslamic,        'when_exe/region/islamic'
     autoload :EphemerisBasedIslamic, 'when_exe/region/islamic'
@@ -223,11 +237,14 @@ module When
     autoload :JulianB,               'when_exe/region/roman'
     autoload :JulianC,               'when_exe/region/roman'
     autoload :Roman,                 'when_exe/region/roman'
+    autoload :Gregorian,             'when_exe/region/christian'
     autoload :FrenchRepublican,      'when_exe/region/french'
     autoload :World,                 'when_exe/region/world'
     autoload :LongCount,             'when_exe/region/mayan'
     autoload :Shire,                 'when_exe/region/shire'
     autoload :ShireG,                'when_exe/region/shire'
+    autoload :Yerm,                  'when_exe/region/yerm'
+    autoload :Goddess,               'when_exe/region/goddess'
     autoload :Darian,                'when_exe/region/martian'
 
     _time_systems = {
@@ -249,6 +266,7 @@ module When
     autoload :JapaneseNote,          'when_exe/region/japanese/notes'
     autoload :BalineseNote,          'when_exe/region/balinese'
     autoload :RomanNote,             'when_exe/region/roman'
+    autoload :YermNotes,             'when_exe/region/yerm'
     autoload :WorldWeek,             'when_exe/region/world'
     autoload :ShireWeek,             'when_exe/region/shire'
 
@@ -782,6 +800,24 @@ module When
   end
   alias :IRI :Resource
 
+  # When::Coordinates::Index の生成
+  #
+  # @overload Index(terms=nil, name='Month', options)
+  #   @param [String] terms trunk の用語空間名
+  #   @param [String] name  trunk の要素配列名
+  #   @param [Hash] options
+  #   @option options [Array]   :trunk  幹の要素(省略時は使用しない)
+  #   @option options [Hash]    :branch 枝の要素(省略時は使用しない)
+  #   @option options [Integer] :unit   要素の数(省略時は不定)
+  #   @option options [Integer] :base   要素の最初の添え字(0 or 1(デフォルト))
+  #   @option options [Integer] :shift  幹の要素のローテート数(省略時はローテートしない)
+  #
+  # @return [When::Coordinates::Index]
+  #
+  def Index(*args)
+    Coordinates::Index.new(*args)
+  end
+
   # When::Coordinates::Pair の生成
   #
   # @param [Numeric, String] trunk  幹の要素
@@ -794,10 +830,7 @@ module When
     Coordinates::Pair._force_pair(trunk, branch)
   end
 
-  #
-  # When 直下に定数として定義する時法・暦法(明示的的追加)
-  #
-  %w(UTC Julian Gregorian Civil).each do |calendar|
-    const_set(calendar, Parts::Resource._instance(calendar, '_c:'))
-  end
+  # When 直下に定数として時法・暦法を定義する
+  _define_common_calendar_types
+
 end

@@ -696,20 +696,18 @@ module When::Coordinates
     private
 
     def _normalize(args=[], options={})
-      label, unit, base, trunk, shift, branch = args
-      label ||= @label
-      unit  ||= @unit
-      base  ||= @base  || 1
-      shift ||= @shift || 0
-      @label  = m17n(label, nil, nil, @options) if label
-      @unit   = unit.to_i if unit
-      @base   = base.to_i
-      @trunk  = trunk  if trunk
-      @shift  = shift.to_i
-      @branch = branch if branch
+      terms, name = args
+      if terms
+        @trunk = When::Parts::Resource._instance("_m:#{terms}Terms::#{name||'Month'}::*")
+        @trunk = @trunk.map {|m| m.label} if @trunk[0].kind_of?(When::Coordinates::Residue)
+      end
+      @label  = m17n(@label, nil, nil, @options) if @label
+      @unit   = @unit.to_i if @unit
+      @base   = (@base  || 1).to_i
+      @shift  = (@shift || 0).to_i
       @keys   = []
-      if (@trunk)
-        if (@trunk.kind_of?(Array))
+      if @trunk
+        if @trunk.kind_of?(Array)
           m17n = {}
           @trunk.length.times do |i|
             m17n[(i-@shift) % @trunk.length + @base] = @trunk[i]
@@ -721,8 +719,8 @@ module When::Coordinates
           @keys |= v.keys if v.kind_of?(When::Locale)
         end
       end
-      if (@branch)
-        if (@branch.kind_of?(Array))
+      if @branch
+        if @branch.kind_of?(Array)
           m17n = {}
           @branch.length.times do |i|
             m17n[i] = @branch[i]
@@ -1979,6 +1977,17 @@ module When::Coordinates
       @keys = @indices.inject(label.instance_of?(When::Locale) ? label.keys : []) {|key, index| key |= index.keys}
     end
 
+    def _default_index_of_MSC
+      unless @index_of_MSC
+        [:_coordinates_to_number, :_coordinates_to_number_].each do |to_n|
+          if respond_to?(to_n)
+            @index_of_MSC = @indices.length - method(to_n).arity + 1
+            break
+          end
+        end
+      end
+    end
+
     # 何もしない
     def _return_nil(source); nil end
     alias :_from_index :_return_nil
@@ -2047,12 +2056,21 @@ module When::Coordinates
     def method_missing(name, *args, &block)
       unless When::Parts::MethodCash::Escape.key?(name)
         if note.respond_to?(name)
-          instance_eval %Q{
-            def #{name}(*args, &block)
-              @note.send("#{name}", *(args + [self]), &block)
-            end
-          } unless When::Parts::MethodCash.escape(name)
-          return @note.send(name, *(args + [self]), &block)
+          if note.class::CalendarDepend
+            instance_eval %Q{
+              def #{name}(*args, &block)
+                @note.send("#{name}", *(args + [self]), &block)
+              end
+            } unless When::Parts::MethodCash.escape(name)
+            return @note.send(name, *(args + [self]), &block)
+          else
+            instance_eval %Q{
+              def #{name}(*args, &block)
+                @note.send("#{name}", *args, &block)
+              end
+            } unless When::Parts::MethodCash.escape(name)
+            return @note.send(name, *args, &block)
+          end
         end
         ['SolarTerms', 'LunarPhases'].each do |note|
           if When.CalendarNote(note).respond_to?(name)

@@ -202,6 +202,11 @@ module When
       end
     end
 
+    #
+    # 暦法によってイベントの動作を変えるか否か
+    #
+    CalendarDepend = false
+
     # デフォルトイベント名
     #
     # @return [String]

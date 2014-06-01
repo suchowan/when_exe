@@ -290,6 +290,7 @@ module When::TM
       @indices  ||= DefaultDateIndices
       _normalize_spatial
       _normalize_time_basis
+      _default_index_of_MSC
       _normalize_temporal
       @reference_frame ||= []
     end

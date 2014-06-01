@@ -1196,8 +1196,9 @@ module When
         # 準備
         precision = [precision, 1 - @cal_date.length].max
         precision = [precision, DAY].min
-        terms  = []
-        ext_dg = [(@extra_year_digits||1).to_i, 0].max
+        terms   = []
+        ext_dg  = [(@extra_year_digits||1).to_i, 0].max
+        year_dg = @frame.indices.length <= 2 ? 4 : 2
 
         # 年
         year_by_epoch = @cal_date[0]
@@ -1206,14 +1207,14 @@ module When
           year_in_term        = reverse ? -year_by_epoch : year_by_epoch
           year_by_calendar    = epoch + year_by_epoch if epoch
           terms  << year_in_term
-          format = (0..99) === (year_in_term * 1) ? "%02d." : "%04d."
+          format = (0..99) === (year_in_term * 1) ? "%02d." : "%0#{year_dg}d."
           if year_by_calendar && year_by_calendar != year_in_term
             terms  << (year_by_calendar * 1)
-            format += "(%04d)"
+            format += "(%0#{year_dg}d)"
           end
         else
           terms  << year_by_epoch
-          format = (0..9999) === (year_by_epoch * 1) ? "%04d." : "%+0#{5+ext_dg}d."
+          format = (0..(10**year_dg-1)) === (year_by_epoch * 1) ? "%0#{year_dg}d." : "%+0#{5+ext_dg}d."
         end
 
         # 月日
@@ -1227,7 +1228,7 @@ module When
         date = Pair._format([format] + terms)
         date.sub!(/([^\d])\(([-+\d]+)\)/, '(\2)\1') if era
         date = date[0..-2] unless @frame.pair[precision-1] || date[-1..-1] != '.'
-        date.gsub!(/\./, '-') if (@frame.indices.length <= DefaultDateIndices.length) && !era
+        date.gsub!(/\./, '-') if (@frame.indices.length <= 3) && !era
         return date
       end
     end

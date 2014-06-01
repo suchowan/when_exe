@@ -27,6 +27,7 @@ module When
         # @option options [String, Array<String, Integer>] :era_name デフォルトの年号(Integerは0年に対応する通年)
         # @option options [Array<Numeric>] :abbr 上位省略形式で使用する上位部分
         # @option options [Integer] :extra_year_digits ISO8601拡大表記のための年の構成要素拡大桁数(省略時 1桁)
+        # @option options [Integer] :ordinal_date_digits ISO8601拡大表記の年内通日の桁数(省略時 3桁)
         #
         # @return [Array] format, date, time, clock, era
         #
@@ -147,6 +148,11 @@ module When
           end
       }
 
+      # @private
+      Ordinal_Date_Digits = Hash.new {|hash, key|
+        hash[key] = /^(\d{#{(key || 3).to_i}})$/
+      }
+
       class << self
         # ISO 8601 基本形式の表現を分解して配列化する
         def _to_array_basic_ISO8601(date, options={})
@@ -220,7 +226,7 @@ module When
             dd << Coordinates::Pair._en_pair(_completion($1, abbr.shift), $2)
             dd << Coordinates::Pair._en_pair($3, $4)
             return :week, dd
-          when /^(\d{3})$/
+          when Ordinal_Date_Digits[options[:ordinal_date_digits]]
             dd << $1.to_i
             return :day, dd
           when /^(\d+#{abbr[0] ? '|-' : ''})([-+*&%@!>=<?.])?$/

@@ -11,28 +11,28 @@ module Test
   class Mayan < Test::Unit::TestCase
     def test__mayan_epoch
       # No offset
-      [['PHLC13.0.0.0.0', 'PHLC13(0000).00.00.00.00', 584283],
-       ['HLC0.0.0.0.1',   'HLC00.00.00.00.01',        584284],
-       ['HLC13.0.0.0.0',  'HLC13.00.00.00.00',       2456283],
-       ['HLC13.0.0.0.1',  'NLC00(0013).00.00.00.01', 2456284]].each do |sample|
+      [['PHLC13.0.0.0.0', 'PHLC13(00).00.00.00.00',  584283],
+       ['HLC0.0.0.0.1',   'HLC00.00.00.00.01',       584284],
+       ['HLC13.0.0.0.0',  'HLC13.00.00.00.00',      2456283],
+       ['HLC13.0.0.0.1',  'NLC00(13).00.00.00.01',  2456284]].each do |sample|
         date = When.when?(sample.shift)
         assert_equal(sample, [date.to_s, date.to_i])
       end
 
       # offset 0B
-      [['LongCount?Epoch=0D::PHLC13.0.0.0.0', 'LongCount?Epoch=0D::PHLC13(0000).00.00.00.00', 584283],
-       ['LongCount?Epoch=0D::HLC0.0.0.0.1',   'LongCount?Epoch=0D::HLC00.00.00.00.01',        584284],
-       ['LongCount?Epoch=0D::HLC13.0.0.0.0',  'LongCount?Epoch=0D::HLC13.00.00.00.00',       2456283],
-       ['LongCount?Epoch=0D::HLC13.0.0.0.1',  'LongCount?Epoch=0D::NLC00(0013).00.00.00.01', 2456284]].each do |sample|
+      [['LongCount?Epoch=0D::PHLC13.0.0.0.0', 'LongCount?Epoch=0D::PHLC13(00).00.00.00.00',  584283],
+       ['LongCount?Epoch=0D::HLC0.0.0.0.1',   'LongCount?Epoch=0D::HLC00.00.00.00.01',       584284],
+       ['LongCount?Epoch=0D::HLC13.0.0.0.0',  'LongCount?Epoch=0D::HLC13.00.00.00.00',      2456283],
+       ['LongCount?Epoch=0D::HLC13.0.0.0.1',  'LongCount?Epoch=0D::NLC00(13).00.00.00.01',  2456284]].each do |sample|
         date = When.when?(sample.shift)
         assert_equal(sample, [date.to_s, date.to_i])
       end
 
       # offset 2B
-      [['LongCount?Epoch=2D::PHLC13.0.0.0.0', 'LongCount?Epoch=2D::PHLC13(0000).00.00.00.00', 584285],
-       ['LongCount?Epoch=2D::HLC0.0.0.0.1',   'LongCount?Epoch=2D::HLC00.00.00.00.01',        584286],
-       ['LongCount?Epoch=2D::HLC13.0.0.0.0',  'LongCount?Epoch=2D::HLC13.00.00.00.00',       2456285],
-       ['LongCount?Epoch=2D::HLC13.0.0.0.1',  'LongCount?Epoch=2D::NLC00(0013).00.00.00.01', 2456286]].each do |sample|
+      [['LongCount?Epoch=2D::PHLC13.0.0.0.0', 'LongCount?Epoch=2D::PHLC13(00).00.00.00.00',  584285],
+       ['LongCount?Epoch=2D::HLC0.0.0.0.1',   'LongCount?Epoch=2D::HLC00.00.00.00.01',       584286],
+       ['LongCount?Epoch=2D::HLC13.0.0.0.0',  'LongCount?Epoch=2D::HLC13.00.00.00.00',      2456285],
+       ['LongCount?Epoch=2D::HLC13.0.0.0.1',  'LongCount?Epoch=2D::NLC00(13).00.00.00.01',  2456286]].each do |sample|
         date = When.when?(sample.shift)
         assert_equal(sample, [date.to_s, date.to_i])
       end

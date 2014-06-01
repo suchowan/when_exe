@@ -124,7 +124,6 @@ module When
         'T' => {'Rule'  =>[360]},
         360 => {'Length'=>[20] * 18}
       },
-      'index_of_MSC' => 2,
       'indices'=> [_c20, _c20, _c18, _c20],
       'note'   => 'MayanNotes#{?Epoch=Epoch}'
     }]

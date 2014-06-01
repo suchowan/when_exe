@@ -50,7 +50,7 @@ module When
       "names:[Bahai]",
 
       [Residue,
-        "label:[YearName]", "divisor:19", "year:0", "format:[%1$s(%3$d)]",
+        "label:[YearName]", "divisor:19", "year:0", "format:[%1$s(%3$d)=]",
         [Residue, "label:[Alif=,   ألف=,   A=            ]", "remainder:  0"],
         [Residue, "label:[Bá=,     باء=,   B=            ]", "remainder:  1"],
         [Residue, "label:[Ab=,     أب=,    Father=       ]", "remainder:  2"],
@@ -121,7 +121,6 @@ module When
                                         :branch=>{+1=>When.Resource('_m:BahaiTerms::Month::*')[19]}}),
           When::Coordinates::DefaultDayIndex
         ]
-        @index_of_MSC  ||= 2
         @origin_of_MSC ||= -1844 + 19*19
         @rule_table    ||= {
           365 => {'Length'=>[19] * 18 + [4, 19], 'IDs'=>ID},

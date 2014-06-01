@@ -482,3 +482,21 @@ class Array
   end
   alias :pair :to_pair
 end
+
+#
+# Extensions to Module class
+#
+class Module
+  unless method_defined?(:_const_missing)
+    alias :_const_missing :const_missing
+
+    #
+    # When 直下に定数として定義する時法・暦法(暗黙的追加)
+    #
+    def const_missing(name)
+      return _const_missing(name) if When.const_defined?(name) ||
+                                    !When::CalendarTypes.const_defined?(name)
+      When.const_set(name, When::Parts::Resource._instance(name.to_s, '_c:'))
+    end
+  end
+end

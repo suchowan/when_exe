@@ -8,6 +8,92 @@
 
 module Test
 
+  class ChristianVariation < Test::Unit::TestCase
+
+    def verify_built_in_date(calendar, start, length)
+      date = Date.new(start, 1, 1)
+      diff = {}
+      while date.year < start + length
+        cal_date = [date.year, date.month, date.day]
+        cal_jdn  = date.jd
+        fdate = When.TemporalPosition(date.year, date.month, date.day, {:frame=>calendar})
+        rdate = calendar ^ cal_jdn
+        [fdate, rdate].each do |tdate|
+          [[cal_date, tdate.cal_date], [cal_jdn, tdate.to_i]].each do |verify|
+            unless verify.uniq.size == 1
+              diff[cal_date] ||= []
+              diff[cal_date] << verify[1]
+            end
+          end
+        end
+        date = yield(date)
+      end
+      diff
+    end
+
+    def test__verify_to_built_in_date
+
+      sample = [{}, {}, {}, {}, {}, {[2900, 1, 1]=>[2780263, [2900, 1, 2]]}]
+
+      %w(Gregorian RevisedJulian).each do |name|
+        calendar = When.Calendar(name)
+        assert_equal(sample.shift, verify_built_in_date(calendar, 1900,  8) {|date| date  +    1})
+        assert_equal(sample.shift, verify_built_in_date(calendar, 2000,400) {|date| date >>    1})
+        assert_equal(sample.shift, verify_built_in_date(calendar, 2400,900) {|date| date >> 1200})
+      end
+    end
+
+    def test__gregorian_date
+
+      calendar = When.Calendar('Gregorian')
+
+      dates = [When.when?('1900-02-28', {:frame=>calendar})]
+      9.times do
+        dates << dates.last + When::DurationP1Y * 100
+      end
+      assert_equal([2415079, 2451603, 2488128, 2524652, 2561176,
+                    2597700, 2634225, 2670749, 2707273, 2743797], dates.map {|date| date.to_i})
+      assert_equal(%w(1900-02-28 2000-02-28 2100-02-28 2200-02-28 2300-02-28
+                      2400-02-28 2500-02-28 2600-02-28 2700-02-28 2800-02-28), dates.map {|date| (calendar ^ date.to_i).to_s})
+      assert_equal([28, 29, 28, 28, 28, 29, 28, 28, 28, 29], dates.map {|date| date.length(When::MONTH)})
+
+      dates = [When.when?('1900-03-01', {:frame=>calendar})]
+      9.times do
+        dates << dates.last + When::DurationP1Y * 100
+      end
+      assert_equal([2415080, 2451605, 2488129, 2524653, 2561177,
+                    2597702, 2634226, 2670750, 2707274, 2743799], dates.map {|date| date.to_i})
+      assert_equal(%w(1900-03-01 2000-03-01 2100-03-01 2200-03-01 2300-03-01
+                      2400-03-01 2500-03-01 2600-03-01 2700-03-01 2800-03-01), dates.map {|date| (calendar ^ date.to_i).to_s})
+      assert_equal([1], dates.map {|date| calendar._century_from_jdn(date.to_i) - calendar._century_from_jdn(date.to_i-1)}.uniq)
+    end
+
+    def test__revised_julian_date
+
+      calendar = When.Calendar('RevisedJulian')
+
+      dates = [When.when?('1900-02-28', {:frame=>calendar})]
+      9.times do
+        dates << dates.last + When::DurationP1Y * 100
+      end
+      assert_equal([2415079, 2451603, 2488128, 2524652, 2561176,
+                    2597700, 2634225, 2670749, 2707273, 2743797], dates.map {|date| date.to_i})
+      assert_equal(%w(1900-02-28 2000-02-28 2100-02-28 2200-02-28 2300-02-28
+                      2400-02-28 2500-02-28 2600-02-28 2700-02-28 2800-02-28), dates.map {|date| (calendar ^ date.to_i).to_s})
+      assert_equal([28, 29, 28, 28, 28, 29, 28, 28, 28, 28], dates.map {|date| date.length(When::MONTH)})
+
+      dates = [When.when?('1900-03-01', {:frame=>calendar})]
+      9.times do
+        dates << dates.last + When::DurationP1Y * 100
+      end
+      assert_equal([2415080, 2451605, 2488129, 2524653, 2561177,
+                    2597702, 2634226, 2670750, 2707274, 2743798], dates.map {|date| date.to_i})
+      assert_equal(%w(1900-03-01 2000-03-01 2100-03-01 2200-03-01 2300-03-01
+                      2400-03-01 2500-03-01 2600-03-01 2700-03-01 2800-03-01), dates.map {|date| (calendar ^ date.to_i).to_s})
+      assert_equal([1], dates.map {|date| calendar._century_from_jdn(date.to_i) - calendar._century_from_jdn(date.to_i-1)}.uniq)
+    end
+  end
+
   class Civil < Test::Unit::TestCase
     def test__border
       frame = When.Calendar('Civil?reform=1752-9-14&border=0-3-25(1753)0-1-1')

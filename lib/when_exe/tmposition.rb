@@ -275,6 +275,7 @@ module When::TM
       # @option options [String] :tz 時法の指定(時間帯を指定する場合 :clock の替わりに用いることができる)
       # @option options [Array<Numeric>] :abbr ISO8601上位省略形式のためのデフォルト日付(省略時 指定なし)
       # @option options [Integer] :extra_year_digits ISO8601拡大表記のための年の構成要素拡大桁数(省略時 1桁)
+      # @option options [Integer] :ordinal_date_digits ISO8601拡大表記の年内通日の桁数(省略時 3桁)
       # @option options [String] :wkst ISO8601週日形式のための暦週開始曜日(省略時 'MO')
       # @option options [Integer] :precision 生成するオブジェクトの分解能
       # @option options [When::TimeStandard::TimeStandard] :time_standard 時刻系の指定(省略時 When::TimeStandard::UnversalTime)
@@ -440,7 +441,7 @@ module When::TM
         clock = Clock.get_clock_option(query)
         main[:clock] = clock if clock
         [:indeterminated_position, :frame, :events, :precision,
-         :era_name, :era, :abbr, :extra_year_digits, :wkst, :time_standard, :location].each do |key|
+         :era_name, :era, :abbr, :extra_year_digits, :ordinal_date_digits, :wkst, :time_standard, :location].each do |key|
           main[key] = query.delete(key) if (query.key?(key))
         end
         long = query.delete(:long)

@@ -162,8 +162,9 @@ module When::Parts
       # 初期化
       #
       # @param [Hash] options 以下の通り
-      # @option options [String] :base_uri Base URI for When_exe Resources (Default When::SourceURI)
-      # @option options [String] :root_dir Root Directory for When_exe Resources Cash data (Default When::RootDir)
+      # @option options [String]  :base_uri Base URI for When_exe Resources (Default When::SourceURI)
+      # @option options [String]  :root_dir Root Directory for When_exe Resources Cash data (Default When::RootDir)
+      # @option options [Boolean] :leave_const If true, leave Constants of When module defined
       #
       # @return [void]
       #
@@ -196,6 +197,15 @@ module When::Parts
         @root_dir       = options[:root_dir] || When::RootDir
         @_prefix_values = @_prefix.values.sort.reverse
         @_prefix_index  = @_prefix.invert
+        unless options[:leave_const]
+          list = When.constants & When::CalendarTypes.constants
+          if list.size > 0
+            list.each do |constant|
+              When.send(:remove_const, constant)
+            end
+            When._define_common_calendar_types
+          end
+        end
       end
 
       # 設定情報を取得する
