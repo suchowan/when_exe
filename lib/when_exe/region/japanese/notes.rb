@@ -5,7 +5,7 @@
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
 
-require 'when_exe/region/ephemeric_notes'
+require 'when_exe/ephemeris/notes'
 require 'when_exe/region/japanese/residues'
 
 class When::CalendarNote

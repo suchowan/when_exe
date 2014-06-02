@@ -260,9 +260,9 @@ module When
   end
 
   class CalendarNote
-    autoload :SolarTerms,            'when_exe/region/ephemeric_notes'
-    autoload :LunarPhases,           'when_exe/region/ephemeric_notes'
-    autoload :EphemericNote,         'when_exe/region/ephemeric_notes'
+    autoload :SolarTerms,            'when_exe/ephemeris/notes'
+    autoload :LunarPhases,           'when_exe/ephemeris/notes'
+    autoload :EphemericNote,         'when_exe/ephemeris/notes'
     autoload :JapaneseNote,          'when_exe/region/japanese/notes'
     autoload :BalineseNote,          'when_exe/region/balinese'
     autoload :RomanNote,             'when_exe/region/roman'
