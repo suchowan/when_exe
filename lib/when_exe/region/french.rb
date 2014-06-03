@@ -8,10 +8,10 @@
 module When
   class BasicTypes::M17n
 
-    FrenchTerms = [self, [
+    French = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
-      "names:[FrenchTerms=]",
+      "names:[French=]",
 
       [self,
         "names:[Month, 月=ja:%%<月_(暦)>]",
@@ -51,7 +51,7 @@ module When
     #
     FrenchRepublican =  [YearLengthTableBased, {
       'indices' => [
-         When::Coordinates::Index.new({:unit =>13, :trunk=>When.Resource('_m:FrenchTerms::Month::*')}),
+         When.Index('French::Month', {:unit =>13}),
          When::Coordinates::DefaultDayIndex
        ],
        'origin_of_MSC' => +1,

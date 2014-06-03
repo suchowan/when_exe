@@ -12,9 +12,8 @@ module When
   module CalendarTypes
 
     _Indices = [
-      Coordinates::Index.new({:branch=>{1=>When.Resource('_m:CalendarTerms::閏')},
-                              :trunk=>When.Resource('_m:ChineseTerms::Month::*')}),
-      Coordinates::DefaultDayIndex
+      When.Index('Chinese::Month', {:branch=>{1=>When.Resource('_m:Calendar::閏')}}),
+      When::Coordinates::DefaultDayIndex
     ]
 
     _year1884 = {

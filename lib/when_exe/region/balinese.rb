@@ -8,10 +8,10 @@
 module When
   class BasicTypes::M17n
 
-    BalineseTerms = [self, [
+    Balinese = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
-      "names:[BalineseTerms=]",
+      "names:[Balinese=]",
       "[BalineseLuniSolar=, バリ・サカ暦=]",
       "[Tenganan=, テンガナン暦=]",
 
@@ -90,40 +90,40 @@ module When
       # 2日週
       # @return [When::BasicTypes::M17n]
       def dwiwara
-        When.CalendarNote('BalineseNote/NoteObjects')['day']['Dwiwara'][Dwiwara[@remainder % 35]]
+        When.CalendarNote('Balinese/Notes')['day']['Dwiwara'][Dwiwara[@remainder % 35]]
       end
 
       # 4日週
       # @return [When::BasicTypes::M17n]
       def tjaturwara
         index = (@remainder + 137) % 210
-        When.CalendarNote('BalineseNote/NoteObjects')['day']['Tjaturwara'][index >= 208 ? 2 : (index-1) % 4]
+        When.CalendarNote('Balinese/Notes')['day']['Tjaturwara'][index >= 208 ? 2 : (index-1) % 4]
       end
 
       # 8日週
       # @return [When::BasicTypes::M17n]
       def astawara
         index = (@remainder + 137) % 210
-        When.CalendarNote('BalineseNote/NoteObjects')['day']['Astawara'][index >= 208 ? 6 : (index-1) % 8]
+        When.CalendarNote('Balinese/Notes')['day']['Astawara'][index >= 208 ? 6 : (index-1) % 8]
       end
 
       # 9日週
       # @return [When::BasicTypes::M17n]
       def sangawara
         index = @remainder - 3
-        When.CalendarNote('BalineseNote/NoteObjects')['day']['Sangawara'][index < 0 ? 0 : index % 9]
+        When.CalendarNote('Balinese/Notes')['day']['Sangawara'][index < 0 ? 0 : index % 9]
       end
 
       # 10日週
       # @return [When::BasicTypes::M17n]
       def dasawara
-        When.CalendarNote('BalineseNote/NoteObjects')['day']['Dasawara'][Dasawara[@remainder % 35]]
+        When.CalendarNote('Balinese/Notes')['day']['Dasawara'][Dasawara[@remainder % 35]]
       end
 
       # Watek
       # @return [When::BasicTypes::M17n]
       def watek
-        When.CalendarNote('BalineseNote/NoteObjects')['day']['Watek'][Watek[@remainder % 35]]
+        When.CalendarNote('Balinese/Notes')['day']['Watek'][Watek[@remainder % 35]]
       end
     end
   end
@@ -192,19 +192,18 @@ module When
       #
       def _normalize(args=[], options={})
 
-        intercalary_month = When.Resource('_m:BalineseTerms::IntercalaryMonth::*')
-        intercalary_day   = When.Resource('_m:BalineseTerms::IntercalaryDay::*')
-        month_index = Coordinates::Index.new({:branch=>{ 0   => intercalary_month[0],  #   白分
-                                                        +0.5 => intercalary_month[1],  #   黒分
-                                                        +1   => intercalary_month[2],  # 閏白分
-                                                        +1.5 => intercalary_month[3]}, # 閏黒分
-                                              :trunk=>When.Resource('_m:BalineseTerms::HinduMonth::*'),
-                                              :shift=>+8})
+        intercalary_month = When.Resource('_m:Balinese::IntercalaryMonth::*')
+        intercalary_day   = When.Resource('_m:Balinese::IntercalaryDay::*')
+        month_index = When.Index('Balinese::HinduMonth', {:branch=>{ 0   => intercalary_month[0],  #   白分
+                                                                    +0.5 => intercalary_month[1],  #   黒分
+                                                                    +1   => intercalary_month[2],  # 閏白分
+                                                                    +1.5 => intercalary_month[3]}, # 閏黒分
+                                                          :shift=>+8})
 
         @origin_of_MSC = 0
 
         @tabular = CyclicTableBased.new({
-          'indices'    => [month_index, Coordinates::Index.new],
+          'indices'    => [month_index, When::Coordinates::DefaultDayIndex],
           'rule_table' => @rule_table
         })
 
@@ -218,9 +217,9 @@ module When
            'lunation_length' => '945/32'
         })]
 
-        @indices    = [month_index, Coordinates::Index.new({:branch=>{-2=>intercalary_day[0]}})]
+        @indices    = [month_index, When.Index({:branch=>{-2=>intercalary_day[0]}})]
 
-        @note       = When.CalendarNote(@note || 'BalineseNote')
+        @note       = When.CalendarNote(@note || 'Balinese')
         super
       end
     end
@@ -277,11 +276,11 @@ module When
     # Tenganan Calendar
     #
     Tenganan = [CyclicTableBased, {
-      'label' => When.Resource('_m:BalineseTerms::Tenganan'),
+      'label'         => 'Balinese::Tenganan',
       'origin_of_LSC' =>  1095 * 1573 - 381,
       'origin_of_MSC' =>  1,
       'indices' => [
-         When::Coordinates::Index.new({:trunk=>When.Resource('_m:BalineseTerms::TengananMonth::*')}),
+         When.Index('Balinese::TengananMonth'),
          When::Coordinates::DefaultDayIndex
        ],
       'rule_table' => {
@@ -296,9 +295,9 @@ module When
   #
   # バリ暦の暦注
   #
-  class CalendarNote::BalineseNote < CalendarNote
+  class CalendarNote::Balinese < CalendarNote
 
-    NoteObjects = [When::BasicTypes::M17n, [
+    Notes = [When::BasicTypes::M17n, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[Balinese]",
@@ -567,18 +566,18 @@ module When
     # When::Coordinates::Residue へ処理を委譲する暦注
     #
     # @private
-    When.CalendarNote('BalineseNote/NoteObjects')['day::*'].each do |cood|
+    When.CalendarNote('Balinese/Notes')['day::*'].each do |cood|
       case cood
       when Coordinates::Residue
         module_eval %Q{
           def #{cood.label.to_s.downcase}(date, parameter=nil)
-            When.CalendarNote('BalineseNote/NoteObjects')['day']['#{cood.label.to_s}'] % date
+            When.CalendarNote('Balinese/Notes')['day']['#{cood.label.to_s}'] % date
           end
         }
       when BasicTypes::M17n
         module_eval %Q{
           def #{cood.to_s.downcase}(date, parameter=nil)
-            (When.CalendarNote('BalineseNote/NoteObjects')['day']['Wuku'] % date).#{cood.to_s.downcase}
+            (When.CalendarNote('Balinese/Notes')['day']['Wuku'] % date).#{cood.to_s.downcase}
           end
         }
       end
@@ -608,7 +607,7 @@ module When
       thiti     = [d * 1 - 1]
       thiti[0] += 15 unless [0,1,nil].include?(m * 0)
       thiti << (thiti[0] + 1) % 30 if d * 0 == -2
-      table = When.CalendarNote('BalineseNote/NoteObjects')['day']['Hari']
+      table = When.CalendarNote('Balinese/Notes')['day']['Hari']
       thiti.map {|t| table[t / 15][t % 15]}.join('/')
     end
 

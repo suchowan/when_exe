@@ -8,10 +8,10 @@
 module When
   class BasicTypes::M17n
 
-    JapaneseTerms = [self, [
+    Japanese = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
-      "names:[JapaneseTerms=]",
+      "names:[Japanese=]",
 
       [self,
         "names:[Month, 月=ja:%%<月_(暦)>]",

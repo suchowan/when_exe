@@ -32,7 +32,7 @@ module Test
     end
 
     def test__kanshi
-      ['_co:CommonResidue', 'examples/Residue.m17n'].each do |iri|
+      ['_co:Common', 'examples/Residue.m17n'].each do |iri|
         assert_equal("Week", When.Resource(iri + '::Week').label)
         assert_equal("Monday", When.Resource(iri + '::Week::Monday').label)
         assert_equal(7, When.Resource(iri + '::Week::Friday').divisor)
@@ -109,7 +109,7 @@ module Test
       # 'ThaiC',
         'Tibetan',
       ]
-      eto   = When.Resource('_co:CommonResidue::干支').to('year')
+      eto   = When.Resource('_co:Common::干支').to('year')
       today = When.when?('2012-06-13')
       assert_equal([[28, 246778, 246778]],
         cals.map { |cal|

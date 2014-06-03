@@ -9,10 +9,10 @@ module When
 
   class BasicTypes::M17n
 
-    CopticTerms = [self, [
+    Coptic = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
-      "names:[CopticTerms=]",
+      "names:[Coptic=]",
       "[Coptic=en:Coptic_calendar,       コプト暦    ]",
       "[Ethiopian=en:Ethiopian_calendar, エチオピア暦=en:Ethiopian_calendar]",
 
@@ -55,25 +55,25 @@ module When
   module CalendarTypes
 
     _egyptian_month_indices  = [
-      When::Coordinates::Index.new({:unit =>13, :trunk=>When::Parts::Resource._instance('_m:CopticTerms::EgyptianMonth::*')}),
-      When::Coordinates::Index.new
+      When.Index('Coptic::EgyptianMonth', {:unit =>13}),
+      When::Coordinates::DefaultDayIndex
     ]
 
     _ethiopian_month_indices = [
-      When::Coordinates::Index.new({:unit =>13, :trunk=>When::Parts::Resource._instance('_m:CopticTerms::EthiopianMonth::*')}),
-      When::Coordinates::Index.new
+      When.Index('Coptic::EthiopianMonth', {:unit =>13}),
+      When::Coordinates::DefaultDayIndex
     ]
 
     #
     # Coptic Calendar in Egypt and Ethiopia
     #
     Coptic =  [{'Epoch'=>{'284Y'=>{'origin_of_MSC' =>   1,
-                                   'label'         => Parts::Resource._instance('_m:CopticTerms::Coptic'),
+                                   'label'         => 'Coptic::Coptic',
                                    'indices'       => _egyptian_month_indices},
                             '8Y'=>{'origin_of_MSC' => 277,
-                                   'label'         => Parts::Resource._instance('_m:CopticTerms::Ethiopian'),
+                                   'label'         => 'Coptic::Ethiopian',
                                    'indices'       => _ethiopian_month_indices}}}, CyclicTableBased, {
-      'label'         => Parts::Resource._instance('_m:CopticTerms::Coptic'),
+      'label'         => 'Coptic::Coptic',
       'origin_of_LSC' => 1825030,
       'origin_of_MSC' =>       1,
       'epoch_in_CE'   =>     285,

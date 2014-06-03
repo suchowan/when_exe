@@ -16,11 +16,10 @@ module When
     Japanese = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>454, 'origin_of_LSC'=>1886926,
       'indices'=> [
-           Coordinates::Index.new({:branch=>{1=>When.Resource('_m:CalendarTerms::閏')},
-                                   :trunk=>When.Resource('_m:JapaneseTerms::Month::*')}),
-           Coordinates::DefaultDayIndex
+           When.Index('Japanese::Month', {:branch=>{1=>When.Resource('_m:Calendar::閏')}}),
+           When::Coordinates::DefaultDayIndex
        ],
-      'note'      => 'JapaneseNote',
+      'note'      => 'Japanese',
       'rule_table'=> %w(
 							aBcDeFgHiJkL	aBCdEfGhIjKl
 	AbCcDeFGhIjKl	AbCdEfGhIjKL	aBcDeFgHiJkLl	AbCDeFgHiJkL	aBcDeFGhIjKl
@@ -345,11 +344,10 @@ module When
     Japanese0764 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>764, 'origin_of_LSC'=>2000146,
       'indices'=> [
-           Coordinates::Index.new({:branch=>{1=>When.Resource('_m:CalendarTerms::閏')},
-                                   :trunk=>When.Resource('_m:JapaneseTerms::Month::*')}),
-           Coordinates::DefaultDayIndex
+           When.Index('Japanese::Month', {:branch=>{1=>When.Resource('_m:Calendar::閏')}}),
+           When::Coordinates::DefaultDayIndex
        ],
-      'note'      => 'JapaneseNote',
+      'note'      => 'Japanese',
       'rule_table'=> %w(				aBCdEfGhiJkL	aBCdEFgHiJjkL
 	aBCdEfGHiJkL	abCdEfGHiJKl	AbcDeFfGHiJKl	AbCdeFghIJKL	aBcdEfgHiJKL
 	aBCcDefgHiJKl	ABCdeFgHijKL	aBcDEfGhIjkKL	aBcDEfGhIjkL	AbcDEfGHiJkL

@@ -19,6 +19,23 @@ module When::Parts
     LabelProperty = nil
 
     # @private
+    ConstTypes = {
+      'Terms'   => ['BasicTypes::M17n', '%s',     '_m:%s%s'      ],
+      'Era'     => ['TM::CalendarEra',  '%s',     '_e:%s%s'      ],
+      'Residue' => ['Coordinates',      '%s',     '_co:%s%s'     ],
+      'Week'    => ['CalendarNote',     '%sWeek', '_n:%sWeek%s'  ],
+      'Note'    => ['CalendarNote',     '%s',     '_n:%s%s'      ],
+      'Notes'   => ['CalendarNote',     '%s',     '_n:%s/Notes%s'],
+      nil       => ['CalendarTypes',    '%s',     '_c:%s%s'      ]
+    }
+
+    # @private
+    ConstList = []
+
+    # private
+    IRIHeader = /^[_a-z\d]+:[^:]/i
+
+    # @private
     class ContentLine
 
       RFC6350 = {
@@ -155,6 +172,26 @@ module When::Parts
         @root_dir ||= When::RootDir
       end
 
+      #
+      # 略称を iri に変換する
+      #
+      # @param [String or Symbol] abbreviation 略称
+      #
+      # @return [String] iri or nil
+      #
+      # @private
+      def _abbreviation_to_iri(abbreviation, abbreviation_types=ConstTypes)
+        abbreviation_types[:pattern] ||= /^([A-Z].*?)(#{abbreviation_types.keys.compact.join('|')})?(\?.+|::.+)?$/
+        abbreviation =~ abbreviation_types[:pattern]
+        return nil unless $1
+        klass, name, iri = abbreviation_types[$2]
+        if klass.kind_of?(String)
+          klass = klass.split('::').inject(When) {|k,n| k.const_get(n)}
+          abbreviation_types[$2][0] = klass
+        end
+        klass.const_defined?(name % $1) ? iri % [$1,$3] : nil
+      end
+
       # @private
       attr_reader :_prefix, :_prefix_values, :_prefix_index
       private     :_prefix, :_prefix_values, :_prefix_index
@@ -197,14 +234,12 @@ module When::Parts
         @root_dir       = options[:root_dir] || When::RootDir
         @_prefix_values = @_prefix.values.sort.reverse
         @_prefix_index  = @_prefix.invert
-        unless options[:leave_const]
-          list = When.constants & When::CalendarTypes.constants
-          if list.size > 0
-            list.each do |constant|
-              When.send(:remove_const, constant)
-            end
-            When._define_common_calendar_types
+        unless options[:leave_const] || ConstList.empty?
+          ConstList.delete_if do |constant|
+            When.send(:remove_const, constant) if When.const_defined?(constant)
+            true
           end
+          When._define_common_calendar_types
         end
       end
 
@@ -241,7 +276,7 @@ module When::Parts
         # 階層がある場合は、階層をたどる
         iri = Resource._decode(iri)
         iri = $1 while iri =~ /^\((.*)\)$/
-        iri = namespace + iri if namespace && iri !~ /^[_a-z\d]+:[^:]/i
+        iri = namespace + iri if namespace && iri !~ IRIHeader
         root, *leaves= Resource._encode(iri).split(/::/)
         if leaves.size > 0
           return leaves.inject(_instance(Resource._decode(root))) {|obj,leaf| obj[Resource._decode(leaf)]}
@@ -455,10 +490,10 @@ module When::Parts
       def _class(path)
         list = [When]
         path[Resource.base_uri.length..-1].split(/\//).each do |mod|
-          if list[0].const_defined?(mod)
+          if list[0].kind_of?(Module) && list[0].const_defined?(mod)
             list.unshift(list[0].const_get(mod))
           else
-            return nil unless (list[0] == When::V)
+            return nil unless list[0] == When::V
             list.unshift(When::V::Root)
             return list
           end

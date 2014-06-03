@@ -53,7 +53,7 @@ module When
     #
     # 暦注検索結果を保存するコンテナ
     #
-    module Notes
+    module NotesContainer
 
       class << self
         #
@@ -92,18 +92,18 @@ module When
       #
       # @param [Boolean] compact 余分な nil や空配列を除去するか否か
       #
-      # @return [Notes]
+      # @return [NotesContainer]
       #
       def simplify(compact=true)
         if kind_of?(Hash) && !key?(:note)
-          # Persistent Notes
+          # Persistent NotesContainer
           simplified = {}
           each_pair do |key, value|
-            value = value.simplify(compact) if value.kind_of?(Notes)
+            value = value.simplify(compact) if value.kind_of?(NotesContainer)
             simplified[key] = value if value
           end
         else
-          # Non-Persistent Notes
+          # Non-Persistent NotesContainer
           simplified = self
           simplified = _compact(simplified) if compact
           simplified = simplified[0] while simplified.kind_of?(Array) && simplified.size <= 1
@@ -122,13 +122,13 @@ module When
       #
       def value(compact=true, symbol=:value)
         if kind_of?(Hash) && !key?(:note)
-          # Persistent Notes
+          # Persistent NotesContainer
           sliced = {}
           each_pair do |key, val|
             sliced[key] = val[symbol]
           end
         else
-          # Non-Persistent Notes
+          # Non-Persistent NotesContainer
           return _bless(slice(symbol)) if symbol.kind_of?(Integer)
           sliced = _dig(self) {|target| target.fetch(symbol, nil)}
         end
@@ -157,16 +157,16 @@ module When
       #
       def subset(condition, compact=true)
         if kind_of?(Hash) && !key?(:note)
-          # Persistent Notes
+          # Persistent NotesContainer
           result = {}
           each_pair do |key, value|
-            value = value.subset(condition, compact) if value.kind_of?(Notes)
+            value = value.subset(condition, compact) if value.kind_of?(NotesContainer)
             result[key] = value if value
           end
         else
-          # Non-Persistent Notes
+          # Non-Persistent NotesContainer
           result = _dig(self) {|target|
-            (condition.each_pair {|key, pattern| break nil unless Notes.verify(pattern, target[key])}) ? target : nil
+            (condition.each_pair {|key, pattern| break nil unless NotesContainer.verify(pattern, target[key])}) ? target : nil
           }
           result = _compact(result) if compact
         end
@@ -176,10 +176,10 @@ module When
       private
 
       #
-      # 対象オブジェクトを Notes にする
+      # 対象オブジェクトを NotesContainer にする
       #
       def _bless(target)
-        target.extend(Notes) if target && !equal?(target)
+        target.extend(NotesContainer) if target && !equal?(target)
         target
       end
 
@@ -313,13 +313,13 @@ module When
     #                                        see {When::TM::TemporalPosition._instance}
     #
     # @note CalendarNoteオブジェクト生成時に _normalize メソッド内で @prime 変数を設定しておけば、
-    #       本メソッドの :prime オプションで参照される。(BalineseNote#_normalize等参照)
+    #       本メソッドの :prime オプションで参照される。(Balinese#_normalize等参照)
     #
-    # @note 暦注のビットアドレスは、暦注サブクラスのNoteObjects定数の中の定義順序による。
+    # @note 暦注のビットアドレスは、暦注サブクラスのNotes定数の中の定義順序による。
     #       When::CalendarNote クラスの場合 new の引数とした暦注要素リストの定義順序による。
     #       ビットアドレスの値が 1 の暦注が計算対象となる。
     #
-    # @return [Array<Array<Hash>>] 暦注計算結果(When::CalendarNote::Notesモジュールをextendしている)
+    # @return [Array<Array<Hash>>] 暦注計算結果(When::CalendarNote::NotesContainerモジュールをextendしている)
     #     [ :note  => 暦注要素 (When::Coordinates::Residue, String, When::BasicTypes::M17n) ]
     #     [ :value => 暦注の値 (When::Coordinates::Residue, String, When::BasicTypes::M17n, When::TM::TemporalPosition) ]
     #
@@ -331,9 +331,9 @@ module When
     #
     def notes(date, options={})
       dates, indices, notes, persistence, conditions, options = _parse_note(date, options)
-      retrieved = Notes.retrieve(persistence, date.to_i)
+      retrieved = NotesContainer.retrieve(persistence, date.to_i)
       return retrieved unless retrieved == false
-      Notes.register(indices.map {|i|
+      NotesContainer.register(indices.map {|i|
         next [] unless i <= date.precision
         _note_values(dates, notes[i-1], _all_keys[i-1], _elements[i-1]) do |dates, focused_notes, notes_hash|
           focused_notes.each do |note|
@@ -379,7 +379,7 @@ module When
       return false unless result.size > 0
       return true unless pattern
       result.each do |hash|
-        return true if Notes.verify(pattern, hash[:value])
+        return true if NotesContainer.verify(pattern, hash[:value])
       end
       return false
     end
@@ -414,8 +414,8 @@ module When
     # オブジェクトの正規化
     #
     def _normalize(args=[], options={})
-      @_elements = (args.size == 0 && self.class.const_defined?(:NoteObjects)) ?
-        When::Parts::Resource.base_uri + self.class.to_s.split(/::/)[1..-1].join('/') + '/NoteObjects' :
+      @_elements = (args.size == 0 && self.class.const_defined?(:Notes)) ?
+        When::Parts::Resource.base_uri + self.class.to_s.split(/::/)[1..-1].join('/') + '/Notes' :
         _to_iri(args, options[:prefix] || '_co:')
       if @_elements.kind_of?(Array)
         @_elements.each do |e|

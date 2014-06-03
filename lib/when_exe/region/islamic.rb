@@ -8,10 +8,10 @@
 module When
   class BasicTypes::M17n
 
-    IslamicTerms = [self, [
+    Islamic = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/, ar=http://ar.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, ar=ar:, alias]",
-      "names:[IslamicTerms=]",
+      "names:[Islamic=]",
       "[TabularIslamic=en:Islamic_calendar, イスラーム暦=ja:ヒジュラ暦]",
       "[EphemerisBasedIslamic=en:Islamic_calendar, イスラーム暦=ja:ヒジュラ暦]",
 
@@ -49,10 +49,10 @@ module When
     # Tabular Islamic Calendar
     #
     TabularIslamic =  [CyclicTableBased, {
-      'label' => When.Resource('_m:IslamicTerms::TabularIslamic'),
+      'label' => 'Islamic::TabularIslamic',
       'origin_of_LSC'  =>  1948440-354,
       'indices' => [
-         When::Coordinates::Index.new({:unit =>12, :trunk=>When.Resource('_m:IslamicTerms::Month::*')}),
+         When.Index('Islamic::Month', {:unit =>12}),
          When::Coordinates::DefaultDayIndex
        ],
       'rule_table'     => {
@@ -92,11 +92,11 @@ module When
       #    @cycle_offset   = Goldstein Number に対する暦元の補正
       #
       def _normalize(args=[], options={})
-        @label        ||= When.Resource('_m:IslamicTerms::EphemerisBasedIslamic')
+        @label        ||= 'Islamic::EphemerisBasedIslamic'
         @cycle_offset ||= 1671 * 12 + 4
         @indices      ||= [
-         When::Coordinates::Index.new({:unit =>12, :trunk=>When.Resource('_m:IslamicTerms::Month::*')}),
-         When::Coordinates::DefaultDayIndex
+          When.Index('Islamic::Month', {:unit =>12}),
+          When::Coordinates::DefaultDayIndex
         ]
         super
       end

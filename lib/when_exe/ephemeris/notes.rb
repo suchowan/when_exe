@@ -193,9 +193,9 @@ class When::CalendarNote
   #
   # 天体暦の暦注
   #
-  class EphemericNote < self
+  class Ephemeris < self
 
-    NoteObjects = [When::BasicTypes::M17n, [
+    Notes = [When::BasicTypes::M17n, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias=ja:]",
       "names:[Ephemeric]",
@@ -374,7 +374,7 @@ class When::CalendarNote
         @formula  = {}
       end
       @interval  = @interval.sub('@','.').to_f / 24 if @interval
-      @root      = When.CalendarNote('EphemericNote/NoteObjects::day')
+      @root      = When.CalendarNote('Ephemeris/Notes::day')
       @prime   ||= [%w(Month), %w(Sunrise Sunset Moon_Age)]
       super
     end

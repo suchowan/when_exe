@@ -352,7 +352,7 @@ ISO, jwiki=http://ja.wikipedia.org/wiki/, ewiki=http://en.wikipedia.org/wiki/
 NS
 =jwiki:, en=ewiki:
 LOCALE
-      Term3 = When.Resource('_co:CommonResidue::Week::Monday::Monday')
+      Term3 = When.Resource('_co:Common::Week::Monday::Monday')
 
       def test__code_space
         assert_equal('zip', Term1.codeSpace)

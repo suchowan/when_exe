@@ -9,10 +9,10 @@ module When
 
   class BasicTypes::M17n
 
-    ArmenianTerms = [self, [
+    Armenian = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
-      "names:[ArmenianTerms=]",
+      "names:[Armenian=]",
       "[Armenian=en:Armenian_calendar, アルメニア暦=]",
 
       [self,
@@ -40,13 +40,13 @@ module When
     # Armenian Calendar
     #
     Armenian =  [CyclicTableBased, {
-      'label'         => Parts::Resource._instance('_m:ArmenianTerms::Armenian'),
+      'label'         => 'Armenian::Armenian',
       'origin_of_LSC' => 1922868,
       'origin_of_MSC' =>       1,
       'epoch_in_CE'   =>     552,
       'indices'       => [
-        When::Coordinates::Index.new({:unit =>13, :trunk=>When::Parts::Resource._instance('_m:ArmenianTerms::Month::*')}),
-        When::Coordinates::Index.new
+        When.Index('Armenian::Month', {:unit =>13}),
+        When::Coordinates::DefaultDayIndex
       ],
       'rule_table' => {
         'T' => {'Rule'  =>[365]},

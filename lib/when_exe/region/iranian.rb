@@ -8,10 +8,10 @@
 module When
   class BasicTypes::M17n
 
-    IranianTerms = [self, [
+    Iranian = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/, ar=http://ar.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, ar=ar:, alias=ja:]",
-      "names:[IranianTerms=]",
+      "names:[Iranian=]",
       "[SolarHejri=en:Iranian_calendars#Modern_calendar_.28Solar_Hejri.29, ヘジラ太陽暦=ja:%%<イラン暦>]",
 
       [self,
@@ -48,9 +48,9 @@ module When
     # Solar Hejri Calendar
     #
     SolarHejri =  [YearLengthTableBased, {
-      'label'   => When.Resource('_m:IranianTerms::SolarHejri'),
+      'label'   => 'Iranian::SolarHejri',
       'indices' => [
-         When::Coordinates::Index.new({:unit =>12, :trunk=>When.Resource('_m:IranianTerms::Month::*')}),
+         When.Index('Iranian::Month', {:unit =>12}),
          When::Coordinates::DefaultDayIndex
        ],
        'origin_of_MSC' => -621,

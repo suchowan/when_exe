@@ -18,40 +18,23 @@
 module When
   class BasicTypes::M17n
 
-    ZoroastrianTerms = [self, [
+    Zoroastrian = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/, ar=http://ar.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, ar=ar:, alias=ja:]",
-      "names:[ZoroastrianTerms=]",
+      "names:[Zoroastrian=]",
       "[Zoroastrian=en:Zoroastrian_calendar#The_reckoning_of_years,   ゾロアスター暦=  ]",
       "[Qadimi=en:Zoroastrian_calendar#The_Qadimi_calendar ,          カディミ暦=      ]",
       "[Shahanshahi=en:Zoroastrian_calendar#The_Shahanshahi_calendar, シャハンシャヒ暦=]",
-      "[Fasli=en:Zoroastrian_calendar#The_Fasli_calendar ,            ファスリ暦=      ]",
-
-      [self,
-        "names:[Month, 月=ja:%%<月_(暦)>]",
-        "[Fravardin=   ]",
-        "[Ardibehest=  ]",
-        "[Khordad=     ]",
-        "[Tir=         ]",
-        "[Amardad=     ]",
-        "[Shehrevar=   ]",
-        "[Meher=       ]",
-        "[Avan=        ]",
-        "[Adar=        ]",
-        "[Dae=         ]",
-        "[Bahman=      ]",
-        "[Aspandarmad= ]",
-        "[Gatha Days=  ]"
-      ]
+      "[Fasli=en:Zoroastrian_calendar#The_Fasli_calendar ,            ファスリ暦=      ]"
     ]]
   end
 
   #
   # ゾロアスター暦の暦注
   #
-  class CalendarNote::ZoroastrianNote < CalendarNote
+  class CalendarNote::Zoroastrian < CalendarNote
 
-    NoteObjects = [When::BasicTypes::M17n, [
+    Notes = [When::BasicTypes::M17n, [
       "namespace:[en=http://en.wikipedia.org/wiki/]",
       "locale:[=en:]",
       "names:[Zoroastrian]",
@@ -65,7 +48,20 @@ module When
       [When::BasicTypes::M17n,
         "names:[month]",
         [When::BasicTypes::M17n,
-          "names:[Month]"
+          "names:[Month]",
+          "[Fravardin=   ]",
+          "[Ardibehest=  ]",
+          "[Khordad=     ]",
+          "[Tir=         ]",
+          "[Amardad=     ]",
+          "[Shehrevar=   ]",
+          "[Meher=       ]",
+          "[Avan=        ]",
+          "[Adar=        ]",
+          "[Dae=         ]",
+          "[Bahman=      ]",
+          "[Aspandarmad= ]",
+          "[Gatha Days=  ]"
         ]
       ],
 
@@ -122,7 +118,7 @@ module When
     #
     def divinity(date)
       y, m, d = date.cal_date
-      When.CalendarNote('ZoroastrianNote/NoteObjects::day::divinity::*')[m <= 12 ? d-1 : d+29]
+      When.CalendarNote('Zoroastrian/Notes::day::divinity::*')[m <= 12 ? d-1 : d+29]
     end
   end
 
@@ -132,9 +128,9 @@ module When
     # Zoroastrian Calendar
     #
     Zoroastrian =  [CyclicTableBased, {
-      'label'   => When.Resource('_m:ZoroastrianTerms::Zoroastrian'),
+      'label'   => 'Zoroastrian::Zoroastrian',
       'indices' => [
-         When::Coordinates::Index.new({:unit =>13, :trunk=>When.Resource('_m:ZoroastrianTerms::Month::*')}),
+         When.Index('ZoroastrianNotes::month::Month', {:unit =>13}),
          When::Coordinates::DefaultDayIndex
        ],
       'origin_of_MSC' => 1,
@@ -144,16 +140,16 @@ module When
         'T' => {'Rule'  =>[365]},
         365 => {'Length'=>[30]*12+[5]}
       },
-     'note' => 'ZoroastrianNote'
+     'note' => 'Zoroastrian'
     }]
 
     #
     # Qadimi Calendar
     #
     Qadimi =  [CyclicTableBased, {
-      'label'   => When.Resource('_m:ZoroastrianTerms::Qadimi'),
+      'label'   => 'Zoroastrian::Qadimi',
       'indices' => [
-         When::Coordinates::Index.new({:unit =>13, :trunk=>When.Resource('_m:ZoroastrianTerms::Month::*')}),
+         When.Index('ZoroastrianNotes::month::Month', {:unit =>13}),
          When::Coordinates::DefaultDayIndex
        ],
       'origin_of_MSC' => 1,
@@ -163,16 +159,16 @@ module When
         'T' => {'Rule'  =>[365]},
         365 => {'Length'=>[30]*12+[5]}
       },
-     'note' => 'ZoroastrianNote'
+     'note' => 'Zoroastrian'
     }]
 
     #
     # Shahanshahi Calendar
     #
     Shahanshahi =  [CyclicTableBased, {
-      'label'   => When.Resource('_m:ZoroastrianTerms::Shahanshahi'),
+      'label'   => 'Zoroastrian::Shahanshahi',
       'indices' => [
-         When::Coordinates::Index.new({:unit =>13, :trunk=>When.Resource('_m:ZoroastrianTerms::Month::*')}),
+         When.Index('ZoroastrianNotes::month::Month', {:unit =>13}),
          When::Coordinates::DefaultDayIndex
        ],
       'origin_of_MSC' => 1,
@@ -182,7 +178,7 @@ module When
         'T' => {'Rule'  =>[365]},
         365 => {'Length'=>[30]*12+[5]}
       },
-     'note' => 'ZoroastrianNote'
+     'note' => 'Zoroastrian'
     }]
 
     #
@@ -192,9 +188,9 @@ module When
                  'ZRE'=>{'origin_of_MSC'=>1737},
                  'YZ' =>{'origin_of_MSC'=>-630}
               }}, Bahai, {
-      'label'   => When.Resource('_m:ZoroastrianTerms::Fasli'),
+      'label'   => 'Zoroastrian::Fasli',
       'indices' => [
-         When::Coordinates::Index.new({:unit =>13, :trunk=>When.Resource('_m:ZoroastrianTerms::Month::*')}),
+         When.Index('ZoroastrianNotes::month::Month', {:unit =>13}),
          When::Coordinates::DefaultDayIndex
       ],
       'origin_of_MSC' => -630,
@@ -203,7 +199,7 @@ module When
         365 => {'Length'=>[30] * 12 + [5]},
         366 => {'Length'=>[30] * 12 + [6]}
       },
-      'note' => 'ZoroastrianNote'
+      'note' => 'Zoroastrian'
     }]
   end
 end

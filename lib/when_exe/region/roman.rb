@@ -9,10 +9,10 @@ module When
 
   class BasicTypes::M17n
 
-    RomanTerms = [self, [
+    Roman = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
-      "names:[RomanTerms=]",
+      "names:[Roman=]",
 
       [self, # ..CE-44 / ..BCE45
         "names:[MonthA, 月=ja:%%<月_(暦)>]",
@@ -124,9 +124,9 @@ module When
   module CalendarTypes
 
     # From http://en.wikipedia.org/wiki/Julian_calendar#Sacrobosco.27s_theory_on_month_lengths
-    _Index0     = Coordinates::DefaultDayIndex
-    _IndicesB12 = [Coordinates::Index.new({:unit=>12, :trunk=>When.Resource('_m:RomanTerms::MonthB::*')}), _Index0]
-    _Indices12  = [Coordinates::Index.new({:unit=>12, :trunk=>When.Resource('_m:RomanTerms::Month::*')}),  _Index0]
+    _Index0     = When::Coordinates::DefaultDayIndex
+    _IndicesB12 = [When.Index('Roman::MonthB', {:unit=>12}), _Index0]
+    _Indices12  = [When.Index('Roman::Month',  {:unit=>12}), _Index0]
 
     #
     # Julian Calendar A : BCE45-BCE8
@@ -140,7 +140,7 @@ module When
         365 => {'Length'=>[31,29] + [31,30]*5},
         366 => {'Length'=>[31,30] + [31,30]*5}
       },
-      'note' => 'RomanNote'
+      'note' => 'Roman'
     }]
 
     #
@@ -154,7 +154,7 @@ module When
         'T' => {'Rule'  =>[365]},
         365 => {'Length'=>[31,28] + [31,30,31,30,31]*2}
       },
-      'note' => 'RomanNote'
+      'note' => 'Roman'
     }]
 
     #
@@ -162,7 +162,7 @@ module When
     #
     JulianC =  [Julian, {
       'indices' => _Indices12,
-      'note' => 'RomanNote'
+      'note' => 'Roman'
     }]
 
     # From http://www.tyndalehouse.com/Egypt/ptolemies/chron/roman/chron_rom_intro_fr.htm
@@ -173,14 +173,14 @@ module When
     _ID_L = '1,2,2=,3,4,5,6,7,8,9,10,11,12'
     _ID_J = '1,2,2=,3,4,5,6,7,8,9,10,11,11<,11>,12'
     _Branch = {
-        1=>When.Resource('_m:RomanTerms::IntercalaryMonth::*')[0],
-      0.5=>When.Resource('_m:RomanTerms::IntercalaryMonth::*')[1],
-      1.5=>When.Resource('_m:RomanTerms::IntercalaryMonth::*')[2]
+        1=>When.Resource('_m:Roman::IntercalaryMonth::*')[0],
+      0.5=>When.Resource('_m:Roman::IntercalaryMonth::*')[1],
+      1.5=>When.Resource('_m:Roman::IntercalaryMonth::*')[2]
     }
-    _IndicesA = [Coordinates::Index.new({:branch=>_Branch, :trunk=>When.Resource('_m:RomanTerms::MonthA::*')}), _Index0]
-    _IndicesB = [Coordinates::Index.new({:branch=>_Branch, :trunk=>When.Resource('_m:RomanTerms::MonthB::*')}), _Index0]
-    _Indices  = [Coordinates::Index.new({:branch=>_Branch, :trunk=>When.Resource('_m:RomanTerms::Month::*')}),  _Index0]
-    _IndicesC = [Coordinates::Index.new({:branch=>_Branch, :trunk=>When.Resource('_m:RomanTerms::MonthC::*')}), _Index0]
+    _IndicesA = [When.Index('Roman::MonthA', {:branch=>_Branch}), _Index0]
+    _IndicesB = [When.Index('Roman::MonthB', {:branch=>_Branch}), _Index0]
+    _Indices  = [When.Index('Roman::Month',  {:branch=>_Branch}), _Index0]
+    _IndicesC = [When.Index('Roman::MonthC', {:branch=>_Branch}), _Index0]
     Options = {
       'origin_of_LSC'  =>  1625698,
       'origin_of_MSC'  =>  -261,
@@ -201,7 +201,7 @@ module When
         'N' => {'Length'=>[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]},
         'L' => {'Length'=>[31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]},
       },
-      'note' => 'RomanNote'
+      'note' => 'Roman'
     }
     RomanA =  [CyclicTableBased, Options.merge({'indices' => _IndicesA})]
     RomanB =  [CyclicTableBased, Options.merge({'indices' => _IndicesB})]
@@ -212,9 +212,9 @@ module When
   #
   # 古代ローマの暦注
   #
-  class CalendarNote::RomanNote < CalendarNote
+  class CalendarNote::Roman < CalendarNote
 
-    NoteObjects = [When::BasicTypes::M17n, [
+    Notes = [When::BasicTypes::M17n, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[Roman]",

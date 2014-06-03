@@ -9,10 +9,10 @@ module When
 
   class BasicTypes::M17n
 
-    ChineseTerms = [self, [
+    Chinese = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=ja:, en=en:, alias]",
-      "names:[ChineseTerms=]",
+      "names:[Chinese=]",
       "[中国太陽暦(節月)=ja:%%<二十四節気>#%.<暦月と節月>, *ChineseSolar=en:Solar_term]",
       "[中国太陰太陽暦=ja:%%<中国暦>, *ChineseLuniSolar=en:Chinese_calendar]",
       "[彝暦=ja:%%<イ族>, *Yi=en:Yi_people]",
@@ -66,10 +66,10 @@ module When
       ]
     ]]
 
-    YiTerms = [self, [
+    Yi = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=ja:, en=en:, alias]",
-      "names:[YiTerms=]",
+      "names:[Yi=]",
 
       [self,
         "names:[月=ja:%%<月_(暦)>, *Month]",
@@ -108,6 +108,10 @@ module When
         [Residue, "label:[北方之年=, NorthYear=    ]", "remainder:  7"]
       ]
     ]]
+  end
+
+  class CalendarNote
+    Yis = [['Yi::YearName'], ['_m:Calendar::Month'], ['Common::Week']]
   end
 
   module Ephemeris
@@ -738,15 +742,15 @@ module When
       #   @formula      = 太陽黄経の計算に用いるEphemeris
       #
       def _normalize(args=[], options={})
-        @label            ||= When.Resource('_m:ChineseTerms::ChineseSolar')
+        @label            ||= 'Chinese::ChineseSolar'
         @formula          ||= ['Formula']
         @formula            = Array(@formula)
         @formula           *= 2 if @formula.length == 1
         @formula[0]        += (@formula[0] =~ /\?/ ? '&' : '?') + 'formula=12S' if @formula[0].kind_of?(String)
         @formula[1]        += (@formula[1] =~ /\?/ ? '&' : '?') + 'formula=1L'  if @formula[1].kind_of?(String)
-        @note             ||= When.CalendarNote('ChineseNotes')
+        @note             ||= When.CalendarNote('Chinese')
         @indices          ||= [
-            When::Coordinates::Index.new({:trunk=>When.Resource('_m:ChineseTerms::Month::*')}),
+            When.Index('Chinese::Month'),
             When::Coordinates::DefaultDayIndex
           ]
         super
@@ -791,7 +795,7 @@ module When
       #   @formula      = 太陽黄経および月の位相の計算に用いるEphemeris
       #
       def _normalize(args=[], options={})
-        @label            ||= When.Resource('_m:ChineseTerms::ChineseLuniSolar')
+        @label            ||= 'Chinese::ChineseLuniSolar'
         @formula          ||= ['Formula']
         @formula            = Array(@formula)
         @formula           *= 2 if @formula.length == 1
@@ -803,10 +807,9 @@ module When
         @intercalary_span ||= 12
         @intercalary_span   =  @intercalary_span.to_i
         @intercalary_month  = (@intercalary_month.to_i - @base_month) % 12 + 1 if @intercalary_month
-        @note             ||= When.CalendarNote('ChineseNotes')
+        @note             ||= When.CalendarNote('Chinese')
         @indices          ||= [
-            When::Coordinates::Index.new({:branch=>{1=>When.Resource('_m:CalendarTerms::閏')},
-                                          :trunk=>When.Resource('_m:ChineseTerms::Month::*')}),
+            When.Index('Chinese::Month', {:branch=>{1=>When.Resource('_m:Calendar::閏')}}),
             When::Coordinates::DefaultDayIndex
           ]
         super
@@ -912,7 +915,7 @@ module When
       'origin_of_LSC'  =>  2397523,
       'origin_of_MSC'  =>  1852,
       'indices' => [
-         When::Coordinates::Index.new({:unit =>12, :trunk=>When.Resource('_m:ChineseTerms::Month::*')}),
+         When.Index('Chinese::Month', {:unit =>12}),
          When::Coordinates::DefaultDayIndex
        ],
       'rule_table'     => {
@@ -928,25 +931,25 @@ module When
       'origin_of_LSC'  =>  2397522,
       'origin_of_MSC'  =>  1852,
       'indices' => [
-         When::Coordinates::Index.new({:unit  =>12, :trunk=>When.Resource('_m:ChineseTerms::Month::*')}),
-         When::Coordinates::Index.new({:shift => 1})
+         When.Index('Chinese::Month', {:unit  =>12}),
+         When.Index({:shift => 1})
        ],
       'rule_table'     => {
         'T' => {'Rule'  =>[366]},
         366 => {'Length'=>[31,30]*6}
       },
-      'note' => 'DefaultNotes'
+      'note' => 'Default'
     }]
 
     #
     # 彝
     #
     Yi =  [CyclicTableBased, {
-      'label'   => When.Resource('_m:ChineseTerms::Yi'),
+      'label'   => 'Chinese::Yi',
       'origin_of_LSC'  =>  1721431,
       'origin_of_MSC'  =>  1,
       'indices' => [
-         When::Coordinates::Index.new({:unit  =>11, :trunk=>When.Resource('_m:YiTerms::Month::*')}),
+         When.Index('Yi::Month', {:unit  =>11}),
          When::Coordinates::DefaultDayIndex
        ],
       'rule_table'     => {
@@ -954,7 +957,7 @@ module When
         365 => {'Length'=>[36]*10 + [5]},
         366 => {'Length'=>[36]*10 + [6]}
       },
-      'note' => 'YiNotes'
+      'note' => 'Yis'
     }]
   end
 end

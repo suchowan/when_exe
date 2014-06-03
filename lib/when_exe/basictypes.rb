@@ -418,6 +418,74 @@ module When
       # @private
       HashProperty = [:label, :names, :link, :access_key, :code_space]
 
+      # @private
+      LabelTypes = {
+        'Residue' => ['Coordinates',      '%s',     '_co:%s%s'     ],
+        'Week'    => ['CalendarNote',     '%sWeek', '_n:%sWeek%s'  ],
+        'Notes'   => ['CalendarNote',     '%s',     '_n:%s/Notes%s'],
+        nil       => ['BasicTypes::M17n', '%s',     '_m:%s%s'      ]
+      }
+
+      class << self
+
+        #
+        # resource の取得
+        #
+        # @param [When::Parts::Resource, String] source
+        #
+        # @return [When::Parts::Resource]
+        #
+        # @private
+        def _label(source)
+          case source
+          when Parts::Resource, nil       ; return source
+          when Parts::Resource::IRIHeader ; return Parts::Resource._instance(source)
+          end
+          iri = Parts::Resource._abbreviation_to_iri(source, LabelTypes)
+          iri ? Parts::Resource._instance(iri) : nil
+        end
+
+        #
+        # label の取得
+        #
+        # @param [When::Parts::Resource, String] source
+        #
+        # @return [When::BasicTypes::M17n, String]
+        #
+        def label(source)
+          resource = _label(source)
+          case resource
+          when nil             ; return source
+          when M17n            ; return resource
+          when Parts::Resource ; return resource.label
+          else                 ; return resource
+          end
+        end
+
+        #
+        # label の Array の取得
+        #
+        # @param [When::Parts::Resource, Array] source
+        #
+        # @return [Array]
+        #
+        def labels(source)
+          array =
+            if source.kind_of?(Array)
+              source
+            else
+              resource = _label(source)
+              return nil unless resource
+              resource.child
+            end
+          case array[0]
+          when M17n            ; return array
+          when Parts::Resource ; return array.map {|v| v.label}
+          else                 ; return array
+          end
+        end
+      end
+
       #
       # 代表名
       #

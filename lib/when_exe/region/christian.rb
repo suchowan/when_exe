@@ -9,10 +9,10 @@ module When
 
   class BasicTypes::M17n
 
-    ChristianTerms = [self, [
+    Christian = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
-      "names:[ChristianTerms=]",
+      "names:[Christian=]",
       "[Julian=en:Julian_calendar,                ユリウス暦    ]",
       "[Gregorian=en:Gregorian_calendar,          グレゴリオ暦  ]",
       "[RevisedJulian=en:Revised_Julian_calendar, 修正ユリウス暦]",
@@ -27,7 +27,7 @@ module When
       "locale:[=en:, ja=ja:, alias]",
       "period:[Byzantine=en:Byzantine_calendar, ビザンティン暦=ja:%%<世界創造紀元>]",
       ["[AM=en:Anno_Mundi, 世界創造紀元, alias:Anno_Mundi]6497.9.1",
-       "Calendar Epoch", "989-09-01^Julian?border=[-1,9,1]&note=RomanNote", "1453=5-29"]
+       "Calendar Epoch", "989-09-01^Julian?border=[-1,9,1]&note=Roman", "1453=5-29"]
     ]]
   end
 
@@ -111,10 +111,8 @@ module When
         raise TypeError, "#{self.class} is abstract class" unless @label
         @note      = When.CalendarNote(@note || 'Christian')
         @indices ||= [
-           Index.new({:unit =>12,
-                      :trunk=>m17n('[::_m:CalendarTerms::Month::*]')}),
-
-           DefaultDayIndex
+           When.Index('Calendar::Month', {:unit =>12}),
+           When::Coordinates::DefaultDayIndex
         ]
         super
       end
@@ -144,7 +142,7 @@ module When
       private
 
       def _normalize(args=[], options={})
-        @label ||= When.Resource('_m:ChristianTerms::Julian')
+        @label ||= 'Christian::Julian'
         super
       end
     end
@@ -238,7 +236,7 @@ module When
       private
 
       def _normalize(args=[], options={})
-        @label ||= When.Resource('_m:ChristianTerms::Gregorian')
+        @label ||= 'Christian::Gregorian'
         super
       end
     end
@@ -271,7 +269,7 @@ module When
       private
 
       def _normalize(args=[], options={})
-        @label ||= When.Resource('_m:ChristianTerms::RevisedJulian')
+        @label ||= 'Christian::RevisedJulian'
       # @diff  ||= [-2, -1, -1, 0, 1, 2, 2, 3, 4, 5] # 1～10世紀の各世紀のユリウス暦と差の日数
         super
       end
@@ -385,7 +383,7 @@ module When
       #   @the_length  = 通常と異なる日付となる年月の情報({[年,月]=>[スキップした日数, スキップし始める日, 月の日数]})
       #
       def _normalize(args=[], options={})
-        @label   ||= When.Resource('_m:ChristianTerms::Civil')
+        @label   ||= 'Christian::Civil'
 
         # 前後の暦法
         @old       = When.Calendar(@old || 'Julian')
@@ -480,7 +478,7 @@ module When
   #
   class CalendarNote::Christian < CalendarNote
 
-    NoteObjects = [When::BasicTypes::M17n, [
+    Notes = [When::BasicTypes::M17n, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[Christian]",

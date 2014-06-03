@@ -330,7 +330,7 @@ module When
 	["[慶応]1",	"@ND",	"	     1865-04-08", "1868-09-08"]
       ],
       ["[明治,Meiji=en:Meiji_period,M]1",		"@A",
-				"name=[明治天皇,Emperor_Meiji];1868-09-08^Japanese", "1873-01-01^Gregorian?note=JapaneseNote", ""],
+				"name=[明治天皇,Emperor_Meiji];1868-09-08^Japanese", "1873-01-01^Gregorian?note=Japanese", ""],
       ["[大正,Taishō=en:Taish%C5%8D_period,T]1.07.30",  "@A",
 				"name=[大正天皇,Emperor_Taishō];1912-07-30"],
       ["[昭和,Shōwa=en:Sh%C5%8Dwa_period,S]1.12.25",    "@A",

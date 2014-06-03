@@ -6,7 +6,7 @@ BEGIN:B:M17n
   NAMESPACE:[en=http://en.wikipedia.org/wiki/,
              ja=http://ja.wikipedia.org/wiki/]
   LOCALE:[=en:, ja=ja:, alias]
-  NAMES:[CalendarTerms=]
+  NAMES:[Calendar=]
 
   [Calendars_and_Eras=, 暦法と紀元=]
 

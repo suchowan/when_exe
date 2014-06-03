@@ -92,6 +92,11 @@ module When
     ]]
   end
 
+  class CalendarNote
+    Mayan = [{},['Mayan#{?Epoch=Epoch}::Trecena', 'Mayan#{?Epoch=Epoch}::Tzolk\'in',
+                      'Mayan#{?Epoch=Epoch}::Lords_of_the_Night', 'Mayan#{?Epoch=Epoch}::Haab\'']]
+  end
+
   class TM::CalendarEra
 
     #
@@ -109,8 +114,8 @@ module When
 
   module CalendarTypes
 
-    _c20 = Coordinates::Index.new({:base=>0, :unit=>20})
-    _c18 = Coordinates::Index.new({:base=>0, :unit=>18})
+    _c20 = When.Index({:base=>0, :unit=>20})
+    _c18 = When.Index({:base=>0, :unit=>18})
 
     #
     # Mayan Long Count
@@ -125,7 +130,7 @@ module When
         360 => {'Length'=>[20] * 18}
       },
       'indices'=> [_c20, _c20, _c18, _c20],
-      'note'   => 'MayanNotes#{?Epoch=Epoch}'
+      'note'   => 'Mayan#{?Epoch=Epoch}'
     }]
   end
 end

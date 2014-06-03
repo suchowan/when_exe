@@ -40,7 +40,7 @@ module When::Coordinates
       # 日の九星のインデックス
       #
       # @param [When::TM::TemporalPosition] date 節月による日付
-      # @param [When::CalendarNote::JapaneseNote::SolarTerms] s_terms
+      # @param [When::CalendarNote::Japanese::SolarTerms] s_terms
       #
       # @return [Integer]
       #

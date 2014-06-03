@@ -9,10 +9,10 @@ module When
 
   class BasicTypes::M17n
 
-    MartianTerms = [self, [
+    Martian = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
-      "names:[MartianTerms=]",
+      "names:[Martian=]",
       "[Darian=en:Darian_calendar, ダリアン暦]",
 
       [self,
@@ -118,7 +118,7 @@ module When
     #
     class DarianWeek < WorldWeek
 
-      NoteObjects = [When::BasicTypes::M17n, [
+      Notes = [When::BasicTypes::M17n, [
         "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
         "locale:[=en:, ja=ja:, alias]",
         "names:[Darian]",
@@ -205,11 +205,11 @@ module When
     # Darian Calendar
     #
     Darian =  [CyclicTableBased, {
-      'label' => When.Resource('_m:MartianTerms::Darian'),
+      'label'         => 'Martian::Darian',
       'time_basis'    => 'MTC',
       'origin_of_LSC' =>  -94798,
       'indices' => [
-         When::Coordinates::Index.new({:unit =>24, :trunk=>When.Resource('_m:MartianTerms::DarianMonth::*')}),
+         When.Index('Martian::DarianMonth', {:unit =>24}),
          When::Coordinates::DefaultDayIndex
        ],
       'rule_table' => {

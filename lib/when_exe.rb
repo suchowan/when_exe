@@ -112,18 +112,28 @@ module When
     # @private
     def _define_common_calendar_types(list=%w(UTC Gregorian Julian Civil))
       list.each do |calendar|
-        const_set(calendar, Parts::Resource._instance(calendar, '_c:'))
+        resource = Parts::Resource._instance(calendar, '_c:')
+        Parts::Resource.synchronize do
+          Parts::Resource::ConstList << calendar
+          const_set(calendar, resource)
+        end
       end
     end
 
     alias :_const_missing :const_missing
 
     #
-    # When 直下に定数として定義する時法・暦法(暗黙的追加)
+    # When 直下に定数として定義する時法・暦法など(暗黙的追加)
     #
-    def const_missing(name)
-      return _const_missing(name) unless CalendarTypes.const_defined?(name)
-      const_set(name, Parts::Resource._instance(name.to_s, '_c:'))
+    def const_missing(constant)
+      iri = Parts::Resource._abbreviation_to_iri(constant)
+      return _const_missing(constant) unless iri
+      resource = Parts::Resource._instance(iri)
+      return const_get(constant) if const_defined?(constant)
+      Parts::Resource.synchronize do
+        Parts::Resource::ConstList << constant
+        const_set(constant, resource)
+      end
     end
   end
 
@@ -177,75 +187,75 @@ module When
   EUCJP = '.eucJP'
 
   class BasicTypes::M17n
-    autoload :JapaneseTerms,         'when_exe/region/japanese'
-    autoload :ChineseTerms,          'when_exe/region/chinese'
-    autoload :YiTerms,               'when_exe/region/chinese'
-    autoload :TibetanTerms,          'when_exe/region/tibetan'
-    autoload :ThaiTerms,             'when_exe/region/thai'
-    autoload :BalineseTerms,         'when_exe/region/balinese'
-    autoload :JavaneseTerms,         'when_exe/region/javanese'
-    autoload :IndianTerms,           'when_exe/region/indian'
-    autoload :IranianTerms,          'when_exe/region/iranian'
-    autoload :IslamicTerms,          'when_exe/region/islamic'
-    autoload :JewishTerms,           'when_exe/region/jewish'
-    autoload :ArmenianTerms,         'when_exe/region/Armenian'
-    autoload :RomanTerms,            'when_exe/region/roman'
-    autoload :CopticTerms,           'when_exe/region/coptic'
-    autoload :FrenchTerms,           'when_exe/region/french'
-    autoload :WorldTerms,            'when_exe/region/world'
-    autoload :ShireTerms,            'when_exe/region/shire'
-    autoload :YermTerms,             'when_exe/region/yerm'
-    autoload :MartianTerms,          'when_exe/region/martian'
+    autoload :Japanese,                'when_exe/region/japanese'
+    autoload :Chinese,                 'when_exe/region/chinese'
+    autoload :Yi,                      'when_exe/region/chinese'
+    autoload :Tibetan,                 'when_exe/region/tibetan'
+    autoload :Thai,                    'when_exe/region/thai'
+    autoload :Balinese,                'when_exe/region/balinese'
+    autoload :Javanese,                'when_exe/region/javanese'
+    autoload :Indian,                  'when_exe/region/indian'
+    autoload :Iranian,                 'when_exe/region/iranian'
+    autoload :Islamic,                 'when_exe/region/islamic'
+    autoload :Jewish,                  'when_exe/region/jewish'
+    autoload :Armenian,                'when_exe/region/Armenian'
+    autoload :Roman,                   'when_exe/region/roman'
+    autoload :Coptic,                  'when_exe/region/coptic'
+    autoload :French,                  'when_exe/region/french'
+    autoload :World,                   'when_exe/region/world'
+    autoload :Shire,                   'when_exe/region/shire'
+    autoload :Yerm,                    'when_exe/region/yerm'
+    autoload :Martian,                 'when_exe/region/martian'
   end
 
   module Locale
-    autoload :WikipediaLinks,        'when_exe/locales/links'
-    autoload :IAST,                  'when_exe/locales/iast'
-    autoload :IASTR,                 'when_exe/locales/iast'
-    autoload :AKT,                   'when_exe/locales/akt'
+    autoload :WikipediaLinks,          'when_exe/locales/links'
+    autoload :IAST,                    'when_exe/locales/iast'
+    autoload :IASTR,                   'when_exe/locales/iast'
+    autoload :AKT,                     'when_exe/locales/akt'
   end
 
   module CalendarTypes
-    autoload :Japanese,              'when_exe/region/japanese/calendars'
-    autoload :JapaneseTwin,          'when_exe/region/japanese/twins'
-    autoload :ChineseTwin,           'when_exe/region/chinese/twins'
-    autoload :ChineseSolar,          'when_exe/region/chinese'
-    autoload :ChineseLuniSolar,      'when_exe/region/chinese'
-    autoload :Yi,                    'when_exe/region/chinese'
-    autoload :Tibetan,               'when_exe/region/tibetan'
-    autoload :Thai,                  'when_exe/region/thai'
-    autoload :ThaiP,                 'when_exe/region/thai'
-    autoload :ThaiC,                 'when_exe/region/thai'
-    autoload :ThaiT,                 'when_exe/region/thai'
-    autoload :Tenganan,              'when_exe/region/balinese'
-    autoload :Pranatamangsa,         'when_exe/region/javanese'
-    autoload :IndianNationalSolar,   'when_exe/region/indian'
-    autoload :HinduSolar,            'when_exe/region/indian'
-    autoload :HinduLuniSolar,        'when_exe/region/indian'
-    autoload :SolarHejri,            'when_exe/region/iranian'
-    autoload :Zoroastrian,           'when_exe/region/zoroastrian'
-    autoload :Qadimi,                'when_exe/region/zoroastrian'
-    autoload :Shahanshahi,           'when_exe/region/zoroastrian'
-    autoload :Fasli,                 'when_exe/region/zoroastrian'
-    autoload :Bahai,                 'when_exe/region/bahai'
-    autoload :TabularIslamic,        'when_exe/region/islamic'
-    autoload :EphemerisBasedIslamic, 'when_exe/region/islamic'
-    autoload :Jewish,                'when_exe/region/jewish'
-    autoload :Armenian,              'when_exe/region/armenian'
-    autoload :Coptic,                'when_exe/region/coptic'
-    autoload :JulianA,               'when_exe/region/roman'
-    autoload :JulianB,               'when_exe/region/roman'
-    autoload :JulianC,               'when_exe/region/roman'
-    autoload :Roman,                 'when_exe/region/roman'
-    autoload :Gregorian,             'when_exe/region/christian'
-    autoload :FrenchRepublican,      'when_exe/region/french'
-    autoload :World,                 'when_exe/region/world'
-    autoload :LongCount,             'when_exe/region/mayan'
-    autoload :Shire,                 'when_exe/region/shire'
-    autoload :ShireG,                'when_exe/region/shire'
-    autoload :Yerm,                  'when_exe/region/yerm'
-    autoload :Goddess,               'when_exe/region/goddess'
-    autoload :Darian,                'when_exe/region/martian'
+    autoload :Japanese,                'when_exe/region/japanese/calendars'
+    autoload :JapaneseTwin,            'when_exe/region/japanese/twins'
+    autoload :ChineseTwin,             'when_exe/region/chinese/twins'
+    autoload :ChineseSolar,            'when_exe/region/chinese'
+    autoload :ChineseLuniSolar,        'when_exe/region/chinese'
+    autoload :Yi,                      'when_exe/region/chinese'
+    autoload :Tibetan,                 'when_exe/region/tibetan'
+    autoload :Thai,                    'when_exe/region/thai'
+    autoload :ThaiP,                   'when_exe/region/thai'
+    autoload :ThaiC,                   'when_exe/region/thai'
+    autoload :ThaiT,                   'when_exe/region/thai'
+    autoload :Tenganan,                'when_exe/region/balinese'
+    autoload :Pranatamangsa,           'when_exe/region/javanese'
+    autoload :IndianNationalSolar,     'when_exe/region/indian'
+    autoload :HinduSolar,              'when_exe/region/indian'
+    autoload :HinduLuniSolar,          'when_exe/region/indian'
+    autoload :SolarHejri,              'when_exe/region/iranian'
+    autoload :Zoroastrian,             'when_exe/region/zoroastrian'
+    autoload :Qadimi,                  'when_exe/region/zoroastrian'
+    autoload :Shahanshahi,             'when_exe/region/zoroastrian'
+    autoload :Fasli,                   'when_exe/region/zoroastrian'
+    autoload :Bahai,                   'when_exe/region/bahai'
+    autoload :TabularIslamic,          'when_exe/region/islamic'
+    autoload :EphemerisBasedIslamic,   'when_exe/region/islamic'
+    autoload :Jewish,                  'when_exe/region/jewish'
+    autoload :Armenian,                'when_exe/region/armenian'
+    autoload :Coptic,                  'when_exe/region/coptic'
+    autoload :JulianA,                 'when_exe/region/roman'
+    autoload :JulianB,                 'when_exe/region/roman'
+    autoload :JulianC,                 'when_exe/region/roman'
+    autoload :Roman,                   'when_exe/region/roman'
+    autoload :Gregorian,               'when_exe/region/christian'
+    autoload :FrenchRepublican,        'when_exe/region/french'
+    autoload :World,                   'when_exe/region/world'
+    autoload :LongCount,               'when_exe/region/mayan'
+    autoload :Shire,                   'when_exe/region/shire'
+    autoload :ShireG,                  'when_exe/region/shire'
+    autoload :Yerm,                    'when_exe/region/yerm'
+    autoload :Goddess,                 'when_exe/region/goddess'
+    autoload :Darian,                  'when_exe/region/martian'
 
     _time_systems = {
       'LMT' => nil,                       # Local Mean Time
@@ -260,90 +270,88 @@ module When
   end
 
   class CalendarNote
-    autoload :SolarTerms,            'when_exe/ephemeris/notes'
-    autoload :LunarPhases,           'when_exe/ephemeris/notes'
-    autoload :EphemericNote,         'when_exe/ephemeris/notes'
-    autoload :JapaneseNote,          'when_exe/region/japanese/notes'
-    autoload :BalineseNote,          'when_exe/region/balinese'
-    autoload :RomanNote,             'when_exe/region/roman'
-    autoload :YermNotes,             'when_exe/region/yerm'
-    autoload :WorldWeek,             'when_exe/region/world'
-    autoload :ShireWeek,             'when_exe/region/shire'
+    autoload :SolarTerms,              'when_exe/ephemeris/notes'
+    autoload :LunarPhases,             'when_exe/ephemeris/notes'
+    autoload :Ephemeris,               'when_exe/ephemeris/notes'
+    autoload :Japanese,                'when_exe/region/japanese/notes'
+    autoload :Yis,                     'when_exe/region/chinese'
+    autoload :Balinese,                'when_exe/region/balinese'
+    autoload :Javanese,                'when_exe/region/javanese'
+    autoload :Tibetan,                 'when_exe/region/tibetan'
+    autoload :Bahai,                   'when_exe/region/bahai'
+    autoload :Roman,                   'when_exe/region/roman'
+    autoload :Mayan,                   'when_exe/region/mayan'
+    autoload :Yerm,                    'when_exe/region/yerm'
+    autoload :WorldWeek,               'when_exe/region/world'
+    autoload :ShireWeek,               'when_exe/region/shire'
 
-    DefaultNotes   = [['_m:CalendarTerms::Month'], ['CommonResidue::Week']]
-    JulianDayNotes = [['CommonResidue::Week', 'CommonResidue::干支']]
-    BahaiNotes     = [['Bahai::YearName'], ['_m:BahaiTerms::Month'], ['CommonResidue::Week']]
-    JavaneseNotes  = [['Javanese::Windu'], ['_m:CalendarTerms::Month'],
-                      ['Javanese::Pasaran', 'Javanese::Paringkelan', 'Javanese::Week', 'Javanese::Wuku']]
-    ChineseNotes   = [['CommonResidue::干支'], ['_m:CalendarTerms::Month'], ['CommonResidue::Week', 'CommonResidue::干支']]
-    TibetanNotes   = [['Tibetan::干支'], ['_m:CalendarTerms::Month'], ['CommonResidue::Week']]
-    YiNotes        = [['Yi::YearName'], ['_m:CalendarTerms::Month'], ['CommonResidue::Week']]
-    MayanNotes     = [{},['Mayan#{?Epoch=Epoch}::Trecena', 'Mayan#{?Epoch=Epoch}::Tzolk\'in',
-                          'Mayan#{?Epoch=Epoch}::Lords_of_the_Night', 'Mayan#{?Epoch=Epoch}::Haab\'']]
+    Default   = [['_m:Calendar::Month'], ['Common::Week']]
+    JulianDay = [['Common::Week', 'Common::干支']]
+    Chinese   = [['Common::干支'], ['_m:Calendar::Month'], ['Common::Week', 'Common::干支']]
   end
 
   module Coordinates
-    autoload :Tibetan,               'when_exe/region/tibetan'
-    autoload :Yi,                    'when_exe/region/chinese'
-    autoload :Javanese,              'when_exe/region/javanese'
-    autoload :IndianCities,          'when_exe/region/indian'
-    autoload :Bahai,                 'when_exe/region/bahai'
-    autoload :Roman,                 'when_exe/region/roman'
-    autoload :Mayan,                 'when_exe/region/mayan'
+    autoload :Tibetan,                 'when_exe/region/tibetan'
+    autoload :Yi,                      'when_exe/region/chinese'
+    autoload :Javanese,                'when_exe/region/javanese'
+    autoload :IndianCities,            'when_exe/region/indian'
+    autoload :Bahai,                   'when_exe/region/bahai'
+    autoload :Roman,                   'when_exe/region/roman'
+    autoload :Mayan,                   'when_exe/region/mayan'
 
     # default index for day coordinate
-    DefaultDayIndex = Coordinates::Index.new
+    DefaultDayIndex = Index.new
 
     # default indices for date coordinates
     DefaultDateIndices = [
-      Coordinates::Index.new({:unit=>12}),
+      Index.new({:unit=>12}),
       DefaultDayIndex
     ]
 
     # default indices for time coordinates
     DefaultTimeIndices = [
-      Coordinates::Index.new({:base=>0, :unit=>24}),
-      Coordinates::Index.new({:base=>0, :unit=>60}),
-      Coordinates::Index.new({:base=>0, :unit=>60})
+      Index.new({:base=>0, :unit=>24}),
+      Index.new({:base=>0, :unit=>60}),
+      Index.new({:base=>0, :unit=>60})
     ]
   end
 
   module TM
     class OrdinalReferenceSystem
-      autoload :GeologicalAge,           'when_exe/region/geologicalage'
+      autoload :GeologicalAge,         'when_exe/region/geologicalage'
     end
 
     class CalendarEra
-      autoload :Japanese,                'when_exe/region/japanese/epochs'
-      autoload :JapanesePrimeMinister,   'when_exe/region/japanese/epochs'
-      autoload :NihonKoki,               'when_exe/region/japanese/nihon_shoki'
-      autoload :NihonShoki,              'when_exe/region/japanese/nihon_shoki'
-      autoload :JapaneseSolarSeries,     'when_exe/region/japanese/twins'
-      autoload :JapaneseLuniSolarSeries, 'when_exe/region/japanese/twins'
-      autoload :Chinese,                 'when_exe/region/chinese/epochs'
-      autoload :ChineseSolarSeries,      'when_exe/region/chinese/twins'
-      autoload :ChineseLuniSolarSeries,  'when_exe/region/chinese/twins'
-      autoload :Ryukyu,                  'when_exe/region/ryukyu'
-      autoload :Korean,                  'when_exe/region/korean'
-      autoload :Vietnamese,              'when_exe/region/vietnamese'
-      autoload :Manchurian,              'when_exe/region/far_east'
-      autoload :Rouran,                  'when_exe/region/far_east'
-      autoload :Gaochang,                'when_exe/region/far_east'
-      autoload :Yunnan,                  'when_exe/region/far_east'
-    # autoload :Tibetan,                 'when_exe/region/tibetan'
-      autoload :BalineseLuniSolar,       'when_exe/region/balinese'
-      autoload :JavaneseLunar,           'when_exe/region/javanese'
-      autoload :IndianNationalSolar,     'when_exe/region/indian'
-      autoload :Iranian,                 'when_exe/region/iranian'
-      autoload :Hijra,                   'when_exe/region/islamic'
-      autoload :Jewish,                  'when_exe/region/jewish'
-      autoload :Roman,                   'when_exe/region/roman'
-      autoload :Julian,                  'when_exe/region/roman'
-      autoload :Pope,                    'when_exe/region/pope'
-      autoload :Byzantine,               'when_exe/region/christian'
-      autoload :French,                  'when_exe/region/french'
-      autoload :World,                   'when_exe/region/world'
-      autoload :LongCount,               'when_exe/region/mayan'
+      autoload :Japanese,              'when_exe/region/japanese/epochs'
+      autoload :JapanesePrimeMinister, 'when_exe/region/japanese/epochs'
+      autoload :NihonKoki,             'when_exe/region/japanese/nihon_shoki'
+      autoload :NihonShoki,            'when_exe/region/japanese/nihon_shoki'
+      autoload :JapaneseSolar,         'when_exe/region/japanese/twins'
+      autoload :JapaneseLuniSolar,     'when_exe/region/japanese/twins'
+      autoload :Chinese,               'when_exe/region/chinese/epochs'
+      autoload :ChineseSolar,          'when_exe/region/chinese/twins'
+      autoload :ChineseLuniSolar,      'when_exe/region/chinese/twins'
+      autoload :Ryukyu,                'when_exe/region/ryukyu'
+      autoload :Korean,                'when_exe/region/korean'
+      autoload :Vietnamese,            'when_exe/region/vietnamese'
+      autoload :Manchurian,            'when_exe/region/far_east'
+      autoload :Rouran,                'when_exe/region/far_east'
+      autoload :Gaochang,              'when_exe/region/far_east'
+      autoload :Yunnan,                'when_exe/region/far_east'
+    # autoload :Tibetan,               'when_exe/region/tibetan'
+      autoload :BalineseLuniSolar,     'when_exe/region/balinese'
+      autoload :JavaneseLunar,         'when_exe/region/javanese'
+      autoload :IndianNationalSolar,   'when_exe/region/indian'
+      autoload :Iranian,               'when_exe/region/iranian'
+      autoload :Hijra,                 'when_exe/region/islamic'
+      autoload :Jewish,                'when_exe/region/jewish'
+      autoload :Roman,                 'when_exe/region/roman'
+      autoload :Julian,                'when_exe/region/roman'
+      autoload :Pope,                  'when_exe/region/pope'
+      autoload :Byzantine,             'when_exe/region/christian'
+      autoload :French,                'when_exe/region/french'
+      autoload :World,                 'when_exe/region/world'
+      autoload :LongCount,             'when_exe/region/mayan'
 
       # Defualt search path for Epochs and Eras
       DefaultEpochs = ['Common',     'ModernJapanese',
@@ -352,8 +360,8 @@ module When
                        'BalineseLuniSolar',  'JavaneseLunar',
                        'Japanese',   'JapanesePrimeMinister', 'NihonKoki', 'NihonShoki',
                        'Chinese',    'Ryukyu',  'Vietnamese', 'Korean',
-                       'JapaneseSolarSeries', 'JapaneseLuniSolarSeries',
-                       'ChineseSolarSeries',  'ChineseLuniSolarSeries',
+                       'JapaneseSolar', 'JapaneseLuniSolar',
+                       'ChineseSolar',  'ChineseLuniSolar',
                        'Manchurian', 'Rouran',  'Gaochang',   'Yunnan', # 'Tibetan',
                        'Pope' ]
 
@@ -380,7 +388,7 @@ module When
       ModernJapanese = [self, [
         'namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]',
         'area:[ModernJapanese]',
-        ['[M=,alias:明=ja:明治]6.01.01', '@CR', '1873-01-01^Gregorian?note=DefaultNotes'],
+        ['[M=,alias:明=ja:明治]6.01.01', '@CR', '1873-01-01^Gregorian?note=Default'],
         ['[T=,alias:大=ja:大正]1.07.30', '@A',  '1912-07-30'],
         ['[S=,alias:昭=ja:昭和]1.12.25', '@A',  '1926-12-25'],
         ['[H=,alias:平=ja:平成]1.01.08', '@A',  '1989-01-08']

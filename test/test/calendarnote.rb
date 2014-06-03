@@ -8,7 +8,7 @@
 
 module Test::CalendarNote
 
-  class Notes < Test::Unit::TestCase
+  class NotesContainer < Test::Unit::TestCase
 
     def test__lunar_phases
       assert_equal([[{:note=>"月相", :value=>"朔(-233/3040)", :position=>"中段"}]],

@@ -368,12 +368,12 @@ module When
 	["[憲宗]1",	"@A",	"name=[憲宗];1835"],
 	["[哲宗]1",	"@A",	"name=[哲宗];1850"],
 	["[高宗]1",	"@A",	"name=[高宗];1864"],
-	["[建陽]1",	"",		    "1896.01.01^Gregorian?note=ChineseNotes",	# 朝鮮史による
+	["[建陽]1",	"",		    "1896.01.01^Gregorian?note=Chinese",	# 朝鮮史による
 	    "1897.10.01"]
       ],
       [self,
 	"period:[大韓帝国]",
-	["[光武]1",	"@F",	"name=[高宗];1897.10.01^Gregorian?note=ChineseNotes"],
+	["[光武]1",	"@F",	"name=[高宗];1897.10.01^Gregorian?note=Chinese"],
 	["[隆熙]1",	"@A",	"name=[純宗];1907.07.19", "1910.08.22="]
       ]
     ]]

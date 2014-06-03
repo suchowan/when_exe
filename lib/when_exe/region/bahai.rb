@@ -8,10 +8,10 @@
 module When
   class BasicTypes::M17n
 
-    BahaiTerms = [self, [
+    Bahai = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/, ar=http://ar.wikipedia.org/wiki/]",
       "locale:[=en:, ar=ar:, alias=en:]",
-      "names:[BahaiTerms=]",
+      "names:[Bahai=]",
       "[Bahai=en:Bah%C3%A1%27%C3%AD_calendar, ja:バハーイー暦=ja:%%<バハーイー教>]",
 
       # %0s は“閏”の表記を抑制する指定となっている
@@ -39,6 +39,10 @@ module When
         "[%0sAyyám-i-Há=en:Ayy%C3%A1m-i-H%C3%A1, %0sايام الهاء=, %0sThe Days of Há=]" # Intercalary days
       ]
     ]]
+  end
+
+  class CalendarNote
+    Bahai = [['Bahai::YearName'], ['_m:Bahai::Month'], ['Common::Week']]
   end
 
   module Coordinates
@@ -112,13 +116,12 @@ module When
       # オブジェクトの正規化
       #
       def _normalize(args=[], options={})
-        @label ||= When.Resource('_m:BahaiTerms::Bahai')
+        @label   ||= 'Bahai::Bahai'
 
         @indices ||= [
-          When::Coordinates::Index.new({:unit =>19}),
-          When::Coordinates::Index.new({:unit =>19}),
-          When::Coordinates::Index.new({:trunk=>When.Resource('_m:BahaiTerms::Month::*'),
-                                        :branch=>{+1=>When.Resource('_m:BahaiTerms::Month::*')[19]}}),
+          When.Index({:unit =>19}),
+          When.Index({:unit =>19}),
+          When.Index('Bahai::Month', {:branch=>{+1=>When.Resource('_m:Bahai::Month::*')[19]}}),
           When::Coordinates::DefaultDayIndex
         ]
         @origin_of_MSC ||= -1844 + 19*19
@@ -126,7 +129,7 @@ module When
           365 => {'Length'=>[19] * 18 + [4, 19], 'IDs'=>ID},
           366 => {'Length'=>[19] * 18 + [5, 19], 'IDs'=>ID}
         }
-        @note ||= 'BahaiNotes'
+        @note ||= 'Bahai'
 
         super
 

@@ -479,9 +479,9 @@ module When
         form_options = options.kind_of?(Hash) ? options : {}
         form_options[:method] = :to_m17n unless form_options.key?(:method)
         persistence = options.delete(:persistence) if options.kind_of?(Hash)
-        retrieved   = When::CalendarNote::Notes.retrieve(persistence, self.to_i)
+        retrieved   = When::CalendarNote::NotesContainer.retrieve(persistence, self.to_i)
         return retrieved unless retrieved == false
-        When::CalendarNote::Notes.register(_m17n_form(_notes(options), form_options), persistence, self.to_i)
+        When::CalendarNote::NotesContainer.register(_m17n_form(_notes(options), form_options), persistence, self.to_i)
       end
 
       #
@@ -652,9 +652,9 @@ module When
         designator = When::Locale.translate(designator,locale)
         case designator
                                                                 # 現在のロケールにおける曜日の省略名
-        when 'a' ; When.Resource('_co:CommonResidue::Abbr_Day')[to_i % 7].translate(locale)
+        when 'a' ; When.Resource('_co:Common::Abbr_Day')[to_i % 7].translate(locale)
                                                                 # 現在のロケールにおける曜日の完全な名前
-        when 'A' ; When.Resource('_co:CommonResidue::Week')[to_i % 7].label.translate(locale)
+        when 'A' ; When.Resource('_co:Common::Week')[to_i % 7].label.translate(locale)
         when 'b' ; (name(MONTH-d).translate(locale))[/^.{1,#{e}}/] # 現在のロケールにおける月の省略名
         when 'B' ; (name(MONTH-d).translate(locale))            # 現在のロケールにおける月の完全な名前
         when 'C' ; year(d).div(100)                             # 世紀 (西暦年の上 2 桁)
@@ -729,7 +729,7 @@ module When
       #
       def _calendar_note(options)
         calendar_note   = options.delete(:calendar_note) if options.kind_of?(Hash)
-        calendar_note ||= @frame ? @frame.note : 'JulianDayNotes'
+        calendar_note ||= @frame ? @frame.note : 'JulianDay'
         When.CalendarNote(calendar_note)
       end
     end

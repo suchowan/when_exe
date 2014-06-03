@@ -149,7 +149,7 @@ module Test
          2449525..2449526].each do |range|
           range.each do |jdn|
             (When.when?(jdn) ^ When.CalendarEra('Japanese')).each do |date|
-              dates = When.CalendarNote('JapaneseNote').send(:_to_date_for_note, date)
+              dates = When.CalendarNote('Japanese').send(:_to_date_for_note, date)
               date  = When.when?(dates.o_date.to_cal_date.to_s,
                                {:clock=>dates.s_date.frame.time_basis})
               long  = dates.cal4note.s_terms.position(date)
@@ -161,9 +161,9 @@ module Test
           end
         end
         assert_equal(sample.shift, result)
-        When::CalendarNote::JapaneseNote::SolarTerms.send(:patch=, {})
+        When::CalendarNote::Japanese::SolarTerms.send(:patch=, {})
       end
-      When::CalendarNote::JapaneseNote::SolarTerms.send(:patch=, nil)
+      When::CalendarNote::Japanese::SolarTerms.send(:patch=, nil)
     end
 
     def test__lunar_phases

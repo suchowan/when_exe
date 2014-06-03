@@ -9,10 +9,10 @@ module When
 
   class BasicTypes::M17n
 
-    WorldTerms = [self, [
+    World = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
-      "names:[WorldTerms=]",
+      "names:[World=]",
       "[World=en:The_World_Calendar, 世界暦]"
     ]]
   end
@@ -32,7 +32,7 @@ module When
   #
   class CalendarNote::WorldWeek < CalendarNote
 
-    NoteObjects = [When::BasicTypes::M17n, [
+    Notes = [When::BasicTypes::M17n, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[World]",
@@ -105,7 +105,7 @@ module When
 
     # @private
     7.times do |k|
-      name = When.CalendarNote('WorldWeek/NoteObjects::day::Week')[k].to_s.downcase
+      name = When.CalendarNote('WorldWeek/Notes::day::Week')[k].to_s.downcase
       module_eval %Q{
         def #{name}(date, parameter=nil)
           event_name = 'from_#{name}'
@@ -161,11 +161,11 @@ module When
     # World calendar based on Gregorian calendar
     #
     World =  [CyclicTableBased, {
-      'label'   => When.Resource('_m:WorldTerms::World'),
+      'label'   => 'World::World',
       'origin_of_LSC'  => 1721060,
       'indices' => [
-         Coordinates::Index.new({:unit =>12, :trunk=>When.Resource('_m:CalendarTerms::Month::*')}),
-         Coordinates::DefaultDayIndex
+         When.Index('Calendar::Month', {:unit =>12}),
+         When::Coordinates::DefaultDayIndex
        ],
       'rule_table'      => {
         'T'  => {'Rule'  =>['LC', 'SC', 'SC', 'SC']},

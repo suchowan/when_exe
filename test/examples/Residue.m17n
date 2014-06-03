@@ -6,7 +6,7 @@ BEGIN:B:M17N
   NAMESPACE:[en=http://en.wikipedia.org/wiki/,
              ja=http://ja.wikipedia.org/wiki/]
   LOCALE:[=en:, ja=ja:, alias]
-  NAMES:[ResidueTerms]
+  NAMES:[Residue]
 
   BEGIN:CO:RESIDUE
     LABEL:[Week, 週]

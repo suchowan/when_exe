@@ -8,12 +8,12 @@
 module When
   class BasicTypes::M17n
 
-    ShireTerms = [self, [
+    Shire = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, " +
                  "ja=http://ja.wikipedia.org/wiki/, " +
                  "cal=http://en.wikipedia.org/wiki/Middle-earth_calendar]",
       "locale:[=en:, ja=ja:, alias]",
-      "names:[ShireTerms=]",
+      "names:[Shire=]",
       "[Shire=en:The_Lord_of_the_Rings, ホビット庄暦=ja:%%<指輪物語>]",
 
       [self,
@@ -41,7 +41,7 @@ module When
   #
   class CalendarNote::ShireWeek < CalendarNote
 
-    NoteObjects = [When::BasicTypes::M17n, [
+    Notes = [When::BasicTypes::M17n, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[Shire]",
@@ -121,7 +121,7 @@ module When
 
     # @private
     7.times do |k|
-      name = When.CalendarNote('ShireWeek/NoteObjects::day::Week')[k].to_s.downcase
+      name = When.CalendarNote('ShireWeek/Notes::day::Week')[k].to_s.downcase
       module_eval %Q{
         def #{name}(date, parameter=nil)
           event_name = 'from_#{name}'
@@ -197,10 +197,10 @@ module When
     # Shire Calendar based on summer solstice date
     #
     Shire =  [YearLengthTableBased, {
-      'label'   => When.Resource('_m:ShireTerms::Shire'),
+      'label'   => 'Shire::Shire',
       'indices' => [
-         Coordinates::Index.new({:unit=>14, :trunk=>When.Resource('_m:ShireTerms::Month::*')}),
-         Coordinates::DefaultDayIndex
+         When.Index('Shire::Month', {:unit=>14}),
+         When::Coordinates::DefaultDayIndex
        ],
       'border'       => '00-01-02',
       'day_offset'   => -183,           # the day 183 days before summer solstice
@@ -217,11 +217,11 @@ module When
     # Shire Calendar based on Gregorian Date
     #
     ShireG =  [CyclicTableBased, {
-      'label'   => When.Resource('_m:ShireTerms::Shire'),
+      'label'   => 'Shire::Shire',
       'origin_of_LSC' => 1721060-10,
       'indices' => [
-        Coordinates::Index.new({:unit=>14, :trunk=>When.Resource('_m:ShireTerms::Month::*')}),
-        Coordinates::DefaultDayIndex
+        When.Index('Shire::Month', {:unit=>14}),
+        When::Coordinates::DefaultDayIndex
       ],
       'border'     => '00-01-02',
       'rule_table' => {

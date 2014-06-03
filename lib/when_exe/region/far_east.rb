@@ -52,7 +52,7 @@ module When
       ],
       [self,
 	"period:[満洲国]",
-	["[大同]1",	"@F",	"name=[溥儀];1932-03-01^Gregorian?note=ChineseNotes"],
+	["[大同]1",	"@F",	"name=[溥儀];1932-03-01^Gregorian?note=Chinese"],
 	["[康徳]1.03.01","",		    "1934-03-01", "1945-08-18="]
       ],
     ]]

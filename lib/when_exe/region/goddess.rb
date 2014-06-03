@@ -18,10 +18,10 @@ module When
 
   class BasicTypes::M17n
 
-    GoddessTerms = [self, [
+    Goddess = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/]",
       "locale:[=en:, ja]",
-      "names:[GoddessTerms=]",
+      "names:[Goddess=]",
       "[Goddess(MMG)=http://calendars.wikia.com/wiki/Goddess_Lunar_Calendar, ゴッデス暦, *alias:Goddess]",
 
       [self,
@@ -40,11 +40,11 @@ module When
     # Goddess Calendar
     #
     Goddess =  [CyclicTableBased, {
-      'label'         => Parts::Resource._instance('_m:GoddessTerms::Goddess'),
+      'label'         => 'Goddess::Goddess',
       'origin_of_LSC' => 2415611 - 180432,  # 1901-08-14 Base Cycle = No.1
       'indices'       => [
         When.Index({:unit=>470}),
-        When.Index('Goddess'),
+        When.Index('Goddess::Month'),
         When::Coordinates::DefaultDayIndex,
       ],
       'rule_table' => {

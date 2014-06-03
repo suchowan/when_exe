@@ -718,7 +718,7 @@ module When::TM
       @indices ||= DefaultTimeIndices
 
       # note
-      @note    ||= 'JulianDayNotes'
+      @note    ||= 'JulianDay'
 
       # normalize spatial module
       _normalize_spatial

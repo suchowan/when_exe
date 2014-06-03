@@ -58,7 +58,7 @@ module When::CalendarTypes
     def _normalize(args=[], options={})
       @label   ||= m17n('Z')
       @indices ||= When::Coordinates::DefaultTimeIndices
-      @note    ||= 'JulianDayNotes'
+      @note    ||= 'JulianDay'
       _normalize_spatial
       _normalize_temporal
       @second    = (@second||1/When::TM::Duration::SECOND).to_f
@@ -667,7 +667,7 @@ module When::CalendarTypes
     # @note インスタンス変数 @note は to_a でデフォルトとして用いる暦注
     #
     def _normalize(args=[], options={})
-      @note ||= When.CalendarNote('ChineseNotes') # See when.rb
+      @note ||= When.CalendarNote('Chinese') # See when.rb
       super
     end
   end

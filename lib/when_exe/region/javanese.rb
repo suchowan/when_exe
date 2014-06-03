@@ -8,10 +8,10 @@
 module When
   class BasicTypes::M17n
 
-    JavaneseTerms = [self, [
+    Javanese = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
-      "names:[JavaneseTerms=]",
+      "names:[Javanese=]",
       "[JavaneseLunar=, ジャワ・イスラーム暦=]",
       "[Pranatamangsa=, プラノトモンソ=]",
 
@@ -47,6 +47,11 @@ module When
         "[Besar=,      12月=]"
       ]
     ]]
+  end
+
+  class CalendarNote
+    Javanese = [['Javanese::Windu'], ['_m:Calendar::Month'],
+                     ['Javanese::Pasaran', 'Javanese::Paringkelan', 'Javanese::Week', 'Javanese::Wuku']]
   end
 
   module Coordinates
@@ -157,7 +162,7 @@ module When
       'origin_of_LSC' =>  2317690,
       'origin_of_MSC' =>     1555-512,
       'indices' => [
-         When::Coordinates::Index.new({:unit =>12, :trunk=>When.Resource('_m:JavaneseTerms::IslamicMonth::*')}),
+         When.Index('Javanese::IslamicMonth', {:unit =>12}),
          When::Coordinates::DefaultDayIndex
       ],
       'rule_table'    => {
@@ -165,7 +170,7 @@ module When
         354   => {'Length'=>[30,29] * 6           },
         355   => {'Length'=>[30,29] * 5 + [30] * 2}
       },
-      'note'  => 'JavaneseNotes'
+      'note'  => 'Javanese'
     }]
 
     #
@@ -175,7 +180,7 @@ module When
       'origin_of_LSC' =>  2360214,
       'origin_of_MSC' =>     1675-512,
       'indices' => [
-         When::Coordinates::Index.new({:unit =>12, :trunk=>When.Resource('_m:JavaneseTerms::IslamicMonth::*')}),
+         When.Index('Javanese::IslamicMonth', {:unit =>12}),
          When::Coordinates::DefaultDayIndex
        ],
       'rule_table'    => {
@@ -183,7 +188,7 @@ module When
         354   => {'Length'=>[30,29] * 6                 },
         355   => {'Length'=>[30,29] * 5 + [30] * 2      }
       },
-      'note'  => 'JavaneseNotes'
+      'note'  => 'Javanese'
     }]
 
     #
@@ -193,7 +198,7 @@ module When
       'origin_of_LSC' =>  2385728,
       'origin_of_MSC' =>     1747-512,
       'indices' => [
-         When::Coordinates::Index.new({:unit =>12, :trunk=>When.Resource('_m:JavaneseTerms::IslamicMonth::*')}),
+         When.Index('Javanese::IslamicMonth', {:unit =>12}),
          When::Coordinates::DefaultDayIndex
        ],
       'rule_table'    => {
@@ -202,19 +207,19 @@ module When
         'D'   => {'Length'=>[30]*2+[29]*3+[29,30]*3+[30]},
         355   => {'Length'=>[30,29] * 5 + [30] * 2      }
       },
-      'note'  => 'JavaneseNotes'
+      'note'  => 'Javanese'
     }]
 
     #
     # Pranatamangsa
     #
     Pranatamangsa =  [CyclicTableBased, {
-      'label'         => When.Resource('_m:JavaneseTerms::Pranatamangsa'),
+      'label'         => 'Javanese::Pranatamangsa',
       'origin_of_LSC' => 1721232,
       'origin_of_MSC' =>   -1854,
       'indices' => [
-         Coordinates::Index.new({:unit =>12, :trunk=>When.Resource('_m:JavaneseTerms::HinduMonth::*'), :shift=>8}),
-         Coordinates::DefaultDayIndex
+         When.Index('Javanese::HinduMonth', {:unit =>12, :shift=>8}),
+         When::Coordinates::DefaultDayIndex
        ],
       'rule_table'     => {
         'T'  => {'Rule'  =>['LC', 'SC', 'SC', 'SC']},

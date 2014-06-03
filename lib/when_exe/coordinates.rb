@@ -112,7 +112,7 @@ module When::Coordinates
         return day if day.kind_of?(self)
 
         day ||= 0
-        week  = When.Resource('_co:CommonResidue::Week').child
+        week  = When.Resource('_co:Common::Week').child
         case day
         when Numeric ; return week[day]
         when String  ; day = When::EncodingConversion.to_internal_encoding(day)
@@ -696,14 +696,10 @@ module When::Coordinates
     private
 
     def _normalize(args=[], options={})
-      terms, name = args
-      if terms
-        @trunk = When::Parts::Resource._instance("_m:#{terms}Terms::#{name||'Month'}::*")
-        @trunk = @trunk.map {|m| m.label} if @trunk[0].kind_of?(When::Coordinates::Residue)
-      end
       @label  = m17n(@label, nil, nil, @options) if @label
       @unit   = @unit.to_i if @unit
       @base   = (@base  || 1).to_i
+      @trunk  = When::BasicTypes::M17n.labels(args[0]) unless args.empty?
       @shift  = (@shift || 0).to_i
       @keys   = []
       if @trunk
@@ -1942,6 +1938,9 @@ module When::Coordinates
       # method cash
       @_m_cash_lock_ = Mutex.new if When.multi_thread
 
+      # label
+      @label = When::BasicTypes::M17n.label(@label)
+
       # Origin and Upper Digits
       @origin_of_MSC  ||= - +@border.behavior if @border
       @origin_of_MSC    = Pair._en_number(@origin_of_MSC)
@@ -1971,7 +1970,7 @@ module When::Coordinates
       class << self; include IndexConversion; end unless @pair.uniq == [false]
 
       # note
-      @note ||= 'DefaultNotes'
+      @note ||= 'Default'
 
       # keys
       @keys = @indices.inject(label.instance_of?(When::Locale) ? label.keys : []) {|key, index| key |= index.keys}

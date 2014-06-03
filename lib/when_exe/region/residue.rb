@@ -20,11 +20,11 @@ module When::Coordinates
   class Kyusei     < Residue; end
 
   # Common Residue
-  CommonResidue = [{'V'=>{'0618'=>{'A'=>'awakening_of_insects=,*啓蟄',
+  Common = [{'V'=>{'0618'=>{'A'=>'awakening_of_insects=,*啓蟄',
                                    'B'=>'rain_water=,*雨水'}}}, When::BasicTypes::M17n, [
     "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
     "locale:[=en:, ja=ja:, tenreki, tibetan, yi, alias]",
-    "names:[CommonResidue]",
+    "names:[Common]",
 
     [Residue,
       "label:[Week, 週]", "divisor:7", "day:0",

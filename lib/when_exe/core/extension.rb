@@ -494,9 +494,11 @@ class Module
     # When 直下に定数として定義する時法・暦法(暗黙的追加)
     #
     def const_missing(name)
-      return _const_missing(name) if When.const_defined?(name) ||
-                                    !When::CalendarTypes.const_defined?(name)
-      When.const_set(name, When::Parts::Resource._instance(name.to_s, '_c:'))
+      if When.const_defined?(name)
+        _const_missing(name)
+      else
+        When.const_missing(name)
+      end
     end
   end
 end

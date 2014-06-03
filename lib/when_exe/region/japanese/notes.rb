@@ -13,7 +13,7 @@ class When::CalendarNote
   #
   # 日本暦注
   #
-  class JapaneseNote < self
+  class Japanese < self
 
     #
     # 日本暦注が使用する暦法
@@ -36,7 +36,7 @@ class When::CalendarNote
     #
     # 日本暦注の要素
     #
-    NoteObjects = [When::BasicTypes::M17n, [
+    Notes = [When::BasicTypes::M17n, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=ja:, en=en:]",
       "names:[日本暦注]",
@@ -279,10 +279,10 @@ class When::CalendarNote
     # 日本暦注の時代変遷
     #
     # @private
-    NoteTypes = (3...When::TM::CalendarEra::JapaneseSolarSeries[1].size).to_a.map {|i|
+    NoteTypes = (3...When::TM::CalendarEra::JapaneseSolar[1].size).to_a.map {|i|
       calendars =
-        [When::TM::CalendarEra::JapaneseLuniSolarSeries[1][i][2],
-         When::TM::CalendarEra::JapaneseSolarSeries[1][i][2]].map {|epoch|
+        [When::TM::CalendarEra::JapaneseLuniSolar[1][i][2],
+         When::TM::CalendarEra::JapaneseSolar[1][i][2]].map {|epoch|
           epoch =~ /^(-?\d+)-(\d+)-(\d+)\^(.+)$/
           $4
         }
@@ -313,7 +313,7 @@ class When::CalendarNote
     # @private
     NoteFocused = (0...NoteRange.size).to_a.map {|range|
       (3..5).to_a.map {|cord|
-        notes = NoteObjects[1][cord]
+        notes = Notes[1][cord]
         (2...notes.size).to_a.inject([]) {|focused,note|
           focused << notes[note][2][/\[.+?[=\]]/][1..-2] if notes[note][1][range] == 1
           focused
@@ -350,11 +350,11 @@ class When::CalendarNote
       end
 
       def l_phases
-        @l_phases   ||= JapaneseNote::LunarPhases.new('formula'=>l_calendar.formula[-1])
+        @l_phases   ||= Japanese::LunarPhases.new('formula'=>l_calendar.formula[-1])
       end
 
       def s_terms
-        @s_terms    ||= JapaneseNote::SolarTerms.new('formula'=>s_calendar.formula[0])
+        @s_terms    ||= Japanese::SolarTerms.new('formula'=>s_calendar.formula[0])
       end
 
       def doyo
@@ -363,7 +363,7 @@ class When::CalendarNote
     end
 
     #
-    #  日本暦注用の NoteObjects の要素のための内部クラス
+    #  日本暦注用の Notes の要素のための内部クラス
     #
     # @private
     class Note
@@ -455,13 +455,13 @@ class When::CalendarNote
     # @return [Array<Hash>]        上記に該当せず、:indices が Integer の場合
     # @return [Array<Array<Hash>>] 上記のいずれにも該当しない場合
     # @note return 値の [Hash] の要素は下記の通り
-    #   :note     => 暦注要素 (When::CalendarTypes::JapaneseNote::Note)
+    #   :note     => 暦注要素 (When::CalendarTypes::Japanese::Note)
     #   :value    => 暦注の値 (String or When::BasicTypes::M17n または、その Array)
     #   :position => 具注暦でのその暦注の配置場所(String)
     #
     def notes(date, options={})
       dates, indices, notes, persistence, conditions, options = _parse_note(date, options)
-      Notes.register(indices.map {|i|
+      NotesContainer.register(indices.map {|i|
         next [] unless i <= dates.precision
         send(NoteMethods[i-1], dates, notes[i-1], conditions)
       }, persistence, date.to_i)
@@ -550,7 +550,7 @@ class When::CalendarNote
       _note_values(dates, notes, _all_keys[-3], _elements[-3]) do |dates, focused_notes, notes_hash|
 
         focused_notes[0..-1] = focused_notes & NoteFocused[dates.range][-3]
-        root = When.Resource('_co:CommonResidue')
+        root = When.Resource('_co:Common')
 
         # 干支
         residue = (dates.precision < When::DAY ? dates.o_date : dates.s_date).most_significant_coordinate - 4
@@ -592,7 +592,7 @@ class When::CalendarNote
       _note_values(dates, notes, _all_keys[-2], _elements[-2]) do |dates, focused_notes, notes_hash|
 
         focused_notes[0..-1] = focused_notes & NoteFocused[dates.range][-2]
-        root = When.Resource('_co:CommonResidue')
+        root = When.Resource('_co:Common')
 
         # 干支
         residue = month_stem_branch(dates.precision < When::DAY ? dates.o_date : dates.m_date)
@@ -627,7 +627,7 @@ class When::CalendarNote
       _note_values(dates, notes, _all_keys[-1], _elements[-1]) do |dates, focused_notes, notes_hash|
 
         focused_notes[0..-1] = focused_notes & NoteFocused[dates.range][-1]
-        root = When.Resource('_co:CommonResidue')
+        root = When.Resource('_co:Common')
 
         # 干支
         residue = dates.s_date.to_i-11
@@ -872,7 +872,7 @@ class When::CalendarNote
                    足小指 足踝及胸、目下 肝及足 手陽明 足陽明 胸   膝 陰   膝晊 足跌)
 
     # 六曜
-    Rokuyo = When.Resource('_m:JapaneseTerms::六曜')
+    Rokuyo = When.Resource('_m:Japanese::六曜')
 
     # 月の暦注
     # @private
@@ -923,7 +923,7 @@ class When::CalendarNote
   #
   # 月の位相による暦注
   #
-  class JapaneseNote::LunarPhases < LunarPhases
+  class Japanese::LunarPhases < LunarPhases
 
     # 日の暦注
     # @private
@@ -989,7 +989,7 @@ class When::CalendarNote
   #
   # 太陽黄経による暦注
   #
-  class JapaneseNote::SolarTerms < SolarTerms
+  class Japanese::SolarTerms < SolarTerms
 
     Notes12 = %w(正月 二月 三月 四月 五月 六月 七月 八月 九月 十月 十一月 十二月)
 
@@ -1311,7 +1311,7 @@ class When::CalendarNote
           notes['節中']     ||= Notes12[div] + %w(節 中)[mod]
           notes['廿四節気'] ||= 
             begin
-              residue = When.Resource(dates.range == 1 ? '_co:CommonResidue?V=0618' : '_co:CommonResidue')['二十四節気::*'][(note-3) % 24]
+              residue = When.Resource(dates.range == 1 ? '_co:Common?V=0618' : '_co:Common')['二十四節気::*'][(note-3) % 24]
               if conditions[:shoyo]
                 dates.cal4note.s_terms.event_time(date, residue.label, [0,15])
               else

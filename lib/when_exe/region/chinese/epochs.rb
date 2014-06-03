@@ -1239,7 +1239,7 @@ module When
       [self,
 	"period:[中華民国=ja:%%<民国紀元>,ROC=en:Chinese_era_name#The_Republic_of_China_Era]",
 	["[民国=ja:%%<民国紀元>,ROC=en:Chinese_era_name#The_Republic_of_China_Era]1",
-				"@F",		"name=;1912-01-01^Gregorian?note=ChineseNotes"]
+				"@F",		"name=;1912-01-01^Gregorian?note=Chinese"]
       ]
     ]]
   end

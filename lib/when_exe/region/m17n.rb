@@ -21,8 +21,8 @@ module When
       def self.month_name(name)
         return name if name.kind_of?(self)
 
-        months = When.Resource('_m:CalendarTerms::Month').child
-        abbrs  = When.Resource('_m:CalendarTerms::Abbr_Month').child
+        months = When.Resource('_m:Calendar::Month').child
+        abbrs  = When.Resource('_m:Calendar::Abbr_Month').child
         return name > 0 ? months[name-1] : abbrs[-name-1] if name.kind_of?(Numeric)
 
         name   = When::EncodingConversion.to_internal_encoding(name)
@@ -43,11 +43,11 @@ module When
       Namespace = "[ja=http://ja.wikipedia.org/wiki/, en=http://en.wikipedia.org/wiki/]"
       Locales   = "[=ja:, en=en:]"
 
-      # Terms
-      CalendarTerms = [M17n, [
+      # 
+      Calendar = [M17n, [
         "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
         "locale:[=en:, ja=ja:, alias]",
-        "names:[CalendarTerms=]",
+        "names:[Calendar=]",
 
         "[Intercalary %s=, *閏]",
 

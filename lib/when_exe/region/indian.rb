@@ -10,10 +10,10 @@ require 'when_exe/locales/iast'
 module When
   class BasicTypes::M17n
 
-    IndianTerms = [self, [
+    Indian = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/, hi=http://hi.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, hi=hi:, alias]",
-      "names:[IndianTerms=]",
+      "names:[Indian=]",
       "[IndianNationalSolar=en:Indian_national_calendar, インド国定暦]",
       "[HinduSolar=en:Hindu_calendar,     インド太陽暦=ja:%%<ヒンドゥー暦>]",
       "[HinduLuniSolar=en:Hindu_calendar, インド太陰太陽暦=ja:%%<ヒンドゥー暦>]",
@@ -541,10 +541,10 @@ module When
     # Indian national solar calendar
     #
     IndianNationalSolar =  [CyclicTableBased, {
-      'label'   => When.Resource('_m:IndianTerms::IndianNationalSolar'),
+      'label'   => 'Indian::IndianNationalSolar',
       'origin_of_LSC' => 1721140,
       'indices' => [
-         When::Coordinates::Index.new({:unit =>12, :trunk=>When.Resource('_m:IndianTerms::LunarMonth::*'), :shift=>4}),
+         When.Index('Indian::LunarMonth', {:unit =>12, :shift=>4}),
          When::Coordinates::DefaultDayIndex
        ],
       'rule_table'      => {
@@ -585,7 +585,7 @@ module When
       #    @start_month  = 暦年の最初の月
       #
       def _normalize(args=[], options={})
-        @label ||= When.Resource('_m:IndianTerms::HinduSolar')
+        @label ||= 'Indian::HinduSolar'
         @type  ||= 'SBS'
         raise ArgumentError, "Irregal formula: #{@formula}" unless @type.upcase =~ /^(M|SS|SB)(V|S|VZ|SZ)$/
 
@@ -602,9 +602,8 @@ module When
           @formula = [When.Resource("_ep:#{formula}location=(#{@location})&formula=12S")]
         end
         @indices        ||= [
-          Coordinates::Index.new({:trunk=>When.Resource('_m:IndianTerms::SolarMonth::*'),
-                                  :shift=>@start_month-1}),
-          Coordinates::DefaultDayIndex
+          When.Index('Indian::SolarMonth', {:shift=>@start_month-1}),
+          When::Coordinates::DefaultDayIndex
         ]
 
         super
@@ -728,7 +727,7 @@ module When
       #    @start_month  = 暦年の最初の月
       #
       def _normalize(args=[], options={})
-        @label ||= When.Resource('_m:IndianTerms::HinduLuniSolar')
+        @label ||= 'Indian::HinduLuniSolar'
         @type  ||= 'SBSA'
         raise ArgumentError, "Irregal formula: #{@formula}" unless @type.upcase =~ /^(M|SS|SB)(V|S|VZ|SZ)(A|P|PX)$/
 
@@ -749,19 +748,18 @@ module When
                                "_ep:#{formula}formula=30L->12S",
                                "_ep:#{formula}location=(#{@location})&formula=2L"])
         end
-        intercalary_month = When.Resource('_m:IndianTerms::IntercalaryMonth::*')
-        intercalary_day   = When.Resource('_m:IndianTerms::IntercalaryDay::*')
+        intercalary_month = When.Resource('_m:Indian::IntercalaryMonth::*')
+        intercalary_day   = When.Resource('_m:Indian::IntercalaryDay::*')
         @indices        ||= [
-          Coordinates::Index.new({:branch=>{-2.5 => intercalary_month[1],  #   黒分
-                                            -2   => intercalary_month[3],  # 閏黒分
-                                            -1.5 => intercalary_month[2],  # 閏白分
-                                            -1   => intercalary_month[3],  # 閏黒分
-                                            -0.5 => intercalary_month[1],  #   黒分
-                                             0   => intercalary_month[0],  #   白分
-                                            +0.5 => intercalary_month[1]}, #   黒分
-                                  :trunk=>When.Resource('_m:IndianTerms::LunarMonth::*'),
-                                  :shift=>@start_month-1}),
-          Coordinates::Index.new({:branch=>{-2=>intercalary_day[0], -1=>intercalary_day[1]}})
+          When.Index('Indian::LunarMonth', {:branch=>{-2.5 => intercalary_month[1],  #   黒分
+                                                      -2   => intercalary_month[3],  # 閏黒分
+                                                      -1.5 => intercalary_month[2],  # 閏白分
+                                                      -1   => intercalary_month[3],  # 閏黒分
+                                                      -0.5 => intercalary_month[1],  #   黒分
+                                                       0   => intercalary_month[0],  #   白分
+                                                      +0.5 => intercalary_month[1]}, #   黒分
+                                            :shift=>@start_month-1}),
+          When.Index({:branch=>{-2=>intercalary_day[0], -1=>intercalary_day[1]}})
         ]
 
         super
@@ -775,7 +773,7 @@ module When
     #
     class HinduNote < self
 
-      NoteObjects = [When::BasicTypes::M17n, [
+      Notes = [When::BasicTypes::M17n, [
         "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/, hi=http://hi.wikipedia.org/wiki/]",
         "locale:[=en:, ja=ja:, hi=hi:, alias]",
         "names:[Hindu]",
@@ -1009,7 +1007,7 @@ module When
           clock    = date.clock
           frame    = date.frame if date.frame.kind_of?(When::CalendarTypes::HinduLuniSolar)
           @l_date  = (frame || When.Calendar('HinduLuniSolar?note=HinduNote')).jul_trans(date.to_i, {:clock=>'+05:30'})
-          @root    = When.CalendarNote('HinduNote/NoteObjects')['day']
+          @root    = When.CalendarNote('HinduNote/Notes')['day']
           @formula = @l_date.frame.formula[-1]
           @iri     = @formula.iri
           @rises   = [@formula.sunrise(@l_date), @formula.sunrise(@l_date+When.Duration('P1D'))]
@@ -1046,7 +1044,7 @@ module When
         year_kali = dates.l_date.most_significant_coordinate + dates.l_date.frame._diff_to_CE + 3101
         year_mod  = year_kali >= jovian ? (year_kali + 12) % 60 :
                                          ((year_kali * 211 - 108).div(18000) + year_kali + 26) % 60
-        When.CalendarNote('HinduNote/NoteObjects')['year']['samvatsara'][year_mod]
+        When.CalendarNote('HinduNote/Notes')['year']['samvatsara'][year_mod]
       end
 
       #

@@ -9,11 +9,11 @@ module When
 
   class TM::CalendarEra
 
-    # Chinese Luni-Solar Calendar Series for ChineseNote
-    ChineseLuniSolarSeries = [self, [
+    # Chinese Luni-Solar Calendar Series for Chinese Note
+    ChineseLuniSolar = [self, [
       'namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]',
       'locale:[=en:, ja=ja:, alias]',
-      'area:[ChineseLuniSolarSeries=, 中国の暦月=]',
+      'area:[ChineseLuniSolar=, 中国の暦月=]',
       ['[太初暦]1.01.01',      '@CR',   '1-01-01^ChineseTwin::太初暦',    '85-01-01'], # 西暦が正になるところから開始(実際は-103.01.01)
       ['[四分暦]85.01.01',     '@CR',  '85-01-01^ChineseTwin::四分暦',    '265-01-01'],
       ['[乾象暦]222.01.01',    '@CR', '222-01-01^ChineseTwin::乾象暦',    '281-01-01'],
@@ -42,11 +42,11 @@ module When
       ['[大統暦]1368.01.01',   '@CR','1368-01-01^ChineseTwin::大統暦',   '1645-01-01']
     ]]
 
-    # Chinese Solar Calendar Series for ChineseNote
-    ChineseSolarSeries = [self, [
+    # Chinese Solar Calendar Series for Chinese Note
+    ChineseSolar = [self, [
       'namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]',
       'locale:[=en:, ja=ja:, alias]',
-      'area:[ChineseSolarSeries=, 中国の節月=]',
+      'area:[ChineseSolar=, 中国の節月=]',
       ['[太初暦]1.01.01',     '@CR',    '1-01-01^ChineseTwin::太初暦(節月)',  '85-01-06'], # 西暦が正になるところから開始(実際は-103.01.15)
       ['[四分暦]85.01.07',    '@CR',   '85-01-07^ChineseTwin::四分暦(節月)', '264-12-28'],
       ['[乾象暦]221.12.23',   '@CR',  '221-12-23^ChineseTwin::乾象暦(節月)', '280-12-31'],

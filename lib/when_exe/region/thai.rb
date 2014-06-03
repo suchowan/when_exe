@@ -8,10 +8,10 @@
 module When
   class BasicTypes::M17n
 
-    ThaiTerms = [self, [
+    Thai = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
-      "names:[ThaiTerms=]",
+      "names:[Thai=]",
       "[ThaiLuniSolar=en:Thai_lunar_calendar, タイ太陰太陽暦=ja:%%<チャントラカティ>]",
 
       [self,
@@ -84,14 +84,13 @@ module When
       include Songkran
 
       # 月番号
-      _intercalary_month = When.Resource('_m:ThaiTerms::IntercalaryMonth::*')
+      _intercalary_month = When.Resource('_m:Thai::IntercalaryMonth::*')
       Indices = [
-        Coordinates::Index.new({:branch=>{0   => _intercalary_month[0],
-                                          0.5 => _intercalary_month[1],
-                                         -1.5 => _intercalary_month[2],
-                                         -1   => _intercalary_month[3]},
-                                :trunk =>When.Resource('_m:ThaiTerms::LunarMonth::*')}),
-        Coordinates::DefaultDayIndex
+        When.Index('Thai::LunarMonth', {:branch=>{0   => _intercalary_month[0],
+                                                  0.5 => _intercalary_month[1],
+                                                 -1.5 => _intercalary_month[2],
+                                                 -1   => _intercalary_month[3]}}),
+        When::Coordinates::DefaultDayIndex
       ]
 
       # 月の大小と閏
@@ -108,7 +107,7 @@ module When
       # オブジェクトの正規化
       # @private
       def _normalize(args=[], options={})
-        @label ||= When.Resource('_m:ThaiTerms::ThaiLuniSolar')
+        @label ||= 'Thai::ThaiLuniSolar'
 
         Rational
         @mean_month    ||=       29 + Rational(  373,    703)

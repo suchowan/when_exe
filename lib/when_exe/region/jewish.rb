@@ -8,10 +8,10 @@
 module When
   class BasicTypes::M17n
 
-    JewishTerms = [self, [
+    Jewish = [self, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
-      "names:[JewishTerms=]",
+      "names:[Jewish=]",
       "[Jewish=en:Hebrew_calendar, ユダヤ暦]",
 
       [self,
@@ -64,7 +64,7 @@ module When
 
       # オブジェクトの正規化
       def _normalize(args=[], options={})
-        @label = When.Resource('_m:JewishTerms::Jewish')
+        @label = 'Jewish::Jewish'
 
         # Default Parameters
         Rational
@@ -83,10 +83,9 @@ module When
 
         # Month & Day Index
         @indices ||= [
-          Coordinates::Index.new({:branch=>{-1=>When.Resource('_m:JewishTerms::IntercalaryMonth::*')[0],
-                                             1=>When.Resource('_m:JewishTerms::IntercalaryMonth::*')[1]},
-                                  :trunk=>m17n('[::_m:JewishTerms::Month::*]')}),
-          Coordinates::DefaultDayIndex
+          When.Index('Jewish::Month', {:branch=>{-1=>When.Resource('_m:Jewish::IntercalaryMonth::*')[0],
+                                                  1=>When.Resource('_m:Jewish::IntercalaryMonth::*')[1]}}),
+          When::Coordinates::DefaultDayIndex
         ]
 
         # Month & Day Arrangement

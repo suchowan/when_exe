@@ -11,7 +11,7 @@ module Test
   class M17n < Test::Unit::TestCase
 
     First = [
-      ["CalendarTerms", "CalendarTerms", nil],
+      ["Calendar", "Calendar", nil],
       ["Month",      "月", "http://ja.wikipedia.org/wiki/%E6%9C%88_(%E6%9A%A6)"],
       ["Month",      "月", "http://ja.wikipedia.org/wiki/%E6%9C%88_(%E6%9A%A6)"],
       ["January",   "1月", "http://ja.wikipedia.org/wiki/1%E6%9C%88"]
@@ -33,7 +33,7 @@ module Test
     ]
 
     def test__m17n_1
-      ['examples/Terms.m17n', '_m:CalendarTerms'].each do |head|
+      ['examples/Terms.m17n', '_m:Calendar'].each do |head|
         When.Resource(head)
 
         # pp When::Parts::Resource[head].child.map {|v| v.label}
@@ -71,8 +71,8 @@ module Test
 
       date = When.when?('CE2010.4.12')
       era  = When.era('CE')[0]
-    # assert_equal(Second.map {|v| v[0]}, era.m17n('[::_m:CalendarTerms::Month::*]').map {|v| v.to_s})
-      assert_equal(Second.map {|v| v[0]}, When.m17n('[::_m:CalendarTerms::Month::*]').map {|v| v.to_s})
+    # assert_equal(Second.map {|v| v[0]}, era.m17n('[::_m:Calendar::Month::*]').map {|v| v.to_s})
+      assert_equal(Second.map {|v| v[0]}, When.m17n('[::_m:Calendar::Month::*]').map {|v| v.to_s})
       assert_equal(["Accession", true, "http://hosi.org/When/BasicTypes/M17n/EpochEvents::Accession"],
         [era['::_m:EpochEvents::Accession'].to_s,
          era['::_m:EpochEvents::Accession'].registered?,
@@ -101,21 +101,21 @@ module Test
     end
 
     def test__m17n_3
-      january = When.Resource('_m:CalendarTerms::Month::January')
+      january = When.Resource('_m:Calendar::Month::January')
       [['en', 'January'], ['ja', '1月'], ['fr', 'janvier']].each do |sample|
         assert_equal(sample[1], january.translate(sample[0]))
       end
     end
 
     def test__m17n_4
-      january = When.Resource('_m:CalendarTerms::Month::January')
+      january = When.Resource('_m:Calendar::Month::January')
       [['en', 'January'], ['ja', '1月'], ['fr', 'janvier']].each do |sample|
         assert_equal(sample[1], january.translate(sample[0]))
       end
     end
 
     def test__m17n_5
-      month = When.Resource('_m:CalendarTerms::Month')
+      month = When.Resource('_m:Calendar::Month')
       [['en', 'Month'], ['ja', '月'], ['fr', 'Mois']].each do |sample|
         assert_equal(sample[1], month.translate(sample[0]))
       end
