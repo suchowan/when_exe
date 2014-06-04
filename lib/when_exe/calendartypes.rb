@@ -260,13 +260,13 @@ module When::CalendarTypes
     # @return [Integer] 通日
     #
     def _coordinates_to_number(y, m, d)
-      if @before && y < 0
-        _normalize_before
-        return @before[0]._coordinates_to_number(y + @before[1], m, d)
-      end
       if @after && y >= @rule_table[@entry_key]['Years']
         _normalize_after
-        return @after[0]._coordinates_to_number(y + @after[1], m, d)
+        return @after._coordinates_to_number(y + @_after_offset, m, d)
+      end
+      if @before && y < 0
+        _normalize_before
+        return @before._coordinates_to_number(y + @_before_offset, m, d)
       end
       super
     end
@@ -281,15 +281,15 @@ module When::CalendarTypes
     #   d 日 (0 始まり)
     #
     def _number_to_coordinates(sdn)
-      if @before && sdn < @origin_of_LSC
-        _normalize_before
-        y, m, d = @before[0]._number_to_coordinates(sdn)
-        return [y - @before[1], m, d]
-      end
       if @after && sdn >= @origin_of_LSC + @rule_table[@entry_key]['Days']
         _normalize_after
-        y, m, d = @after[0]._number_to_coordinates(sdn)
-        return [y - @after[1], m, d]
+        y, m, d = @after._number_to_coordinates(sdn)
+        return [y - @_after_offset, m, d]
+      end
+      if @before && sdn < @origin_of_LSC
+        _normalize_before
+        y, m, d = @before._number_to_coordinates(sdn)
+        return [y - @_before_offset, m, d]
       end
       super
     end
@@ -300,15 +300,15 @@ module When::CalendarTypes
     %w(ids length).each do |method|
       module_eval %Q{
         def _#{method}(date)
-          if @before && +date[0] < 0
-            _normalize_before
-            date[0] += @before[1]
-            return @before[0].send(:_#{method}, date)
-          end
           if @after && +date[0] >= @rule_table[@entry_key]['Years']
             _normalize_after
-            date[0] += @after[1]
-            return @after[0].send(:_#{method}, date)
+            date[0] += @_after_offset
+            return @after.send(:_#{method}, date)
+          end
+          if @before && +date[0] < 0
+            _normalize_before
+            date[0] += @_before_offset
+            return @before.send(:_#{method}, date)
           end
           super
         end
@@ -317,20 +317,18 @@ module When::CalendarTypes
 
     private
 
-    def _normalize_before
-      unless @before.kind_of?(Array)
-        @before = [When.Calendar(@before)]
-        @before << @origin_of_MSC - @before[0].origin_of_MSC
-        class << self; alias :_normalize_before :_normalize_non end
-      end
+    def _normalize_after
+      raise RangeError, "Out of range: #{iri}" if @after.kind_of?(Symbol)
+      @after = When.Calendar(@after)
+      @_after_offset = @origin_of_MSC - @after.origin_of_MSC
+      class << self; alias :_normalize_after :_normalize_non end
     end
 
-    def _normalize_after
-      unless @after.kind_of?(Array)
-        @after = [When.Calendar(@after)]
-        @after << @origin_of_MSC - @after[0].origin_of_MSC
-        class << self; alias :_normalize_after :_normalize_non end
-      end
+    def _normalize_before
+      raise RangeError, "Out of range: #{iri}" if @before.kind_of?(Symbol)
+      @before = When.Calendar(@before)
+      @_before_offset = @origin_of_MSC - @before.origin_of_MSC
+      class << self; alias :_normalize_before :_normalize_non end
     end
 
     def _normalize_non
