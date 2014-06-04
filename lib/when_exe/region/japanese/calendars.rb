@@ -19,6 +19,8 @@ module When
            When.Index('Japanese::Month', {:branch=>{1=>When.Resource('_m:Calendar::閏')}}),
            When::Coordinates::DefaultDayIndex
        ],
+      'before'    => 'JapaneseTwin::平朔儀鳳暦',
+      'after'     => 'JapaneseTwin::旧暦',
       'note'      => 'Japanese',
       'rule_table'=> %w(
 							aBcDeFgHiJkL	aBCdEfGhIjKl
@@ -334,7 +336,23 @@ module When
 	AbcDeFgHIJkL	aBcdEeFgHIjKL	aBcdEfgHIjKL	AbCdeFghIjKL	AbCCdeFghIjKL
 	aBCdEfGhIjkL	AbCDeFgHhIjKl	aBCdEfGHiJkL	abCdEfGHIjKl	AbcDeEfGHiJKl
 	AbCdefGHiJKL	aBcDefgHiJKL	aBCddEfgHiJKl	ABCdeFghIjKL	aBCdEfGhIjjKl
-	ABcDEfGhIjkL	aBcDEfGHiJkL	)
+	ABcDEfGhIjkL	aBcDEfGHiJkL
+					abCdEfFGhIJkL	abCdEfGhIJKl	AbCdefGhIJKl
+	ABcDeefGhIJkL	ABcdEfgHiJkL	ABcDeFghIjKl	ABcCDeFgHijKl	ABcDeFGhIjkL
+	aBcDeFGgHIjKl	aBcDeFgHIJkL	abCdEfgHIJkL	AbCdeeFgHIjKL	AbCdefGhIjKL
+	AbCdEfgHiJkL	ABcDdEfgHiJkL	AbCDeFghIjKl	AbCDeFgHiJkLl	AbCdEFgHiJKl
+	aBcDeFgHIjKL	abCdeFfGHiJKL	abCdeFgHiJKL	aBcDefGhIjKL	AbCdEefGhIjKL
+	aBCdEfgHiJkL	aBCdEFghIjKl	AbCcDEfGhIjKl	AbCdEfGHiJkL	aBcdEfGHhIJkL
+	aBcdEfGhIJKl	AbCdeFgHiJKL	aBcDeeFgHiJKl	ABcDefGhIjKl	ABCdEfgHiJkL
+	aBCdDeFgHiJkL	aBcDEfGhIjKl	AbCdEfGhIJkL	aBbcDeFGhIJkL	aBcdEfGhIJKl
+	AbCdeFfgHIJkL	AbCdeFghIJkL	ABcDefGhiJkL	ABcDEefGhIjkL	AbCDeFgHiJkL
+	aBcDeFGhIjKl	AbbCdEFgHIjKl	AbcDeFgHIJkL	aBcdEfGgHIjKL	aBcdEfgHIjKL
+	AbCdeFghIjKL	AbCDeeFghIjKL	aBCdEfGhIjkL	AbCdEFgHiJkl	AbCDdEfGHiJkL
+	abCdEfGHiJKl	AbcDeFgHIjKL	aBbcDefGHiJKL	aBcdEfgHiJKL	aBCdeFfgHiJKl
+	ABCdeFghIjKl	ABCdEfGhiJkL	aBCdEEfGhIjkL	aBcDEfGHiJkL	abCdEfGHiJKl
+	AbcCdEfGhIJKl	AbcDefGhIJKl	ABcdEfgGhIJkL	ABcdEfgHiJkL	ABcDeFghIjKl
+	ABcDEfFghIjKl	AbCDeFGhIjkL	aBcDeFGhIJkL	abCdDeFgHIjKL	abCdeFgHIJkL
+	AbcDefGhIJkL	ABccDefGhIjKL)
       }
     ]
 
@@ -347,6 +365,8 @@ module When
            When.Index('Japanese::Month', {:branch=>{1=>When.Resource('_m:Calendar::閏')}}),
            When::Coordinates::DefaultDayIndex
        ],
+      'before'    => 'Japanese',
+      'after'     => 'Japanese',
       'note'      => 'Japanese',
       'rule_table'=> %w(				aBCdEfGhiJkL	aBCdEFgHiJjkL
 	aBCdEfGHiJkL	abCdEfGHiJKl	AbcDeFfGHiJKl	AbCdeFghIJKL	aBcdEfgHiJKL

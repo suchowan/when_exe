@@ -246,6 +246,97 @@ module When::CalendarTypes
     end
   end
 
+  # 
+  # 朔閏パターンの表の拡張
+  #
+  module TableExtend
+
+    # 年月日 -> 通日
+    #
+    # @param  [Numeric] y 年
+    # @param  [Integer] m 月 (0 始まり)
+    # @param  [Integer] d 日 (0 始まり)
+    #
+    # @return [Integer] 通日
+    #
+    def _coordinates_to_number(y, m, d)
+      if @before && y < 0
+        _normalize_before
+        return @before[0]._coordinates_to_number(y + @before[1], m, d)
+      end
+      if @after && y >= @rule_table[@entry_key]['Years']
+        _normalize_after
+        return @after[0]._coordinates_to_number(y + @after[1], m, d)
+      end
+      super
+    end
+
+    # 通日 - > 年月日
+    #
+    # @param  [Integer] sdn 通日
+    #
+    # @return [Array<Integer>] [ y, m, d ]
+    #   y 年
+    #   m 月 (0 始まり)
+    #   d 日 (0 始まり)
+    #
+    def _number_to_coordinates(sdn)
+      if @before && sdn < @origin_of_LSC
+        _normalize_before
+        y, m, d = @before[0]._number_to_coordinates(sdn)
+        return [y - @before[1], m, d]
+      end
+      if @after && sdn >= @origin_of_LSC + @rule_table[@entry_key]['Days']
+        _normalize_after
+        y, m, d = @after[0]._number_to_coordinates(sdn)
+        return [y - @after[1], m, d]
+      end
+      super
+    end
+
+    #
+    # その他のテーブル参照
+    #
+    %w(ids length).each do |method|
+      module_eval %Q{
+        def _#{method}(date)
+          if @before && +date[0] < 0
+            _normalize_before
+            date[0] += @before[1]
+            return @before[0].send(:_#{method}, date)
+          end
+          if @after && +date[0] >= @rule_table[@entry_key]['Years']
+            _normalize_after
+            date[0] += @after[1]
+            return @after[0].send(:_#{method}, date)
+          end
+          super
+        end
+      }
+    end
+
+    private
+
+    def _normalize_before
+      unless @before.kind_of?(Array)
+        @before = [When.Calendar(@before)]
+        @before << @origin_of_MSC - @before[0].origin_of_MSC
+        class << self; alias :_normalize_before :_normalize_non end
+      end
+    end
+
+    def _normalize_after
+      unless @after.kind_of?(Array)
+        @after = [When.Calendar(@after)]
+        @after << @origin_of_MSC - @after[0].origin_of_MSC
+        class << self; alias :_normalize_after :_normalize_non end
+      end
+    end
+
+    def _normalize_non
+    end
+  end
+
   # 月日の配当パターンの種類が限定されている暦の抽象基底クラス
   #
   #   Calendar which has some fixed arrangement rules for under year
@@ -347,6 +438,9 @@ module When::CalendarTypes
         @mean_month = Rational(@rule_table[@entry_key]['Days'], @rule_table[@entry_key]['Months'])
         @mean_year  = Rational(@rule_table[@entry_key]['Days'], @rule_table[@entry_key]['Years' ])
       end
+
+      # range extension
+      extend(TableExtend) if @before || @after
     end
 
     # rule の正規化
@@ -478,77 +572,79 @@ module When::CalendarTypes
 
     include Lunar
 
-    #
-    # ひとつのひな型朔閏表からの差分で朔閏表を生成する
-    #
-    # @param [Array] definition ひな型朔閏表
-    # @param [Range] range 生成する朔閏表の年代範囲
-    # @param [Hash{Integer=>(String or Hash{String or Regexp=>String})}] difference 差分情報
-    #
-    # @return [Array] 生成された朔閏表定義
-    #
-    def self.patch(definition, range=nil, difference={})
-      When.Calendar(definition)
-      base    = When::CalendarTypes.const_get(definition)
-      hash    = base[-1].dup
-      range ||= hash['origin_of_MSC']...(hash['origin_of_MSC']+hash['rule_table'].size)
-      range   = range.to_a
-      hash['origin_of_LSC'] += hash['rule_table'][range[0]-hash['origin_of_MSC']][1]
-      hash['rule_table']     = range.map {|year|
-        original = hash['rule_table'][year-hash['origin_of_MSC']][0]
-        case difference[year]
-        when String ; next difference[year]
-        when nil    ; next original
-        end
-        original = original.dup
-        difference[year].each_pair {|key,value|
-          raise ArgumentError, "Can't patch \"#{original}\" by {#{key}=>#{value}} at #{year}" unless original.sub!(key,value)
-        }
-        original
-      }
-      hash['origin_of_MSC']  = range[0]
-      base[0..-2] + [hash]
-    end
-
-    #
-    # 複数のひな型朔閏表からの差分で朔閏表を生成する
-    #
-    # @param [[Array<Array<String, Range>>]] definitions ひな型朔閏表
-    #     - String - もとにする太陰太陽暦のIRI文字列
-    #     - Range  - 朔閏表の年代範囲(デフォルトはもとにする太陰太陽暦の年代範囲)
-    # @param [Hash{Integer=>(String or Hash{String or Regexp=>String})}] difference 差分情報
-    #
-    # @return [Array] 生成された朔閏表定義
-    #
-    def self.join(definitions, difference={})
-      if definitions.first.kind_of?(Array)
-        base = When::CalendarTypes.const_get(definitions.first[0]).dup
-      else
-        base = []
-        base << definitions.shift until definitions.first.kind_of?(Array)
-      end
-      tables = definitions.map {|definition|
-        When.Calendar(definition[0]).lunar_table(definition[1])
-      }
-      hash   = base.pop.merge({
-        'origin_of_MSC' => tables.first['origin_of_MSC'],
-        'origin_of_LSC' => tables.first['origin_of_LSC'],
-        'rule_table'    => tables.inject([]) {|rules, table| rules += table['rule_table']}
-      })
-      difference.each_pair do |year, pattern|
-        offset = year - hash['origin_of_MSC']
-        hash['rule_table'][offset] =
-         if pattern.kind_of?(Hash)
-            rule = hash['rule_table'][offset].dup
-            pattern.each_pair do |key,value|
-              raise ArgumentError, "Can't patch \"#{rule}\" by {#{key}=>#{value}} at #{year}" unless rule.sub!(key,value)
-            end
-            rule
-          else
-            pattern
+    class << self
+      #
+      # ひとつのひな型朔閏表からの差分で朔閏表を生成する
+      #
+      # @param [Array] definition ひな型朔閏表
+      # @param [Range] range 生成する朔閏表の年代範囲
+      # @param [Hash{Integer=>(String or Hash{String or Regexp=>String})}] difference 差分情報
+      #
+      # @return [Array] 生成された朔閏表定義
+      #
+      def patch(definition, range=nil, difference={})
+        When.Calendar(definition)
+        base    = When::CalendarTypes.const_get(definition)
+        hash    = base[-1].dup
+        range ||= hash['origin_of_MSC']...(hash['origin_of_MSC']+hash['rule_table'].size)
+        range   = range.to_a
+        hash['origin_of_LSC'] += hash['rule_table'][range[0]-hash['origin_of_MSC']][1]
+        hash['rule_table']     = range.map {|year|
+          original = hash['rule_table'][year-hash['origin_of_MSC']][0]
+          case difference[year]
+          when String ; next difference[year]
+          when nil    ; next original
           end
+          original = original.dup
+          difference[year].each_pair {|key,value|
+            raise ArgumentError, "Can't patch \"#{original}\" by {#{key}=>#{value}} at #{year}" unless original.sub!(key,value)
+          }
+          original
+        }
+        hash['origin_of_MSC']  = range[0]
+        base[0..-2] + [hash]
       end
-      base << hash
+
+      #
+      # 複数のひな型朔閏表からの差分で朔閏表を生成する
+      #
+      # @param [[Array<Array<String, Range>>]] definitions ひな型朔閏表
+      #     - String - もとにする太陰太陽暦のIRI文字列
+      #     - Range  - 朔閏表の年代範囲(デフォルトはもとにする太陰太陽暦の年代範囲)
+      # @param [Hash{Integer=>(String or Hash{String or Regexp=>String})}] difference 差分情報
+      #
+      # @return [Array] 生成された朔閏表定義
+      #
+      def join(definitions, difference={})
+        if definitions.first.kind_of?(Array)
+          base = When::CalendarTypes.const_get(definitions.first[0]).dup
+        else
+          base = []
+          base << definitions.shift until definitions.first.kind_of?(Array)
+        end
+        tables = definitions.map {|definition|
+          When.Calendar(definition[0]).lunar_table(definition[1])
+        }
+        hash   = base.pop.merge({
+          'origin_of_MSC' => tables.first['origin_of_MSC'],
+          'origin_of_LSC' => tables.first['origin_of_LSC'],
+          'rule_table'    => tables.inject([]) {|rules, table| rules += table['rule_table']}
+        })
+        difference.each_pair do |year, pattern|
+          offset = year - hash['origin_of_MSC']
+          hash['rule_table'][offset] =
+           if pattern.kind_of?(Hash)
+              rule = hash['rule_table'][offset].dup
+              pattern.each_pair do |key,value|
+                raise ArgumentError, "Can't patch \"#{rule}\" by {#{key}=>#{value}} at #{year}" unless rule.sub!(key,value)
+              end
+              rule
+            else
+              pattern
+            end
+        end
+        base << hash
+      end
     end
 
     # 朔閏表を生成する

@@ -896,7 +896,7 @@ module When::V
                  ['last_modified', 'tzurl', 'x_lic_location'], [], []]
     Classes   = [Standard, Daylight]
 
-    class << self; include When::Parts::Resource::Pool; end
+    extend When::Parts::Resource::Pool
 
     include When::Parts::Timezone::Base
 

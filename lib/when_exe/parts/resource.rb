@@ -264,11 +264,12 @@ module When::Parts
       def _instance(iri, namespace=nil)
         _setup_ unless @_pool
 
-        # 配列は個別に処理
-        return iri.map {|e| _instance(e, namespace)} if iri.kind_of?(Array)
-
-        # 文字列以外はそのまま返す
-        return iri unless iri.instance_of?(String)
+        case iri
+        when Array    ; return iri.map {|e| _instance(e, namespace)}                  # 配列は個別に処理
+        when Resource ; return iri                                                    # 登録済みはそのまま
+        when String   ;                                                               # 解析処理へ
+        else          ; raise ArgumentError, "can't convert #{iri.class} to String"   # 例外
+        end
 
         # 内部文字列化
         iri = When::EncodingConversion.to_internal_encoding(iri)

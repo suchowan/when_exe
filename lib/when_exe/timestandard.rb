@@ -385,9 +385,9 @@ module When::TimeStandard
       @time_basis = @_time_basis[0] if @time_basis
 
       if @_time_basis[0].time_standard.kind_of?(LocalApparentTime)
-        class << self; include ApparentTimeBasis ; end
+        extend ApparentTimeBasis
       else
-        class << self; include FixedTimeBasis    ; end
+        extend FixedTimeBasis
       end
     end
   end

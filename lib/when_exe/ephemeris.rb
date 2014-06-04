@@ -1901,11 +1901,11 @@ module When::Ephemeris
           @month_epoch   = 0
           @month_epoch   = @longitude_shift -_mean_moon_(@epoch_shift).to_i
         end
-        class << self; include LunarMethod; end
+        extend LunarMethod
       else
         # 太陽黄経の計算
         @solar_degree    = @year_length / 360
-        class << self; include SolarMethod;    end
+        extend SolarMethod
       end
       super
     end

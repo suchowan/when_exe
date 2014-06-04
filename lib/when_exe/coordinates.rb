@@ -1579,7 +1579,7 @@ module When::Coordinates
         # Formula
         instance_eval('class << self; attr_reader :formula; end') if @location && @border
         if respond_to?(:formula)
-          instance_eval('class << self; include When::Ephemeris::Formula::ForwardedFormula; end')
+          extend When::Ephemeris::Formula::ForwardedFormula
           @formula ||= When::Ephemeris::Formula.new({:location=>@location})
           @formula   = When.Resource(Array(@formula), '_ep:')
         end
@@ -1946,10 +1946,10 @@ module When::Coordinates
       @origin_of_MSC    = Pair._en_number(@origin_of_MSC)
       @origin_of_LSC    = Pair._en_number(@origin_of_LSC)
       @index_of_MSC     = Pair._en_number(@index_of_MSC)
-      if (@index_of_MSC != 0)
-        class << self; include OriginAndUpperDigits; end
-      elsif (@origin_of_MSC != 0)
-        class << self; include OriginOnly; end
+      if @index_of_MSC != 0
+        extend OriginAndUpperDigits
+      elsif @origin_of_MSC != 0
+        extend OriginOnly
       end
 
       # unit
@@ -1967,7 +1967,7 @@ module When::Coordinates
         @base <<  @indices[i].base
         @pair << (@indices[i].branch != nil)
       end
-      class << self; include IndexConversion; end unless @pair.uniq == [false]
+      extend IndexConversion unless @pair.uniq == [false]
 
       # note
       @note ||= 'Default'
@@ -2083,7 +2083,7 @@ module When::Coordinates
         end
         if When::Ephemeris::Formula.method_defined?(name)
           unless respond_to?(:forwarded_formula, true)
-            instance_eval('class << self; include When::Ephemeris::Formula::ForwardedFormula; end')
+            extend When::Ephemeris::Formula::ForwardedFormula
             @formula ||= When::Ephemeris::Formula.new({:location=>@location})
             @formula   = When.Resource(Array(@formula), '_ep:')
           end

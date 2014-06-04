@@ -662,22 +662,22 @@ module When
 
           # 月の位相の計算
           @method ||= @year_span ? 'J' : 'A'
-          instance_eval("class << self; include const_get('Method#{@method.upcase}'); end")
+          extend self.class.const_get("Method#{@method.upcase}")
 
           # 立成の初期化
           _initialize_rissei
 
         elsif @year_span
           # 太陽黄経の計算(消長あり)
-          class << self; include MethodS; end
+          extend MethodS
           @year_span = @year_span.to_i
         end
 
         if self.kind_of?(JujiMethods)
           case @year_span
-          when 0,1; class << self; include JujiMethods::Y; end
-        # when 10 ; class << self; include JujiMethods::D; end
-          else    ; class << self; include JujiMethods::C; end
+          when 0,1; extend JujiMethods::Y
+        # when 10 ; extend JujiMethods::D
+          else    ; extend JujiMethods::C
           end
         end
       end

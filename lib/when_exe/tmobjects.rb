@@ -1299,9 +1299,7 @@ module When::TM
         else   ; @duration   = nil
         end
       end
-      unless @duration
-        class << self; include NoDuration; end
-      end
+      extend NoDuration unless @duration
     end
 
     # 加減算共通処理
