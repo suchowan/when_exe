@@ -297,7 +297,7 @@ module When::CalendarTypes
     #
     # その他のテーブル参照
     #
-    %w(ids length).each do |method|
+    %w(ids_ length).each do |method|
       module_eval %Q{
         def _#{method}(date)
           if @after && +date[0] >= @rule_table[@entry_key]['Years']
