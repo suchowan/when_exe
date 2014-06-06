@@ -110,6 +110,22 @@ module Test
           date = When.when?(sample[0], {:abbr=>[1985,15,5]})
           assert_equal(sample[1], [date.precision, date.to_s])
         end
+
+        result = []
+        (1900...1928).each do |year|
+          date = ::Date.new(year, 1, 1) - 7
+          14.times do
+            gdate     = When.TemporalPosition(date.year, date.month, date.day)
+            strdate   = date.strftime('%G-W%V-%u')
+            strgdate  = gdate.strftime('%G-W%V-%u')
+            w1date    = When::WeekDate ^ date
+            w2date    = When.when?(strdate, {:frame=>When::WeekDate})
+            strw1date = w1date.strftime
+            strw2date = w2date.strftime
+            result << [[strdate, strgdate, strw1date, strw2date].uniq.size, date.jd == w1date.to_i, date.jd == w2date.to_i]
+          end
+        end
+        assert_equal([[1, true, true]], result.uniq)
       end
 
       def test__x0301_5_2_4

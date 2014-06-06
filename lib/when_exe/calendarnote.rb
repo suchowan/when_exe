@@ -337,17 +337,7 @@ module When
         next [] unless i <= date.precision
         _note_values(dates, notes[i-1], _all_keys[i-1], _elements[i-1]) do |dates, focused_notes, notes_hash|
           focused_notes.each do |note|
-            unless notes_hash[note]
-              void, event, *parameter = note.split(/^([^\d]+)/)
-              method = event.downcase
-              parameter << conditions unless conditions.empty?
-              notes_hash[note] = 
-                if respond_to?(method)
-                  send(method, dates, *parameter)
-                else
-                  _elements[i-1][note].send(When::Coordinates::PRECISION_NAME[i].downcase, dates)
-                end
-            end
+            notes_hash[note] ||= _note_element(note, i, conditions, dates)
           end
           notes_hash
         end
@@ -411,6 +401,50 @@ module When
     private
 
     #
+    # 年月日暦注計算の共通処理 - コールバック元
+    #
+    def _note_values(dates, focused_notes, all_notes, note_objects)
+      return [] unless dates && all_notes
+
+      # prepare focused notes
+      case focused_notes
+      when Integer
+        bits = ~focused_notes << 1
+        focused_notes = all_notes.dup.delete_if { (bits>>=1)[0] == 1 }
+      when []
+        focused_notes = all_notes
+      when nil
+        focused_notes = []
+      end
+      focused_notes = focused_notes.dup
+      not_focused_notes = all_notes - focused_notes
+      notes = {}
+      not_focused_notes.each do |note|
+        notes[note] = true
+      end
+      focused_notes.each do |note|
+        notes[note] = nil
+      end
+
+      # update notes
+      focused_notes_actual = focused_notes.dup
+      notes = yield(dates, focused_notes_actual, notes)
+      notes.keys.each do |note|
+        notes.delete(note) unless focused_notes_actual.include?(note)
+      end
+
+      # return Array of Hash
+      focused_notes.map {|note|
+        next {} unless notes[note]
+        if note_objects[note].respond_to?(:to_note_hash)
+          note_objects[note].to_note_hash(notes[note], dates)
+        else
+          {:note=>note_objects[note].label, :value=>notes[note]}
+        end
+      }
+    end
+
+    #
     # オブジェクトの正規化
     #
     def _normalize(args=[], options={})
@@ -422,6 +456,34 @@ module When
           e.extend LabelAccess
         end
       end
+    end
+
+    #
+    # 再帰的に配列の中を Resource化する
+    #
+    def _to_iri(args, prefix)
+      args.map {|arg|
+        case arg
+        when String
+          arg, method = $1, $2 if (arg =~ /^(.+)#([_A-Z0-9]+)$/i)
+          obj = When.Resource(arg, prefix)
+          obj = obj.copy(method) if method
+          obj
+        when Array
+          _to_iri(arg, prefix)
+        else
+          arg
+        end
+      }
+    end
+
+    #
+    # 暦日を当該暦注計算用クラスに変換
+    #
+    #   基底クラスである本クラスでは何もしないで、引数をそのまま返す
+    #
+    def _to_date_for_note(date)
+      date
     end
 
     # 暦注要素
@@ -480,6 +542,20 @@ module When
     end
 
     #
+    # 暦注を計算する暦座標の配列
+    #
+    # @return [Array<Integer>]
+    #
+    def _indices(indices, notes)
+      case indices
+      when nil   ; (0...notes.size).to_a.reverse.map {|i| -i}
+      when Range ; indices.to_a
+      when Array ; indices
+      else       ; [indices.to_i]
+      end
+    end
+
+    #
     # notes メソッドの 文字列引数の意味を解釈する
     #
     # @return [Hash] options for note String
@@ -508,89 +584,20 @@ module When
     end
 
     #
-    # 暦注を計算する暦座標の配列
+    # 暦注の計算
     #
-    # @return [Array<Integer>]
+    # @return [Object] 暦注の値
     #
-    def _indices(indices, notes)
-      case indices
-      when nil   ; (0...notes.size).to_a.reverse.map {|i| -i}
-      when Range ; indices.to_a
-      when Array ; indices
-      else       ; [indices.to_i]
-      end
-    end
-
-    #
-    # 年月日暦注計算の共通処理 - コールバック元
-    #
-    def _note_values(dates, focused_notes, all_notes, note_objects)
-      return [] unless dates && all_notes
-
-      # prepare focused notes
-      case focused_notes
-      when Integer
-        bits = ~focused_notes << 1
-        focused_notes = all_notes.dup.delete_if { (bits>>=1)[0] == 1 }
-      when []
-        focused_notes = all_notes
-      when nil
-        focused_notes = []
-      end
-      focused_notes = focused_notes.dup
-      not_focused_notes = all_notes - focused_notes
-      notes = {}
-      not_focused_notes.each do |note|
-        notes[note] = true
-      end
-      focused_notes.each do |note|
-        notes[note] = nil
-      end
-
-      # update notes
-      focused_notes_actual = focused_notes.dup
-      notes = yield(dates, focused_notes_actual, notes)
-      notes.keys.each do |note|
-        notes.delete(note) unless focused_notes_actual.include?(note)
-      end
-
-      # return Array of Hash
-      focused_notes.map {|note|
-        next {} unless notes[note]
-        if note_objects[note].respond_to?(:to_note_hash)
-          note_objects[note].to_note_hash(notes[note], dates)
-        else
-          {:note=>note_objects[note].label, :value=>notes[note]}
-        end
-      }
-    end
-
-    #
-    # 再帰的に配列の中を Resource化する
-    #
-    def _to_iri(args, prefix)
-      args.map {|arg|
-        case arg
-        when String
-          arg, method = $1, $2 if (arg =~ /^(.+)#([_A-Z0-9]+)$/i)
-          obj = When.Resource(arg, prefix)
-          obj = obj.copy(method) if method
-          obj
-        when Array
-          _to_iri(arg, prefix)
-        else
-          arg
-        end
-      }
-    end
-
-    #
-    # 暦日を当該暦注計算用クラスに変換
-    #
-    #   基底クラスである本クラスでは何もしないで、引数をそのまま返す
-    #
-    def _to_date_for_note(date)
-      date
+    def _note_element(note, index, conditions, dates)
+      void, event, *parameter = note.split(/^([^\d]+)/)
+      method = event.downcase
+      parameter << conditions unless conditions.empty?
+      return send(method, dates, *parameter) if respond_to?(method)
+      root = _elements[index-1][note]
+      parent, leaf = root.iri.split('/Notes') if root.kind_of?(When::Parts::Resource)
+      parent = When.Resource(parent) if leaf
+      return parent.send(method, dates, *parameter) if parent.respond_to?(method)
+      root.send(When::Coordinates::PRECISION_NAME[index].downcase, dates)
     end
 
     #

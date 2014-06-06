@@ -491,7 +491,7 @@ class When::CalendarNote
       den  = (den || 360).to_f
       diff = (num - patch[0] + 1) % den - 1
       return result if diff == 0
-      patched = result + When::DurationP1D * diff
+      patched = result + When::P1D * diff
       result.cal_date[0..-2] = patched.cal_date[0..-2]
       result.cal_date[-1]    = When::Coordinates::Pair.new(patched.cal_date[-1], -diff)
       result
@@ -531,7 +531,7 @@ class When::CalendarNote
         return result
       end
 
-      patched = result + When::DurationP1D * diff
+      patched = result + When::P1D * diff
       result.cal_date[0..-2] = patched.cal_date[0..-2]
       result.cal_date[-1]    = When::Coordinates::Pair.new(patched.cal_date[-1], -diff)
       result
@@ -574,7 +574,7 @@ class When::CalendarNote
             length   = -length if dates.o_date.frame.kind_of?(When::CalendarTypes::Christian) # 太陽暦
             pattern += '閏' if month[When::MONTH] * 0 == 1
             pattern += MonthPattern[length] || '改'
-            month   += When::DurationP1M
+            month   += When::P1M
           end
           notes_hash['大小'] = "#{pattern}(#{year.length(When::YEAR)})"
         end

@@ -48,7 +48,7 @@ module When
         def _to_array(date_time, options={})
           raise TypeError, "Argument is not ISO 8601 String" unless date_time.kind_of?(String)
           if options[:abbr].kind_of?(When::TimeValue)
-            options[:abbr] = ((options[:frame]||When.Calendar('Gregorian')) ^ options[:abbr]).cal_date
+            options[:abbr] = ((options[:frame]||When::Gregorian) ^ options[:abbr]).cal_date
           end
           date_time = date_time.gsub(/_([\d])/, '\1')
           begin
@@ -94,8 +94,12 @@ module When
 
           case date_time
           # extended date & time format (ISO 8601)
-          when /^([-+*&%@!>=<?\dW.]+)(?:(T([:*=.,\d]+)?)([A-Z]+(\?.+)?|[-+][:\d]+)?)?$/
+          when /^([-+*&%@!>=<?\dW.\(\)]+)(?:(T([:*=.,\d]+)?)([A-Z]+(\?.+)?|[-+][:\d]+)?)?$/
             d, t, time, clock = $~[1..4]
+            if d =~ /[\(\)]/
+              d = When::CalendarTypes::Yerm.parse(d, options[:abbr])
+              options[:frame] ||= 'Yerm'
+            end
             format, date  = Date._to_array_extended_ISO8601(d, options)
 
           # extended date & time format (JIS X0301)

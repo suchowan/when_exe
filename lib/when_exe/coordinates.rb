@@ -724,8 +724,10 @@ module When::Coordinates
           @branch = m17n
         end
         raise TypeError, "Branch must be Hash" unless @branch.kind_of?(Hash)
-        @branch.values.each do |v|
-          @keys |= v.keys if v.kind_of?(When::Locale)
+        @branch.each_pair do |key, value|
+          value  = When::BasicTypes::M17n.label(value)
+          @keys |= value.keys if value.kind_of?(When::Locale)
+          @branch[key] = value
         end
       end
       @trunk_branch = {}
@@ -1674,7 +1676,10 @@ module When::Coordinates
     #   block  [Block] (デフォルト なし)
     #
     def note
-      @note = When.CalendarNote(@note) if @note.kind_of?(String)
+      case @note
+      when String ; @note = When.CalendarNote(@note)
+      when Array  ; @note = When::CalendarNote.new(*@note)
+      end
       @note
     end
 

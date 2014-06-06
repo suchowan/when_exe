@@ -135,7 +135,7 @@ module When
 
         @engine ||= @location ?
           When::Ephemeris::Formula.new({:formula=>'1S', :location=>@location}) :
-          When.Calendar('Gregorian') 
+          When::Gregorian
 
         case @engine
         when When::Ephemeris::Formula; instance_eval('class << self; alias :_sdn_ :ephemeris_equinox; end')

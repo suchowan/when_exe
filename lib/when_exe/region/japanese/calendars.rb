@@ -16,7 +16,7 @@ module When
     Japanese = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>454, 'origin_of_LSC'=>1886926,
       'indices'=> [
-           When.Index('Japanese::Month', {:branch=>{1=>When.Resource('_m:Calendar::閏')}}),
+           When.Index('Japanese::Month', {:branch=>{1=>'_m:Calendar::閏'}}),
            When::Coordinates::DefaultDayIndex
        ],
       'before'    => 'JapaneseTwin::平朔儀鳳暦',
@@ -362,7 +362,7 @@ module When
     Japanese0764 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>764, 'origin_of_LSC'=>2000146,
       'indices'=> [
-           When.Index('Japanese::Month', {:branch=>{1=>When.Resource('_m:Calendar::閏')}}),
+           When.Index('Japanese::Month', {:branch=>{1=>'_m:Calendar::閏'}}),
            When::Coordinates::DefaultDayIndex
        ],
       'before'    => 'Japanese',

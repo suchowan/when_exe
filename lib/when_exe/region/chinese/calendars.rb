@@ -12,17 +12,17 @@ module When
 
     # @private
     ChineseIndices = [
-      When.Index('Chinese::Month', {:branch=>{1=>When.Resource('_m:Calendar::閏')}}),
+      When.Index('Chinese::Month', {:branch=>{1=>'_m:Calendar::閏'}}),
       When::Coordinates::DefaultDayIndex
     ]
 
     _IndicesM12 = [
-      When.Index('Chinese::Month', {:branch=>{1=>When.Resource('_m:Calendar::閏')}, :shift=>1}),
+      When.Index('Chinese::Month', {:branch=>{1=>'_m:Calendar::閏'}, :shift=>1}),
       When::Coordinates::DefaultDayIndex
     ]
 
     _IndicesM11 = [
-      When.Index('Chinese::Month', {:branch=>{1=>When.Resource('_m:Calendar::閏')}, :shift=>2}),
+      When.Index('Chinese::Month', {:branch=>{1=>'_m:Calendar::閏'}, :shift=>2}),
       When::Coordinates::DefaultDayIndex
     ]
 
@@ -503,7 +503,7 @@ module When
       'origin_of_MSC'=>688, 'origin_of_LSC'=>1972387, 'border'=>'0*11-01',
       'before' => 'Chinese0523', 'after' => 'Chinese0523',
       'indices'=> [
-           When.Index('Chinese::MonthA', {:branch=>{1=>When.Resource('_m:Calendar::閏')}}),
+           When.Index('Chinese::MonthA', {:branch=>{1=>'_m:Calendar::閏'}}),
            When::Coordinates::DefaultDayIndex
        ],
       'rule_table'=> %w(
@@ -519,7 +519,7 @@ module When
       'origin_of_MSC'=>760, 'origin_of_LSC'=>1998670, 'border'=>'0*11-01',
       'before' => 'Chinese0523', 'after' => 'Chinese0523',
       'indices'=> [
-           When.Index('Chinese::MonthB', {:branch=>{1=>When.Resource('_m:Calendar::閏')}}),
+           When.Index('Chinese::MonthB', {:branch=>{1=>'_m:Calendar::閏'}}),
            When::Coordinates::DefaultDayIndex
        ],
       'rule_table'=> %w(AbcDdeFgHIjKL	aBcDefGhIJkL	AbCdEfgHiJkL)
@@ -618,7 +618,7 @@ module When
       'origin_of_MSC'=>688, 'origin_of_LSC'=>1972387, 'border'=>'0*11-01',
       'before' => 'Chinese0618', 'after' => 'Chinese0618',
       'indices'=> [
-           When.Index('Chinese::MonthA', {:branch=>{1=>When.Resource('_m:Calendar::閏')}}),
+           When.Index('Chinese::MonthA', {:branch=>{1=>'_m:Calendar::閏'}}),
            When::Coordinates::DefaultDayIndex
        ],
       'rule_table'=> %w(		AbcDeFgHIJkL	aBcdEfGhIIJkL	aBcdEfgHIjKL 
@@ -636,7 +636,7 @@ module When
       'origin_of_MSC'=>760, 'origin_of_LSC'=>1998670, 'border'=>'0*11-01',
       'before' => 'Chinese0618', 'after' => 'Chinese0618',
       'indices'=> [
-           When.Index('Chinese::MonthB', {:branch=>{1=>When.Resource('_m:Calendar::閏')}}),
+           When.Index('Chinese::MonthB', {:branch=>{1=>'_m:Calendar::閏'}}),
            When::Coordinates::DefaultDayIndex
        ],
       'rule_table'=> %w(AbcDdeFgHIjKL	aBcdeFGhIJkL	AbCdEFghiJkL)

@@ -809,7 +809,7 @@ module When
         @intercalary_month  = (@intercalary_month.to_i - @base_month) % 12 + 1 if @intercalary_month
         @note             ||= When.CalendarNote('Chinese')
         @indices          ||= [
-            When.Index('Chinese::Month', {:branch=>{1=>When.Resource('_m:Calendar::閏')}}),
+            When.Index('Chinese::Month', {:branch=>{1=>'_m:Calendar::閏'}}),
             When::Coordinates::DefaultDayIndex
           ]
         super

@@ -460,7 +460,7 @@ module When
       #
       # @return [Array<Numeric>] その年の境界
       #
-      def border(date=[], frame=When.Calendar('Gregorian'))
+      def border(date=[], frame=When::Gregorian)
         frame._encode(frame._number_to_coordinates(frame.note.easter(date[0], frame)), false)
       end
 
@@ -620,7 +620,7 @@ module When
     #
     # @param [Numeric] date 西暦の年数
     # @param [When::TM::TemporalPosition] date
-    # @param [When::TM::ReferenceSystem] frame 使用する暦法(デフォルトは When.Resource('_c:Gregorian'))
+    # @param [When::TM::ReferenceSystem] frame 使用する暦法(デフォルトは When::Gregorian)
     #
     # @return [Integer]           クリスマスのユリウス通日(dateが西暦の年数の場合)
     # @return [When::TM::CalDate] クリスマスのWhen::TM::CalDate(yearがWhen::TM::TemporalPositionの場合)
@@ -635,7 +635,7 @@ module When
     #
     # @param [Numeric] date 西暦の年数
     # @param [When::TM::TemporalPosition] date
-    # @param [When::TM::ReferenceSystem] frame 使用する暦法(デフォルトは When.Resource('_c:Gregorian'))
+    # @param [When::TM::ReferenceSystem] frame 使用する暦法(デフォルトは When::Gregorian)
     #
     # @return [Integer]           復活祭のユリウス通日(dateが西暦の年数の場合)
     # @return [When::TM::CalDate] 復活祭のWhen::TM::CalDate(yearがWhen::TM::TemporalPositionの場合)
@@ -659,7 +659,7 @@ module When
     #   イベントの標準的な間隔を返す
     # @private
     def _delta(parameter=nil)
-      return When::DurationP1Y
+      return When::P1Y
     end
 
     # @private
@@ -671,7 +671,7 @@ module When
     # 固定祝日
     #
     # @param [When::TM::TemporalPosition] date
-    # @param [When::TM::ReferenceSystem] frame 使用する暦法(デフォルトは When.Resource('_c:Gregorian'))
+    # @param [When::TM::ReferenceSystem] frame 使用する暦法(デフォルトは When::Gregorian)
     #
     # @return [String] 祝日の名称
     # @return [nil]    祝日に該当しない
@@ -684,7 +684,7 @@ module When
     # 移動祝日
     #
     # @param [When::TM::TemporalPosition] date
-    # @param [When::TM::ReferenceSystem] frame 使用する暦法(デフォルトは When.Resource('_c:Gregorian'))
+    # @param [When::TM::ReferenceSystem] frame 使用する暦法(デフォルトは When::Gregorian)
     #
     # @return [String] 祝日の名称
     # @return [nil]    祝日に該当しない
@@ -729,7 +729,7 @@ module When
     #
     def _to_date_for_note(date)
       return When.Calendar(When::CalendarTypes::Christian._default_start(date)) ^ date if ::Object.const_defined?(:Date) && date.kind_of?(::Date)
-      return When.Calendar('Gregorian') ^ date if date.kind_of?(::Time)
+      return When::Gregorian ^ date if date.kind_of?(::Time)
       return date if date.frame.kind_of?(When::CalendarTypes::Christian)
       When.Calendar(date.frame.iri =~ /Coptic/ || date.to_i < 2299161 ? 'Julian' : 'Gregorian') ^ date
     end
@@ -737,7 +737,7 @@ module When
     # 当該年のイベントの日付
     #   date       : 西暦の年数 or When::TM::(Temporal)Position
     #   event      : イベント名 (String)
-    #   frame      : 暦法(デフォルトは When.Resource('_c:Gregorian'))
+    #   frame      : 暦法(デフォルトは When:Gregorian)
     #
     # @return [Integer]           イベントのユリウス通日(dateが西暦の年数の場合)
     # @return [When::TM::CalDate] イベントのWhen::TM::CalDate(yearがWhen::TM::(Temporal)Positionの場合)
@@ -760,7 +760,7 @@ module When
       else
         raise TypeError, "Irregal date type: #{date.class}"
       end
-      frame ||= When.Resource('_c:Gregorian')
+      frame ||= When::Gregorian
       result  = yield(year, frame)
       return result if date.kind_of?(Numeric)
       return frame.jul_trans(result, options)

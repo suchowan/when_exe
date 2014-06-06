@@ -173,11 +173,14 @@ module When
   # Module Constants
   #
 
-  DurationP1D = TM::PeriodDuration.new([0,0,1])
-  DurationP1W = TM::PeriodDuration.new([0,0,7])
-  DurationP1M = TM::PeriodDuration.new([0,1,0])
-  DurationP1Y = TM::PeriodDuration.new([1,0,0])
-  TimeValue   = TM::IndeterminateValue
+  PT1S = TM::PeriodDuration.new(nil,[0,0,0,1])
+  PT1M = TM::PeriodDuration.new(nil,[0,0,1,0])
+  PT1H = TM::PeriodDuration.new(nil,[0,1,0,0])
+  P1D  = TM::PeriodDuration.new([0,0,1])
+  P1W  = TM::PeriodDuration.new([0,0,7])
+  P1M  = TM::PeriodDuration.new([0,1,0])
+  P1Y  = TM::PeriodDuration.new([1,0,0])
+  TimeValue = TM::IndeterminateValue
 
   PlusInfinity  = TM::TemporalPosition.new({:indeterminated_position=>TimeValue::Max})
   MinusInfinity = TM::TemporalPosition.new({:indeterminated_position=>TimeValue::Min})
@@ -206,6 +209,7 @@ module When
     autoload :Shire,                   'when_exe/region/shire'
     autoload :Yerm,                    'when_exe/region/yerm'
     autoload :Martian,                 'when_exe/region/martian'
+    autoload :WeekDate,                'when_exe/region/weekdate'
   end
 
   module Locale
@@ -257,6 +261,7 @@ module When
     autoload :Yerm,                    'when_exe/region/yerm'
     autoload :Goddess,                 'when_exe/region/goddess'
     autoload :Darian,                  'when_exe/region/martian'
+    autoload :WeekDate,                'when_exe/region/weekdate'
 
     _time_systems = {
       'LMT' => nil,                       # Local Mean Time
@@ -282,7 +287,7 @@ module When
     autoload :Bahai,                   'when_exe/region/bahai'
     autoload :Roman,                   'when_exe/region/roman'
     autoload :Mayan,                   'when_exe/region/mayan'
-    autoload :Yerm,                    'when_exe/region/yerm'
+  # autoload :Yerm,                    'when_exe/region/yerm'
     autoload :WorldWeek,               'when_exe/region/world'
     autoload :ShireWeek,               'when_exe/region/shire'
 

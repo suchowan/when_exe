@@ -783,7 +783,7 @@ module When::TM
     # @return [When::TM::DateAndTime] (When::TM::BasicTypes::DateTimeはまちがい)
     #
     def transform_coord(c_value)
-      When.Resource('_c:Gregorian').jul_trans(JulianDate.universal_time(c_value.universal_time, {:frame=>When::UTC}))
+      When::Gregorian.jul_trans(JulianDate.universal_time(c_value.universal_time, {:frame=>When::UTC}))
     end
     alias :transformCoord :transform_coord
 
@@ -1536,7 +1536,7 @@ module When::TM
       @epoch    ||= epochs
       @epoch[0] ||= '-Infinity'
       @epoch[1] ||= '+Infinity'
-      term_options[:options][:frame] ||= When.Resource('_c:Gregorian')
+      term_options[:options][:frame] ||= When::Gregorian
       epoch = ''
       @epoch = @epoch.map {|e|
         case e

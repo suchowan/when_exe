@@ -80,11 +80,11 @@ module GoogleCalendar
       conditions['orderby']     = 'starttime'
       direction = (conditions['sortorder'] == 'd') ? :reverse : :forward
       first     = When.when?(conditions['start-min'])
-      conditions['start-min']   = (When.Calendar('Gregorian') ^ first).to_s
+      conditions['start-min']   = (When::Gregorian ^ first).to_s
       if conditions['start-max']
         last       = When.when?(conditions['start-max'])
         inner_args = [first...last]
-        conditions['start-max'] = (When.Calendar('Gregorian') ^ last).to_s
+        conditions['start-max'] = (When::Gregorian ^ last).to_s
       else
         inner_args = [first, direction]
       end

@@ -198,7 +198,7 @@ class When::CalendarNote
     Notes = [When::BasicTypes::M17n, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias=ja:]",
-      "names:[Ephemeric]",
+      "names:[Ephemeris]",
 
       # 年の暦注 ----------------------------
       [When::BasicTypes::M17n,
@@ -221,7 +221,7 @@ class When::CalendarNote
           [When::Coordinates::Residue,
             "label:[Moon_Age=, 正午月齢=ja:%%<月齢>]",
             "divisor:60",
-            "format:[%s(%4.1f)]"
+            "format:[%s(%4.1f)=]"
           ],
           "[Moonrise,  月の出          ]", # 月の出
           "[Moonset=,  月の入り        ]", # 月の入り

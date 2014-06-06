@@ -153,6 +153,19 @@ module When
   end
 
   module TM
+
+    class Calendar
+
+      # TemporalPosition#strftime のためのデフォルト書式
+      #
+      # @return [String]
+      #
+      def strftime
+        @strftime ||= '%Y-%m-%d'
+      end
+
+    end
+
     class TemporalPosition
 
       AMPM   = ['AM', 'PM'].map {|half| When::Parts::Resource._instance('_m:CalendarFormats::' + half)}
@@ -163,10 +176,10 @@ module When
         'E' => ['%s',   'E'], 'F' => ['%s',   'F'], 'G' => ['%d',   'G'], 'g' => ['%02d', 'g'],
         'h' => '%b',          'H' => ['%02d', 'H'], 'I' => ['%02d', 'I'], 'j' => ['%03d', 'j'],
         'k' => ['%2d',  'H'], 'l' => ['%2d',  'I'], 'm' => ['%02d', 'm'], 'M' => ['%02d', 'M'],
-        'n' => '\n',          'p' => ['%s',   'p'], 'P' => ['%s',   'P'], 'r' => '%I:%M:%S %p',
-        'R' => '%H:%M',       's' => ['%d',   's'], 'S' => ['%02d', 'S'], 't' => '\t',
-        'T' => '%H:%M:%S',    'u' => ['%d',   'u'], 'U' => ['%02d', 'U'], 'V' => ['%02d', 'V'],
-        'w' => ['%d',   'w'], 'W' => ['%02d', 'W'],
+        'n' => '\n',          'p' => ['%s',   'p'], 'P' => ['%s',   'P'], 'q' => ['%01d', 'd'],
+        'r' => '%I:%M:%S %p', 'R' => '%H:%M',       's' => ['%d',   's'], 'S' => ['%02d', 'S'],
+        't' => '\t',          'T' => '%H:%M:%S',    'u' => ['%d',   'u'], 'U' => ['%02d', 'U'],
+        'V' => ['%02d', 'V'], 'w' => ['%d',   'w'], 'W' => ['%02d', 'W'],
         'x' => When::Parts::Resource._instance('_m:CalendarFormats::Date'),
         'X' => When::Parts::Resource._instance('_m:CalendarFormats::Time'),
         'y' => ['%02d', 'y'], 'Y' => ['%4d',  'Y'], 'z' => ['%s',   'z'], 'Z' => ['%s',   'Z'],
@@ -319,7 +332,7 @@ module When
         if wkst
           (first...(first+length)).map {|i|
             begun = self.floor(MONTH,DAY) + When::TM::PeriodDuration.new([0,i,0])
-            ended = begun                 + DurationP1M
+            ended = begun                 + P1M
             ended = ended.prev until begun.cal_date[MONTH-1] == ended.cal_date[MONTH-1]
             if ended.to_i <= begun.to_i
               ended = begun
@@ -398,7 +411,7 @@ module When
             result  = [yield(begun, YEAR)]
             while current < ended do
               result << current.month_included(wkst, &block)
-              current += DurationP1M
+              current += P1M
             end
             result.compact
           }
@@ -425,14 +438,14 @@ module When
           when date.most_significant_coordinate * 1 == year
             return date
           when date.most_significant_coordinate * 1 >  year
-            next_date = (date-When::DurationP1Y).floor(YEAR,DAY)
+            next_date = (date-When::P1Y).floor(YEAR,DAY)
             date = (date.to_i == next_date.to_i) ?
-                     (date-When::DurationP1Y*2).floor(YEAR,DAY) :
+                     (date-When::P1Y*2).floor(YEAR,DAY) :
                      next_date
           else
-            next_date = (date+When::DurationP1Y).floor(YEAR,DAY)
+            next_date = (date+When::P1Y).floor(YEAR,DAY)
             date = (date.to_i == next_date.to_i) ?
-                     (date+When::DurationP1Y*2).floor(YEAR,DAY) :
+                     (date+When::P1Y*2).floor(YEAR,DAY) :
                      next_date
           end
           raise RangeError, "can't find target date: #{self} -> #{year}" if done.key?(date.to_i)
@@ -630,7 +643,7 @@ module When
       #
       # @return [When::BasicTypes::M17n]
       #
-      def strftime(pattern, locale=nil)
+      def strftime(pattern=@frame.strftime, locale=nil)
         pattern = m17n([pattern]*self.keys.length, nil, nil, {:locale=>self.keys}) if pattern.instance_of?(String)
         pattern._printf([], locale) do |k, *t|
           _strftime(k, pattern, [''])
@@ -670,7 +683,7 @@ module When
         when 'M' ; minute(d)                                    # 分
         when 'p' ; (AMPM[hour(d).to_i.div(12)].translate(locale)).upcase   # 現在のロケールにおける「午前」「午後」に相当する文字列
         when 'P' ; (AMPM[hour(d).to_i.div(12)].translate(locale)).downcase # 前項を小文字で表記
-        when 's' ; universal_time / Duration::SECOND      # 紀元 (1970-01-01T00:00:00Z) からの秒数
+        when 's' ; universal_time / Duration::SECOND            # 紀元 (1970-01-01T00:00:00Z) からの秒数
         when 'S' ; second(d)                                    # 秒 (10 進数表記)
         when 'u' ; cwday                                        # 週の何番目の日か(月曜日を 1 とする)
         when 'U' ; yweek(6, 7, d)                               # 年の初めからの通算の週番号(日曜日始まり)

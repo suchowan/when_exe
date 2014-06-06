@@ -70,7 +70,7 @@ module When
     # イベントの標準的な間隔を返す
     # @private
     def _delta(parameter=nil)
-      return When::DurationP1W
+      return When::P1W
     end
 
     # @private

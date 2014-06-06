@@ -160,7 +160,7 @@ module When::CalendarTypes
     #
     # @return [Hash] 朔閏表
     #
-    def lunar_table(range, length=30, duration=When::DurationP1M)
+    def lunar_table(range, length=30, duration=When::P1M)
       date  = When.TemporalPosition(range.first, {:frame=>self}).floor
       table = []
       hash  = {
@@ -193,7 +193,7 @@ module When::CalendarTypes
     #
     # @return [Hash] 朔閏表の差分
     #
-    def verify(base, range=base.range, length=30, duration=When::DurationP1M)
+    def verify(base, range=base.range, length=30, duration=When::P1M)
       range = When::Parts::GeometricComplex.new(range) & When::Parts::GeometricComplex.new(self.range) if respond_to?(:range)
       base_table = base.lunar_table(range, length, duration)
       self_table = self.lunar_table(range, length, duration)

@@ -510,7 +510,7 @@ module When::TM
         when :week
           position = ((position  + PeriodDuration.new(4, DAY)) & (Residue.day_of_week(options[:wkst]) << 1)) +
                      PeriodDuration.new((w[0]-1)*7 + (w[1]||1)-1, DAY)
-          position = When::Parts::GeometricComplex.new(position...(position+DurationP1W)) unless w[1]
+          position = When::Parts::GeometricComplex.new(position...(position+P1W)) unless w[1]
         end
         return position
       end
@@ -739,7 +739,7 @@ module When::TM
     def prev
       @precision==When::DAY ? _force_euqal_day(-1) : self-period
     rescue RangeError
-      (When.Calendar('Gregorian') ^ self) - period
+      (When::Gregorian ^ self) - period
     end
 
     # 次の日時
@@ -751,7 +751,7 @@ module When::TM
     def succ
       @precision==When::DAY ? _force_euqal_day(+1) : self+period
     rescue RangeError
-      (When.Calendar('Gregorian') ^ self) + period
+      (When::Gregorian ^ self) + period
     end
     alias :next :succ
 
@@ -1001,11 +1001,11 @@ module When::TM
         when date.to_i == jdn
           return date
         when date.to_i > jdn
-          next_date = date - When::DurationP1D
-          date = (date.to_i == next_date.to_i) ? date - When::DurationP1D * 2 : next_date
+          next_date = date - When::P1D
+          date = (date.to_i == next_date.to_i) ? date - When::P1D * 2 : next_date
         when date.to_i < jdn
-          next_date = date + When::DurationP1D
-          date = (date.to_i == next_date.to_i) ? date + When::DurationP1D * 2 : next_date
+          next_date = date + When::P1D
+          date = (date.to_i == next_date.to_i) ? date + When::P1D * 2 : next_date
         end
         raise RangeError, "can't find target date: #{self} -> #{jdn}" if done.key?(date.to_i)
         done[date.to_i] = true

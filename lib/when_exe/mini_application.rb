@@ -218,7 +218,7 @@ module When
     #
     def _free_conv(calendars, dates, methods, output, options, &block)
       dates[0]     ||= When.now
-      calendars[0] ||= When.Calendar('Gregorian')
+      calendars[0] ||= When::Gregorian
       result = dates.map {|date|
         date = When.when?(date)
         opts = {}

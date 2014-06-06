@@ -49,7 +49,7 @@ module Test
 
       dates = [When.when?('1900-02-28', {:frame=>calendar})]
       9.times do
-        dates << dates.last + When::DurationP1Y * 100
+        dates << dates.last + When::P1Y * 100
       end
       assert_equal([2415079, 2451603, 2488128, 2524652, 2561176,
                     2597700, 2634225, 2670749, 2707273, 2743797], dates.map {|date| date.to_i})
@@ -59,7 +59,7 @@ module Test
 
       dates = [When.when?('1900-03-01', {:frame=>calendar})]
       9.times do
-        dates << dates.last + When::DurationP1Y * 100
+        dates << dates.last + When::P1Y * 100
       end
       assert_equal([2415080, 2451605, 2488129, 2524653, 2561177,
                     2597702, 2634226, 2670750, 2707274, 2743799], dates.map {|date| date.to_i})
@@ -74,7 +74,7 @@ module Test
 
       dates = [When.when?('1900-02-28', {:frame=>calendar})]
       9.times do
-        dates << dates.last + When::DurationP1Y * 100
+        dates << dates.last + When::P1Y * 100
       end
       assert_equal([2415079, 2451603, 2488128, 2524652, 2561176,
                     2597700, 2634225, 2670749, 2707273, 2743797], dates.map {|date| date.to_i})
@@ -84,7 +84,7 @@ module Test
 
       dates = [When.when?('1900-03-01', {:frame=>calendar})]
       9.times do
-        dates << dates.last + When::DurationP1Y * 100
+        dates << dates.last + When::P1Y * 100
       end
       assert_equal([2415080, 2451605, 2488129, 2524653, 2561177,
                     2597702, 2634226, 2670750, 2707274, 2743798], dates.map {|date| date.to_i})
@@ -114,7 +114,7 @@ module Test
       date = When.when?('1582-9-30', :frame=>'Civil?reform=1582-10-15')
       25.times do
         assert_equal(sample.shift, date.to_s)
-        date = date + When::DurationP1D
+        date = date + When::P1D
       end
     end
 
@@ -127,7 +127,7 @@ module Test
       date = When.when?('1582-11-01', :frame=>'Civil?reform=1582-10-15')
       25.times do
         assert_equal(sample.shift, date.to_s)
-        date = date - When::DurationP1D
+        date = date - When::P1D
       end
     end
 
