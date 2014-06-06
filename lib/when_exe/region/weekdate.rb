@@ -72,17 +72,9 @@ module When
       # @private
       def _week_number_range
         return 52..53 if @engine.kind_of?(When::CalendarTypes::Christian)
-        min = max = sdn0 = nil
-        20.times do |year|
-          sdn1 = @engine._coordinates_to_number(year, 0, 0)
-          if sdn0
-            length = sdn1 - sdn0
-            min = length unless min && min < length
-            max = length unless max && max > length
-          end
-          sdn0 = sdn1
-        end
-        return (min / @period)..((max + @period - 1) / @period)
+        starts  = (0..19).to_a.map {|year| @engine._coordinates_to_number(year, 0, 0)}
+        lengths = (0..18).to_a.map {|year| starts[year+1] - starts[year]}
+        (lengths.min / @period)..((lengths.max + @period - 1) / @period)
       end
     end
   end
