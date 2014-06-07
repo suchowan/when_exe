@@ -497,6 +497,9 @@ module When
     return position
   end
 
+  alias :tm_pos :TemporalPosition
+
+
   # 指定日時に対応する When::TM::TemporalPosition の生成
   # (When::TM::DateAndTime of specified Time)
   #

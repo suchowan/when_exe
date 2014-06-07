@@ -191,10 +191,10 @@ module When::TM
       #
       # @return [When::TM::CalDate, When::TM::DateAndTime]
       #
-      def tm_position(options={})
+      def tm_pos(options={})
         When.Calendar(options[:frame] || 'Gregorian').jul_trans(self, options)
       end
-      alias :to_tm_position :tm_position
+      alias :to_tm_pos :tm_pos
     end
 
     include When

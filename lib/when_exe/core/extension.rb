@@ -44,10 +44,10 @@ class Time
   #
   # @note core/extension
   #
-  def tm_position(options={})
+  def tm_pos(options={})
     When.at(self, options)
   end
-  alias :to_tm_position :tm_position
+  alias :to_tm_pos :tm_pos
 end
 
 #
@@ -70,11 +70,11 @@ class Date
     # @note 暦法の指定がない場合、start メソッドの値によって
     #       Julian / Gregorian / Civil 暦法を選択する
     #
-    def tm_position(options={})
+    def tm_pos(options={})
       options[:frame] ||= When::CalendarTypes::Christian._default_start(self)
       super(options)
     end
-    alias :to_tm_position :tm_position
+    alias :to_tm_pos :tm_pos
   end
 
   alias :__method_missing :method_missing
@@ -83,13 +83,13 @@ class Date
   #
   # @note
   #   self で定義されていないメソッドは
-  #   tm_position で変換して処理する
+  #   tm_pos で変換して処理する
   #
   def method_missing(name, *args, &block)
     return __method_missing(name, *args, &block) if When::Parts::MethodCash::Escape.key?(name)
     self.class.module_eval %Q{
       def #{name}(*args, &block)
-        result = tm_position.send("#{name}", *args, &block)
+        result = tm_pos.send("#{name}", *args, &block)
         case result
         when When::TM::DateAndTime ; result.to_date_time
         when When::TM::CalDate     ; result.to_date
@@ -97,7 +97,7 @@ class Date
         end
       end
     } unless When::Parts::MethodCash.escape(name)
-    result = tm_position.send(name, *args, &block)
+    result = tm_pos.send(name, *args, &block)
     case result
     when When::TM::DateAndTime ; result.to_date_time
     when When::TM::CalDate     ; result.to_date
@@ -359,8 +359,8 @@ class String
   def when?(options={})
     When.when?(self, options)
   end
-  alias :tm_position    :when?
-  alias :to_tm_position :when?
+  alias :tm_pos    :when?
+  alias :to_tm_pos :when?
 
   #
   # 曜日(剰余類)
@@ -466,10 +466,10 @@ class Array
   #
   # @note core/extension
   #
-  def tm_position(options={})
+  def tm_pos(options={})
     When.TemporalPosition(*(self.dup << options))
   end
-  alias :to_tm_position :tm_position
+  alias :to_tm_pos :tm_pos
 
   # self を[幹,枝]と解釈してWhen::Coordinates::Pair を生成
   #
