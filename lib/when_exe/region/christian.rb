@@ -109,11 +109,7 @@ module When
 
       def _normalize(args=[], options={})
         raise TypeError, "#{self.class} is abstract class" unless @label
-        @note      = When.CalendarNote(@note || 'Christian')
-        @indices ||= [
-           When.Index('Calendar::Month', {:unit =>12}),
-           When::Coordinates::DefaultDayIndex
-        ]
+        @note = When.CalendarNote(@note || 'Christian')
         super
       end
     end

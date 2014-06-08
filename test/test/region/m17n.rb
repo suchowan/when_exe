@@ -71,7 +71,8 @@ module Test
 
       date = When.when?('CE2010.4.12')
       era  = When.era('CE')[0]
-    # assert_equal(Second.map {|v| v[0]}, era.m17n('[::_m:Calendar::Month::*]').map {|v| v.to_s})
+      assert_raises(NoMethodError) {When.m17n('[::_m:Calendar::Month::*]').map {|v| v.to_s}}
+      When.Resource('_m:Calendar::Month::*')
       assert_equal(Second.map {|v| v[0]}, When.m17n('[::_m:Calendar::Month::*]').map {|v| v.to_s})
       assert_equal(["Accession", true, "http://hosi.org/When/BasicTypes/M17n/EpochEvents::Accession"],
         [era['::_m:EpochEvents::Accession'].to_s,

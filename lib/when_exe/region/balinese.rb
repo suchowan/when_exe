@@ -279,15 +279,17 @@ module When
       'label'         => 'Balinese::Tenganan',
       'origin_of_LSC' =>  1095 * 1573 - 381,
       'origin_of_MSC' =>  1,
+      'note'          => [['_m:Calendar::Month'],
+                          ['_n:Balinese/Notes::day::Triwara', '_n:Balinese/Notes::day::Pantjawara']],
       'indices' => [
          When.Index('Balinese::TengananMonth'),
          When::Coordinates::DefaultDayIndex
        ],
       'rule_table' => {
-        'T'  => {'Rule'  =>[360, 379, 356]},
+        'T'  => {'Rule'  =>[360, 383, 352]},
         360  => {'Length'=>[30] * 12},
-        379  => {'Length'=>[30] * 6 + [26] * 2 + [30] * 4 + [27]},
-        356  => {'Length'=>[30] * 6 + [28] * 2 + [30] * 4 }
+        383  => {'Length'=>[30] * 6 + [26] * 2 + [30] * 4 + [27]},
+        352  => {'Length'=>[30] * 6 + [28] * 2 + [30] * 4 }
       }
     }]
   end

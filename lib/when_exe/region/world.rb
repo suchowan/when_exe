@@ -162,12 +162,8 @@ module When
     #
     World =  [CyclicTableBased, {
       'label'   => 'World::World',
-      'origin_of_LSC'  => 1721060,
-      'indices' => [
-         When.Index('Calendar::Month', {:unit =>12}),
-         When::Coordinates::DefaultDayIndex
-       ],
-      'rule_table'      => {
+      'origin_of_LSC'    => 1721060,
+      'rule_table'       => {
         'T'  => {'Rule'  =>['LC', 'SC', 'SC', 'SC']},
         'SC' => {'Rule'  =>[365]*4 + [366, 365, 365, 365]*24},
         'LC' => {'Rule'  =>[366, 365, 365, 365]*25},

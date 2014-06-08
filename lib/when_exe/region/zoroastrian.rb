@@ -130,9 +130,9 @@ module When
     Zoroastrian =  [CyclicTableBased, {
       'label'   => 'Zoroastrian::Zoroastrian',
       'indices' => [
-         When.Index('ZoroastrianNotes::month::Month', {:unit =>13}),
-         When::Coordinates::DefaultDayIndex
-       ],
+        When.Index('ZoroastrianNotes::month::Month', {:unit =>13}),
+        When::Coordinates::DefaultDayIndex
+      ],
       'origin_of_MSC' => 1,
       'origin_of_LSC' => 1952063 + 5 - 365 * 1020,
       'epoch_in_CE'   => 31,

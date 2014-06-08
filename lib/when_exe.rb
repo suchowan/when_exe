@@ -256,8 +256,11 @@ module When
     autoload :FrenchRepublican,        'when_exe/region/french'
     autoload :World,                   'when_exe/region/world'
     autoload :LongCount,               'when_exe/region/mayan'
+    autoload :Discordian,              'when_exe/region/discordian'
     autoload :Shire,                   'when_exe/region/shire'
     autoload :ShireG,                  'when_exe/region/shire'
+    autoload :Sym454,                  'when_exe/region/symmetry'
+    autoload :Sym010,                  'when_exe/region/symmetry'
     autoload :Yerm,                    'when_exe/region/yerm'
     autoload :Goddess,                 'when_exe/region/goddess'
     autoload :Darian,                  'when_exe/region/martian'
@@ -287,6 +290,7 @@ module When
     autoload :Bahai,                   'when_exe/region/bahai'
     autoload :Roman,                   'when_exe/region/roman'
     autoload :Mayan,                   'when_exe/region/mayan'
+    autoload :Discordian,              'when_exe/region/discordian'
   # autoload :Yerm,                    'when_exe/region/yerm'
     autoload :WorldWeek,               'when_exe/region/world'
     autoload :ShireWeek,               'when_exe/region/shire'
@@ -310,7 +314,7 @@ module When
 
     # default indices for date coordinates
     DefaultDateIndices = [
-      Index.new({:unit=>12}),
+      Index.new(When::Parts::Resource._instance('_m:Calendar::Month'), {:unit =>12}),
       DefaultDayIndex
     ]
 
