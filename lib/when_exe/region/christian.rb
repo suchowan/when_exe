@@ -16,6 +16,7 @@ module When
       "[Julian=en:Julian_calendar,                ユリウス暦    ]",
       "[Gregorian=en:Gregorian_calendar,          グレゴリオ暦  ]",
       "[RevisedJulian=en:Revised_Julian_calendar, 修正ユリウス暦]",
+      "[Swedish=en:Swedish_calendar,              スウェーデン暦]",
       "[Civil in the West=en:Civil_calendar, 西暦, *alias:Civil]"
     ]]
   end
@@ -38,6 +39,11 @@ module When
     #
     class Christian < When::TM::Calendar
 
+      # デフォルトの改暦日付(ユリウス通日)
+      # 
+      # @private
+      DefaultReformDate = 2299161 # 1582-10-15
+
       # @private
       # 
       # ::Date オブジェクトに対応する暦法名
@@ -53,11 +59,7 @@ module When
 
       # 年月日 -> 通日
       #
-      # @param  [Numeric] y 年
-      # @param  [Integer] m 月 (0 始まり)
-      # @param  [Integer] d 日 (0 始まり)
-      #
-      # @return [Integer] 通日
+      # @see When::CalendarTypes::TableBased#_coordinates_to_number
       #
       def _coordinates_to_number(y,m,d)
         m = (+m + 10) % 12
@@ -69,12 +71,7 @@ module When
 
       # 通日 - > 年月日
       #
-      # @param  [Integer] jdn 通日
-      #
-      # @return [Array<Integer>] ( y, m, d )
-      #   [ y 年 ]
-      #   [ m 月 (0 始まり) ]
-      #   [ d 日 (0 始まり) ]
+      # @see When::CalendarTypes::TableBased#_number_to_coordinates
       #
       def _number_to_coordinates(jdn)
         j    =   jdn.to_i + 1401
@@ -89,20 +86,20 @@ module When
 
       # 暦要素数
       #
-      # @overload _length(date)
-      #   @param [Array<Integer>] date ( 年 )
-      #   @return [Integer] 12 (=その年の月数)
-      #
-      # @overload _length(date)
-      #   @param [Array<Integer>] date ( 年, 月 )
-      #   @note 月は 0 始まりの通番
-      #   @return [Integer] その年月の日数
+      # @see When::CalendarTypes::TableBased#_length
       #
       def _length(date)
         yy, mm = date
         return super unless(mm)
         return ((yy % 4) == 0) ? 29 : 28 if (mm == 1)
         return (((((mm + 10) % 12) % 5) % 2) == 0) ? 31 : 30
+      end
+
+      # 復活祭の遅延日数
+      # 
+      # @private
+      def _easter_delay(year)
+        0
       end
 
       private
@@ -144,17 +141,98 @@ module When
     end
 
     #
-    # Variation of Christian Calendar
+    # Swedish Calendar
     #
-    class ChristianVariation < Christian
+    class Swedish < Julian
+
+      # デフォルトの改暦日付(ユリウス通日)
+      # 
+      # @private
+      DefaultReformDate = 2361390 # 1753-03-01
+
+      # @private
+      #           Julian -  17000229  17120229
+      SwedishCalendarRange = 2342042...2346425
+
+      # @private
+      ExtraDate = [1712,1,29]
+
+      # @private
+      Length = {
+        [1700, nil] => 365,
+        [1700,   1] =>  28,
+        [1712, nil] => 367,
+        [1712,   1] =>  30
+      }
+
+      # Ref: http://www.ortelius.de/kalender/east_en.php
+      # @private
+      EasterDelay = {
+        1741 =>  -7,
+        1742 => -35,
+        1744 =>  -7,
+        1745 =>  -7,
+        1747 => -28,
+        1748 =>  -7,
+        1750 => -28,
+        1751 =>  -7,
+        1752 =>  -7,
+        1802 =>  +7,
+        1805 =>  +7,
+        1818 =>  +7
+      }
 
       # 年月日 -> 通日
       #
-      # @param  [Numeric] y 年
-      # @param  [Integer] m 月 (0 始まり)
-      # @param  [Integer] d 日 (0 始まり)
+      # @see When::CalendarTypes::TableBased#_coordinates_to_number
       #
-      # @return [Integer] 通日
+      def _coordinates_to_number(y,m,d)
+        jdn = super
+        return SwedishCalendarRange.last if [+y, m, d] == ExtraDate
+        SwedishCalendarRange.include?(jdn-1) ? jdn-1 : jdn
+      end
+
+      # 通日 - > 年月日
+      #
+      # @see When::CalendarTypes::TableBased#_number_to_coordinates
+      #
+      def _number_to_coordinates(jdn)
+        return ExtraDate.dup if jdn == SwedishCalendarRange.last
+        super(SwedishCalendarRange.include?(jdn) ? jdn+1 : jdn)
+      end
+
+      # 暦要素数
+      #
+      # @see When::CalendarTypes::TableBased#_length
+      #
+      def _length(date)
+        y, m = date
+        Length[[+y,m]] || super
+      end
+
+      # 復活祭の遅延日数
+      # 
+      # @private
+      def _easter_delay(year)
+        EasterDelay[year] || 0
+      end
+
+      private
+
+      def _normalize(args=[], options={})
+        @label ||= 'Christian::Swedish'
+        super
+      end
+    end
+
+    #
+    # Variation of Christian Calendar
+    #
+    class ReformVariation < Christian
+
+      # 年月日 -> 通日
+      #
+      # @see When::CalendarTypes::TableBased#_coordinates_to_number
       #
       def _coordinates_to_number(y,m,d)
         super - _diff_from_century(((m < 2) ? +y-1 : +y).to_i.div(100))
@@ -162,12 +240,7 @@ module When
 
       # 通日 - > 年月日
       #
-      # @param  [Integer] jdn 通日
-      #
-      # @return [Array<Integer>] [ y, m, d ]
-      #   y 年
-      #   m 月 (0 始まり)
-      #   d 日 (0 始まり)
+      # @see When::CalendarTypes::TableBased#_number_to_coordinates
       #
       def _number_to_coordinates(jdn)
         super(jdn + _diff_from_century(_century_from_jdn(jdn)))
@@ -175,14 +248,7 @@ module When
 
       # 暦要素数
       #
-      # @overload _length(date)
-      #   @param [Array<Integer>] date ( 年 )
-      #   @return [Integer] 12 (=その年の月数)
-      #
-      # @overload _length(date)
-      #   @param [Array<Integer>] date ( 年, 月 )
-      #   @note 月は 0 始まりの通番
-      #   @return [Integer] その年月の日数
+      # @see When::CalendarTypes::TableBased#_length
       #
       def _length(date)
         yy, mm = date
@@ -207,7 +273,7 @@ module When
     #
     # Gregorian Calendar
     #
-    class Gregorian < ChristianVariation
+    class Gregorian < ReformVariation
 
       # 百年代 - > ユリウス暦とグレゴリオ暦の差
       #
@@ -240,7 +306,12 @@ module When
     #
     # Revised Julian Calendar
     #
-    class RevisedJulian < ChristianVariation
+    class RevisedJulian < ReformVariation
+
+      # デフォルトの改暦日付(ユリウス通日)
+      # 
+      # @private
+      DefaultReformDate = 2423707 # 1923-10-14
 
       # 百年代 - > ユリウス暦と修正ユリウス暦の差
       #
@@ -302,11 +373,7 @@ module When
 
       # 年月日 -> 通日
       #
-      # @param  [Numeric] y 年
-      # @param  [Integer] m 月 (0 始まり)
-      # @param  [Integer] d 日 (0 始まり)
-      #
-      # @return [Integer] 通日
+      # @see When::CalendarTypes::TableBased#_coordinates_to_number
       #
       def _coordinates_to_number(y,m,d)
         skip, limit = @the_length[[y,m]]
@@ -317,12 +384,7 @@ module When
 
       # 通日 - > 年月日
       #
-      # @param  [Integer] jdn 通日
-      #
-      # @return [Array<Integer>] ( y, m, d )
-      #   [ y 年 ]
-      #   [ m 月 (0 始まり) ]
-      #   [ d 日 (0 始まり) ]
+      # @see When::CalendarTypes::TableBased#_number_to_coordinates
       #
       def _number_to_coordinates(jdn)
         if jdn >= @reform_jdn
@@ -338,14 +400,7 @@ module When
 
       # 暦要素数
       #
-      # @overload _length(date)
-      #   @param [Array<Integer>] date ( 年 )
-      #   @return [Integer] 12 (=その年の月数)
-      #
-      # @overload _length(date)
-      #   @param [Array<Integer>] date ( 年, 月 )
-      #   @note 月は 0 始まりの通番
-      #   @return [Integer] その年月の日数
+      # @see When::CalendarTypes::TableBased#_length
       #
       def _length(date)
         return @the_length[date][2] if @the_length[date]
@@ -364,6 +419,13 @@ module When
       #
       def _lunar_equation(year)
         year >= @the_easter ? @new._lunar_equation(year) : @old._lunar_equation(year)
+      end
+
+      # 復活祭の遅延日数
+      # 
+      # @private
+      def _easter_delay(year)
+        @old._easter_delay(year)
       end
 
       private
@@ -400,7 +462,7 @@ module When
           (1..2).each {|i| @reform_date[i] = @reform_date[i] ? @reform_date[i] - 1 : 0 }
           @reform_jdn   = @new._coordinates_to_number(*@reform_date)
         else
-          @reform_jdn ||= @new.kind_of?(Gregorian) ? 2299161 : 2423707 # 1582-10-15 / 1923-10-14
+          @reform_jdn ||= [@old.class::DefaultReformDate, @new.class::DefaultReformDate].max
           @reform_jdn   = @reform_jdn.to_i
           @reform_date  = @new._number_to_coordinates(@reform_jdn)
         end
@@ -648,7 +710,7 @@ module When
         end
         result  = frame._coordinates_to_number(year, 2, 0) + @d - 1 - m
         result += @g - (result-@w) % 7 if @w<7
-        result
+        result + frame._easter_delay(year)
       end
     end
 

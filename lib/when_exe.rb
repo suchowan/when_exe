@@ -502,7 +502,7 @@ module When
   end
 
   alias :tm_pos :TemporalPosition
-
+  module_function :tm_pos
 
   # 指定日時に対応する When::TM::TemporalPosition の生成
   # (When::TM::DateAndTime of specified Time)
