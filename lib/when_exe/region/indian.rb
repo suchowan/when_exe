@@ -69,10 +69,10 @@ module When
   module Coordinates
 
     # Location of cities in India
-    IndianCities = [When::BasicTypes::M17n, [
+    Indian = [When::BasicTypes::M17n, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
-      "names:[IndianCities]",
+      "names:[Indian]",
       [Spatial, "long:+82.5", "lat:N23.11", "label:[CentralIndia,       インド中部]"          ],
       [Spatial, "long:+82.5", "lat:+29.0",  "label:[NorthIndia,         インド北部]"          ],
       [Spatial, "long:+78.0", "lat:+27.2",  "label:[Agra,               アーグラ]"            ],
@@ -525,16 +525,6 @@ module When
     end
   end
 
-  class TM::CalendarEra
-
-    IndianNationalSolar = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
-      "locale:[=en:, ja=ja:, alias]",
-      "area:[IndianNationalSolar=en:Indian_national_calendar, インド国定暦]",
-      ["[SE=, サカ暦=, alias:Saka_Era]1.1.1", "Calendar Epoch", "79-01-01^IndianNationalSolar"]
-    ]]
-  end
-
   module CalendarTypes
 
     #
@@ -543,6 +533,8 @@ module When
     IndianNationalSolar =  [CyclicTableBased, {
       'label'   => 'Indian::IndianNationalSolar',
       'origin_of_LSC' => 1721140,
+      'origin_of_MSC' => -78,
+      'epoch_in_CE'   =>   0,
       'indices' => [
          When.Index('Indian::LunarMonth', {:unit =>12, :shift=>4}),
          When::Coordinates::DefaultDayIndex
@@ -587,9 +579,9 @@ module When
       def _normalize(args=[], options={})
         @label ||= 'Indian::HinduSolar'
         @type  ||= 'SBS'
-        raise ArgumentError, "Irregal formula: #{@formula}" unless @type.upcase =~ /^(M|SS|SB)(V|S|VZ|SZ)$/
+        raise ArgumentError, "Irregal formula: #{@formula}" unless @type.upcase =~ /^(M|SS|SB)(V|S||B|H|VZ|SZ|BZ|HZ)$/
 
-        @location      ||=  HinduLuniSolar::Location[$1]
+        @location      ||=  HinduLuniSolar::Location_E[$2] || HinduLuniSolar::Location_F[$1]
         @cycle_offset  ||=  HinduLuniSolar::CycleOffset[$1]
         @origin_of_MSC ||= -HinduLuniSolar::YearEpoch[$2]
         @epoch_in_CE   ||=  0
@@ -617,10 +609,11 @@ module When
 
       # Calendar Type
       Formula     = {'M'=>'Formula', 'SS'=>'Hindu?bija=SS', 'SB'=>'Hindu?bija=SB'}
-      Location    = {'M'=>'_co:IndianCities::CentralIndia', 'SS'=>'_co:IndianCities::Ujjain', 'SB'=>'_co:IndianCities::Ujjain'}
+      Location_F  = {'M'=>'_co:Indian::CentralIndia', 'SS'=>'_co:Indian::Ujjain', 'SB'=>'_co:Indian::Ujjain'}
+      Location_E  = {'B'=>'_co:Indian::Dacca', 'BZ'=>'_co:Indian::Dacca', 'H'=>'_co:Iranian::Tehran', 'HZ'=>'_co:Iranian::Tehran'}
       CycleOffset = {'M'=>+23.25/30, 'SS'=>0.0, 'SB'=>0.0}
       HinduStyle = {'A'=>0, 'P'=>1, 'PX'=>2}
-      YearEpoch   = {'V'=>-58,'VZ'=>-57,'S'=>78, 'SZ'=>79}
+      YearEpoch   = {'V'=>-58,'VZ'=>-57,'S'=>78, 'SZ'=>79, 'B'=> 593, 'BZ'=>594, 'H'=> 621, 'HZ'=> 622}
 
       # White / black  month and leap month identification table
 
@@ -729,9 +722,9 @@ module When
       def _normalize(args=[], options={})
         @label ||= 'Indian::HinduLuniSolar'
         @type  ||= 'SBSA'
-        raise ArgumentError, "Irregal formula: #{@formula}" unless @type.upcase =~ /^(M|SS|SB)(V|S|VZ|SZ)(A|P|PX)$/
+        raise ArgumentError, "Irregal formula: #{@formula}" unless @type.upcase =~ /^(M|SS|SB)(V|S||B|H|VZ|SZ|BZ|HZ)(A|P|PX)$/
 
-        @location      ||=  Location[$1]
+        @location      ||=  Location_E[$2] || Location_F[$1]
         @cycle_offset  ||=  CycleOffset[$1]
         @origin_of_MSC ||= -YearEpoch[$2]
         @hindu_style   ||=  HinduStyle[$3]

@@ -24,7 +24,7 @@ module When
       "names:[Mayan]",
 
       [Residue,
-        "label:[Haab', ハアブ, Haab]", "divisor:365", 'day:#{Haab:300}', "format:[%2$d%1$s/365]",
+        "label:[Haab', ハアブ, Haab]", "divisor:365", 'day:#{Haab:300}', "format:[%2$d%1$s/365=]",
         "namespace:[glyph=http://en.wikipedia.org/wiki/File:Maya-]",
         [Residue, "label:[Pop     =glyph:Pop.jpg,            ポプ,       Pop   ]", "remainder:  0"],
         [Residue, "label:[Wo'     =glyph:Dresden-wo.jpg,     ウオ,       Wo    ]", "remainder: 20"],
@@ -48,12 +48,12 @@ module When
       ],
 
       [Residue,
-        "label:[Trecena, トレセナ=, Trecena]", "divisor:13", 'day:#{Trecena:8}', "format:[%1$s(%3$d/13)]"
+        "label:[Trecena, トレセナ=, Trecena]", "divisor:13", 'day:#{Trecena:8}', "format:[%1$s(%3$d/13)=]"
       ],
 
       [Residue,
         "namespace:[glyph=http://en.wikipedia.org/wiki/File:MAYA-g-log-cal-]",
-        "label:[Tzolk'in, ツォルキン, Tzolkin]", "divisor:20", 'day:#{Tzolkin:4}', "format:[%s(%d/20)]",
+        "label:[Tzolk'in, ツォルキン, Tzolkin]", "divisor:20", 'day:#{Tzolkin:4}', "format:[%s(%d/20)=]",
         [Residue, "label:[Imix'   =glyph:D01-Imix.png,     イミシュ,   Imix    =glyph:D01-Imix-cdxW.png    ]", "remainder: 0"],
         [Residue, "label:[Ik'     =glyph:D02-Ik.png,       イック,     Ik      =glyph:D02-Ik-cdxW.png      ]", "remainder: 1"],
         [Residue, "label:[Ak'b'al =glyph:D03-Akbal.png,    アクバル,   Akbal   =glyph:D03-Akbal-cdxW.png   ]", "remainder: 2"],
@@ -78,7 +78,7 @@ module When
 
       [Residue,
         "namespace:[glyph=http://www.pauahtun.org/G/G]",
-        "label:[Lords_of_the_Night, 夜の九王]", "divisor:9", 'day:#{LoN:3}', "format:[%s(%d/9)]",
+        "label:[Lords_of_the_Night, 夜の九王]", "divisor:9", 'day:#{LoN:3}', "format:[%s(%d/9)=]",
         [Residue, "label:[G9=glyph:9_m.png]", "remainder: 0"],
         [Residue, "label:[G1=glyph:1_m.png]", "remainder: 1"],
         [Residue, "label:[G2=glyph:2_m.png]", "remainder: 2"],

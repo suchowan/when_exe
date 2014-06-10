@@ -50,7 +50,7 @@ module When::Coordinates
 
     [Residue,
       "locale:[=en:, ja=ja:, alias]",
-      "label:[StarMansion, *宿]", "divisor:28", "day:17",   "format:[%s(%02d)]",
+      "label:[StarMansion, *宿]", "divisor:28", "day:17",   "format:[%s(%02d)=]",
       [Residue, "label:[Horn=,            *角宿,  Jiăo= ]", "remainder:0"],  #  1 α Vir 
       [Residue, "label:[Neck=,            *亢宿,  Kàng= ]", "remainder:1"],  #  2 κ Vir 
       [Residue, "label:[Root=,            *氐宿,  Dĭ=   ]", "remainder:2"],  #  3 α Lib 
@@ -112,7 +112,7 @@ module When::Coordinates
     ],
 
     [StemBranch,
-      "label:[Stem-Branch, *干支]", "divisor:60", "day:11", "year:4", "format:[%s(%02d)]",
+      "label:[Stem-Branch, *干支]", "divisor:60", "day:11", "year:4", "format:[%s(%02d)=]",
       [StemBranch, "label:[kinoe-ne=,           *甲子, 甲子, 木男鼠, 木公鼠]", "remainder: 0"],
       [StemBranch, "label:[kinoto-ushi=,        *乙丑, 乙好, 木女牛, 木母牛]", "remainder: 1"],
       [StemBranch, "label:[hinoe-tora=,         *丙寅, 丙寅, 火男虎, 火公虎]", "remainder: 2"],

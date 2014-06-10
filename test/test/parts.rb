@@ -123,7 +123,7 @@ LOCALE
       assert_equal(["閏長月", String], [date.name('Month').to_s,  date.name('Month').to_s.class])
       assert_equal("http://ja.wikipedia.org/wiki/%E9%96%8F", date.name('Month').reference('ja'))
       assert_equal("閏長月", date.name('Month').translate('日本語'))
-      assert_equal("Intercalary 9th Month", date.name('Month').translate('en_US'))
+      assert_equal("Intercalary Month 9", date.name('Month').translate('en_US'))
     end
 
     def test__split

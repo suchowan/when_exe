@@ -12,6 +12,7 @@ module When
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[French=]",
+      "[FrenchRepublican=en:French_Republican_Calendar, フランス共和暦=ja:%%<フランス革命暦>]",
 
       [self,
         "names:[Month, 月=ja:%%<月_(暦)>]",
@@ -32,29 +33,19 @@ module When
     ]]
   end
 
-  class TM::CalendarEra
-
-    # フランス共和暦
-     French = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
-      "locale:[=en:, ja=ja:, alias]",
-      "period:[FrenchRepublican=en:French_Republican_Calendar, フランス共和暦=ja:%%<フランス革命暦>]",
-      ["[FRE=en:French_Republican_Calendar, 共和暦=ja:%%<フランス革命暦>, alias:Republican_Era]1.1.1",
-       "Calendar Epoch", "1793-01-01^FrenchRepublican", "1806-04-11"],
-    ]]
-  end
-
   module CalendarTypes
 
     #
     # French Calendar
     #
     FrenchRepublican =  [YearLengthTableBased, {
+      'label'   => 'French::FrenchRepublican',
       'indices' => [
          When.Index('French::Month', {:unit =>13}),
          When::Coordinates::DefaultDayIndex
        ],
-       'origin_of_MSC' => +1,
+       'origin_of_MSC' => -1791,
+       'epoch_in_CE'   => +1,
        'cycle_offset'  => Rational(1,2),
        'time_basis'    => '+00:09:20',
        'rule_table'    => {

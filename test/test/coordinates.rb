@@ -194,7 +194,7 @@ module Test::Coordinates
   # 空間位置
   #
   class Spatial < Test::Unit::TestCase
-    IndianCities = [
+    Indian = [
       ["CentralIndia",
        "インド中部",
        "http://en.wikipedia.org/wiki/CentralIndia",
@@ -365,8 +365,8 @@ module Test::Coordinates
     end
 
     def test__spatial_m17n
-      ['_co:IndianCities', 'examples/Spatial.m17n'].each do |iri|
-        samples = IndianCities.dup
+      ['_co:Indian', 'examples/Spatial.m17n'].each do |iri|
+        samples = Indian.dup
         assert_equal(samples.size, When.Resource(iri).child.size)
         When.Resource(iri).child.each do |obj|
           name   = obj.label

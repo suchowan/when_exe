@@ -17,16 +17,6 @@ module When
     ]]
   end
 
-  class TM::CalendarEra
-
-    World = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/]",
-      "area:[Common=]",
-      ["[BCE=en:BCE_(disambiguation), alias:BeforeCommonEra]0.1.1"],
-      ["[CE=en:Common_Era, alias:CommonEra]1.1.1", "Calendar Epoch", "01-01-01^World"]
-    ]]
-  end
-
   #
   # 世界暦の暦週
   #

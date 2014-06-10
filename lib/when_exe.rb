@@ -235,9 +235,11 @@ module When
     autoload :Tenganan,                'when_exe/region/balinese'
     autoload :Pranatamangsa,           'when_exe/region/javanese'
     autoload :IndianNationalSolar,     'when_exe/region/indian'
-    autoload :HinduSolar,              'when_exe/region/indian'
     autoload :HinduLuniSolar,          'when_exe/region/indian'
-    autoload :SolarHejri,              'when_exe/region/iranian'
+    autoload :HinduSolar,              'when_exe/region/indian'
+    autoload :Jalali,                  'when_exe/region/iranian'
+    autoload :SolarHijri,              'when_exe/region/iranian'
+    autoload :SolarHijriAlgorithmic,   'when_exe/region/iranian'
     autoload :Zoroastrian,             'when_exe/region/zoroastrian'
     autoload :Qadimi,                  'when_exe/region/zoroastrian'
     autoload :Shahanshahi,             'when_exe/region/zoroastrian'
@@ -304,7 +306,8 @@ module When
     autoload :Tibetan,                 'when_exe/region/tibetan'
     autoload :Yi,                      'when_exe/region/chinese'
     autoload :Javanese,                'when_exe/region/javanese'
-    autoload :IndianCities,            'when_exe/region/indian'
+    autoload :Indian,            'when_exe/region/indian'
+    autoload :Iranian,                 'when_exe/region/iranian'
     autoload :Bahai,                   'when_exe/region/bahai'
     autoload :Roman,                   'when_exe/region/roman'
     autoload :Mayan,                   'when_exe/region/mayan'
@@ -351,7 +354,6 @@ module When
     # autoload :Tibetan,               'when_exe/region/tibetan'
       autoload :BalineseLuniSolar,     'when_exe/region/balinese'
       autoload :JavaneseLunar,         'when_exe/region/javanese'
-      autoload :IndianNationalSolar,   'when_exe/region/indian'
       autoload :Iranian,               'when_exe/region/iranian'
       autoload :Hijra,                 'when_exe/region/islamic'
       autoload :Jewish,                'when_exe/region/jewish'
@@ -359,14 +361,12 @@ module When
       autoload :Julian,                'when_exe/region/roman'
       autoload :Pope,                  'when_exe/region/pope'
       autoload :Byzantine,             'when_exe/region/christian'
-      autoload :French,                'when_exe/region/french'
-      autoload :World,                 'when_exe/region/world'
       autoload :LongCount,             'when_exe/region/mayan'
 
       # Defualt search path for Epochs and Eras
       DefaultEpochs = ['Common',     'ModernJapanese',
-                       'IndianNationalSolar',  'Iranian',   'Hijra', 'Jewish',
-                       'Roman',      'Byzantine', 'French', 'World', 'LongCount',
+                       'Iranian',    'Hijra', 'Jewish',
+                       'Roman',      'Byzantine', 'LongCount',
                        'BalineseLuniSolar',  'JavaneseLunar',
                        'Japanese',   'JapanesePrimeMinister', 'NihonKoki', 'NihonShoki',
                        'Chinese',    'Ryukyu',  'Vietnamese', 'Korean',
