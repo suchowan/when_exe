@@ -141,13 +141,13 @@ module When
           "names:[day]",
           [When::BasicTypes::M17n,
             "names:[Week]",
-            "[Solis,    日曜日]",
-            "[Lunae,    月曜日]",
-            "[Martis,   火曜日]",
-            "[Mercurii, 水曜日]",
-            "[Jovis,    木曜日]",
-            "[Veneris,  金曜日]",
-            "[Saturni,  土曜日]"
+            [DayOfWeek, "label:[Solis=,    日曜日]", {'delta'=>7}],
+            [DayOfWeek, "label:[Lunae=,    月曜日]", {'delta'=>7}],
+            [DayOfWeek, "label:[Martis=,   火曜日]", {'delta'=>7}],
+            [DayOfWeek, "label:[Mercurii=, 水曜日]", {'delta'=>7}],
+            [DayOfWeek, "label:[Jovis=,    木曜日]", {'delta'=>7}],
+            [DayOfWeek, "label:[Veneris=,  金曜日]", {'delta'=>7}],
+            [DayOfWeek, "label:[Saturni=,  土曜日]", {'delta'=>7}]
           ]
         ]
       ]]
@@ -169,10 +169,39 @@ module When
         date.events = ['from_solis']
         date
       end
-      alias :week :solis
 
+      #
+      # この日は何曜？
+      #
+      # @param [When::TM::TemporalPosition] date
+      #
+      # @return [Array<When::CalendarNote::Week::DayOfWeek, Array<Integer,Integer>>]
+      #
+      def week(date)
+        date  = _to_date_for_note(date)
+        index = (date.cal_date.last - 1) % 7
+        [@days_of_week[index], [index, 7]]
+      end
+
+      #
+      # 曜日の名前の一覧
+      #
+      # @param [When::TM::TemporalPosition] date (ダミー)
+      #
+      # @return [Array<When::CalendarNote::Week::DayOfWeek>]
+      #
+      def week_labels(date)
+        @days_of_week.child
+      end
+
+      #
+      # 暦日を当該暦注計算用クラスに変換
+      #
       # @private
-      alias :solis_delta :_delta
+      def _to_date_for_note(date)
+        date = When::Darian ^ date unless date.frame.label.to_s == 'Darian'
+        date
+      end
 
       private
 

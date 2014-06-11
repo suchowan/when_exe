@@ -20,8 +20,11 @@ module When
   #
   # 世界暦の暦週
   #
-  class CalendarNote::WorldWeek < CalendarNote
+  class CalendarNote::WorldWeek < CalendarNote::Week
 
+    #
+    # 暦注要素の定義
+    #
     Notes = [When::BasicTypes::M17n, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
@@ -45,28 +48,34 @@ module When
         "names:[day]",
         [When::BasicTypes::M17n,
           "names:[Week]",
-          "[Sunday,    日曜日]",
-          "[Monday,    月曜日]",
-          "[Tuesday,   火曜日]",
-          "[Wednesday, 水曜日]",
-          "[Thursday,  木曜日]",
-          "[Friday,    金曜日]",
-          "[Saturday,  土曜日]",
-          "[Worldsday, 無曜日]"
+          [DayOfWeek, "label:[Sunday,    日曜日]", {'delta'=>7}],
+          [DayOfWeek, "label:[Monday,    月曜日]", {'delta'=>7}],
+          [DayOfWeek, "label:[Tuesday,   火曜日]", {'delta'=>7}],
+          [DayOfWeek, "label:[Wednesday, 水曜日]", {'delta'=>7}],
+          [DayOfWeek, "label:[Thursday,  木曜日]", {'delta'=>7}],
+          [DayOfWeek, "label:[Friday,    金曜日]", {'delta'=>7}],
+          [DayOfWeek, "label:[Saturday,  土曜日]", {'delta'=>7}],
+          [DayOfWeek, "label:[Worldsday, 無曜日]", {'delta'=>183}],
         ]
       ]
     ]]
 
-    # イベントの標準的な間隔を返す
     # @private
-    def _delta(parameter=nil)
-      return When::P1W
-    end
+    FirstDayOfWeek = [0, 3, 5] * 4
 
     # @private
-    def worldsday_delta(parameter=nil)
-      return When::TM::PeriodDuration.new([0,0,7*26+1])
-    end
+    ExtraDayInYear = {
+      [ 6, 31] => 7,
+      [12, 31] => 7
+    }
+
+    # @private
+    WeekLength = {
+      [ 6, 30] => 7,
+      [ 6, 31] => 8,
+      [12, 30] => 8,
+      [12, 31] => 8
+    }
 
     # 当日または直前の worldsday の日
     # @param date [When::TM::TemporalPosition]
@@ -108,12 +117,34 @@ module When
           date.events = [event_name]
           date
         end
-
-        alias :#{name}_delta :_delta
       }
     end
 
-    alias :week :sunday
+    #
+    # この日は何曜？
+    #
+    # @param [When::TM::TemporalPosition] date
+    #
+    # @return [Array<When::CalendarNote::Week::DayOfWeek, Array<Integer,Integer>>]
+    #
+    def week(date)
+      date    = _to_date_for_note(date)
+      y, m, d = date.cal_date
+      index   = ExtraDayInYear[[m,d]] || (FirstDayOfWeek[m-1] + d - 1) % 7
+      length  = WeekLength[[m, date.length(When::MONTH)]] || 7
+      [@days_of_week[index], [index, length]]
+    end
+
+    #
+    # 暦日を当該暦注計算用クラスに変換
+    #
+    # @private
+    def _to_date_for_note(date)
+      date = When::World ^ date unless date.frame.equal?(When::World)
+      date
+    end
+
+    private
 
     # オブジェクトの正規化
     # @private

@@ -39,7 +39,7 @@ module When
   #
   # ホビット庄暦の暦週
   #
-  class CalendarNote::ShireWeek < CalendarNote
+  class CalendarNote::ShireWeek < CalendarNote::Week
 
     Notes = [When::BasicTypes::M17n, [
       "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
@@ -64,29 +64,33 @@ module When
         "names:[day]",
         [When::BasicTypes::M17n,
           "names:[Week]",
-          "[Saturday,     土曜日]",
-          "[Sunday,       日曜日]",
-          "[Monday,       月曜日]",
-          "[Tuesday,      火曜日]",
-          "[Wednesday,    水曜日]",
-          "[Thursday,     木曜日]",
-          "[Friday,       金曜日]",
-          "[lithe,        中日= ]",
-          "[double,       重日= ]"
+          [DayOfWeek, "label:[Saturday,     土曜日]", {'delta'=>7}],
+          [DayOfWeek, "label:[Sunday,       日曜日]", {'delta'=>7}],
+          [DayOfWeek, "label:[Monday,       月曜日]", {'delta'=>7}],
+          [DayOfWeek, "label:[Tuesday,      火曜日]", {'delta'=>7}],
+          [DayOfWeek, "label:[Wednesday,    水曜日]", {'delta'=>7}],
+          [DayOfWeek, "label:[Thursday,     木曜日]", {'delta'=>7}],
+          [DayOfWeek, "label:[Friday,       金曜日]", {'delta'=>7}],
+          [DayOfWeek, "label:[lithe,        中日= ]", {'delta'=> 365}],
+          [DayOfWeek, "label:[double,       重日= ]", {'delta'=>1827}]
         ]
       ]
     ]]
 
-    # イベントの標準的な間隔を返す
     # @private
-    def _delta(parameter=nil)
-      return When::P1W
-    end
+    FirstDayOfWeek  = [6, 1, 3, 5, 0, 2, 4] * 2
 
     # @private
-    def lithe_delta(parameter=nil)
-      return When::TM::PeriodDuration.new([0,0,7*52+1])
-    end
+    ExtraDayInYear = {
+      [ 8, 2] => 7,
+      [ 8, 4] => 0
+    }
+
+    # @private
+    WeekLength = {
+      [ 8, 3] => 8,
+      [ 8, 4] => 9
+    }
 
     # 当日または直前の lithe の日
     # @param date [When::TM::TemporalPosition]
@@ -144,12 +148,33 @@ module When
           date.events = [event_name]
           date
         end
-
-        alias :#{name}_delta :_delta
       }
     end
 
-    alias :week :saturday
+    #
+    # この日は何曜？
+    #
+    # @param [When::TM::TemporalPosition] date
+    #
+    # @return [Array<When::CalendarNote::Week::DayOfWeek, Array<Integer,Integer>>]
+    #
+    def week(date)
+      date    = _to_date_for_note(date)
+      y, m, d = date.cal_date
+      length  = WeekLength[[m, date.length(When::MONTH)]] || 7
+      index   = length == 8 ? 0 : 8 if [m,d] == [8,3]
+      index ||= ExtraDayInYear[[m,d]] || (FirstDayOfWeek[m-1] + d - 1) % 7
+      [@days_of_week[index], [index, length]]
+    end
+
+    #
+    # 暦日を当該暦注計算用クラスに変換
+    #
+    # @private
+    def _to_date_for_note(date)
+      date = When::ShireG ^ date unless date.frame.label.to_s == 'Shire'
+      date
+    end
 
     # オブジェクトの正規化
     # @private
