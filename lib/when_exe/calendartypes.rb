@@ -543,20 +543,16 @@ module When::CalendarTypes
       rule = {
         'Years'  => 1,
         'Months' => key.length,
-        'Days'   => key.length * 29 + key.gsub(/[a-z]/,'').length,
+        'Days'   => _year_length(key),
         'IDs'    => [],
         'Length' => [],
         'Offset' => []
       }
 
-      key.length.times do |k|
-        rule['Length'] << (key[k,1] =~ /[a-z]/ ? 29 : 30)
-        rule['Offset'] << (k == 0 ? 0 : rule['Offset'][k-1]+rule['Length'][k-1])
-        trunk  = key.upcase[k]
-        branch = (trunk == key.upcase[k-1]) ? 1 : 0
-        trunk  = trunk.ord if trunk.kind_of?(String)
-        trunk -= 64
-        rule['IDs'] << ((branch==0) ? trunk : When::Coordinates::Pair.new(trunk, branch))
+      key.length.times do |m|
+        rule['Length'] << _month_length(key, m)
+        rule['Offset'] << (m == 0 ? 0 : rule['Offset'][m-1]+rule['Length'][m-1])
+        rule['IDs'] << _month_id(key, m)
       end
       return rule
     end
@@ -711,8 +707,8 @@ module When::CalendarTypes
 
     # オフセットの更新
     def _increment_offsets(offsets, subkey)
-      offsets[1] += subkey.length                                       # 月のオフセットを月数分進める
-      offsets[0] += subkey.length * 29 + subkey.gsub(/[a-z]/,'').length # 日のオフセットを日数分進める
+      offsets[1] += subkey.length        # 月のオフセットを月数分進める
+      offsets[0] += _year_length(subkey) # 日のオフセットを日数分進める
     end
 
     # 年初の通日によるセットアップ
@@ -756,6 +752,42 @@ module When::CalendarTypes
       return rule['Rule'][year][0]
     end
 
+    # 朔閏パターン -> 日数/年
+    #
+    # @param [String] key 朔閏パターン
+    #
+    # @return [Integer] 日数/年
+    #
+    def _year_length(key)
+      key.length * 29 + key.gsub(/[a-z]/,'').length
+    end
+
+    # 朔閏パターン -> 日数/年
+    #
+    # @param [String] key 朔閏パターン
+    # @param [Integer] m 月番号(0始まり)
+    #
+    # @return [Integer] 日数/月
+    #
+    def _month_length(key, m)
+      key[m,1] =~ /[a-z]/ ? 29 : 30
+    end
+
+    # 朔閏パターン -> 月のID
+    #
+    # @param [String] key 朔閏パターン
+    # @param [Integer] m 月番号(0始まり)
+    #
+    # @return [Integer] 月のID
+    #
+    def _month_id(key, m)
+      trunk  = key.upcase[m]
+      branch = trunk == key.upcase[m-1] ? 1 : 0
+      trunk  = trunk.ord if trunk.kind_of?(String)
+      trunk -= 64
+      branch == 0 ? trunk : When::Coordinates::Pair.new(trunk, branch)
+    end
+
     # オブジェクトの正規化
     #
     # @note インスタンス変数 @note は to_a でデフォルトとして用いる暦注
@@ -784,6 +816,58 @@ module When::CalendarTypes
       return super unless subkey.kind_of?(Hash)
       offsets[1] += subkey['Months'] # 月のオフセットを月数分進める
       offsets[0] += subkey['Days']   # 日のオフセットを日数分進める
+    end
+  end
+
+  # 表引きにより実現する太陽暦(閏月なし, 5,6,27～34日の月に対応)
+  #
+  #   Solar calendar which uses year / month /day table
+  #
+  class PatternTableBasedSolar < PatternTableBasedLuniSolar
+
+    private
+
+    # 朔閏パターン -> 日数/年
+    #
+    # @param [String] key 朔閏パターン
+    #
+    # @return [Integer] 日数/年
+    #
+    def _year_length(key)
+      length = 0
+      key.length.times do |m|
+        length += _month_length(key, m)
+      end
+      length
+    end
+
+    # 朔閏パターン -> 日数/年
+    #
+    # @param [String] key 朔閏パターン
+    # @param [Integer] m 月番号(0始まり)
+    #
+    # @return [Integer] 日数/月
+    #
+    def _month_length(key, m)
+      trunk  = key.upcase[m]
+      trunk  = trunk.ord if trunk.kind_of?(String)
+      trunk -= 48
+      case trunk
+      when 5, 6 ; trunk
+      when 7..9 ; trunk + 20
+      else      ; trunk + 30
+      end
+    end
+
+    # 朔閏パターン -> 月のID
+    #
+    # @param [String] key 朔閏パターン
+    # @param [Integer] m 月番号(0始まり)
+    #
+    # @return [Integer] 月のID
+    #
+    def _month_id(key, m)
+      m + 1
     end
   end
 

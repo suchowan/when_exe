@@ -15,8 +15,10 @@ module When
       "locale:[=en:, ja=ja:, hi=hi:, alias]",
       "names:[Indian=]",
       "[IndianNationalSolar=en:Indian_national_calendar, インド国定暦]",
-      "[HinduSolar=en:Hindu_calendar,     インド太陽暦=ja:%%<ヒンドゥー暦>]",
-      "[HinduLuniSolar=en:Hindu_calendar, インド太陰太陽暦=ja:%%<ヒンドゥー暦>]",
+      "[Nanakshahi=en:Nanakshahi_calendar,  ナーナク暦=]",
+      "[RevisedBengali=en:Bengali_calendar, 改訂ベンガル暦=]",
+      "[HinduSolar=en:Hindu_calendar,       インド太陽暦=ja:%%<ヒンドゥー暦>]",
+      "[HinduLuniSolar=en:Hindu_calendar,   インド太陰太陽暦=ja:%%<ヒンドゥー暦>]",
 
       [self,
         "names:[IntercalaryMonth=en:Intercalation, 閏月]",
@@ -62,6 +64,38 @@ module When
         "[Makar=,                      磨羯宮,              _IAST_=]",
         "[Kumbha=,                     宝瓶宮,              _IAST_=]",
         "[Meena=,                      双魚宮,              _IAST_=]"
+      ],
+
+      [self,
+        "names:[NanakshahiMonth=, 太陽月=ja:%%<月_(暦)>]",
+        "[Maghar=en:Maghar_(month)    ]",
+        "[Poh                         ]",
+        "[Magh=en:Magh_(Sikh_calendar)]",
+        "[Phagun                      ]",
+        "[Chet=en:Chet_(month)        ]",
+        "[Vaisakh                     ]",
+        "[Jeth                        ]",
+        "[Harh                        ]",
+        "[Sawan                       ]",
+        "[Bhadon                      ]",
+        "[Assu                        ]",
+        "[Katak                       ]"
+      ],
+
+      [self,
+        "names:[BengaliMonth=, 太陽月=ja:%%<月_(暦)>]",
+        "[Ogrôhayôn=]",
+        "[Poush=    ]",
+        "[Magh=     ]",
+        "[Falgun=   ]",
+        "[Chôitrô=  ]",
+        "[Bôishakh= ]",
+        "[Jyôishţhô=]",
+        "[Ashaŗh=   ]",
+        "[Shrabôn=  ]",
+        "[Bhadrô=   ]",
+        "[Ashbin=   ]",
+        "[Kartik=   ]"
       ]
     ]]
   end
@@ -547,6 +581,74 @@ module When
         366  => {'Length'=>       [31]*6 + [30]*6}
       },
     }]
+
+    #
+    # Nanakshahi Calendar
+    #
+    class Nanakshahi < TableBased
+
+      private
+
+      #
+      # Object Normalization
+      #
+      def _normalize(args=[], options={})
+        @label         ||= 'Indian::Nanakshahi'
+        @epoch_in_CE   ||= 1468
+        @engine        ||= 'Gregorian'
+        @engine          = When.Calendar(@engine)
+        @indices       ||= [
+          When.Index('Indian::NanakshahiMonth', {:unit=>12, :shift=>4}),
+          When::Coordinates::DefaultDayIndex
+        ]
+        @rule_table    ||= {
+          365 => {'Length'=> [31]*5 + [30]*7},
+          366 => {'Length'=> [31]*5 + [30]*6 + [31]}
+        }
+        super
+      end
+
+      # first day of year
+      #
+      def _sdn_(date)
+        year = +date[0] + @epoch_in_CE
+        @engine._coordinates_to_number(year, 2, 13)
+      end
+    end
+
+    #
+    # Revised Bengali Calendar
+    #
+    class RevisedBengali < TableBased
+
+      private
+
+      #
+      # Object Normalization
+      #
+      def _normalize(args=[], options={})
+        @label         ||= 'Indian::RevisedBengali'
+        @epoch_in_CE   ||=  593
+        @engine        ||= 'Gregorian'
+        @engine          = When.Calendar(@engine)
+        @indices       ||= [
+          When.Index('Indian::BengaliMonth', {:unit=>12, :shift=>5}),
+          When::Coordinates::DefaultDayIndex
+        ]
+        @rule_table    ||= {
+          365 => {'Length'=> [31]*5 + [30]*7},
+          366 => {'Length'=> [31]*5 + [30]*5 + [31, 30]}
+        }
+        super
+      end
+
+      # first day of year
+      #
+      def _sdn_(date)
+        year = +date[0] + @epoch_in_CE
+        @engine._coordinates_to_number(year, 3, 13)
+      end
+    end
 
     #
     # Hindu Solar Calendar

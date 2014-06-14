@@ -235,9 +235,14 @@ module When
     autoload :Tenganan,                'when_exe/region/balinese'
     autoload :Pranatamangsa,           'when_exe/region/javanese'
     autoload :IndianNationalSolar,     'when_exe/region/indian'
+    autoload :Nanakshahi,              'when_exe/region/indian'
+    autoload :RevisedBengali,          'when_exe/region/indian'
     autoload :HinduLuniSolar,          'when_exe/region/indian'
     autoload :HinduSolar,              'when_exe/region/indian'
     autoload :Jalali,                  'when_exe/region/iranian'
+    autoload :TableBasedJalali,        'when_exe/region/iranian'
+    autoload :Borji,                   'when_exe/region/iranian'
+    autoload :TableBasedBorji,         'when_exe/region/iranian'
     autoload :SolarHijri,              'when_exe/region/iranian'
     autoload :SolarHijriAlgorithmic,   'when_exe/region/iranian'
     autoload :Zoroastrian,             'when_exe/region/zoroastrian'
@@ -306,7 +311,7 @@ module When
     autoload :Tibetan,                 'when_exe/region/tibetan'
     autoload :Yi,                      'when_exe/region/chinese'
     autoload :Javanese,                'when_exe/region/javanese'
-    autoload :Indian,            'when_exe/region/indian'
+    autoload :Indian,                  'when_exe/region/indian'
     autoload :Iranian,                 'when_exe/region/iranian'
     autoload :Bahai,                   'when_exe/region/bahai'
     autoload :Roman,                   'when_exe/region/roman'
@@ -365,7 +370,7 @@ module When
 
       # Defualt search path for Epochs and Eras
       DefaultEpochs = ['Common',     'ModernJapanese',
-                       'Iranian',    'Hijra', 'Jewish',
+                       'Hijra',      'Jewish', 'Iranian',
                        'Roman',      'Byzantine', 'LongCount',
                        'BalineseLuniSolar',  'JavaneseLunar',
                        'Japanese',   'JapanesePrimeMinister', 'NihonKoki', 'NihonShoki',

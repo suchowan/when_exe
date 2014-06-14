@@ -13,7 +13,7 @@ module When
       "locale:[=en:, ja=ja:, alias]",
       "names:[Balinese=]",
       "[BalineseLuniSolar=, バリ・サカ暦=]",
-      "[Tenganan=, テンガナン暦=]",
+      "[Tenganan, テンガナン暦=]",
 
       [self,
         "names:[IntercalaryMonth=en:Intercalation, 閏月]",
@@ -140,7 +140,7 @@ module When
       ["[SE=, サカ暦=, alias:Balinese_Saka_Era]1887-07<13", "Calendar Epoch", "1965-07<13^BalineseLuniSolar1965",
                                                             "1971-07-04^BalineseLuniSolar1971",
                                                             "1993-07-08^BalineseLuniSolar1993",
-                                                            "2000-06<10^BalineseLuniSolar2000",
+                                                            "1999-06<10^BalineseLuniSolar2000",
                                                             "2003-07<14^BalineseLuniSolar2003", '+Infinity']
     ]]
   end
