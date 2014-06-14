@@ -269,6 +269,8 @@ module When
     autoload :Sym454,                  'when_exe/region/symmetry'
     autoload :Sym010,                  'when_exe/region/symmetry'
     autoload :Yerm,                    'when_exe/region/yerm'
+    autoload :Dee,                     'when_exe/region/dee'
+    autoload :DeeCecil,                'when_exe/region/dee'
     autoload :Goddess,                 'when_exe/region/goddess'
     autoload :Darian,                  'when_exe/region/martian'
     autoload :WeekDate,                'when_exe/region/weekdate'
