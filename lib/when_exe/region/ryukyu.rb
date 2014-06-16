@@ -23,7 +23,6 @@ module When
     # 琉球王朝
     #
     Ryukyu = [self, [
-      "namespace:[ja=http://ja.wikipedia.org/wiki/, en=http://en.wikipedia.org/wiki/]",
       "locale:[=ja:, en=en:, alias]",
       "area:[琉球,Ryukyu]",
       [self,

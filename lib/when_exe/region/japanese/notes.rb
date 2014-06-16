@@ -37,7 +37,6 @@ class When::CalendarNote
     # 日本暦注の要素
     #
     Notes = [When::BasicTypes::M17n, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=ja:, en=en:]",
       "names:[日本暦注]",
 
@@ -279,7 +278,7 @@ class When::CalendarNote
     # 日本暦注の時代変遷
     #
     # @private
-    NoteTypes = (3...When::TM::CalendarEra::JapaneseSolar[1].size).to_a.map {|i|
+    NoteTypes = (2...When::TM::CalendarEra::JapaneseSolar[1].size).to_a.map {|i|
       calendars =
         [When::TM::CalendarEra::JapaneseLuniSolar[1][i][2],
          When::TM::CalendarEra::JapaneseSolar[1][i][2]].map {|epoch|
@@ -312,7 +311,7 @@ class When::CalendarNote
 
     # @private
     NoteFocused = (0...NoteRange.size).to_a.map {|range|
-      (3..5).to_a.map {|cord|
+      (2..4).to_a.map {|cord|
         notes = Notes[1][cord]
         (2...notes.size).to_a.inject([]) {|focused,note|
           focused << notes[note][2][/\[.+?[=\]]/][1..-2] if notes[note][1][range] == 1
@@ -333,6 +332,24 @@ class When::CalendarNote
       -30 => '小',
       -31 => '大'
     }
+
+    #
+    # 日本暦注に対応するインデックス(整数値)
+    #
+    # @private
+    module Index
+      # @private
+      [[2,'Y'], [3,'M'], [4,'D']].map {|cord|
+        index, initial = cord
+        notes = Notes[1][index]
+        (notes.size-2).times {|no|
+          name = initial + notes[no+2][2][/\[.+?[=\]]/][1..-2]
+          mask = 'M' + name
+          const_set(name, no)
+          const_set(mask, 1<<no)
+        }
+      }
+    end
 
     #
     # 日本暦注が使用する暦法

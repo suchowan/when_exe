@@ -10,6 +10,8 @@ module Test
 
   class Japanese < Test::Unit::TestCase
 
+    include When::CalendarNote::Japanese::Index
+
     def test_japanese_epoch
       eras = When.Resource('_e:Japanese')
 
@@ -154,7 +156,7 @@ module Test
                                {:clock=>dates.s_date.frame.time_basis})
               long  = dates.cal4note.s_terms.position(date)
               notes = date.notes(:indices => When::DAY,
-                                 :notes   => (13<<9|1<<49|1<<72),
+                                 :notes   => MD廿四節気|MD七十二候|MD六十卦|MD没|MD往亡,
                                  :locale  => 'ja').simplify[:value].compact
               result << [date.to_m17n/'ja', notes]
             end

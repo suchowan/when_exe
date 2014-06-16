@@ -10,7 +10,6 @@ module When
   class BasicTypes::M17n
 
     WeekDate = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/]",
       "locale:[=en:, ja]",
       "names:[WeekDate=en:ISO_week_date, 暦週=]",
       [self, "names:[week]"] + (1...100).to_a.map {|m| "Week #{m}"},

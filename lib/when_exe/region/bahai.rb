@@ -9,7 +9,6 @@ module When
   class BasicTypes::M17n
 
     Bahai = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/, ar=http://ar.wikipedia.org/wiki/]",
       "locale:[=en:, ar=ar:, alias=en:]",
       "names:[Bahai=]",
       "[Bahai=en:Bah%C3%A1%27%C3%AD_calendar, ja:バハーイー暦=ja:%%<バハーイー教>]",
@@ -49,7 +48,6 @@ module When
 
     # Bahai years
     Bahai = [When::BasicTypes::M17n, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/, ar=http://ar.wikipedia.org/wiki/]",
       "locale:[=en:, ar=ar:, alias=en:]",
       "names:[Bahai]",
 

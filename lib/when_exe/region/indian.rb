@@ -11,7 +11,6 @@ module When
   class BasicTypes::M17n
 
     Indian = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/, hi=http://hi.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, hi=hi:, alias]",
       "names:[Indian=]",
       "[IndianNationalSolar=en:Indian_national_calendar, インド国定暦]",
@@ -104,7 +103,6 @@ module When
 
     # Location of cities in India
     Indian = [When::BasicTypes::M17n, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[Indian]",
       [Spatial, "long:+82.5", "lat:N23.11", "label:[CentralIndia,       インド中部]"          ],
@@ -869,7 +867,6 @@ module When
     class HinduNote < self
 
       Notes = [When::BasicTypes::M17n, [
-        "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/, hi=http://hi.wikipedia.org/wiki/]",
         "locale:[=en:, ja=ja:, hi=hi:, alias]",
         "names:[Hindu]",
 

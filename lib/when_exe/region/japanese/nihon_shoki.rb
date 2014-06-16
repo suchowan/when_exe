@@ -11,7 +11,6 @@ class When::TM::CalendarEra
   # 皇紀
   #
   NihonKoki = [self, [
-    "namespace:[ja=http://ja.wikipedia.org/wiki/, en=http://en.wikipedia.org/wiki/]",
     "locale:[=ja:, en=en:, alias]",
     "area:[日本]",
     ["[皇紀]1",		"@A",	"-659-01-01^JapaneseTwin::平朔儀鳳暦"],
@@ -24,7 +23,6 @@ class When::TM::CalendarEra
   # 日本書紀暦日
   #
   NihonShoki = [self, [
-    "namespace:[ja=http://ja.wikipedia.org/wiki/, en=http://en.wikipedia.org/wiki/]",
     "locale:[=ja:, en=en:, alias]",
     "period:[(日本書紀)=ja:%%<日本書紀>, (Nihon_Shoki)=en:Nihon_Shoki]",
     ["[神武]1",	"@A",	"name=[神武];-659-01-01^JapaneseTwin::平朔儀鳳暦"],

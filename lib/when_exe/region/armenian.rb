@@ -10,7 +10,6 @@ module When
   class BasicTypes::M17n
 
     Armenian = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[Armenian=]",
       "[Armenian=en:Armenian_calendar, アルメニア暦=]",

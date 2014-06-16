@@ -24,7 +24,6 @@ module When
     # 満洲
     #
     Manchurian = [self, [
-      "namespace:[ja=http://ja.wikipedia.org/wiki/, en=http://en.wikipedia.org/wiki/]",
       "locale:[=ja:, en=en:, alias]",
       "area:[満洲,Manchurian=en:Manchuria]",
       [self,
@@ -61,7 +60,6 @@ module When
     # 柔然
     #
     Rouran = [self, [
-      "namespace:[ja=http://ja.wikipedia.org/wiki/, en=http://en.wikipedia.org/wiki/]",
       "locale:[=ja:, en=en:, alias]",
       "area:[柔然,Rouran]",
       ["[永康]1",	"@A",	"name=[予成];464^Chinese0445"],
@@ -75,7 +73,6 @@ module When
     # 高昌
     #
     Gaochang = [self, [
-      "namespace:[ja=http://ja.wikipedia.org/wiki/, en=http://en.wikipedia.org/wiki/]",
       "locale:[=ja:, en=en:, alias]",
       "area:[高昌,Gaochang]",
       ["[章和]1",	"@A",	  "name=[麹堅];531^Chinese0523"],
@@ -93,7 +90,6 @@ module When
     # 雲南
     #
     Yunnan = [self, [
-      "namespace:[ja=http://ja.wikipedia.org/wiki/, en=http://en.wikipedia.org/wiki/]",
       "locale:[=ja:, en=en:, alias]",
       "area:[雲南,Yunnan]",
       [self,

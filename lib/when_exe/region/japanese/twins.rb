@@ -11,9 +11,8 @@ module When
 
     # Japanese Luni-Solar Calendar Series for Japanese Note
     JapaneseLuniSolar = [self, [
-      'namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]',
-      'locale:[=en:, ja=ja:, alias]',
-      'area:[JapaneseLuniSolar=, 日本の暦月=]',
+      'locale:[ja=ja:, en=en:]',
+      'area:[日本の暦月=, *JapaneseLuniSolar=]',
       ['[平朔儀鳳暦=]-660.01.01',  '@F',  "-660-01-01^JapaneseTwin::平朔儀鳳暦"],
       ['[元嘉暦]454.01.01',        '@CR',  "454-01-01^ChineseTwin::元嘉暦"],
       ['[儀鳳暦]697.01.01',        '@CR',  "697-01-01^ChineseTwin::麟徳暦"],
@@ -29,15 +28,14 @@ module When
       ['[寛政暦]1798.01.01',       '@CR', "1798-01-01^JapaneseTwin::寛政暦"    ], # 京都平均太陽時
       ['[寛政丁亥暦]1827.01.01',   '@CR', "1827-01-01^JapaneseTwin::寛政丁亥暦"], # 京都平均太陽時
       ['[天保暦]1844.01.01',       '@CR', "1844-01-01^JapaneseTwin::天保暦"    ], # 京都真太陽時
-      ['[JLSO=,旧々暦=]1872.12.03','@CR', "1872-12-03^JapaneseTwin::旧々暦"    ], # 東京平均太陽時
-      ['[JLS=,旧暦]1887.11.18',    '@CR', "1887-11-18^JapaneseTwin::旧暦"      ]  # 日本標準時
+      ['[旧々暦=,*JSO=]1872.12.03','@CR', "1872-12-03^JapaneseTwin::旧々暦"    ], # 東京平均太陽時
+      ['[旧暦,*JS=]1887.11.18',    '@CR', "1887-11-18^JapaneseTwin::旧暦"      ]  # 日本標準時
     ]]
 
     # Japanese Solar Calendar Series for Japanese Note
     JapaneseSolar = [self, [
-      'namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]',
-      'locale:[=en:, ja=ja:, alias]',
-      'area:[JapaneseSolar=, 日本の節月=]',
+      'locale:[ja=ja:, en=en:]',
+      'area:[日本の節月=, *JapaneseSolar=]',
       ['[平朔儀鳳暦=]-661.01.01',  '@F',  "-661-01-01^JapaneseTwin::平朔儀鳳暦(節月)"], # 年の始めに遡って開始(実際は12.22)
       ['[元嘉暦]454.01.12',        '@CR',  "454-01-12^ChineseTwin::元嘉暦(節月)"],
       ['[儀鳳暦]696.12.27',        '@CR',  "696-12-27^ChineseTwin::麟徳暦(節月)"],
@@ -53,8 +51,8 @@ module When
       ['[寛政暦]1798.01.12',       '@CR', "1798-01-12^JapaneseTwin::寛政暦(節月)"    ],
       ['[寛政丁亥暦]1826.12.22',   '@CR', "1826-12-22^JapaneseTwin::寛政丁亥暦(節月)"],
       ['[天保暦]1844.01.14',       '@CR', "1844-01-14^JapaneseTwin::天保暦(節月)"    ], # 京都真太陽時
-      ['[JSO=,旧々暦=]1872.11.26', '@CR', "1872-11-26^JapaneseTwin::旧々暦(節月)"    ], # 東京平均太陽時
-      ['[JS=,旧暦]1887.11.26',     '@CR', "1887-11-26^JapaneseTwin::旧暦(節月)"      ]  # 日本標準時
+      ['[旧々暦=,*JSO=]1872.11.26','@CR', "1872-11-26^JapaneseTwin::旧々暦(節月)"    ], # 東京平均太陽時
+      ['[旧暦,*JS=]1887.11.26',    '@CR', "1887-11-26^JapaneseTwin::旧暦(節月)"      ]  # 日本標準時
     ]]
   end
 
@@ -85,7 +83,6 @@ module When
     }
 
     JapaneseTwin = [{}, When::BasicTypes::M17n, ChineseSolar.twin('JapaneseTwin', [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=ja:, en=en:, alias]",
       "area:[日本,Japan]",
 

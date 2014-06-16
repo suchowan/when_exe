@@ -17,10 +17,9 @@ module When
   class BasicTypes::M17n
 
     Yerm = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/]",
       "locale:[=en:, ja]",
       "names:[Yerm=]",
-      "[YermLunar=http://calendars.wikia.com/wiki/Yerm_Lunar_Calendar, ヤーム]",
+      "[YermLunar=http://calendars.wikia.com/wiki/Yerm_Lunar_Calendar, ヤーム=]",
 
       [Coordinates::Residue, "label:[yerm=]", "divisor:52", "year:0", "format:[%s=]"] +
       (1..52).to_a.map {|y|  [Coordinates::Residue, "label:[Yerm #{y}=]", "remainder:#{y-1}"]},

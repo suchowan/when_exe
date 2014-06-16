@@ -9,7 +9,6 @@ module When
   class BasicTypes::M17n
 
     Jewish = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[Jewish=]",
       "[Jewish=en:Hebrew_calendar, ユダヤ暦]",
@@ -44,7 +43,6 @@ module When
     # Anno Mundi epoch
     #
     Jewish = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "area:[Israel, イスラエル]",
       ["[AnnoMundi=en:Anno_Mundi, ユダヤ紀元, *alias:HY]1.1.1", "Calendar Epoch", "01-01-01^Jewish"],

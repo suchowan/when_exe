@@ -11,7 +11,6 @@ class When::TM::OrdinalReferenceSystem
   # Geological Ages
   #
   GeologicalAge = [self, [
-    "namespace:[ja=http://ja.wikipedia.org/wiki/, en=http://en.wikipedia.org/wiki/]",
     "locale:[=ja:, en=en:]",
     "*area:[地球,Earth]",
 

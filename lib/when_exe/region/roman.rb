@@ -10,7 +10,6 @@ module When
   class BasicTypes::M17n
 
     Roman = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[Roman=]",
 
@@ -95,7 +94,6 @@ module When
 
     # From http://en.wikipedia.org/wiki/Julian_calendar#Sacrobosco.27s_theory_on_month_lengths
     Julian = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "period:[Roman=en:Roman_calendar, ローマ暦]",
       ["[AUC=en:Ab_urbe_condita, 建国紀元=ja:%%<ローマ建国紀元>, alias:Ab_urbe_condita]709.1.1",
@@ -106,7 +104,6 @@ module When
 
     # From http://www.tyndalehouse.com/Egypt/ptolemies/chron/roman/chron_rom_intro_fr.htm
     Roman = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "period:[Roman=en:Roman_calendar, ローマ暦]",
       ["[AUC=en:Ab_urbe_condita, 建国紀元=ja:%%<ローマ建国紀元>, alias:Ab_urbe_condita]492.5.1",
@@ -165,7 +162,7 @@ module When
       'note' => 'Roman'
     }]
 
-    # From http://www.tyndalehouse.com/Egypt/ptolemies/chron/roman/chron_rom_intro_fr.htm
+    # From Chris Bennett, http://www.tyndalehouse.com/Egypt/ptolemies/chron/roman/chron_rom_intro_fr.htm
     #
     # Roman Calendar BCE262-(CE60)-CE480
     #
@@ -215,7 +212,6 @@ module When
   class CalendarNote::Roman < CalendarNote
 
     Notes = [When::BasicTypes::M17n, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[Roman]",
 

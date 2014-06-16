@@ -9,7 +9,6 @@ module When
   class BasicTypes::M17n
 
     French = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[French=]",
       "[FrenchRepublican=en:French_Republican_Calendar, フランス共和暦=ja:%%<フランス革命暦>]",

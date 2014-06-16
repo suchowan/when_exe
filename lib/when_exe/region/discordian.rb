@@ -10,7 +10,6 @@ module When
   class BasicTypes::M17n
 
     Discordian = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/]",
       "locale:[=en:, ja]",
       "names:[Discordian=en:Discordian_calendar, ディスコーディアン暦=]",
       [self,

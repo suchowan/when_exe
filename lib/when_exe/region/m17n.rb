@@ -40,12 +40,10 @@ module When
         return nil
       end
 
-      Namespace = "[ja=http://ja.wikipedia.org/wiki/, en=http://en.wikipedia.org/wiki/]"
-      Locales   = "[=ja:, en=en:]"
-
+      #
+      # 共通的な暦用語
       # 
       Calendar = [M17n, [
-        "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
         "locale:[=en:, ja=ja:, alias]",
         "names:[Calendar=]",
 
@@ -86,7 +84,6 @@ module When
 
       # Events
       EpochEvents = [M17n, [
-        "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
         "locale:[=en:, ja=ja:, alias]",
         "names:[EpochEvents=]",
         "[Accession=,        代始]",

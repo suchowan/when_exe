@@ -10,7 +10,6 @@ module When
   class BasicTypes::M17n
 
     Coptic = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[Coptic=]",
       "[Coptic=en:Coptic_calendar,       コプト暦    ]",

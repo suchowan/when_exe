@@ -19,7 +19,6 @@ module When
   class BasicTypes::M17n
 
     Zoroastrian = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/, ar=http://ar.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, ar=ar:, alias=ja:]",
       "names:[Zoroastrian=]",
       "[Zoroastrian=en:Zoroastrian_calendar#The_reckoning_of_years,   ゾロアスター暦=  ]",
@@ -35,7 +34,6 @@ module When
   class CalendarNote::Zoroastrian < CalendarNote
 
     Notes = [When::BasicTypes::M17n, [
-      "namespace:[en=http://en.wikipedia.org/wiki/]",
       "locale:[=en:]",
       "names:[Zoroastrian]",
 

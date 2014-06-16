@@ -15,7 +15,6 @@ module When
     # 中国の年号
     #
     Chinese = [{'V'=>{'0618'=>{'A'=>'0618', 'B'=>'0618B', 'C'=>'0618C'}}}, self, [
-      "namespace:[ja=http://ja.wikipedia.org/wiki/, en=http://en.wikipedia.org/wiki/]",
       "locale:[=ja:, en=en:]",
       'area:[中国#{?V=A}=ja:%%<元号>#%.<中国>,China#{?V=A}=en:Chinese_era_name]',
       [self,
@@ -679,7 +678,7 @@ module When
       ],
       [self,
 	"period:[唐]",
-	["[武徳]1"	,	"@F"	,	'name=[高祖];618-05-20^Chinese#{A:0523}'], # 甲子 武徳２年から戊寅暦を使用
+	["[武徳]1"	,	"@F"	,	'name=[高祖];618-05-20^Chinese#{A:0523}'], # 甲子 武徳２年から戊寅元暦を使用
 	["[貞観]1"	,	"@A"	,	"name=[太宗];627-01-01"],		# 乙酉
 	["[永徽]1"	,	"@A"	,	"name=[高宗];650-01-01"],		# 辛丑
 	["[顕慶]1"	,	""	,	"	     656-01-07"],		# 壬申

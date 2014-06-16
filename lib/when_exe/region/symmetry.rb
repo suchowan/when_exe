@@ -10,7 +10,6 @@ module When
   class BasicTypes::M17n
 
     Symmetry = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/]",
       "locale:[=en:, ja]",
       "names:[Symmetry=]",
       "[Sym454=en:Symmetry454, 対称454暦=]",

@@ -19,7 +19,6 @@ module When
 
 # ローマ教皇
     Pope = [self, [
-      "namespace:[ja=http://ja.wikipedia.org/wiki/, en=http://en.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "area:[Pope,ローマ教皇]",
 	["StPetros1",			"@A", "0042^Julian"], # <- (Gk.) Petrus <- (L.)

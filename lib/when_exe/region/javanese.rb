@@ -9,7 +9,6 @@ module When
   class BasicTypes::M17n
 
     Javanese = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[Javanese=]",
       "[JavaneseLunar=, ジャワ・イスラーム暦=]",
@@ -58,7 +57,6 @@ module When
 
     # Javanese Residues
     Javanese = [When::BasicTypes::M17n, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[Javanese]",
 
@@ -144,7 +142,6 @@ module When
 
     # シャカ紀元
      JavaneseLunar = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "period:[JavaneseLunar=, ジャワ・イスラーム暦=]",
       ["[SE=, サカ暦=, alias:Javanese_Saka_Era]1547.1.1", "Calendar Epoch", "1035-01-01^Javanese1547",

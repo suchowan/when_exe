@@ -9,7 +9,6 @@ module When
   class BasicTypes::M17n
 
     Balinese = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[Balinese=]",
       "[BalineseLuniSolar=, バリ・サカ暦=]",
@@ -134,7 +133,6 @@ module When
     # バリのサカ暦
     #
     BalineseLuniSolar = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "period:[BalineseLuniSolar=, バリ・サカ暦=]",
       ["[SE=, サカ暦=, alias:Balinese_Saka_Era]1887-07<13", "Calendar Epoch", "1965-07<13^BalineseLuniSolar1965",
@@ -300,7 +298,6 @@ module When
   class CalendarNote::Balinese < CalendarNote
 
     Notes = [When::BasicTypes::M17n, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[Balinese]",
 

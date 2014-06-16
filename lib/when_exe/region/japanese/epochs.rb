@@ -14,7 +14,6 @@ module When
     # 日本の年号
     #
     Japanese = [{}, self, [
-      "namespace:[ja=http://ja.wikipedia.org/wiki/, en=http://en.wikipedia.org/wiki/]",
       "locale:[=ja:, en=en:, alias]",
       'area:[日本#{?V=V}=ja:%%<元号>#%.<日本>,Japan#{?V=V}=en:Regnal_year#Japanese]',
       [self,
@@ -343,7 +342,6 @@ module When
     # 日本の総理大臣
     #
     JapanesePrimeMinister = [self, [
-      "namespace:[ja=http://ja.wikipedia.org/wiki/, en=http://en.wikipedia.org/wiki/]",
       "locale:[=ja:, en=en:, alias]",
       "area:[日本,Japan]",
       ["伊藤博文1.12.22",      "@A", "name=[明治天皇,Emperor_Meiji];1885-12-22^Gregorian"],

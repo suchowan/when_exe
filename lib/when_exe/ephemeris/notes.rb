@@ -196,7 +196,6 @@ class When::CalendarNote
   class Ephemeris < self
 
     Notes = [When::BasicTypes::M17n, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias=ja:]",
       "names:[Ephemeris]",
 

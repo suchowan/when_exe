@@ -55,6 +55,7 @@ module When
     # @option options [When::Coordinates::Spatial]  :location     デフォルトの空間位置
     # @option options [When::TM::IntervalLength]    :until        V::Event::Enumerator の until
     # @option options [Hash{String=>String}]        :alias        Locale の読替パターン         ({ 読替前のlocale=>読替後のlocale })
+    # @option options [String]                      :namespaces   名前空間定義の省略時に名前空間生成に用いる書式
     # @option options [Hash{String=>String}]        :unification  漢字の包摂パターン            ({ 包摂前の文字列=>包摂後の文字列 })
     # @option options [Array<String>]               :order        CalendarEra の検索順序        ([ IRI of When::TM::CalendarEra ])
     # @option options [Hash{String=>Array, String}] :format       strftime で用いる記号の定義   ({ 記号=>[ 書式,項目名 ] or 記号列 })
@@ -394,7 +395,6 @@ module When
 
       # Common Era
       Common = [{}, self, [
-        'namespace:[en=http://en.wikipedia.org/wiki/]',
         'area:Common#{?Reform=Reform}',
         ['[BeforeCommonEra=en:BCE_(disambiguation),*alias:BCE]0.1.1'],
         ['[CommonEra=en:Common_Era,*alias:CE]1.1.1', 'Calendar Epoch', '01-01-01^Julian'],
@@ -403,7 +403,6 @@ module When
 
       # Modern Japanese Eras after the calendar reform to the Gregorian Calendar
       ModernJapanese = [self, [
-        'namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]',
         'area:[ModernJapanese]',
         ['[M=,alias:明=ja:明治]6.01.01', '@CR', '1873-01-01^Gregorian?note=Default'],
         ['[T=,alias:大=ja:大正]1.07.30', '@A',  '1912-07-30'],

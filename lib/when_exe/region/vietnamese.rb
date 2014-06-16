@@ -221,7 +221,6 @@ module When
                           'VSL'   => {'A'=>'1073', 'B'=>'1075', 'C'=>'1137.09', 'D'=>'1140.01', 'E'=>'1225.06'}},
                    'DN'=>{'KDVNT' => {'Z'=>'Chinese1645',  },
                           'LDNK'  => {'Z'=>'Vietnamese1813'}}}, self, [
-      "namespace:[ja=http://ja.wikipedia.org/wiki/, en=http://en.wikipedia.org/wiki/]",
       "locale:[=ja:, en=en:, alias]",
       'area:[ベトナム#{?LY=LY}#{&DN=DN}=ja:%%<元号>#%.<ベトナム>,Vietnam#{?LY=LY}#{&DN=DN}=en:Vietnam]',
       [self,

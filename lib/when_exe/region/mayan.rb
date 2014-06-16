@@ -19,7 +19,6 @@ module When
                              'LoN'     => ((  3 + epoch) %   9).to_s
                            } : nil
                          }}, BasicTypes::M17n, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[Mayan]",
 
@@ -103,7 +102,6 @@ module When
     # Mayan Long Count
     #
     LongCount = [{}, self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       'area:[LongCount#{?Epoch=Epoch}=en:Mesoamerican_Long_Count_calendar, マヤ長期暦=ja:%%<長期暦>]',
      ["[PHLC=, 先史時代=, PreHistoricLongCount=]0.0.0.0.0", "[Pre Historic=]",	'-13.0.0.0.0^LongCount#{?Epoch=Epoch}'],

@@ -10,7 +10,6 @@ module When
   class BasicTypes::M17n
 
     World = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[World=]",
       "[World=en:The_World_Calendar, 世界暦]"
@@ -26,7 +25,6 @@ module When
     # 暦注要素の定義
     #
     Notes = [When::BasicTypes::M17n, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[World]",
 
@@ -125,14 +123,14 @@ module When
     #
     # @param [When::TM::TemporalPosition] date
     #
-    # @return [Array<When::CalendarNote::Week::DayOfWeek, Array<Integer,Integer>>]
+    # @return [Hash<:value=>When::CalendarNote::Week::DayOfWeek, :position=>Array<Integer>>]
     #
     def week(date)
       date    = _to_date_for_note(date)
       y, m, d = date.cal_date
       index   = ExtraDayInYear[[m,d]] || (FirstDayOfWeek[m-1] + d - 1) % 7
       length  = WeekLength[[m, date.length(When::MONTH)]] || 7
-      [@days_of_week[index], [index, length]]
+      {:value=>@days_of_week[index], :position=>[index, length]}
     end
 
     #

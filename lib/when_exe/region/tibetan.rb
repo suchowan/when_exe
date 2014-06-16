@@ -9,7 +9,6 @@ module When
   class BasicTypes::M17n
 
     Tibetan = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[Tibetan=]",
       "[Tibetan=en:Tibetan_calendar, 時輪暦=ja:%%<チベット暦>]",
@@ -48,7 +47,6 @@ module When
   
     # 六十干支
     Tibetan = [When::BasicTypes::M17n, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[Tibetan]",
   

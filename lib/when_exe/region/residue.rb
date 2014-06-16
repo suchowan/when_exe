@@ -22,7 +22,6 @@ module When::Coordinates
   # Common Residue
   Common = [{'V'=>{'0618'=>{'A'=>'awakening_of_insects=,*啓蟄',
                                    'B'=>'rain_water=,*雨水'}}}, When::BasicTypes::M17n, [
-    "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
     "locale:[=en:, ja=ja:, tenreki, tibetan, yi, alias]",
     "names:[Common]",
 

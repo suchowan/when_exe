@@ -9,12 +9,11 @@ module When
   class BasicTypes::M17n
 
     Iranian = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/, ar=http://ar.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, ar=ar:, alias=ja:]",
       "names:[Iranian=]",
       "[SolarHijri=en:Iranian_calendars#Modern_calendar:_Solar_Hijri_.28SH.29, ヘジラ太陽暦=ja:%%<イラン暦>]",
       "[SolarHijriAlgorithmic=en:Solar_Hijri_calendar#Solar_Hijri_algorithmic_calendar, ヘジラ太陽暦=ja:%%<イラン暦>]",
-      "[Jalali=en:http://en.wikipedia.org/wiki/Jalali_calendar, ジャラーリー暦]",
+      "[Jalali=en:Jalali_calendar, ジャラーリー暦]",
       "[Borji=, ボルジ暦]",
 
       [self,
@@ -56,7 +55,6 @@ module When
 
     # Location of cities in Iran
     Iranian = [When::BasicTypes::M17n, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[Iranian]",
       [Spatial, "long:51.4045E", "lat:32.3905N", "label:[Isfahan, エスファハーン]"],
@@ -68,7 +66,6 @@ module When
 
     # イラン暦
      Iranian = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/]",
       "area:[Iranian]",
       ["[Anno_Persico=en:Iranian_calendars,*alias:AP]1.1.1",  "Calendar Epoch", "0001-01-01^TableBasedJalali",
                                                                                 "1230-01-01^Borji",

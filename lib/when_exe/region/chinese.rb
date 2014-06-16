@@ -10,7 +10,6 @@ module When
   class BasicTypes::M17n
 
     Chinese = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=ja:, en=en:, alias]",
       "names:[Chinese=]",
       "[中国太陽暦(節月)=ja:%%<二十四節気>#%.<暦月と節月>, *ChineseSolar=en:Solar_term]",
@@ -67,7 +66,6 @@ module When
     ]]
 
     Yi = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=ja:, en=en:, alias]",
       "names:[Yi=]",
 
@@ -92,7 +90,6 @@ module When
 
     # Yi years
     Yi = [When::BasicTypes::M17n, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=ja:, en=en:, alias]",
       "names:[Yi]",
 
@@ -184,7 +181,7 @@ module When
           end
         end
 
-        # 戊寅暦 立成 １次補間
+        # 戊寅元暦 立成 １次補間
         def _rissei_a(k)
           tv = [0,1].map {|i| _tv_s(k+i)}
           [(tv[1][1]-tv[0][1]) / (tv[1][0]-tv[0][0]), 0.0]

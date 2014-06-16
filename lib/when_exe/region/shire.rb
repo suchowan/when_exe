@@ -9,29 +9,32 @@ module When
   class BasicTypes::M17n
 
     Shire = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, " +
-                 "ja=http://ja.wikipedia.org/wiki/, " +
-                 "cal=http://en.wikipedia.org/wiki/Middle-earth_calendar]",
+      "namespace:[cal=http://en.wikipedia.org/wiki/Middle-earth_calendar#]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[Shire=]",
       "[Shire=en:The_Lord_of_the_Rings, ホビット庄暦=ja:%%<指輪物語>]",
 
       [self,
+        "names:[Festival=,                 祭=                ]",
+        "[%0sYule=en:Yule,                 %0sユール祭=       ]",
+        "[%0sLithe=cal:Hobbit_calendar,    %0sライズ祭=       ]",
+      ],
+
+      [self,
         "names:[Month, 月=ja:%%<月_(暦)>]",
-        "[Yule=en:Yule,      ユール祭=          ]",
-        "[Afteryule=en:Yule, ユール後月=        ]",
-        "[Solmath=cal,       ソマス=            ]",
-        "[Rethe=cal,         レセ=              ]",
-        "[Astron=cal,        アストロン=        ]",
-        "[Thrimidge=cal,     スリミッジ=        ]",
-        "[Forelithe=cal,     ライズ前月=        ]",
-        "[Lithe=cal,         ライズ祭=          ]",
-        "[Afterlithe=cal,    ライズ後月=        ]",
-        "[Wedmath=cal,       ウェドマス=        ]",
-        "[Halimath=cal,      ハリマス=          ]",
-        "[Winterfilth=cal,   ウィンターフィルス=]",
-        "[Blotmath=cal,      ブロドマス=        ]",
-        "[Foreyule=en:Yule,  ユール前月=        ]"
+        "[Yule=en:Yule,                    ユール祭=          ]",
+        "[Afteryule=en:Yule,               ユール後月=        ]",
+        "[Solmath=cal:Hobbit_calendar,     ソマス=            ]",
+        "[Rethe=cal:Hobbit_calendar,       レセ=              ]",
+        "[Astron=cal:Hobbit_calendar,      アストロン=        ]",
+        "[Thrimidge=cal:Hobbit_calendar,   スリミッジ=        ]",
+        "[Forelithe=cal:Hobbit_calendar,   ライズ前月=        ]",
+        "[Afterlithe=cal:Hobbit_calendar,  ライズ後月=        ]",
+        "[Wedmath=cal:Hobbit_calendar,     ウェドマス=        ]",
+        "[Halimath=cal:Hobbit_calendar,    ハリマス=          ]",
+        "[Winterfilth=cal:Hobbit_calendar, ウィンターフィルス=]",
+        "[Blotmath=cal:Hobbit_calendar,    ブロドマス=        ]",
+        "[Foreyule=en:Yule,                ユール前月=        ]"
       ]
     ]]
   end
@@ -42,7 +45,6 @@ module When
   class CalendarNote::ShireWeek < CalendarNote::Week
 
     Notes = [When::BasicTypes::M17n, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[Shire]",
 
@@ -101,6 +103,7 @@ module When
       event_name = 'lithe'
       date  = date.frame.jul_trans(date, {:events=>[event_name]})
       y,m,d = date.cal_date
+      m = date.frame.send(:_to_index,[y,m]) + 1
       h,n   = (m+5).divmod(7)
       dow   = 182 * h[0] + 30 * n + d + 1
       if m==8
@@ -131,6 +134,7 @@ module When
           event_name = 'from_#{name}'
           date  = date.frame.jul_trans(date, {:events=>[event_name], :precision=>When::DAY})
           y,m,d = date.cal_date
+          m = date.frame.send(:_to_index, [y,m]) + 1
           h,n   = (m+5).divmod(7)
           dow   = (182 * h[0] + 30 * n + d - #{k}) % 7
           case m
@@ -156,15 +160,16 @@ module When
     #
     # @param [When::TM::TemporalPosition] date
     #
-    # @return [Array<When::CalendarNote::Week::DayOfWeek, Array<Integer,Integer>>]
+    # @return [Hash<:value=>When::CalendarNote::Week::DayOfWeek, :position=>Array<Integer>>]
     #
     def week(date)
       date    = _to_date_for_note(date)
       y, m, d = date.cal_date
+      m = date.frame.send(:_to_index, [y,m]) + 1
       length  = WeekLength[[m, date.length(When::MONTH)]] || 7
       index   = length == 8 ? 0 : 8 if [m,d] == [8,3]
       index ||= ExtraDayInYear[[m,d]] || (FirstDayOfWeek[m-1] + d - 1) % 7
-      [@days_of_week[index], [index, length]]
+      {:value=>@days_of_week[index], :position=>[index, length]}
     end
 
     #
@@ -218,22 +223,28 @@ module When
   end
 
   module CalendarTypes
+
+    _shire_indices = [
+      When.Index('Shire::Month', {:base  => 0,
+                                  :branch=>{1=>When.Resource('_m:Shire::Festival::*')[1]}}),
+      When::Coordinates::DefaultDayIndex
+    ]
+
+    _IDs = '0,1,2,3,4,5,6,6=,7,8,9,10,11,12'
+
     #
     # Shire Calendar based on summer solstice date
     #
     Shire =  [YearLengthTableBased, {
       'label'   => 'Shire::Shire',
-      'indices' => [
-         When.Index('Shire::Month', {:unit=>14}),
-         When::Coordinates::DefaultDayIndex
-       ],
-      'border'       => '00-01-02',
+      'indices' => _shire_indices,
+      'border'       => '00-00-02',
       'day_offset'   => -183,           # the day 183 days before summer solstice
       'cycle_offset' => Rational(1,4),  # summer solstice
       'time_basis'   => '+09:00',       # JST
       'rule_table'   => {
-        365 => {'Length'=>[2]+[30]*6+[3]+[30]*6},
-        366 => {'Length'=>[2]+[30]*6+[4]+[30]*6}
+        365 => {'Length'=>[2]+[30]*6+[3]+[30]*6, 'IDs'=>_IDs},
+        366 => {'Length'=>[2]+[30]*6+[4]+[30]*6, 'IDs'=>_IDs}
       },
       'note'   => 'ShireWeek'
     }]
@@ -244,17 +255,14 @@ module When
     ShireG =  [CyclicTableBased, {
       'label'   => 'Shire::Shire',
       'origin_of_LSC' => 1721060-10,
-      'indices' => [
-        When.Index('Shire::Month', {:unit=>14}),
-        When::Coordinates::DefaultDayIndex
-      ],
-      'border'     => '00-01-02',
+      'indices' => _shire_indices,
+      'border'     => '00-00-02',
       'rule_table' => {
         'T'  => {'Rule'  =>['LC', 'SC', 'SC', 'SC']},
         'SC' => {'Rule'  =>[365]*4 + [366, 365, 365, 365]*24},
         'LC' => {'Rule'  =>[366, 365, 365, 365]*25},
-        365 => {'Length'=>[2]+[30]*6+[3]+[30]*6},
-        366 => {'Length'=>[2]+[30]*6+[4]+[30]*6}
+        365 => {'Length'=>[2]+[30]*6+[3]+[30]*6, 'IDs'=>_IDs},
+        366 => {'Length'=>[2]+[30]*6+[4]+[30]*6, 'IDs'=>_IDs}
       },
       'note'   => 'ShireWeek'
     }]

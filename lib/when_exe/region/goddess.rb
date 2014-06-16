@@ -19,7 +19,6 @@ module When
   class BasicTypes::M17n
 
     Goddess = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/]",
       "locale:[=en:, ja]",
       "names:[Goddess=]",
       "[Goddess(MMG)=http://calendars.wikia.com/wiki/Goddess_Lunar_Calendar, ゴッデス暦, *alias:Goddess]",

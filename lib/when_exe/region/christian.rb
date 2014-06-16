@@ -10,7 +10,6 @@ module When
   class BasicTypes::M17n
 
     Christian = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[Christian=]",
       "[Julian=en:Julian_calendar,                ユリウス暦    ]",
@@ -24,7 +23,6 @@ module When
   class TM::CalendarEra
     # Anno Mundi Era
     Byzantine = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "period:[Byzantine=en:Byzantine_calendar, ビザンティン暦=ja:%%<世界創造紀元>]",
       ["[AM=en:Anno_Mundi, 世界創造紀元, alias:Anno_Mundi]6497.9.1",
@@ -537,7 +535,6 @@ module When
   class CalendarNote::Christian < CalendarNote
 
     Notes = [When::BasicTypes::M17n, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, alias]",
       "names:[Christian]",
 

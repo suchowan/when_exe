@@ -140,7 +140,6 @@ module When
     # 朝鮮半島
     #
     Korean = [self, [
-      "namespace:[ja=http://ja.wikipedia.org/wiki/, en=http://en.wikipedia.org/wiki/]",
       "locale:[=ja:, en=en:, alias]",
       "area:[朝鮮=ja:%%<元号>#%.<朝鮮半島>,Korea=en:Regnal_year#Korean]",
       [self,

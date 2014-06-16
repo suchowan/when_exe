@@ -9,7 +9,6 @@ module When
   class BasicTypes::M17n
 
     Islamic = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/, ar=http://ar.wikipedia.org/wiki/]",
       "locale:[=en:, ja=ja:, ar=ar:, alias]",
       "names:[Islamic=]",
       "[TabularIslamic=en:Islamic_calendar, イスラーム暦=ja:ヒジュラ暦]",
@@ -37,7 +36,6 @@ module When
 
     # ヒジュラ紀元
      Hijra = [self, [
-      "namespace:[en=http://en.wikipedia.org/wiki/]",
       "area:[Islamic=]",
       ["[AfterHijra=en:Islamic_calendar,*alias:AH]1.1.1", "Calendar Epoch", "01-01-01^TabularIslamic"],
     ]]

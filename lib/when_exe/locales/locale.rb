@@ -20,28 +20,23 @@ module When
     # Locale 読み替えの初期設定
     DefaultAlias = {'alias'=>'ja', '日本語'=>'ja', '英語'=>'en'}
 
+    # 省略時 Namespace
+    DefaultNamespaces = Hash.new {|hash, key|
+      hash[key] = "http://#{key}.wikipedia.org/wiki/"
+      }.update({
+      'mailto' => false,
+      'https'  => false,
+      'http'   => false,
+      'ftp'    => false
+    })
+
     # 漢字の包摂
     DefaultUnification = {
-      '煕' => '熙',
-      '廣' => '広',
-      '寶' => '宝',
-      '國' => '国',
-      '應' => '応',
-      '觀' => '観',
-      '龜' => '亀',
-      '齊' => '斉',
-      '靈' => '霊',
-      '攝' => '摂',
-      '壽' => '寿',
-      '萬' => '万',
-      '廢' => '廃',
-      '顯' => '顕',
-      '會' => '会',
-      '聰' => '聡',
-      '總' => '総',
-      '證' => '証',
-      '禮' => '礼',
-      '竜' => '龍',
+      '煕'=>'熙', '廣'=>'広', '寶'=>'宝', '國'=>'国',
+      '應'=>'応', '觀'=>'観', '龜'=>'亀', '齊'=>'斉',
+      '靈'=>'霊', '攝'=>'摂', '壽'=>'寿', '萬'=>'万',
+      '廢'=>'廃', '顯'=>'顕', '會'=>'会', '聰'=>'聡',
+      '總'=>'総', '證'=>'証', '禮'=>'礼', '竜'=>'龍'
     }
 
     # Escape
@@ -73,6 +68,7 @@ module When
       #
       # @param [Hash] options 下記の通り
       # @option options [Hash]    :alias              Locale の読み替えパターンを Hash で指定する。
+      # @option options [String]  :namespaces         名前空間定義の省略時に名前空間生成に用いる書式
       # @option options [Hash]    :unification        漢字の包摂パターンを Hash で指定する。
       # @option options [Numeric] :wikipedia_interval Wikipedia の連続的な参照を抑制するための遅延時間/秒
       #
@@ -82,6 +78,7 @@ module When
       #
       def _setup_(options={})
         @aliases            = options[:alias]       || DefaultAlias
+        @namespaces         = options[:namespaces]  || DefaultNamespaces
         @unifications       = options[:unification] || DefaultUnification
         @wikipedia_interval = options[:wikipedia_interval]
       end
@@ -92,6 +89,7 @@ module When
       #
       def _setup_info
         {:alias              => _alias,
+         :namespaces         => _namespaces,
          :unification        => _unification,
          :wikipedia_interval => @wikipedia_interval}
       end
@@ -268,7 +266,12 @@ module When
 
       # Locale の読み替えパターン
       def _alias
-        @aliases ||= DefaultAlias
+        @aliases    ||= DefaultAlias
+      end
+
+      # 名前空間定義の省略時に名前空間生成に用いる書式
+      def _namespaces
+        @namespaces ||= DefaultNamespaces
       end
 
       # wikipedia オブジェクトの生成・参照
@@ -694,11 +697,11 @@ module When
           mark[2]  = locale unless mark[2]
           name = _replacement($1, locale, ($3 || @names['en'] || @names[''])) if name =~ /^_([A-Z_]+)_(\((.+)\))?$/
           @names[locale] = name
-          if (ref =~ /^(.+):/)
-            prefix = namespace[$1]
-            ref.sub!(/^.+:/, prefix) if (prefix)
+          if ref =~ /^(.+):/
+            prefix = namespace[$1] || Locale.send(:_namespaces)[$1]
+            ref.sub!(/^.+:/, prefix) if prefix
           end
-          ref += '%%<' + name + '>' if (ref =~ /[\/#:]$/)
+          ref += '%%<' + name + '>' if ref =~ /[\/#:]$/
           @link[locale] = _encode(ref) unless ref == ''
         else ; raise ArgumentError, "Irregal locale format: " + v
         end
