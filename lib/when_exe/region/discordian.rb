@@ -15,14 +15,14 @@ module When
       [self,
         "names:[IntercalaryDay=en:Intercalation, 閏日=ja:%%<閏>]",
         "[%0sSt. Tib's Day=, %0s閏日=]"
-      ],
+      ]
     ]]
   end
 
   #
   # Discordian Note
   #
-  class CalendarNote::Discordian < CalendarNote
+  class CalendarNote::DiscordianWeek < CalendarNote::Week
 
     Notes = [When::BasicTypes::M17n, [
       "namespace:[en=http://en.wiktionary.org/wiki/]",
@@ -51,12 +51,13 @@ module When
       [When::BasicTypes::M17n,
         "names:[day]",
         [When::BasicTypes::M17n,
-          "names:[Erisian_week=]",
-          "[Sweetmorn=         ]",
-          "[Boomtime=          ]",
-          "[Pungenday=         ]",
-          "[Prickle-Prickle=   ]",
-          "[Setting Orange=    ]"
+          "names:[Week]",
+          [DayOfWeek, "label:[Sweetmorn=      ]", {'delta'=>5}],
+          [DayOfWeek, "label:[Boomtime=       ]", {'delta'=>5}],
+          [DayOfWeek, "label:[Pungenday=      ]", {'delta'=>5}],
+          [DayOfWeek, "label:[Prickle-Prickle=]", {'delta'=>5}],
+          [DayOfWeek, "label:[Setting Orange= ]", {'delta'=>5}],
+          [DayOfWeek, "label:[Out of Week=    ]", {'delta'=>1461}]
         ],
 
         [When::BasicTypes::M17n,
@@ -72,20 +73,60 @@ module When
           "[Bureflux=     ]", # 09-26 Bureaucracy 50
           "[Maladay=      ]", # 10-24 The Aftermath 5
           "[Afflux=       ]"  # 12-08 The Aftermath 50
-        ]
+        ],
+
+        "[Standard_Week]"
       ]
     ]]
+
+    # @private
+    IndexOfWeek = [0, 1, 2, 3, 5, 4]
+
+    # Just or last sweetmorn
+    #
+    # @param [When::TM::TemporalPosition] date
+    # @param [nil] parameter (not used)
+    #
+    # @return [When::TM::TemporalPosition]
+    #
+    def sweetmorn(date, parameter=nil)
+      date  = _to_date_for_note(date)
+      y,m,d = date.cal_date
+      date -= When::P1D if date.length(When::MONTH) == 74 && +d == 60
+      dow   = ((m-1)*73+d*1-1) % 5
+      date -= When::P1D * dow unless dow == 0
+      date.events = [@days_of_week[0]]
+      date
+    end
 
     # Erisian week
     #
     # @param [When::TM::CalDate] date
+    # @param [When::TM::CalDate] base
     #
     # @return [String]
     #
-    def erisian_week(date)
-      y, m, d = date.cal_date
-      return nil unless  d * 0 == 0
-      When.CalendarNote('Discordian/Notes::day::Erisian_week::*')[((m-1)*73+d*1-1) % 5]
+    def week(date, base=nil)
+      date   = _to_date_for_note(date)
+      y,m,d  = date.cal_date
+      dow    = d*0 == 0 ? ((m-1)*73+d*1-1) % 5 : 5
+      length = (base || date).length(When::MONTH) == 73 ? 5 : 6
+      index  = length == 5 ? dow : IndexOfWeek[dow]
+      {:value=>@days_of_week[dow], :position=>[index,length]}
+    end
+
+    #
+    # Week labels
+    #
+    # @param [When::TM::TemporalPosition] date
+    #
+    # @return [Array<When::CalendarNote::Week::DayOfWeek>]
+    #
+    def week_labels(date)
+      date = _to_date_for_note(date)
+      date.length(When::MONTH) == 73 ?
+        @days_of_week.child[0...5] :
+        @days_of_week.child[0...4] + [@days_of_week.child[5]] + [@days_of_week.child[4]]
     end
 
     #  Holyday
@@ -95,15 +136,35 @@ module When
     # @return [String]
     #
     def holyday(date)
+      date    = _to_date_for_note(date)
       y, m, d = date.cal_date
       index =
-        case d
+        case +d
         when  5 ;  1
         when 50 ;  2
         else    ;  d * 0 - 1
         end
       return nil if index == -1
-      When.CalendarNote('Discordian/Notes::day::Holyday::*')[(m-1)*2+index]
+      When.CalendarNote('DiscordianWeek/Notes::day::Holyday::*')[(m-1)*2+index]
+    end
+
+    #
+    # convert date to Discordian date
+    #
+    # @private
+    def _to_date_for_note(date)
+      date = When::Discordian ^ date unless date.frame.label.to_s == 'Discordian'
+      date
+    end
+
+    private
+
+    # object normalization
+    #
+    # @private
+    def _normalize(args=[], options={})
+      @event ||= 'sweetmorn'
+      super
     end
   end
 
@@ -128,11 +189,11 @@ module When
       def _normalize(args=[], options={})
         @label         ||= 'Discordian'
         @epoch_in_CE   ||= -1166
-        @note          ||= 'Discordian'
+        @note          ||= 'DiscordianWeek'
         @engine        ||= 'Gregorian'
         @engine          = When.Calendar(@engine)
         @indices       ||= [
-          When.Index('DiscordianNotes::month::Month', {:unit =>5}),
+          When.Index('DiscordianWeekNotes::month::Month', {:unit =>5}),
           When.Index({:branch=>{1=>When.M17n('Discordian::IntercalaryDay')[0]}})
         ]
         @rule_table ||= {

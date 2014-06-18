@@ -126,17 +126,26 @@ module When
         if methods.size == 0
           lambda {|date| date.send(*output)}
         else
-          lambda {|date, type|
-            case type
-            when When::YEAR  ; date.strftime("%Y")
-            when When::MONTH ; date.strftime("%B %Y")
-            when When::WEEK  ; nil
-            when When::DAY   ; date[0]
-            else             ; '-'
-            end
-          }
+          lambda {|date, type| column(date, type)}
         end
       _free_conv(calendars, dates, methods, output, options, &block)
+    end
+
+    # 七曜表の一日分
+    #
+    # @param [When::TM::TemporalPosition] date 処理する一日
+    # @param [Integer, nil] type 当該日の種類
+    #
+    # @return [Object>] 処理結果
+    #
+    def column(date, type)
+      case type
+      when When::YEAR  ; date.strftime("%Y")
+      when When::MONTH ; date.strftime("%B %Y")
+      when When::WEEK  ; nil
+      when When::DAY   ; date[0]
+      else             ; '-'
+      end
     end
 
     private

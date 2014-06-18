@@ -663,11 +663,11 @@ module When
     # 七曜
     #
     # @param [When::TM::TemporalPosition] date
-    # @param [When::TM::ReferenceSystem] frame 使用する暦法(ダミー)
+    # @param [When::TM::CalDate] base (not used)
     #
     # @return [When::Coordinates::Residue] 七曜
     #
-    def week(date, frame=nil)
+    def week(date, base=nil)
       When.Residue('Week')[date.to_i % 7]
     end
 

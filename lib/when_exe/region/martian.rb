@@ -172,10 +172,11 @@ module When
       # この日は何曜？
       #
       # @param [When::TM::TemporalPosition] date
+      # @param [When::TM::CalDate] base (not used)
       #
       # @return [Array<When::CalendarNote::Week::DayOfWeek, Array<Integer,Integer>>]
       #
-      def week(date)
+      def week(date, base=nil)
         date  = _to_date_for_note(date)
         index = (date.cal_date.last - 1) % 7
         [@days_of_week[index], [index, 7]]

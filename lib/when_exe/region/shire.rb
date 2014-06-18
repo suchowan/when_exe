@@ -75,7 +75,9 @@ module When
           [DayOfWeek, "label:[Friday,       金曜日]", {'delta'=>7}],
           [DayOfWeek, "label:[lithe,        中日= ]", {'delta'=> 365}],
           [DayOfWeek, "label:[double,       重日= ]", {'delta'=>1827}]
-        ]
+        ],
+
+        "[Standard_Week]"
       ]
     ]]
 
@@ -121,8 +123,8 @@ module When
 
     # 当日または直前の week_day の日
     # @method week_day(date, parameter=nil)
-    #   @param date [When::TM::TemporalPosition]
-    #   @param parameter [nil] 未使用
+    #   @param [When::TM::TemporalPosition] date
+    #   @param [nil] parameter 未使用
     #   @return [When::TM::TemporalPosition]
     #   @note week_day は saturday, sunday, monday, tuesday, wednesday, thursday, friday に読み替えてください。
 
@@ -159,10 +161,11 @@ module When
     # この日は何曜？
     #
     # @param [When::TM::TemporalPosition] date
+    # @param [When::TM::CalDate] base (not used)
     #
     # @return [Hash<:value=>When::CalendarNote::Week::DayOfWeek, :position=>Array<Integer>>]
     #
-    def week(date)
+    def week(date, base=nil)
       date    = _to_date_for_note(date)
       y, m, d = date.cal_date
       m = date.frame.send(:_to_index, [y,m]) + 1
@@ -186,39 +189,6 @@ module When
     def _normalize(args=[], options={})
       @event ||= 'saturday'
       super
-    end
-
-    #
-    # イベントを取得する Enumerator
-    #
-    class Enumerator < When::CalendarNote::Enumerator
-
-      #
-      # 次のイベントを得る
-      #
-      # @return [When::TM::TemporalPosition]
-      #
-      def succ
-        value = @current
-        plus  = @delta.sign > 0
-        if @current==:first
-          @first   = event_eval(@first) unless plus
-          @current = @first
-        else
-          if plus
-            @current = event_eval(@current + @delta)
-          else
-            @last    = event_eval(@current - When.Duration('P1D'))
-            @current = event_eval(@current + @delta)
-            unless [@current.to_i, value.to_i].include?(@last.to_i) 
-              @current = @last
-              return value
-            end
-          end
-          @current = event_eval(@current + @delta * 2) if @current.to_i == value.to_i
-        end
-        return value
-      end
     end
   end
 

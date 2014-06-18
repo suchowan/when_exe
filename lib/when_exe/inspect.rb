@@ -114,6 +114,21 @@ module When
 
   module Coordinates
 
+    class Pair
+      #
+      # to_h のための要素生成
+      #
+      # @param [Hash] options 下記のとおり
+      # @option options [Symbol] :method :to_m17n なら to_s を返す、その他は self を返す
+      #
+      # @return [String, When::Coordinates::Pair]
+      #
+      # @private
+      def _to_hash_value(options={})
+        options[:method] == :to_m17n ? to_s : self
+      end
+    end
+
     class Residue
       # 多言語対応文字列化
       #
@@ -134,21 +149,83 @@ module When
         return label.to_s + "(#{difference})" unless @format
         @format.to_s % [label.to_s, difference, difference+1]
       end
-    end
 
-    class Pair
       #
-      # to_h のための要素生成
+      # week_included のための range の決定
       #
-      # @param [Hash] options 下記のとおり
-      # @option options [Symbol] :method :to_m17n なら to_s を返す、その他は self を返す
-      #
-      # @return [String, When::Coordinates::Pair]
+      # @return [Array<Range>]
       #
       # @private
-      def _to_hash_value(options={})
-        options[:method] == :to_m17n ? to_s : self
+      def _range_for_week_included(date, first, length, block_given=false)
+        today = date.floor
+        begun = today.succ & self >> first-1
+        unless date.frame.equal?(begun.frame)
+          begun  = (date.frame ^ today).succ & self >> first-1
+          middle = today
+        end
+        ended = begun.succ & self >> length-1
+        middle && block_given ? [begun...middle, middle...ended] : [begun...ended]
       end
+
+      #
+      # week_included のためのコラムの生成
+      #
+      # @return [Array<Object>]
+      #
+      # @private
+      def _column_for_week_included(base, range, opt, &block)
+        range.inject([]) {|s,r| s + r.map { |date|
+          yield(date, !opt.key?(:Range) || opt[:Range].include?(date.to_i) ? DAY : nil)
+        }}
+      end
+    end
+  end
+
+  class CalendarNote::Week
+
+    #
+    # week_included のための range の決定
+    #
+    # @return [Array<Range>]
+    #
+    # @private
+    def _range_for_week_included(date, first, length, block_given=false)
+      begun = ended = nil
+      if first <= 0
+        it = enum_for(date.floor, :reverse)
+        (1-first).times do
+          begun = it.next
+        end
+      else
+        it = enum_for(date.floor, :forward)
+        first.times do
+          begun = it.next
+        end
+      end
+      it = enum_for(begun, :forward)
+      (length+1).times do
+        ended = it.next
+      end
+      [begun...ended]
+    end
+
+    #
+    # week_included のためのコラムの生成
+    #
+    # @return [Array<Object>]
+    #
+    # @private
+    def _column_for_week_included(base, range, opt, &block)
+      count = 0
+      limit = week(base)[:position][1]
+      range.inject([]) {|s,r| s + r.map { |date|
+        position = week(date, base)[:position][0]
+        (position - count).times do
+          yield(nil,nil)
+        end
+        count = position + 1
+        yield(date, !opt.key?(:Range) || opt[:Range].include?(date.to_i) ? DAY : nil) if position < limit
+      }}
     end
   end
 
@@ -163,7 +240,6 @@ module When
       def strftime
         @strftime ||= '%Y-%m-%d'
       end
-
     end
 
     class TemporalPosition
@@ -243,7 +319,7 @@ module When
 
       # 含まれる週
       #
-      # @overload week_included(ord, wkst, opt, block)
+      # @overload week_included(ord, wkst, opt, &block)
       #   @param [Numeric, Range] ord 週の番号(default: 今週)
       #     今週を 0 とする週番号(Integer) または週番号の範囲(Range)
       #       -1 - 先週
@@ -262,47 +338,17 @@ module When
       # @return [Range] 含まれる週を範囲として表現する Range (block 指定なし)
       # @return [Array] 含まれる週の各日をブロックに渡した結果の Array (block 指定あり)
       #
-      def week_included(*args)
+      def week_included(*args, &block)
         begin
           first, length, wkst, opt = _range(args, 'MO')
-          case wkst
-          when When::Coordinates::Residue
-            today = self.floor
-            begun = today.succ & wkst >> first-1
-            unless @frame.equal?(begun.frame)
-              begun  = (@frame ^ today).succ & wkst >> first-1
-              middle = today
-            end
-            ended  = begun.succ & wkst >> length-1
-          else
-            begun = ended = nil
-            if first <= 0
-              it = wkst.enum_for(self.floor, :reverse)
-              (1-first).times do
-                begun = it.next
-              end
-            else
-              it = wkst.enum_for(self.floor, :forward)
-              first.times do
-                begun = it.next
-              end
-            end
-            it = wkst.enum_for(begun, :forward)
-            (length+1).times do
-              ended = it.next
-            end
-          end
-          range = middle && block_given? ? [begun...middle, middle...ended] : [begun...ended]
-
+          range = wkst._range_for_week_included(self, first, length, block_given?)
         rescue RangeError
-          range = [(@frame ^ self).week_included(*args)]
+          range = wkst._range_for_week_included(@frame ^ self, first, length)
         end
 
-        return range[0] unless block_given?
+        return range.first unless block_given?
 
-        (range.inject([]) {|s,r| s + r.map { |date|
-          yield(date, !opt.key?(:Range) || opt[:Range].include?(date.to_i) ? DAY : nil)
-        }}).unshift(yield(range[0].first, WEEK)).compact
+        wkst._column_for_week_included(self, range, opt, &block).unshift(yield(range[0].first, WEEK)).compact
       end
 
       # 含まれる月

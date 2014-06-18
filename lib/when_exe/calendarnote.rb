@@ -605,91 +605,6 @@ module When
     end
 
     #
-    # 暦週
-    #
-    class Week < CalendarNote
-
-      #
-      # 暦週要素
-      #
-      class DayOfWeek < When::BasicTypes::M17n
-
-        # 当該暦週要素の標準的な出現間隔
-        #
-        # @return : [Integer]
-        #
-        attr_reader :delta
-
-        # 所属する暦週オブジェクト
-        #
-        # @return : [When::CalendarNote]
-        #
-        def week_note
-          @week_note ||= When.CalendarNote(iri.split('/Notes').first)
-        end
-
-        # 当日または直前に当該暦週要素が現れる日付
-        #
-        # @return : [When::TM::TemporalPosition]
-        #
-        def just_or_last(date)
-          date = week_note._to_date_for_note(date)
-          ([parent.child.length, @delta[When::DAY]].max*2).times do
-            if equal?(week_note.week(date))
-               date.events ||= []
-               date.events << self
-               return date
-            end
-            date -= When::P1D
-          end
-          raise ArgumentError, "#{self} not found"
-        end
-
-        private
-
-        #
-        # オブジェクトの正規化
-        #
-        def initialize(*args)
-          super
-          @delta = When::P1D * @delta.to_i if @delta && ! @delta.kind_of?(When::TM::Duration)
-        end
-      end
-
-      #
-      # 曜日の名前の一覧
-      #
-      # @param [When::TM::TemporalPosition] date
-      #
-      # @return [Array<When::CalendarNote::Week::DayOfWeek>]
-      #
-      def week_labels(date)
-        @days_of_week.child[0...week(date).last.last]
-      end
-
-      #
-      # オブジェクトの正規化
-      #
-      def _normalize(args=[], options={})
-        super
-        @days_of_week = When.CalendarNote("#{self.class.to_s.split('::').last}/Notes::day::Week")
-        @days_of_week.child.length.times do |index|
-          name = @days_of_week.child[index].label.to_s.downcase
-          self.class.module_eval %Q{
-            def #{name}(date, parameter=nil)
-              @days_of_week.child[#{index}].just_or_last(date)
-            end
-          } unless respond_to?(name)
-          self.class.module_eval %Q{
-            def #{name}_delta(parameter=nil)
-              @days_of_week.child[#{index}].delta
-            end
-          } unless respond_to?(name + '_delta')
-        end
-      end
-    end
-
-    #
     # イベントを取得する Enumerator
     #
     class Enumerator < When::Parts::Enumerator
@@ -752,6 +667,134 @@ module When
         range ?
           super(@parent, range.exclude_end? ? date...last : date..last, options) :
           super(@parent, date, direction, options)
+      end
+    end
+
+    #
+    # 暦週
+    #
+    class Week < CalendarNote
+
+      #
+      # 暦週要素
+      #
+      class DayOfWeek < When::BasicTypes::M17n
+
+        # 当該暦週要素の標準的な出現間隔
+        #
+        # @return [Integer]
+        #
+        attr_reader :delta
+
+        # 所属する暦週オブジェクト
+        #
+        # @return [When::CalendarNote]
+        #
+        def week_note
+          @week_note ||= When.CalendarNote(iri.split('/Notes').first)
+        end
+
+        # 当日または直前に当該暦週要素が現れる日付
+        #
+        # @return [When::TM::TemporalPosition]
+        #
+        def just_or_last(date)
+          date = week_note._to_date_for_note(date)
+          ([parent.child.length, @delta[When::DAY]].max*2).times do
+            if equal?(week_note.week(date))
+               date.events ||= []
+               date.events << self
+               return date
+            end
+            date -= When::P1D
+          end
+          raise ArgumentError, "#{self} not found"
+        end
+
+        private
+
+        #
+        # オブジェクトの正規化
+        #
+        def initialize(*args)
+          super
+          @delta = When::P1D * @delta.to_i if @delta && ! @delta.kind_of?(When::TM::Duration)
+        end
+      end
+
+      #
+      # 曜日の名前の一覧
+      #
+      # @param [When::TM::TemporalPosition] date
+      #
+      # @return [Array<When::CalendarNote::Week::DayOfWeek>]
+      #
+      def week_labels(date)
+        @days_of_week.child[0...week(date)[:position].last]
+      end
+
+      # 七曜
+      #
+      # @param [When::TM::TemporalPosition] date
+      #
+      # @return [When::Coordinates::Residue] 七曜
+      #
+      def standard_week(date)
+        When.Residue('Week')[date.to_i % 7]
+      end
+
+      #
+      # オブジェクトの正規化
+      #
+      def _normalize(args=[], options={})
+        super
+        @days_of_week = When.CalendarNote("#{self.class.to_s.split('::').last}/Notes::day::Week")
+        @days_of_week.child.length.times do |index|
+          name = @days_of_week.child[index].label.to_s.downcase.gsub(/[- ]/, '_')
+          self.class.module_eval %Q{
+            def #{name}(date, parameter=nil)
+              @days_of_week.child[#{index}].just_or_last(date)
+            end
+          } unless respond_to?(name)
+          self.class.module_eval %Q{
+            def #{name}_delta(parameter=nil)
+              @days_of_week.child[#{index}].delta
+            end
+          } unless respond_to?(name + '_delta')
+        end
+      end
+
+      #
+      # イベントを取得する Enumerator
+      #
+      class Enumerator < When::CalendarNote::Enumerator
+
+        #
+        # 次のイベントを得る
+        #
+        # @return [When::TM::TemporalPosition]
+        #
+        def succ
+          value = @current
+          plus  = @delta.sign > 0
+          if @current==:first
+            @first   = event_eval(@first) unless plus
+            @current = @first
+          else
+            if plus
+              @current = event_eval(@current + @delta)
+            else
+              @last    = event_eval(@current - When::P1D)
+              @current = event_eval(@current + @delta)
+              unless [@current.to_i, value.to_i].include?(@last.to_i)
+                @current = @last
+                return value
+              end
+            end
+            @current = event_eval(@current + @delta * 2) if @current.to_i == value.to_i
+          end
+          return value
+        end
       end
     end
   end

@@ -1175,8 +1175,8 @@ module When::CalendarTypes
     private
 
     # オブジェクトの正規化
-    # @cycle_offset   = 位相のオフセット / １か月分の角度
-    # @formula        = 位相の計算に用いる太陽の Formula
+    # cycle_offset   = 位相のオフセット / １か月分の角度
+    # formula        = 位相の計算に用いる太陽の Formula
     #
     def _normalize(args=[], options={})
       @cycle_offset   ||= -1.5
@@ -1208,7 +1208,7 @@ module When::CalendarTypes
     private
 
     # オブジェクトの正規化
-    # @cycle_offset   = Goldstein Number に対する暦元の補正
+    # cycle_offset   = Goldstein Number に対する暦元の補正
     #
     def _normalize(args=[], options={})
       @cycle_offset ||= 1671 * 12 + 4
@@ -1322,9 +1322,9 @@ module When::CalendarTypes
 
     # オブジェクトの正規化
     #
-    # @cycle_offset = 雨水の場合 -1
-    # @formula      = 位相の計算に用いる太陽と月の Formula
-    # @notes        = to_a でデフォルトとして用いる暦注
+    # cycle_offset = 雨水の場合 -1
+    # formula      = 位相の計算に用いる太陽と月の Formula
+    # notes        = to_a でデフォルトとして用いる暦注
     #
     def _normalize(args=[], options={})
       @formula ||= ['Formula?formula=12S', 'Formula?formula=1L']
