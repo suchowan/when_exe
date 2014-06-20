@@ -1200,6 +1200,21 @@ module When::TM
       def _d_to_t(d)
         (d - JD19700100_5) * Duration::DAY
       end
+
+      # Generation of Temporal Objetct
+      #
+      # @param [String] specification ユリウス通日を表す文字列
+      # @param [Hash] options 暦法や時法などの指定 (see {When::TM::TemporalPosition._instance})
+      #
+      # @return [When::TM::TemporalPosition, When::TM::Duration, When::Parts::GeometricComplex or Array<them>]
+      #
+      def parse(specification, options={})
+        jdn, *calendars = specification.split(/\^{1,2}/)
+        jdn   = jdn.sub!(/[.@]/, '.') ? jdn.to_f : jdn.to_i
+        frame = calendars.shift || options[:frame]
+        return self.new(jdn, options) unless frame
+        calendars.unshift(frame).inject(jdn) {|date, calendar| When.Calendar(calendar).jul_trans(date, options)}
+      end
     end
 
     # 加算

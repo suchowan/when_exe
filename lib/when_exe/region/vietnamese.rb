@@ -31,7 +31,7 @@ module When
     # 欽授暦 1544 - 1788
     Vietnamese1544 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>1544, 'origin_of_LSC'=>2285027, 'indices'=> ChineseIndices,
-      'before' => 'Chinese0939', 'after' => 'Vietnamese1789',
+      'before' => 'Chinese0939', 'after' => 'Vietnamese1789', 'note' => 'Chinese',
       'rule_table'=> %w(				AbCdEFgHiJkL	aAbCdEfGHiJKl
 	aBcdEfGHIjKL	abCdeFgHIiJKL	abCdeFgHiJKL	aBcDefGhIjKL	AbCdEffGhIjKl
 
@@ -93,7 +93,7 @@ module When
     # 西山朝の暦 1789-1801
     Vietnamese1789 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>1789, 'origin_of_LSC'=>2374505, 'indices'=> ChineseIndices,
-      'before' => 'Vietnamese1544', 'after' => 'Vietnamese1631',
+      'before' => 'Vietnamese1544', 'after' => 'Vietnamese1631', 'note' => 'Chinese',
       'rule_table'=> %w(				ABcDeeFgHiJkL	AbCDefGhIjKl
 	AbCDeFgHiJkL	aBcDdEFgHiJkL	aBcdEFgHIjKl	AbcDeFgHIJkL	aBbcDeFgHIjKL
 	aBcDefgHIjKL	AbCdEffgHiJKL	aBCdeFghIjKL	aBCdEfGhIjkL	AbCdDEfGhIjKl
@@ -105,7 +105,7 @@ module When
     # 萬全暦 1631-1812
     Vietnamese1631 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>1631, 'origin_of_LSC'=>2316802, 'indices'=> ChineseIndices,
-      'before' => 'Vietnamese1544', 'after' => 'Vietnamese1813',
+      'before' => 'Vietnamese1544', 'after' => 'Vietnamese1813', 'note' => 'Chinese',
       'rule_table'=> %w(
 	ABcDeFgHiJklL	AbCDeFgHiJkL	aBcDeFGhIjKl	AbcDeFGhHIjKl	AbcDeFgHIjKL
 	aBcdEfgHIjKL	AbCddEfgHiJKL	AbCdeFghIjKL	AbCDefGhiJkL	AaBCdEfGhIjkL
@@ -155,6 +155,7 @@ module When
     Vietnamese1813 = [PatternTableBasedLuniSolarExtended, {
       'origin_of_MSC'=>1813, 'origin_of_LSC'=>2383276, 'indices'=> ChineseIndices,
       'before' => 'Vietnamese1631', 'after' => 'ChineseLuniSolar?time_basis=+07',
+      'note'   => 'Chinese',
       'rule_table'=> %w(		AbCdefGhIJKl	ABbCdefGhIJkL	ABcdEfgHiJkL
 	ABcDeFfgHiJkL	AbCDeFgHijKl	AbCDeFGhIjkL	aBcDdEFgHIjKl	aBcDeFgHIJkL
 	abCdeFgHIJkL	AbCcdeFgHIjKL	AbCdefGhIjKL	AbCdEfgGhIjKL	AbCdEfgHiJkL

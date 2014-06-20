@@ -787,15 +787,6 @@ module When::CalendarTypes
       trunk -= 64
       branch == 0 ? trunk : When::Coordinates::Pair.new(trunk, branch)
     end
-
-    # オブジェクトの正規化
-    #
-    # @note インスタンス変数 @note は to_a でデフォルトとして用いる暦注
-    #
-    def _normalize(args=[], options={})
-      @note ||= When.CalendarNote('Chinese') # See when.rb
-      super
-    end
   end
 
   # 表引きにより実現する太陰太陽暦(29,30日以外の月がある場合)

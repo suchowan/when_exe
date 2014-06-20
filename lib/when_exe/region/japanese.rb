@@ -12,6 +12,10 @@ module When
       "locale:[=en:, ja=ja:, alias]",
       "names:[Japanese=]",
 
+      # Remarks
+      "[based on Research Project 22520700=http://kaken.nii.ac.jp/d/p/22520700.en.html," +
+       "典拠 - 科研22520700=http://kaken.nii.ac.jp/d/p/22520700.ja.html]",
+
       [self,
         "names:[Month, 月=ja:%%<月_(暦)>]",
         "[Month 1=,  *睦月   ]",

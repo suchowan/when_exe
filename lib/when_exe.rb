@@ -419,7 +419,7 @@ module When
 
   # Generation of Temporal Objetct, duration or When::Parts::GeometricComplex
   #
-  # @param [String] specification  When.exe Standard Representation として解釈して生成する
+  # @param [String] specification  When.exe Standard Representation または ユリウス日JDN として解釈して生成する
   # @param [Numeric] specification ユリウス日として解釈して生成する
   # @param [Array] specification   要素を個別に解釈して生成したオブジェクトのArrayを返す
   # @param [When::TM::TemporalPosition, When::Parts::GeometricComplex] specification specificationをそのまま返す
@@ -434,14 +434,15 @@ module When
     # フォーマットごとの処理
     case specification
     when TM::TemporalPosition, Parts::GeometricComplex ; specification
-    when TM::Position ; specification.any_other
-    when Array        ; begin options = TM::TemporalPosition._options(options) ; specification.map {|e| when?(e, options)} end
-    when /^today$/i   ; today(options)
-    when /^now$/i     ; now(options)
-    when /[\n\r]+/    ; when?(specification.split(/[\n\r]+/), options)
-    when String       ; TM::TemporalPosition._instance(EncodingConversion.to_internal_encoding(specification), options)
-    when Numeric      ; TM::JulianDate.new(+specification, TM::TemporalPosition._options(options))
-    else              ; Calendar(options[:frame] || 'Gregorian').jul_trans(specification, options)
+    when TM::Position    ; specification.any_other
+    when Array           ; begin options = TM::TemporalPosition._options(options) ; specification.map {|e| when?(e, options)} end
+    when /^today$/i      ; today(options)
+    when /^now$/i        ; now(options)
+    when /[JS]DN($|\^)/i ; TM::JulianDate.parse(specification, options)
+    when /[\n\r]+/       ; when?(specification.split(/[\n\r]+/), options)
+    when String          ; TM::TemporalPosition._instance(EncodingConversion.to_internal_encoding(specification), options)
+    when Numeric         ; TM::JulianDate.new(+specification, TM::TemporalPosition._options(options))
+    else                 ; Calendar(options[:frame] || 'Gregorian').jul_trans(specification, options)
     end
   end
 

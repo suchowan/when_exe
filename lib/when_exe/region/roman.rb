@@ -62,7 +62,7 @@ module When
       ],
 
       [self, # CE37..CE40
-        "names:[MonthC, 月=ja:%%<月_(暦)>]",
+        "names:[MonthD, 月=ja:%%<月_(暦)>]",
         "[Ianuarius,    1月]",
         "[Februarius,   2月]",
         "[Martius,      3月]",
@@ -111,8 +111,8 @@ module When
                          "-221-03-01^RomanA?border=0-3-1",
                          "-152-01-01^RomanA",
                           "-43-01-01^RomanB",
-                           "-7-01-01^Roman",
-                           "37-01-01^RomanC",
+                           "-7-01-01^RomanC",
+                           "37-01-01^RomanD",
                            "41-01-01^Roman", "476-09-04"]
     ]]
 
@@ -177,7 +177,7 @@ module When
     _IndicesA = [When.Index('Roman::MonthA', {:branch=>_Branch}), _Index0]
     _IndicesB = [When.Index('Roman::MonthB', {:branch=>_Branch}), _Index0]
     _Indices  = [When.Index('Roman::Month',  {:branch=>_Branch}), _Index0]
-    _IndicesC = [When.Index('Roman::MonthC', {:branch=>_Branch}), _Index0]
+    _IndicesD = [When.Index('Roman::MonthD', {:branch=>_Branch}), _Index0]
     Options = {
       'origin_of_LSC'  =>  1625698,
       'origin_of_MSC'  =>  -261,
@@ -202,8 +202,9 @@ module When
     }
     RomanA =  [CyclicTableBased, Options.merge({'indices' => _IndicesA})]
     RomanB =  [CyclicTableBased, Options.merge({'indices' => _IndicesB})]
+    RomanC =  [CyclicTableBased, Options]
+    RomanD =  [CyclicTableBased, Options.merge({'indices' => _IndicesD})]
     Roman  =  [CyclicTableBased, Options]
-    RomanC =  [CyclicTableBased, Options.merge({'indices' => _IndicesC})]
   end
 
   #

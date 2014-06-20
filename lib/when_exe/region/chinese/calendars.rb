@@ -30,7 +30,7 @@ module When
     # 漢::          顓頊暦  -161 - -103 （雨水を１月に固定）   (歳首 建亥月)
     Chinese_221 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>-222, 'origin_of_LSC'=>1640021, 'border'=>'0*10-01',
-      'before' => 'ChineseTwin::顓頊暦', 'after' => 'Chinese_103',
+      'before' => 'ChineseTwin::顓頊暦', 'after' => 'Chinese_103', 'note' => 'Chinese',
       'indices'=> ChineseIndices,
       'rule_table'=> %w(
 					AbCdEfGhIjKl	ABcDeFgHiJkL	aBcDeFGhIiJkL
@@ -68,7 +68,7 @@ module When
     # 蜀漢::         四分暦    221 -  264
     Chinese_103 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>-103, 'origin_of_LSC'=>1683490,
-      'before' => 'Chinese_221', 'after' => 'Chinese0239',
+      'before' => 'Chinese_221', 'after' => 'Chinese0239', 'note' => 'Chinese',
       'indices'=> ChineseIndices,
       'rule_table'=> %w(
 			ABcdeFgHiJkL	aBCdEfGhIjKl	AbCdEfFGhIjKl	AbCdEfGhIJkL
@@ -159,7 +159,7 @@ module When
     # 新::           太初暦      7 -   23 (歳首 建丑月)
     Chinese0008 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>7, 'origin_of_LSC'=>1723652, 'border'=>'0*12-01',
-      'before' => 'Chinese_103', 'after' => 'Chinese_103',
+      'before' => 'Chinese_103', 'after' => 'Chinese_103', 'note' => 'Chinese',
       'indices'=> _IndicesM12,
       'rule_table'=> %w(
         		aBcDeFgHiJkL	aABcDeFgHiJkL	aBcDeFGhIjKl	AbCdEfGhIiJKl
@@ -173,7 +173,7 @@ module When
     # 呉::           乾象暦    223 - 280
     Chinese0223 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>222, 'origin_of_LSC'=>1802173,
-      'before' => 'Chinese_103', 'after' => 'Chinese0239',
+      'before' => 'Chinese_103', 'after' => 'Chinese0239', 'note' => 'Chinese',
       'indices'=> ChineseIndices,
       'rule_table'=> %w(
 			AbCdEfFGhIjKl	aBcDeFgHiJKl	AbCdEfGhIjKl	ABcDdEfGhIjKl
@@ -196,7 +196,7 @@ module When
     # 魏::           景初暦    237 - 239 (歳首 建丑月)
     Chinese0237 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>236, 'origin_of_LSC'=>1807282, 'border'=>'0*12-01',
-      'before' => 'Chinese_103', 'after' => 'Chinese0239',
+      'before' => 'Chinese_103', 'after' => 'Chinese0239', 'note' => 'Chinese',
       'indices'=> _IndicesM12,
       'rule_table'=> %w(AaBcDeFgHiJKl	AbCdeFgHiJkL	aBcDeFGhIjJkL	aBcDeFgHiJKl)
       }
@@ -207,7 +207,7 @@ module When
     # 北魏::         景初暦    386? - 451
     Chinese0239 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>239, 'origin_of_LSC'=>1808404,
-      'before' => 'Chinese0237', 'after' => 'Chinese0445',
+      'before' => 'Chinese0237', 'after' => 'Chinese0445', 'note' => 'Chinese',
       'indices'=> ChineseIndices,
       'rule_table'=> %w(
         						aBcDeFgHiJKl	AbCdEfGhIjKl
@@ -267,7 +267,7 @@ module When
     # 及び後梁
     Chinese0445 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>445, 'origin_of_LSC'=>1883618,
-      'before' => 'Chinese0239', 'after' => 'Chinese0523',
+      'before' => 'Chinese0239', 'after' => 'Chinese0523', 'note' => 'Chinese',
       'indices'=> ChineseIndices,
       'rule_table'=> %w(
 									AbCdEeFgHiJkL
@@ -309,7 +309,7 @@ module When
     # 後秦::         三紀暦    384 - 417
     Chinese0384 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>384, 'origin_of_LSC'=>1861352,
-      'before' => 'Chinese0239', 'after' => 'Chinese0239',
+      'before' => 'Chinese0239', 'after' => 'Chinese0239', 'note' => 'Chinese',
       'indices'=> ChineseIndices,
       'rule_table'=> %w(
 							AbCdEfGhIjKl	AbCDeEfGhIjKl
@@ -328,7 +328,7 @@ module When
     # 北魏::         玄始暦    452 - 522
     Chinese0412 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>412, 'origin_of_LSC'=>1871570,
-      'before' => 'Chinese0239', 'after' => 'Chinese0523',
+      'before' => 'Chinese0239', 'after' => 'Chinese0523', 'note' => 'Chinese',
       'indices'=> ChineseIndices,
       'rule_table'=> %w(
 			aBcDeFgHhIjKL	aBcDeFgHiJkL	aBcDEfGhIjKl	AbCdEeFgHIjKl
@@ -363,7 +363,7 @@ module When
     # 北斉::         天保暦    551 - 577
     Chinese0540 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>540, 'origin_of_LSC'=>1918317,
-      'before' => 'Chinese0523', 'after' => 'Chinese0523',
+      'before' => 'Chinese0523', 'after' => 'Chinese0523', 'note' => 'Chinese',
       'indices'=> ChineseIndices,
       'rule_table'=> %w(
 									aBcDeEfGhIjKl
@@ -398,7 +398,7 @@ module When
     # (後晋::        調元暦?   944 -  946)
     Chinese0523 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>523, 'origin_of_LSC'=>1912115,
-      'before' => 'Chinese0412', 'after' => 'Chinese0956',
+      'before' => 'Chinese0412', 'after' => 'Chinese0956', 'note' => 'Chinese',
       'indices'=> ChineseIndices,
       'rule_table'=> %w(
         				AbCdEfGhIjKL	aBbCdEfGhIjKl	AbCDeFgHiJkL
@@ -501,7 +501,7 @@ module When
     # 唐・周::       麟徳暦    688 -  700 (歳首 建子月)
     Chinese0689 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>688, 'origin_of_LSC'=>1972387, 'border'=>'0*11-01',
-      'before' => 'Chinese0523', 'after' => 'Chinese0523',
+      'before' => 'Chinese0523', 'after' => 'Chinese0523', 'note' => 'Chinese',
       'indices'=> [
            When.Index('Chinese::MonthA', {:branch=>{1=>'_m:Calendar::閏'}}),
            When::Coordinates::DefaultDayIndex
@@ -517,7 +517,7 @@ module When
     # 唐::           五紀暦    762     (歳首 建子月)
     Chinese0761 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>760, 'origin_of_LSC'=>1998670, 'border'=>'0*11-01',
-      'before' => 'Chinese0523', 'after' => 'Chinese0523',
+      'before' => 'Chinese0523', 'after' => 'Chinese0523', 'note' => 'Chinese',
       'indices'=> [
            When.Index('Chinese::MonthB', {:branch=>{1=>'_m:Calendar::閏'}}),
            When::Coordinates::DefaultDayIndex
@@ -540,7 +540,7 @@ module When
     # 唐～後梁::     崇玄暦    893 -  907
     Chinese0618 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>618, 'origin_of_LSC'=>1946814,
-      'before' => 'Chinese0523', 'after' => 'Chinese0523',
+      'before' => 'Chinese0523', 'after' => 'Chinese0523', 'note' => 'Chinese',
       'indices'=> ChineseIndices,
       'rule_table'=> %w(		aBcDeFgHiJkL	ABbcDefGhIJKl	AbCdeFgHiJkL
 	ABcDefGhIjJkL	AbCDefGhIjKl	AbCDeFgHiJkL	aBcDeFGgHiJkL	aBcdEFgHIjKl
@@ -616,7 +616,7 @@ module When
     # 唐・周::       麟徳暦    688 -  700 (歳首 建子月)
     Chinese0618B = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>688, 'origin_of_LSC'=>1972387, 'border'=>'0*11-01',
-      'before' => 'Chinese0618', 'after' => 'Chinese0618',
+      'before' => 'Chinese0618', 'after' => 'Chinese0618', 'note' => 'Chinese',
       'indices'=> [
            When.Index('Chinese::MonthA', {:branch=>{1=>'_m:Calendar::閏'}}),
            When::Coordinates::DefaultDayIndex
@@ -634,7 +634,7 @@ module When
     # 唐::           五紀暦    762     (歳首 建子月)
     Chinese0618C = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>760, 'origin_of_LSC'=>1998670, 'border'=>'0*11-01',
-      'before' => 'Chinese0618', 'after' => 'Chinese0618',
+      'before' => 'Chinese0618', 'after' => 'Chinese0618', 'note' => 'Chinese',
       'indices'=> [
            When.Index('Chinese::MonthB', {:branch=>{1=>'_m:Calendar::閏'}}),
            When::Coordinates::DefaultDayIndex
@@ -654,7 +654,7 @@ module When
     # 南明::         大統暦   1645 - 1662
     Chinese0939 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>939, 'origin_of_LSC'=>2064050,
-      'before' => 'Chinese0523', 'after' => 'Chinese1645',
+      'before' => 'Chinese0523', 'after' => 'Chinese1645', 'note' => 'Chinese',
       'indices'=> ChineseIndices,
       'rule_table'=> %w(
 							ABcDefGgHiJkL	ABcDefGhIjKl
@@ -845,7 +845,7 @@ module When
     # 南宋::         本天暦   1277 - 1279
     Chinese0956 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>947, 'origin_of_LSC'=>2066974,
-      'before' => 'Chinese0523', 'after' => 'Chinese0939',
+      'before' => 'Chinese0523', 'after' => 'Chinese0939', 'note' => 'Chinese',
       'indices'=> ChineseIndices,
       'rule_table'=> %w(
 			AbCdeFggHIjKL	AbCdeFghIJkL	AbCDefGhiJKl	AbCDeEfGhIjKl
@@ -928,7 +928,7 @@ module When
     # 方臘::         紀元暦   1118 - 1120 (歳首 建子月)
     Chinese1119 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>1118, 'origin_of_LSC'=>2129431, 'border'=>'0*11-01',
-      'before' => 'Chinese0956', 'after' => 'Chinese0956',
+      'before' => 'Chinese0956', 'after' => 'Chinese0956', 'note' => 'Chinese',
       'indices'=> _IndicesM11,
       'rule_table'=> %w(		aBCdEfGhIiJkL	aBcDEfGhIjKl	AbCdEfGHiJkL)
       }
@@ -942,7 +942,7 @@ module When
     # 中華民国::     農暦     1912 - 1930 (北京時間 +07:45:34 で計算)
     Chinese1645 = [PatternTableBasedLuniSolar, {
       'origin_of_MSC'=>1645, 'origin_of_LSC'=>2321912,
-      'before' => 'Chinese0939', 'after' => 'ChineseLuniSolar?time_basis=+08',
+      'before' => 'Chinese0939', 'after' => 'ChineseLuniSolar?time_basis=+08', 'note' => 'Chinese',
       'indices'=> ChineseIndices,
       'rule_table'=> %w(
 									aBcdEffGhIJKL
