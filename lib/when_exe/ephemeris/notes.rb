@@ -58,7 +58,7 @@ class When::CalendarNote
     #
     # @return [When::TM::CalDate] date またはその直後のイベントの日時
     #
-    def event(date, parameter=nil, precision=date.precision)
+    def event_eval(date, parameter=nil, precision=date.precision)
       num, den  = parameter.kind_of?(String) ? parameter.split(/\//, 2) : parameter
       num = (num || @num).to_f
       den = (den || @den).to_f
@@ -103,7 +103,7 @@ class When::CalendarNote
     # @private
     def event_delta(parameter=nil)
       return @delta unless parameter
-      num, den = parameter.split(/\//, 2)
+      num, den = parameter.kind_of?(String) ? parameter.split(/\//, 2) : parameter
       When::TM::IntervalLength.new([(den || @den).to_f,1].max*0.9, 'day')
     end
 
@@ -134,7 +134,7 @@ class When::CalendarNote
     # 二十四節気のための event の別名
     #
     # @return [When::TM::CalDate] date またはその直後のイベントの日時
-    alias :term :event
+    alias :term :event_eval
 
     private
 
@@ -149,6 +149,7 @@ class When::CalendarNote
     #   margin  - 没滅計算用の補正  (デフォルト 1E-8)
     def _normalize(args=[], options={})
       num, den, formula, delta, margin = args
+      @event ||= 'term'
       @num     = (num || @num  ||   0).to_f
       @den     = (den || @den  || 360).to_f
       @formula = When.Resource(formula || @formula ||'Formula?formula=12S', '_ep:')
@@ -166,7 +167,7 @@ class When::CalendarNote
     # 月の位相のための event の別名
     #
     # @return [When::TM::CalDate] date またはその直後のイベントの日時
-    alias :phase :event
+    alias :phase :event_eval
 
     private
 
@@ -181,6 +182,7 @@ class When::CalendarNote
     #   margin  - 没滅計算用の補正  (デフォルト 1E-8)
     def _normalize(args=[], options={})
       num, den, formula, delta, margin = args
+      @event ||= 'phase'
       @num     = (num || @num  ||  0).to_f
       @den     = (den || @den  || 30).to_f
       @formula = When.Resource(formula || @formula ||'Formula?formula=1L', '_ep:')

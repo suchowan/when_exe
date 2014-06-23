@@ -13,8 +13,9 @@ module When
       "names:[Japanese=]",
 
       # Remarks
-      "[based on Research Project 22520700=http://kaken.nii.ac.jp/d/p/22520700.en.html," +
-       "典拠 - 科研22520700=http://kaken.nii.ac.jp/d/p/22520700.ja.html]",
+      "[based on Research Project 22520700=http://www.excite-webtl.jp/world/english/web/?" +
+       "wb_url=http%3a%2f%2fsuchowan%2eat%2ewebry%2einfo%2f201401%2farticle_25%2ehtml&wb_lp=JAEN," +
+       "典拠 - 科研22520700=http://suchowan.at.webry.info/201401/article_25.html]",
 
       [self,
         "names:[Month, 月=ja:%%<月_(暦)>]",
@@ -30,16 +31,6 @@ module When
         "[Month 10=, *神無月 ]",
         "[Month 11=, *霜月   ]",
         "[Month 12=, *師走   ]"
-      ],
-
-      [self,
-        "names:[Rokuyo=, *六曜]",
-        "[Taian=,      *大安  ]",
-        "[Shakko=,     *赤口  ]",
-        "[Sensho=,     *先勝  ]",
-        "[Tomobiki=,   *友引  ]",
-        "[Senbu=,      *先負  ]",
-        "[Butsumetsu=, *仏滅  ]"
       ],
 
       [self,

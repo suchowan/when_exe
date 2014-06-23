@@ -20,13 +20,15 @@ module When::Parts
 
     # @private
     ConstTypes = {
-      'Terms'   => ['BasicTypes::M17n', '%s',     '_m:%s%s'      ],
-      'Era'     => ['TM::CalendarEra',  '%s',     '_e:%s%s'      ],
-      'Residue' => ['Coordinates',      '%s',     '_co:%s%s'     ],
-      'Week'    => ['CalendarNote',     '%sWeek', '_n:%sWeek%s'  ],
-      'Note'    => ['CalendarNote',     '%s',     '_n:%s%s'      ],
-      'Notes'   => ['CalendarNote',     '%s',     '_n:%s/Notes%s'],
-      nil       => ['CalendarTypes',    '%s',     '_c:%s%s'      ]
+      'SolarTerms'  => ['CalendarNote',     '%sSolarTerms',  '_n:%sSolarTerms%s' ],
+      'LunarPhases' => ['LunarPhases',      '%sLunarPhases', '_n:%sLunarPhases%s'],
+      'Terms'       => ['BasicTypes::M17n', '%s',            '_m:%s%s'           ],
+      'Era'         => ['TM::CalendarEra',  '%s',            '_e:%s%s'           ],
+      'Residue'     => ['Coordinates',      '%s',            '_co:%s%s'          ],
+      'Week'        => ['CalendarNote',     '%sWeek',        '_n:%sWeek%s'       ],
+      'Note'        => ['CalendarNote',     '%s',            '_n:%s%s'           ],
+      'Notes'       => ['CalendarNote',     '%s',            '_n:%s/Notes%s'     ],
+      nil           => ['CalendarTypes',    '%s',            '_c:%s%s'           ]
     }
 
     # @private
@@ -181,7 +183,7 @@ module When::Parts
       #
       # @private
       def _abbreviation_to_iri(abbreviation, abbreviation_types=ConstTypes)
-        abbreviation_types[:pattern] ||= /^([A-Z].*?)(#{abbreviation_types.keys.compact.join('|')})?(\?.+|::.+)?$/
+        abbreviation_types[:pattern] ||= /^(?=[A-Z])(.*?)(#{abbreviation_types.keys.compact.join('|')})?(\?.+|::.+)?$/
         abbreviation =~ abbreviation_types[:pattern]
         return nil unless $1
         klass, name, iri = abbreviation_types[$2]

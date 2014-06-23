@@ -77,7 +77,7 @@ module When
           [DayOfWeek, "label:[double,       重日= ]", {'delta'=>1827}]
         ],
 
-        "[Standard_Week]"
+        "[Common_Week]"
       ]
     ]]
 

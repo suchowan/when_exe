@@ -75,7 +75,7 @@ module When
           "[Afflux=       ]"  # 12-08 The Aftermath 50
         ],
 
-        "[Standard_Week]"
+        "[Common_Week]"
       ]
     ]]
 

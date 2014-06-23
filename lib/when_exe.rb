@@ -127,6 +127,8 @@ module When
     # When 直下に定数として定義する時法・暦法など(暗黙的追加)
     #
     def const_missing(constant)
+      sgn, *args = TM::PeriodDuration._to_array(constant.to_s)
+      return const_set(constant, TM::PeriodDuration.new(*args)) if sgn
       iri = Parts::Resource._abbreviation_to_iri(constant)
       return _const_missing(constant) unless iri
       resource = Parts::Resource._instance(iri)
@@ -293,6 +295,8 @@ module When
     autoload :LunarPhases,             'when_exe/ephemeris/notes'
     autoload :Ephemeris,               'when_exe/ephemeris/notes'
     autoload :Japanese,                'when_exe/region/japanese/notes'
+    autoload :CommonWithRokuyo,        'when_exe/region/japanese/weeks'
+    autoload :RokuyoWeek,              'when_exe/region/japanese/weeks'
     autoload :Yis,                     'when_exe/region/chinese'
     autoload :Balinese,                'when_exe/region/balinese'
     autoload :Javanese,                'when_exe/region/javanese'

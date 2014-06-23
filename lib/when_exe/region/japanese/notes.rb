@@ -686,7 +686,7 @@ class When::CalendarNote
         return Dates.new(date) if date.frame.twin
         o_date = date
       else
-        o_date = _to_japanese_date(date)
+        o_date = self.class._to_japanese_date(date)
         return nil unless o_date
       end
       year = o_date.most_significant_coordinate
@@ -699,7 +699,7 @@ class When::CalendarNote
     #
     # 任意の暦を日本年号付暦日に変換
     #
-    def _to_japanese_date(date)
+    def self._to_japanese_date(date)
       return date if date._attr[:query] && date._attr[:query]['area'].to_s =~ /日本/
       (date^ When.era(:area=>'日本')).each do |list|
         return list[0] if list[0]
@@ -888,9 +888,6 @@ class When::CalendarNote
                    鼻柱   髪際 牙歯 胃管 遍身   胸     気街   股内 足 踝
                    足小指 足踝及胸、目下 肝及足 手陽明 足陽明 胸   膝 陰   膝晊 足跌)
 
-    # 六曜
-    Rokuyo = When.Resource('_m:Japanese::六曜')
-
     # 月の暦注
     # @private
     def self._month_notes(notes, dates, conditions={})
@@ -932,7 +929,7 @@ class When::CalendarNote
       notes['赤舌'  ] ||= d0 == (m * 5 - 3) % 6 + 1 ? '赤舌' : nil
       notes['大赤'  ] ||= d0 % 8 == (m * 7 - 3) % 8 ? '大赤' : nil
       notes['不成就'] ||= d0 % 8 == [6,3,2,1,4,5][m % 6] || (misoka && m % 6 == 0) ? '不成就' : nil # 『現代こよみ読み解き事典』 for 不成就日
-      notes['六曜'  ] ||= Rokuyo[(m + d0) % 6]
+      notes['六曜'  ] ||= When::RokuyoWeek.rokuyo_value(m, d0)
       notes
     end
   end

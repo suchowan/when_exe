@@ -56,7 +56,7 @@ module When
           [DayOfWeek, "label:[Worldsday, 無曜日]", {'delta'=>183}],
         ],
 
-        "[Standard_Week]"
+        "[Common_Week]"
       ]
     ]]
 
@@ -71,9 +71,9 @@ module When
 
     # @private
     WeekLength = {
-      [ 6, 30] => 7,
+      [ 5, 31] => 8,
       [ 6, 31] => 8,
-      [12, 30] => 8,
+      [11, 31] => 8,
       [12, 31] => 8
     }
 
@@ -124,7 +124,7 @@ module When
     # この日は何曜？
     #
     # @param [When::TM::TemporalPosition] date
-    # @param [When::TM::CalDate] base (not used)
+    # @param [When::TM::CalDate] base
     #
     # @return [Hash<:value=>When::CalendarNote::Week::DayOfWeek, :position=>Array<Integer>>]
     #
@@ -132,7 +132,7 @@ module When
       date    = _to_date_for_note(date)
       y, m, d = date.cal_date
       index   = ExtraDayInYear[[m,d]] || (FirstDayOfWeek[m-1] + d - 1) % 7
-      length  = WeekLength[[m, date.length(When::MONTH)]] || 7
+      length  = WeekLength[[m, (base||date).length(When::MONTH)]] || 7
       {:value=>@days_of_week[index], :position=>[index, length]}
     end
 

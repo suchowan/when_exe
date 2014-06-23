@@ -11,7 +11,7 @@ module When
 
     # Japanese Luni-Solar Calendar Series for Japanese Note
     JapaneseLuniSolar = [self, [
-      'locale:[ja=ja:, en=en:]',
+      'locale:[ja=ja:, =en:]',
       'area:[日本の暦月=, *JapaneseLuniSolar=]',
       ['[平朔儀鳳暦=]-660.01.01',  '@F',  "-660-01-01^JapaneseTwin::平朔儀鳳暦"],
       ['[元嘉暦]454.01.01',        '@CR',  "454-01-01^ChineseTwin::元嘉暦"],
@@ -34,7 +34,7 @@ module When
 
     # Japanese Solar Calendar Series for Japanese Note
     JapaneseSolar = [self, [
-      'locale:[ja=ja:, en=en:]',
+      'locale:[ja=ja:, =en:]',
       'area:[日本の節月=, *JapaneseSolar=]',
       ['[平朔儀鳳暦=]-661.01.01',  '@F',  "-661-01-01^JapaneseTwin::平朔儀鳳暦(節月)"], # 年の始めに遡って開始(実際は12.22)
       ['[元嘉暦]454.01.12',        '@CR',  "454-01-12^ChineseTwin::元嘉暦(節月)"],

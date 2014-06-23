@@ -650,7 +650,11 @@ module When
         end
         direction = options[:direction] if options[:direction]
         @parent = parent
-        void, @event, @parameter = options.delete(:event).split(/^([^\d]+)/)
+        event   = options.delete(:event)
+        case event
+        when String ; void, @event, @parameter = event.split(/^([^\d]+)/)
+        else        ;       @event, @parameter = [parent.event, event]
+        end
         @delta = @parent.send((@event+'_delta').to_sym, @parameter)
         instance_eval %Q{
           def event_eval(date)
@@ -701,7 +705,7 @@ module When
         def just_or_last(date)
           date = week_note._to_date_for_note(date)
           ([parent.child.length, @delta[When::DAY]].max*2).times do
-            if equal?(week_note.week(date))
+            if equal?(week_note.week(date)[:value])
                date.events ||= []
                date.events << self
                return date
@@ -739,7 +743,7 @@ module When
       #
       # @return [When::Coordinates::Residue] 七曜
       #
-      def standard_week(date)
+      def common_week(date)
         When.Residue('Week')[date.to_i % 7]
       end
 
@@ -748,9 +752,9 @@ module When
       #
       def _normalize(args=[], options={})
         super
-        @days_of_week = When.CalendarNote("#{self.class.to_s.split('::').last}/Notes::day::Week")
+        @days_of_week ||= When.CalendarNote("#{self.class.to_s.split('::').last}/Notes::day::Week")
         @days_of_week.child.length.times do |index|
-          name = @days_of_week.child[index].label.to_s.downcase.gsub(/[- ]/, '_')
+          name = @days_of_week.child[index].translate('en').downcase.gsub(/[- ]/, '_')
           self.class.module_eval %Q{
             def #{name}(date, parameter=nil)
               @days_of_week.child[#{index}].just_or_last(date)
