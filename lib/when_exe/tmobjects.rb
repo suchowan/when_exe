@@ -620,7 +620,7 @@ module When::TM
     # @note value, factor, radix は Numeric
     #
     def self._to_array(interval)
-      return nil unless interval =~ /^([-+]?[\d.]+)(?:(E|X|\((\d+)\))([-+]?\d+))?([A-Za-z]+|\*([\d.]+)S)$/
+      return nil unless interval =~ /\A([-+]?[\d.]+)(?:(E|X|\((\d+)\))([-+]?\d+))?([A-Za-z]+|\*([\d.]+)S)\z/
       value, radix, radix_quantity, factor, unit, unit_quantity = $~[1..6]
       value  = When::Coordinates::Pair._en_number(value)
       radix  = case radix
@@ -895,13 +895,13 @@ module When::TM
     #
     def self._to_array(period)
 
-      return nil unless period.gsub(/_+/, '') =~ /^([-+])?P(.*?)?(?:T(.+))?$/
+      return nil unless period.gsub(/_+/, '') =~ /\A([-+])?P(.*?)?(?:T(.+))?\z/
 
       sign = ($1 == '-') ? -1 : +1
       pdate, ptime = $~[2..3]
 
       # 時分秒形式
-      if (ptime =~ /^(?:([.,\d]+)?([:*=])?H)?(?:([.,\d]+)?([:*=])?M)?(?:([.,\d]+)?([:*=])?S)?((?:[.,\d]*[:*=]?X)*)$/)
+      if (ptime =~ /\A(?:([.,\d]+)?([:*=])?H)?(?:([.,\d]+)?([:*=])?M)?(?:([.,\d]+)?([:*=])?S)?((?:[.,\d]*[:*=]?X)*)\z/)
         trunk = [1,3,5].map {|i|
             $~[i] ? Pair._en_pair($~[i], $~[i+1]) : 0
           }
@@ -914,7 +914,7 @@ module When::TM
 
       case pdate
       # 年月日形式
-      when /^((?:[.,\d]*[-*=]?X)*)(?:([.,\d]+)?([-*=])?Y)?(?:([.,\d]+)?([-+*&%!>=<?])?M)?(?:([.,\d]+)?([-*=?%])?D)?$/
+      when /\A((?:[.,\d]*[-*=]?X)*)(?:([.,\d]+)?([-*=])?Y)?(?:([.,\d]+)?([-+*&%!>=<?])?M)?(?:([.,\d]+)?([-*=?%])?D)?\z/
         trunk = [2,4,6].map {|i|
             $~[i] ? Pair._en_pair($~[i], $~[i+1]) : 0
           }
@@ -926,7 +926,7 @@ module When::TM
         return sign, date, time
 
       # 週日形式
-      when /^(?:([.,\d]+)?([:*=])?W)(?:([.,\d]+)?([-*=?%])?D)?$/
+      when /\A(?:([.,\d]+)?([:*=])?W)(?:([.,\d]+)?([-*=?%])?D)?\z/
         week = [1,3].map {|i|
             $~[i] ? Pair._en_pair($~[i], $~[i+1]) : 0
           }

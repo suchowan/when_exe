@@ -679,7 +679,7 @@ module When
       def _normalize(args=[], options={})
         @label ||= 'Indian::HinduSolar'
         @type  ||= 'SBS'
-        raise ArgumentError, "Irregal formula: #{@formula}" unless @type.upcase =~ /^(M|SS|SB)(V|S||B|H|VZ|SZ|BZ|HZ)$/
+        raise ArgumentError, "Irregal formula: #{@formula}" unless @type.upcase =~ /\A(M|SS|SB)(V|S||B|H|VZ|SZ|BZ|HZ)\z/
 
         @location      ||=  HinduLuniSolar::Location_E[$2] || HinduLuniSolar::Location_F[$1]
         @cycle_offset  ||=  HinduLuniSolar::CycleOffset[$1]
@@ -822,7 +822,7 @@ module When
       def _normalize(args=[], options={})
         @label ||= 'Indian::HinduLuniSolar'
         @type  ||= 'SBSA'
-        raise ArgumentError, "Irregal formula: #{@formula}" unless @type.upcase =~ /^(M|SS|SB)(V|S||B|H|VZ|SZ|BZ|HZ)(A|P|PX)$/
+        raise ArgumentError, "Irregal formula: #{@formula}" unless @type.upcase =~ /\A(M|SS|SB)(V|S||B|H|VZ|SZ|BZ|HZ)(A|P|PX)\z/
 
         @location      ||=  Location_E[$2] || Location_F[$1]
         @cycle_offset  ||=  CycleOffset[$1]

@@ -1454,7 +1454,7 @@ module When::CalendarTypes
           key, border, *list = list
           break unless key
           key = $1.to_i if key.kind_of?(String) && /\((.+?)\)/ =~ key
-          border = "_c:Border?border=#{border}" unless border =~ /^[A-Z_]/i
+          border = "_c:Border?border=#{border}" unless border =~ /\A[A-Z_]/i
           border = When.Calendar(border)
           @borders << {:key=>key, :border=>border}
         end

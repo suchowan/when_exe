@@ -226,7 +226,7 @@ class String
   # @note core/extension
   #
   def translate(loc='')
-    return encode($1) if loc =~ /\.(.+)$/
+    return encode($1) if loc =~ /\.(.+)\z/
     return self
   end
   alias :/ :translate

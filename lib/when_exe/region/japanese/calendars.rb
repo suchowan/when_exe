@@ -365,8 +365,8 @@ module When
            When.Index('Japanese::Month', {:branch=>{1=>'_m:Calendar::閏'}}),
            When::Coordinates::DefaultDayIndex
        ],
-      'before' => 'Japanese', 'after' => 'Japanese', 'note' => 'Japanese',
-      'remark' => When.M17n('Japanese::based on Research Project 22520700'),
+      'before'  => 'Japanese', 'after' => 'Japanese', 'note' => 'Japanese',
+      'remarks' => When.M17n('Japanese::based on Research Project 22520700'),
       'rule_table'=> %w(				aBCdEfGhiJkL	aBCdEFgHiJjkL
 	aBCdEfGHiJkL	abCdEfGHiJKl	AbcDeFfGHiJKl	AbCdeFghIJKL	aBcdEfgHiJKL
 	aBCcDefgHiJKl	ABCdeFgHijKL	aBcDEfGhIjkKL	aBcDEfGhIjkL	AbcDEfGHiJkL

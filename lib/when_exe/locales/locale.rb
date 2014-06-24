@@ -50,7 +50,7 @@ module When
 
     # Wikipedia の URL の正規表現
     # @private
-    Ref  = /^http:\/\/(.+?)\.wikipedia\.org\/wiki\/([^#]+?)$/
+    Ref  = /\Ahttp:\/\/(.+?)\.wikipedia\.org\/wiki\/([^#]+?)\z/
 
     # Wikipedia の多言語リンクの正規表現
     # @private
@@ -68,7 +68,7 @@ module When
       #
       # @param [Hash] options 下記の通り
       # @option options [Hash]    :alias              Locale の読み替えパターンを Hash で指定する。
-      # @option options [String]  :namespaces         名前空間定義の省略時に名前空間生成に用いる書式
+      # @option options [String]  :namespace_foramt   名前空間定義の省略時に名前空間生成に用いる書式
       # @option options [Hash]    :unification        漢字の包摂パターンを Hash で指定する。
       # @option options [Numeric] :wikipedia_interval Wikipedia の連続的な参照を抑制するための遅延時間/秒
       #
@@ -77,9 +77,9 @@ module When
       #   :unification の指定がない場合、unifications は DefaultUnification(モジュール定数)と解釈する。
       #
       def _setup_(options={})
-        @aliases            = options[:alias]       || DefaultAlias
-        @namespaces         = options[:namespaces]  || DefaultNamespaces
-        @unifications       = options[:unification] || DefaultUnification
+        @aliases            = options[:alias]            || DefaultAlias
+        @namespaces         = options[:namespace_foramt] || DefaultNamespaces
+        @unifications       = options[:unification]      || DefaultUnification
         @wikipedia_interval = options[:wikipedia_interval]
       end
 
@@ -89,7 +89,7 @@ module When
       #
       def _setup_info
         {:alias              => _alias,
-         :namespaces         => _namespaces,
+         :namespace_foramt   => _namespaces,
          :unification        => _unification,
          :wikipedia_interval => @wikipedia_interval}
       end
@@ -122,7 +122,7 @@ module When
         when Locale
           return source.translate(loc)
         when String
-          return source.encode($1) if loc =~ /\.(.+)$/
+          return source.encode($1) if loc =~ /\.(.+)\z/
         end
         source
       end
@@ -164,7 +164,7 @@ module When
           source = $1 if (source=~/\A\s*\[?(.+?)\]?\s*\z/m)
           source.split(/[\n\r,]+/).each do |v|
             v.strip!
-            next if (v=~/^#/)
+            next if (v=~/\A#/)
             pair = [''] + v.split(/\s*=\s*/, 2)
             namespace[pair[-2]] = pair[-1]
           end
@@ -193,8 +193,8 @@ module When
         source.map {|v|
           if v.kind_of?(String)
             v = v.strip
-            next if (v=~/^#/)
-            (v =~ /^(\*)?(.*?)(?:\s*=\s*(.*))?$/) ? $~[1..3] : [[nil, '', nil]]
+            next if (v=~/\A#/)
+            (v =~ /\A(\*)?(.*?)(?:\s*=\s*(.*))?\z/) ? $~[1..3] : [[nil, '', nil]]
           else
             v
           end
@@ -253,7 +253,7 @@ module When
       # @private
       def _get_locale(locale, access_key)
         return nil unless access_key
-        access_key = access_key.split(/\//).map {|key| key =~ /^[0-9]+$/ ? key.to_i : key}
+        access_key = access_key.split(/\//).map {|key| key =~ /\A[0-9]+\z/ ? key.to_i : key}
         locale = locale.sub(/\..*/, '')
         [locale, locale.sub(/-.*/, '')].each do |loc|
           symbol = ('Locale_' + loc.sub(/-/,'_')).to_sym
@@ -354,7 +354,7 @@ module When
 
       # wikipedia オブジェクトの関連付け
       def _wikipedia_relation(object, path, query)
-        code_space = path.sub(/[^\/]+$/, '')
+        code_space = path.sub(/[^\/]+\z/, '')
         if object.kind_of?(When::Coordinates::Spatial)
           object.label._pool['..'] = object
           object._pool[object.label.to_s] = object.label
@@ -653,7 +653,7 @@ module When
       foreign  = Locale._get_locale(locale, @access_key)
       return @names[''] unless foreign
       english  = @names['en'] || @names['']
-      addition = english.dup.sub!(/^#{Locale._get_locale('en', @access_key)['en']}/, '')
+      addition = english.dup.sub!(/\A#{Locale._get_locale('en', @access_key)['en']}/, '')
       foreign[locale] += addition if addition
       update(foreign)
       return Locale._hash_value(@names, locale)
@@ -684,9 +684,9 @@ module When
       names.each do |v|
         v.strip!
         case v
-        when '', /^#/ ;
-        when /^\/(.+)/; @access_key = $1
-        when /^(\*)?(?:([^=%]*?)\s*:)?\s*(.+?)\s*(=\s*([^=]+?(\?.+)?)?)?$/
+        when '', /\A#/ ;
+        when /\A\/(.+)/; @access_key = $1
+        when /\A(\*)?(?:([^=%]*?)\s*:)?\s*(.+?)\s*(=\s*([^=]+?(\?.+)?)?)?\z/
           asterisk[0], locale, name, assignment, ref = $~[1..5]
           asterisk[1], locale, default_ref = default_locale.shift unless locale
           locale ||= ''
@@ -695,13 +695,13 @@ module When
           mark[0]  = locale if asterisk[0]
           mark[1]  = locale if asterisk[1]
           mark[2]  = locale unless mark[2]
-          name = _replacement($1, locale, ($3 || @names['en'] || @names[''])) if name =~ /^_([A-Z_]+)_(\((.+)\))?$/
+          name = _replacement($1, locale, ($3 || @names['en'] || @names[''])) if name =~ /\A_([A-Z_]+)_(\((.+)\))?\z/
           @names[locale] = name
-          if ref =~ /^(.+):/
+          if ref =~ /\A(.+):/
             prefix = namespace[$1] || Locale.send(:_namespaces)[$1]
-            ref.sub!(/^.+:/, prefix) if prefix
+            ref.sub!(/\A.+:/, prefix) if prefix
           end
-          ref += '%%<' + name + '>' if ref =~ /[\/#:]$/
+          ref += '%%<' + name + '>' if ref =~ /[\/#:]\z/
           @link[locale] = _encode(ref) unless ref == ''
         else ; raise ArgumentError, "Irregal locale format: " + v
         end

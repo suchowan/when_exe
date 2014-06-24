@@ -33,7 +33,7 @@ module When
       config = {}
       open(path, 'r') do |file|
         while (line=file.gets)
-          next if line =~ /^\s*#/
+          next if line =~ /\A\s*#/
           key, *value = line.chomp.split(':')
           value = value[0] if value.size <= 1
           config[key] = value
@@ -184,14 +184,14 @@ module When
         when String
           arg = When::EncodingConversion.to_internal_encoding(arg)
           case arg
-          when /^:(.+?)(?:\[(..)\])?$/             ; output  = [$1.to_sym, $2].compact
-          when /^(year|month|week)(?:\[(..)\])?$/i ; methods << [$1.downcase + '_included', $2||'SU']
-          when /^[-+\d]\d*$/                       ; dates   << arg.to_i ; numbers << arg.to_i
-          when /^[-+.\d][.\d]*$/                   ; dates   << arg.to_f ; numbers << arg.to_f
-          when /^now$/i                            ; dates   << When.now
-          when /^today$/i                          ; dates   << When.today
+          when /\A:(.+?)(?:\[(..)\])?\z/             ; output  = [$1.to_sym, $2].compact
+          when /\A(year|month|week)(?:\[(..)\])?\z/i ; methods << [$1.downcase + '_included', $2||'SU']
+          when /\A[-+\d]\d*\z/                       ; dates   << arg.to_i ; numbers << arg.to_i
+          when /\A[-+.\d][.\d]*\z/                   ; dates   << arg.to_f ; numbers << arg.to_f
+          when /\Anow\z/i                            ; dates   << When.now
+          when /\Atoday\z/i                          ; dates   << When.today
           when /(^[-+\d])|\^/                      ; dates   << arg
-          when /^\//
+          when /\A\//
             arg[1..-1].scan(/./) do |c|
               c = c.upcase
               if config.key?(c)
@@ -294,7 +294,7 @@ module When
       when Hash
         result = {}
         source.each_pair {|k,v|
-          result[k =~ /^_sym_(.+)$/ ? $1.to_sym : k] = _to_symbol(v)
+          result[k =~ /\A_sym_(.+)\z/ ? $1.to_sym : k] = _to_symbol(v)
         }
         result
       else

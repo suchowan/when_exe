@@ -282,7 +282,7 @@ class When::CalendarNote
       calendars =
         [When::TM::CalendarEra::JapaneseLuniSolar[1][i][2],
          When::TM::CalendarEra::JapaneseSolar[1][i][2]].map {|epoch|
-          epoch =~ /^(-?\d+)-(\d+)-(\d+)\^(.+)$/
+          epoch =~ /\A(-?\d+)-(\d+)-(\d+)\^(.+)\z/
           $4
         }
       [$2 == '01' ? $1.to_i : $1.to_i+1, Cal4Note.new(*calendars)]
@@ -391,7 +391,7 @@ class When::CalendarNote
         {
           :note      => self,
           :value     => case @suffix
-                        when '是' ; [@label + '是-', note[/.$/]]
+                        when '是' ; [@label + '是-', note[/.\z/]]
                         when '在' ; [@label + '在-', note]
                         when '-'  ; [@label + '-',   note]
                         else      ; note

@@ -26,15 +26,15 @@ module When
         return name > 0 ? months[name-1] : abbrs[-name-1] if name.kind_of?(Numeric)
 
         name   = When::EncodingConversion.to_internal_encoding(name)
-        match  = name[/^...|^..$/]
+        match  = name[/\A...|^..\z/]
         if match
           (months+abbrs).each do |month|
-            return month if month.=~(/^#{match}/i)
+            return month if month.=~(/\A#{match}/i)
           end
         end
 
         ObjectSpace.each_object(self) do |object|
-          return object if object.registered? && object.=~(/^#{name}$/)
+          return object if object.registered? && object.=~(/\A#{name}\z/)
         end
 
         return nil

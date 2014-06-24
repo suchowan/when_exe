@@ -65,19 +65,19 @@ module When
 
           case date_time
           # basic date & time format (ISO 8601)
-          when /^([-+W\d]+)(?:(T([.,\d]+)?)([A-Z]+(\?.+)?|[-+]\d+)?)?$/
+          when /\A([-+W\d]+)(?:(T([.,\d]+)?)([A-Z]+(\?.+)?|[-+]\d+)?)?\z/
             d, t, time, clock = $~[1..4]
             format, date  = Date._to_array_basic_ISO8601(d, options)
 
           # basic date & time format (JIS X0301)
-          when /^([.\d]+)(?:(T([.,\d]+)?)([A-Z]+(\?.+)?|[-+]\d+)?)?$/
+          when /\A([.\d]+)(?:(T([.,\d]+)?)([A-Z]+(\?.+)?|[-+]\d+)?)?\z/
             raise ArgumentError, "Wrong date format" unless options[:era_name]
             d, t, time, clock = $~[1..4]
             format, date  = Date._to_array_basic_X0301(d, options)
             era = options[:era_name]
 
           # basic time format (ISO 8601)
-          when /^(T(-{0,2}[.,\d]+)?)([A-Z]+(\?.+)?|[-+]\d+)?$/
+          when /\A(T(-{0,2}[.,\d]+)?)([A-Z]+(\?.+)?|[-+]\d+)?\z/
             t, time, clock = $~[1..3]
 
           # not supported
@@ -94,7 +94,7 @@ module When
 
           case date_time
           # extended date & time format (ISO 8601)
-          when /^([-+*&%@!>=<?\dW.\(\)]+)(?:(T([:*=.,\d]+)?)([A-Z]+(\?.+)?|[-+][:\d]+)?)?$/
+          when /\A([-+*&%@!>=<?\dW.\(\)]+)(?:(T([:*=.,\d]+)?)([A-Z]+(\?.+)?|[-+][:\d]+)?)?\z/
             d, t, time, clock = $~[1..4]
             if d =~ /[\(\)]/
               d = When::CalendarTypes::Yerm.parse(d, options[:abbr])
@@ -103,13 +103,13 @@ module When
             format, date  = Date._to_array_extended_ISO8601(d, options)
 
           # extended date & time format (JIS X0301)
-          when  /^((.+::)?(\[[^\]]+\]|[^-+\d]+))([-+*&%@!>=<?\dW.\(\)]+)?(?:(T([:*=.,\d]+)?)([A-Z]+(\?.+)?|[-+][:\d]+)?)?$/
+          when  /\A((.+::)?(\[[^\]]+\]|[^-+\d]+))([-+*&%@!>=<?\dW.\(\)]+)?(?:(T([:*=.,\d]+)?)([A-Z]+(\?.+)?|[-+][:\d]+)?)?\z/
             era, parent, child, d, t, time, clock = $~[1..7]
             format, date, era = Date._to_array_extended_X0301(d, era, options)
             era ||= options[:era_name] if (d =~ /\./)
 
           # extended time format (ISO 8601)
-          when /^(T(-{0,2}[:*=.,\d]+)?)([A-Z]+(\?.+)?|[-+][:\d]+)?$/
+          when /\A(T(-{0,2}[:*=.,\d]+)?)([A-Z]+(\?.+)?|[-+][:\d]+)?\z/
             t, time, clock = $~[1..3]
 
           # not supported
@@ -136,25 +136,25 @@ module When
         hash[key] =
           if ex > 0
             [
-              /^(\d{2})$/,
-              /^([-+]\d{#{4+ex}})(\d{2})(\d{2})$/,
-              /^([-+]\d{#{4+ex}})-(\d{2})$/,
-              /^([-+]\d{#{4+ex}})$/,
-              /^([-+]\d{#{4+ex}})W(\d{2})(\d{1})?$/,
-              /^([+]\d{#{2+ex}})$/,
-              /^([-]\d{#{2+ex}})$/,
-              /^([-+]\d{#{4+ex}})(\d{3})$/
+              /\A(\d{2})\z/,
+              /\A([-+]\d{#{4+ex}})(\d{2})(\d{2})\z/,
+              /\A([-+]\d{#{4+ex}})-(\d{2})\z/,
+              /\A([-+]\d{#{4+ex}})\z/,
+              /\A([-+]\d{#{4+ex}})W(\d{2})(\d{1})?\z/,
+              /\A([+]\d{#{2+ex}})\z/,
+              /\A([-]\d{#{2+ex}})\z/,
+              /\A([-+]\d{#{4+ex}})(\d{3})\z/
             ]
           elsif ex == 0
-            [/^(\d{2})$/] + [/^(\d{4})$/] * 6
+            [/\A(\d{2})\z/] + [/\A(\d{4})\z/] * 6
           else
-            [/^(\d{4})$/] * 7
+            [/\A(\d{4})\z/] * 7
           end
       }
 
       # @private
       Ordinal_Date_Digits = Hash.new {|hash, key|
-        hash[key] = /^(\d{#{(key || 3).to_i}})$/
+        hash[key] = /\A(\d{#{(key || 3).to_i}})\z/
       }
 
       class << self
@@ -163,41 +163,41 @@ module When
           by, bm, bd = options[:abbr]
           extra_reg  = Extra_Year_Digits[options[:extra_year_digits]]
           case date
-          when nil                          ; return nil
-          when /^(\d{4})(\d{2})(\d{2})$/    ; return nil,     [$1.to_i, $2.to_i, $3.to_i]          # 5.2.1.1
-          when /^(\d{4})-(\d{2})$/          ; return nil,     [$1.to_i, $2.to_i]                   # 5.2.1.2
-          when /^(\d{4})$/                  ; return nil,     [$1.to_i]                            # 5.2.1.2
-          when extra_reg[0]                 ; return :century,[$1.to_i * 100]                      # 5.2.1.2
-          when /^(\d{4})(\d{3})$/           ; return :day,    [$1.to_i, $2.to_i]                   # 5.2.2.1
-          when /^(\d{4})W(\d{2})(\d{1})?$/  ; return :week,   [$1.to_i, $2.to_i, _int($3)]         # 5.2.3.1-2
-          when extra_reg[1]                 ; return nil,     [$1.to_i, $2.to_i, $3.to_i]          # 5.2.1.4 a)
-          when extra_reg[2]                 ; return nil,     [$1.to_i, $2.to_i]                   # 5.2.1.4 b)
-          when extra_reg[3]                 ; return nil,     [$1.to_i]                            # 5.2.1.4 c)
-          when extra_reg[4]                 ; return :week,   [$1.to_i, $2.to_i, _int($3)]         # 5.2.3.4 a-b)
-          when extra_reg[5]                 ; return :century,[$1.to_i * 100]                      # 5.2.1.4 d)
-          when extra_reg[6]                 ; return :century,[$1.to_i * 100]       unless by      # 5.2.1.4 d)
-          when extra_reg[7]                 ; return :day,    [$1.to_i, $2.to_i]                   # 5.2.2.3 a)
-          else                              ; raise ArgumentError, "Wrong date format" unless by
+          when nil                            ; return nil
+          when /\A(\d{4})(\d{2})(\d{2})\z/    ; return nil,     [$1.to_i, $2.to_i, $3.to_i]          # 5.2.1.1
+          when /\A(\d{4})-(\d{2})\z/          ; return nil,     [$1.to_i, $2.to_i]                   # 5.2.1.2
+          when /\A(\d{4})\z/                  ; return nil,     [$1.to_i]                            # 5.2.1.2
+          when extra_reg[0]                   ; return :century,[$1.to_i * 100]                      # 5.2.1.2
+          when /\A(\d{4})(\d{3})\z/           ; return :day,    [$1.to_i, $2.to_i]                   # 5.2.2.1
+          when /\A(\d{4})W(\d{2})(\d{1})?\z/  ; return :week,   [$1.to_i, $2.to_i, _int($3)]         # 5.2.3.1-2
+          when extra_reg[1]                   ; return nil,     [$1.to_i, $2.to_i, $3.to_i]          # 5.2.1.4 a)
+          when extra_reg[2]                   ; return nil,     [$1.to_i, $2.to_i]                   # 5.2.1.4 b)
+          when extra_reg[3]                   ; return nil,     [$1.to_i]                            # 5.2.1.4 c)
+          when extra_reg[4]                   ; return :week,   [$1.to_i, $2.to_i, _int($3)]         # 5.2.3.4 a-b)
+          when extra_reg[5]                   ; return :century,[$1.to_i * 100]                      # 5.2.1.4 d)
+          when extra_reg[6]                   ; return :century,[$1.to_i * 100]       unless by      # 5.2.1.4 d)
+          when extra_reg[7]                   ; return :day,    [$1.to_i, $2.to_i]                   # 5.2.2.3 a)
+          else                                ; raise ArgumentError, "Wrong date format" unless by
           end
 
           by = by.to_i
           case date
-          when /^(\d{2})(\d{2})(\d{2})$/    ; return nil,     [_century($1,by), $2.to_i, $3.to_i]  # 5.2.1.3 a)
-          when /^-(\d{2})(\d{2})?$/         ; return nil,     [_century($1,by), _int($2)]          # 5.2.1.3 b-c)
-          when /^--(\d{2})(\d{2})?$/        ; return nil,     [by, $1.to_i,     _int($2)]          # 5.2.1.3 d-e)
-          when /^(\d{2})(\d{3})$/           ; return :day,    [_century($1,by), $2.to_i]           # 5.2.2.2 a)
-          when /^-(\d{3})$/                 ; return :day,    [by, $1.to_i]                        # 5.2.2.2 b)
-          when /^(\d{2})W(\d{2})(\d{1})?$/  ; return :week,   [_century($1,by), $2.to_i, _int($3)] # 5.2.3.3 a-b)
-          when /^-(\d{1})W(\d{2})(\d{1})?$/ ; return :week,   [_decade($1,by),  $2.to_i, _int($3)] # 5.2.3.3 c-d)
-          when /^-W(\d{2})(\d{1})?$/        ; return :week,   [by, $1.to_i,     _int($2)]          # 5.2.3.3 e-f)
-          else                              ; raise ArgumentError, "Wrong date format" unless bm
+          when /\A(\d{2})(\d{2})(\d{2})\z/    ; return nil,     [_century($1,by), $2.to_i, $3.to_i]  # 5.2.1.3 a)
+          when /\A-(\d{2})(\d{2})?\z/         ; return nil,     [_century($1,by), _int($2)]          # 5.2.1.3 b-c)
+          when /\A--(\d{2})(\d{2})?\z/        ; return nil,     [by, $1.to_i,     _int($2)]          # 5.2.1.3 d-e)
+          when /\A(\d{2})(\d{3})\z/           ; return :day,    [_century($1,by), $2.to_i]           # 5.2.2.2 a)
+          when /\A-(\d{3})\z/                 ; return :day,    [by, $1.to_i]                        # 5.2.2.2 b)
+          when /\A(\d{2})W(\d{2})(\d{1})?\z/  ; return :week,   [_century($1,by), $2.to_i, _int($3)] # 5.2.3.3 a-b)
+          when /\A-(\d{1})W(\d{2})(\d{1})?\z/ ; return :week,   [_decade($1,by),  $2.to_i, _int($3)] # 5.2.3.3 c-d)
+          when /\A-W(\d{2})(\d{1})?\z/        ; return :week,   [by, $1.to_i,     _int($2)]          # 5.2.3.3 e-f)
+          else                                ; raise ArgumentError, "Wrong date format" unless bm
           end
 
           bm = bm.to_i
           case date
-          when /^---(\d{2})$/               ; return nil,     [by, bm, $1.to_i]                    # 5.2.1.3 f)
-          when /^-W-(\d{1})$/               ; return :week,   [by, bm, $1.to_i]                    # 5.2.3.3 g)
-          when /^----$/                     ; return nil,     [by, bm, bd.to_i] if bd              # extension
+          when /\A---(\d{2})\z/               ; return nil,     [by, bm, $1.to_i]                    # 5.2.1.3 f)
+          when /\A-W-(\d{1})\z/               ; return :week,   [by, bm, $1.to_i]                    # 5.2.3.3 g)
+          when /\A----\z/                     ; return nil,     [by, bm, bd.to_i] if bd              # extension
           end
 
           raise ArgumentError, "Wrong date format: #{date}"
@@ -216,24 +216,24 @@ module When
         def _to_array_extended_ISO8601(date, options={})
           return nil unless date
           abbr = Array(options[:abbr]).dup
-          unless date =~ /^([-+]?\d+#{abbr[0] ? '|-' : ''})([-*=.])?(.*)/
+          unless date =~ /\A([-+]?\d+#{abbr[0] ? '|-' : ''})([-*=.])?(.*)/
             raise ArgumentError, "Wrong date format: #{date}"
           end
           date = $3
           dd   = [Coordinates::Pair._en_pair(_completion($1, abbr.shift), $2)]
-          while date =~ /^(\d+#{abbr[0] ? '|-' : ''})([-+*&%@!>=<?.])(.+)/
+          while date =~ /\A(\d+#{abbr[0] ? '|-' : ''})([-+*&%@!>=<?.])(.+)/
             date = $3
             dd << Coordinates::Pair._en_pair(_completion($1, abbr.shift), $2)
           end
           case date
-          when /^W(\d+#{abbr[0] ? '|-' : ''})([-+*&%@!>=<?.])?(\d+)?([-*=?%@])?$/
+          when /\AW(\d+#{abbr[0] ? '|-' : ''})([-+*&%@!>=<?.])?(\d+)?([-*=?%@])?\z/
             dd << Coordinates::Pair._en_pair(_completion($1, abbr.shift), $2)
             dd << Coordinates::Pair._en_pair($3, $4)
             return :week, dd
           when Ordinal_Date_Digits[options[:ordinal_date_digits]]
             dd << $1.to_i
             return :day, dd
-          when /^(\d+#{abbr[0] ? '|-' : ''})([-+*&%@!>=<?.])?$/
+          when /\A(\d+#{abbr[0] ? '|-' : ''})([-+*&%@!>=<?.])?\z/
             dd << Coordinates::Pair._en_pair(_completion($1, abbr.shift), $2)
             return nil, dd
           when ''
@@ -245,7 +245,7 @@ module When
 
         # JIS X0301 拡張形式の表現を分解して配列化する
         def _to_array_extended_X0301(date, era, options={})
-          if (date =~ /^([-+\d]+)\(([-+\d]+)\)(.*)$/)
+          if (date =~ /\A([-+\d]+)\(([-+\d]+)\)(.*)\z/)
             year = $2
             date = $1 + $3
           end
@@ -263,15 +263,15 @@ module When
         def _completion(digits, base)
           case digits
           when nil           ; return nil
-          when /^\d{5}/      ; raise ArgumentError, "Wrong date format: #{digits}"
+          when /\A\d{5}/      ; raise ArgumentError, "Wrong date format: #{digits}"
           else               ; return digits.to_i unless base
           end
 
           base = base.to_i
           case digits
           when '-'           ; return base
-          when /^-?(\d{1})$/ ; return _decade( $1, base)
-          when /^-?(\d{2})$/ ; return _century($1, base)
+          when /\A-?(\d{1})\z/ ; return _decade( $1, base)
+          when /\A-?(\d{2})\z/ ; return _century($1, base)
           else               ; return digits.to_i
           end
         end
@@ -309,7 +309,7 @@ module When
           return nil unless t
           return [0] unless time
           time.sub!(/,/, '.')
-          unless (time =~ /^(\d{2}(?:\.\d+)?|-)(\d{2}(?:\.\d+)?|-)?(\d{2}(\.\d+)?)?$/)
+          unless (time =~ /\A(\d{2}(?:\.\d+)?|-)(\d{2}(?:\.\d+)?|-)?(\d{2}(\.\d+)?)?\z/)
             raise ArgumentError, "Wrong time format: #{time}"
           end
           indices = options[:frame] ? options[:frame].indices : Coordinates::DefaultDateIndices
@@ -329,12 +329,12 @@ module When
           abbr[0..indices.length] = []
           time.sub!(/,/, '.')
           tt = [0]
-          while time =~ /^(\d{2}(?:\.\d+)?|-)([:*=])(.+)/
+          while time =~ /\A(\d{2}(?:\.\d+)?|-)([:*=])(.+)/
             time = $3
             tt << Coordinates::Pair._en_pair($1=='-' ? abbr.shift : $1, $2)
           end
           case time
-          when /^(\d{2}(\.\d+)?)$/
+          when /\A(\d{2}(\.\d+)?)\z/
             tt << Coordinates::Pair._en_number($1, nil)
           when ''
           else
@@ -346,8 +346,8 @@ module When
         # 時間帯の表現を正規化する
         def _to_string_clock(clock)
           return nil unless clock
-          return clock if (clock =~ /^[A-Z]+(\?.+)?$/)
-          raise ArgumentError, "Wrong clock format: #{clock}" unless clock =~ /^([-+])(\d{2})(?::?(\d{2}))?(?::?(\d{2}))?$/
+          return clock if (clock =~ /\A[A-Z]+(\?.+)?\z/)
+          raise ArgumentError, "Wrong clock format: #{clock}" unless clock =~ /\A([-+])(\d{2})(?::?(\d{2}))?(?::?(\d{2}))?\z/
           sgn, h, m, s = $~[1..4]
           zone  = sgn + h + ':' + (m||'00')
           zone += s if s
@@ -592,7 +592,7 @@ module When
             locale << [nil, loc, namespace[loc]]
             name  = content.object
             ref   = content.attribute['reference'] || content.attribute['url']
-            name += '=' + (/^NUL$/i =~ ref.object ? '' : ref.object) if ref
+            name += '=' + (/\ANUL\z/i =~ ref.object ? '' : ref.object) if ref
             names << name
           end while (content = content.same_altid)
           @names     ||= names.reverse

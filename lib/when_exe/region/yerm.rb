@@ -46,20 +46,20 @@ module When
       def self.parse(source, abbr=nil)
         c, y, m, d = abbr || (When::Yerm^When.today).cal_date
         case source
-        when /^(-?\d+)[-\(](\d+)\((\d+)\((\d+)$/; c, y, m, d = [$1, $2, $3, $4]
-        when /^(-?\d+)-(\d+)\((\d+)$/           ; c, y, m, d = [$1, $2, $3    ]
-        when /^(-?\d+)-(\d+)$/                  ; c, y, m, d = [$1, $2        ]
-        when /^(-?\d+)-$/                       ; c, y, m, d = [$1            ]
-        when /^(\d+)\((\d+)\((\d+)$/            ;    y, m, d = [    $1, $2, $3]
-        when /^(\d+)\((\d+)$/                   ;       m, d = [        $1, $2]
-        when /^(\d+)$/                          ;          d =              $1
+        when /\A(-?\d+)[-\(](\d+)\((\d+)\((\d+)\z/; c, y, m, d = [$1, $2, $3, $4]
+        when /\A(-?\d+)-(\d+)\((\d+)\z/           ; c, y, m, d = [$1, $2, $3    ]
+        when /\A(-?\d+)-(\d+)\z/                  ; c, y, m, d = [$1, $2        ]
+        when /\A(-?\d+)-\z/                       ; c, y, m, d = [$1            ]
+        when /\A(\d+)\((\d+)\((\d+)\z/            ;    y, m, d = [    $1, $2, $3]
+        when /\A(\d+)\((\d+)\z/                   ;       m, d = [        $1, $2]
+        when /\A(\d+)\z/                          ;          d =              $1
 
-        when /^(\d+)\)(\d+)\)(\d+)[-\)](-?\d+)$/; c, y, m, d = [$4, $3, $2, $1]
-        when /^(\d+)\)(\d+)-(-?\d+)$/           ; c, y, m, d = [$3, $2, $1    ]
-        when /^(\d+)-(-\d+)$/                   ; c, y, m, d = [$2, $1        ]
-        when /^(-\d+)$/                         ; c, y, m, d = [$1            ]
-        when /^(\d+)\)(\d+)\)(\d+)$/            ;    y, m, d = [    $3, $2, $1]
-        when /^(\d+)\)(\d+)$/                   ;       m, d = [        $2, $1]
+        when /\A(\d+)\)(\d+)\)(\d+)[-\)](-?\d+)\z/; c, y, m, d = [$4, $3, $2, $1]
+        when /\A(\d+)\)(\d+)-(-?\d+)\z/           ; c, y, m, d = [$3, $2, $1    ]
+        when /\A(\d+)-(-\d+)\z/                   ; c, y, m, d = [$2, $1        ]
+        when /\A(-\d+)\z/                         ; c, y, m, d = [$1            ]
+        when /\A(\d+)\)(\d+)\)(\d+)\z/            ;    y, m, d = [    $3, $2, $1]
+        when /\A(\d+)\)(\d+)\z/                   ;       m, d = [        $2, $1]
         else                                    ; c, y, m, d = [              ]
         end
 

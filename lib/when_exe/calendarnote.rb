@@ -236,7 +236,7 @@ module When
     # @return [When::TM::PeriodDuration]
     #
     def duration(event=@event)
-      void, event, parameter = event.split(/^([^\d]+)/)
+      void, event, parameter = event.split(/\A([^\d]+)/)
       send((event+'_delta').downcase.to_sym, parameter)
     end
 
@@ -469,7 +469,7 @@ module When
       args.map {|arg|
         case arg
         when String
-          arg, method = $1, $2 if (arg =~ /^(.+)#([_A-Z0-9]+)$/i)
+          arg, method = $1, $2 if (arg =~ /\A(.+)#([_A-Z0-9]+)\z/i)
           obj = When.Resource(arg, prefix)
           obj = obj.copy(method) if method
           obj
@@ -593,7 +593,7 @@ module When
     # @return [Object] 暦注の値
     #
     def _note_element(note, index, conditions, dates)
-      void, event, *parameter = note.split(/^([^\d]+)/)
+      void, event, *parameter = note.split(/\A([^\d]+)/)
       method = event.downcase
       parameter << conditions unless conditions.empty?
       return send(method, dates, *parameter) if respond_to?(method)
@@ -652,7 +652,7 @@ module When
         @parent = parent
         event   = options.delete(:event)
         case event
-        when String ; void, @event, @parameter = event.split(/^([^\d]+)/)
+        when String ; void, @event, @parameter = event.split(/\A([^\d]+)/)
         else        ;       @event, @parameter = [parent.event, event]
         end
         @delta = @parent.send((@event+'_delta').to_sym, @parameter)

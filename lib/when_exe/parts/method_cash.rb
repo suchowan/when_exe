@@ -138,7 +138,7 @@ module When
         return method_missing_(name, *args, &block) unless respond_to?("#{name}_", true)
         return send("#{name}_",  *args, &block) if MethodCash.direct
 
-        if ((name.to_s =~ /^(_*)(.+?)_to_(.+)$/) && respond_to?("#{$1}#{$3}_to_#{$2}_", true))
+        if ((name.to_s =~ /\A(_*)(.+?)_to_(.+)\z/) && respond_to?("#{$1}#{$3}_to_#{$2}_", true))
           prefix, from, to = $~[1..3]
           begin
             if (@_m_cash_lock_)

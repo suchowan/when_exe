@@ -605,7 +605,7 @@ module When
           when Hash   ; options.delete(:event)
           else        ; calendar_note.event
           end
-        event.to_s =~ /^([^\d]+)/ && calendar_note.respond_to?($1.downcase) ?
+        event.to_s =~ /\A([^\d]+)/ && calendar_note.respond_to?($1.downcase) ?
           calendar_note.include?(self, event) :
           calendar_note.note?(self,  options)
       end
@@ -714,7 +714,7 @@ module When
         when 'a' ; When.Resource('_co:Common::Abbr_Day')[to_i % 7].translate(locale)
                                                                 # 現在のロケールにおける曜日の完全な名前
         when 'A' ; When.Resource('_co:Common::Week')[to_i % 7].label.translate(locale)
-        when 'b' ; (name(MONTH-d).translate(locale))[/^.{1,#{e}}/] # 現在のロケールにおける月の省略名
+        when 'b' ; (name(MONTH-d).translate(locale))[/\A.{1,#{e}}/] # 現在のロケールにおける月の省略名
         when 'B' ; (name(MONTH-d).translate(locale))            # 現在のロケールにおける月の完全な名前
         when 'C' ; year(d).div(100)                             # 世紀 (西暦年の上 2 桁)
         when 'd' ; day(d)                                       # 月内通算日
@@ -758,9 +758,9 @@ module When
         pattern = pattern.translate(locale) if pattern.kind_of?(When::BasicTypes::M17n)
         pattern.scan(/(%[O\d]*(?:\.(\d+))?.)|(.)/) do |c,e,s|
           case c
-          when /^%%/
+          when /\A%%/
             format += '%%'
-          when /^%/
+          when /\A%/
             action = TemporalPosition.format[c[-1..-1]]
             case action
             when Array

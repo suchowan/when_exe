@@ -35,7 +35,7 @@ module When::Parts
     ConstList = []
 
     # private
-    IRIHeader = /^[_a-z\d]+:[^:]/i
+    IRIHeader = /\A[_a-z\d]+:[^:]/i
 
     # @private
     class ContentLine
@@ -183,7 +183,7 @@ module When::Parts
       #
       # @private
       def _abbreviation_to_iri(abbreviation, abbreviation_types=ConstTypes)
-        abbreviation_types[:pattern] ||= /^(?=[A-Z])(.*?)(#{abbreviation_types.keys.compact.join('|')})?(\?.+|::.+)?$/
+        abbreviation_types[:pattern] ||= /\A(?=[A-Z])(.*?)(#{abbreviation_types.keys.compact.join('|')})?(\?.+|::.+)?\z/
         abbreviation =~ abbreviation_types[:pattern]
         return nil unless $1
         klass, name, iri = abbreviation_types[$2]
@@ -202,6 +202,7 @@ module When::Parts
       #
       # @param [Hash] options 以下の通り
       # @option options [String]  :base_uri Base URI for When_exe Resources (Default When::SourceURI)
+      # @option options [Hash<String(namespace)=>String(URI)>] :additional_namespaces User defined namespaces (Default {})
       # @option options [String]  :root_dir Root Directory for When_exe Resources Cash data (Default When::RootDir)
       # @option options [Boolean] :leave_const If true, leave Constants of When module defined
       #
@@ -234,6 +235,7 @@ module When::Parts
         }
         @base_uri       = options[:base_uri] || When::SourceURI
         @root_dir       = options[:root_dir] || When::RootDir
+        @_prefix        = options[:additional_namespaces].merge(@_prefix) if options[:additional_namespaces].kind_of?(Hash)
         @_prefix_values = @_prefix.values.sort.reverse
         @_prefix_index  = @_prefix.invert
         unless options[:leave_const] || ConstList.empty?
@@ -278,7 +280,7 @@ module When::Parts
 
         # 階層がある場合は、階層をたどる
         iri = Resource._decode(iri)
-        iri = $1 while iri =~ /^\((.*)\)$/
+        iri = $1 while iri =~ /\A\((.*)\)\z/
         iri = namespace + iri if namespace && iri !~ IRIHeader
         root, *leaves= Resource._encode(iri).split(/::/)
         if leaves.size > 0
@@ -311,7 +313,7 @@ module When::Parts
       # @private
       def _path_with_prefix(obj, simple=true)
         _setup_ unless @_pool
-        path = obj.kind_of?(Class) ? obj.to_s.sub(/^When::/, base_uri).gsub(/::/, '/') :
+        path = obj.kind_of?(Class) ? obj.to_s.sub(/\AWhen::/, base_uri).gsub(/::/, '/') :
                                      obj.iri
         simple ? _simplify_path(path) : path
       end
@@ -328,10 +330,10 @@ module When::Parts
       # @private
       def _parse(line, type=nil)
         return line unless line.kind_of?(String)
-        line.sub!(/\s#.*$/, '')
-        return When::Locale._split($1) if type && /^#{type}:(.+)$/i =~ line
+        line.sub!(/\s#.*\z/, '')
+        return When::Locale._split($1) if type && /\A#{type}:(.+)\z/i =~ line
         tokens = line.scan(/((?:[^\\:]|\\.)+)(?::(?!\z))?|:/).flatten
-        return When::Locale._split(line) unless tokens.size > 1 && /^(\*)?([A-Z][-A-Z_]{0,255})(?:;(.+))?$/i =~ tokens[0]
+        return When::Locale._split(line) unless tokens.size > 1 && /\A(\*)?([A-Z][-A-Z_]{0,255})(?:;(.+))?\z/i =~ tokens[0]
         marked, key, property = $~[1..3]
         values = tokens[1..-1]
         value  = values.join(':') unless values == [nil]
@@ -353,15 +355,15 @@ module When::Parts
 
       # @private
       def _extract_prefix(path, capitalize=false)
-        if (path =~ /^(.+?):+(.+)$/)
+        if (path =~ /\A(.+?):+(.+)\z/)
           prefix, klass = $~[1..2]
           if capitalize
             prefix = '_' + prefix.downcase
             klass  = klass.capitalize if klass == klass.upcase
           end
-          path = _prefix[prefix] + klass if (_prefix[prefix])
-        elsif capitalize && path =~ /^(v[^\/]+|daylight$|standard$)/i
-          klass = path.sub(/^v/i, '').capitalize
+          path = _prefix[prefix] + klass if _prefix[prefix]
+        elsif capitalize && path =~ /\A(v[^\/]+|daylight$|standard$)/i
+          klass = path.sub(/\Av/i, '').capitalize
           path  = _prefix['_v'] + klass if When::V.const_defined?(klass) &&
                                            When::V.const_get(klass).kind_of?(Class)
         end
@@ -419,7 +421,7 @@ module When::Parts
             raise ArgumentError, 'Brackets do not correspond: ' + iri 
           end
         end while iri =~ /%28/
-        iri = $1 if iri =~ /^\((.*)\)$/
+        iri = $1 if iri =~ /\A\((.*)\)\z/
         iri
       end
 
@@ -444,7 +446,7 @@ module When::Parts
           }.flatten]
           keys    = options.keys
           keys.each do |key|
-            replace[$1] = options.delete(key) if key =~ /^([A-Z].*)/
+            replace[$1] = options.delete(key) if key =~ /\A([A-Z].*)/
           end
         end
         options['..'] = iri
@@ -465,7 +467,7 @@ module When::Parts
           return object if object
           OpenURI
           args  = [path, "1".respond_to?(:force_encoding) ? 'r:utf-8' : 'r']
-          args << {:ssl_verify_mode=>OpenSSL::SSL::VERIFY_NONE} if path =~ /^https:/
+          args << {:ssl_verify_mode=>OpenSSL::SSL::VERIFY_NONE} if path =~ /\Ahttps:/
           open(*args) do |file|
             resource = file.read
             case resource[0..5].upcase
@@ -545,7 +547,7 @@ module When::Parts
         obj = [_class(_extract_prefix(xml.attributes['type'].to_s))[0]]
         xml.attributes.each_pair do |key,value|
           expanded_name = value.expanded_name
-          next unless (expanded_name =~ /^xmlns/)
+          next unless (expanded_name =~ /\Axmlns/)
           key = '' if expanded_name == 'xmlns'
           namespace[key] = value.to_s
         end
@@ -574,7 +576,7 @@ module When::Parts
         while (line = ics.shift) do
           line.chomp!
           case line
-          when /^\s*BEGIN:(.*)$/
+          when /\A\s*BEGIN:(.*)\z/
             if (type)
               obj[-1] = _parse(obj[-1], type) if obj.length > 1
               obj << _ics(ics, $1)
@@ -582,13 +584,13 @@ module When::Parts
               type = $1
               obj  = [type]
             end
-          when /^\s*END:(.*)$/
+          when /\A\s*END:(.*)\z/
             raise TypeError, "Irregal Type : #{$1}" unless (type == $1)
             obj[0]  = _class(_extract_prefix(type, true))[0]
             obj[-1] = _parse(obj[-1], type)
             return obj
-          when /^\s*#/
-          when /^(\s*)(.*)$/
+          when /\A\s*#/
+          when /\A(\s*)(.*)\z/
             indent  = $1 unless indent
             if (indent.length < $1.length)
               obj[-1] += line[(indent.length+1)..-1] # See RFC5545 3.1 Content Lines
@@ -611,7 +613,7 @@ module When::Parts
           json.each_pair {|key, value| hash[key] = _json(value)}
           hash
         when String
-          return json unless json =~ /^When::/
+          return json unless json =~ /\AWhen::/
           begin
             return json.split('::').inject(Object) {|ns, sym| ns.const_get(sym)}
           rescue
@@ -828,7 +830,7 @@ module When::Parts
       when Array                  ; When::BasicTypes::M17n.new(source, namespace, locale, options)
       when When::BasicTypes::M17n ; source
       when String
-        return self[$1] if source =~ /^\s*\[((\.{1,2}|::)+[^\]]+)\]/
+        return self[$1] if source =~ /\A\s*\[((\.{1,2}|::)+[^\]]+)\]/
         When::BasicTypes::M17n.new(source, namespace, locale, options)
       else ; raise TypeError, "Invalid Type: #{source.class}"
       end
@@ -915,7 +917,7 @@ module When::Parts
     def _set_variables(options)
       @options = options[:options] || {} if options.key?(:options)
       options.each_pair do |key,value|
-        unless (key =~ /^options$|^\.|^[A-Z]/)
+        unless (key =~ /\Aoptions$|^\.|^[A-Z]/)
           case "#{key}"
           when 'namespace' ; value = When::Locale._namespace(value)
           when 'locale'    ; value = When::Locale._locale(value)
@@ -961,7 +963,7 @@ module When::Parts
       key_list.each do |key|
         content = properties[key][0]
         value   = content.same_altid ? When::BasicTypes::M17n.new(content, options['namespace'], []) : content.object
-        value   = When::BasicTypes::M17n.new(value, nil, nil, options) if value.instance_of?(String) && value =~ /^\s*\[/
+        value   = When::BasicTypes::M17n.new(value, nil, nil, options) if value.instance_of?(String) && value =~ /\A\s*\[/
         @_pool[value.to_s] = value if value.kind_of?(When::BasicTypes::M17n)
         if content.marked || key == self.class::LabelProperty
           @label = value

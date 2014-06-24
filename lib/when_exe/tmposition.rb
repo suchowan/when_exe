@@ -313,7 +313,7 @@ module When::TM
         options[:frame] = When.Resource(frame, '_c:') if (frame)
 
         # Prefix - RFC 5545 Options
-        if (rfc5545form =~ /^([^:]+[^-:\d]):([^:].+)$/)
+        if (rfc5545form =~ /\A([^:]+[^-:\d]):([^:].+)\z/)
           rfc5545option, iso8601form = $~[1..2]
           rfc5545option.split(/;/).each do |eq|
             key, value = eq.split(/=/, 2)
@@ -334,7 +334,7 @@ module When::TM
         options = options.dup
 
         # IndeterminateValue
-        if (iso8601form.sub!(/\/After$|^Before\/|^Now$|^Unknown$|^[-+]Infinity$/i, ''))
+        if (iso8601form.sub!(/\/After$|^Before\/|^Now$|^Unknown$|^[-+]Infinity\z/i, ''))
           options[:indeterminated_position] = When::TimeValue::S[$&.sub(/\//,'')]
           case options[:indeterminated_position]
           when When::TimeValue::Now,
@@ -347,14 +347,14 @@ module When::TM
 
         # each specification
         splitted = iso8601form.split(/\//)
-        if (splitted[0] =~ /^R(\d+)?$/)
+        if (splitted[0] =~ /\AR(\d+)?\z/)
           repeat = $1 ? $1.to_i : true
           splitted.shift
         end
         case splitted.length
         when 1
         when 2
-          if (splitted[0] !~ /^[-+]?P/ && splitted[1] =~ /^\d/ && splitted[1].length < splitted[0].length)
+          if (splitted[0] !~ /\A[-+]?P/ && splitted[1] =~ /\A\d/ && splitted[1].length < splitted[0].length)
             splitted[1] = splitted[0][0..(splitted[0].length-splitted[1].length-1)] + splitted[1]
           end
         else
@@ -482,13 +482,13 @@ module When::TM
         end
 
         # TemporalPosition
-        specification =~ /(.+?)(?:\[([-+]?\d+)\])?$/
+        specification =~ /(.+?)(?:\[([-+]?\d+)\])?\z/
         options[:sdn] = $2.to_i if $2
         f, d, t, z, e = When::BasicTypes::DateTime._to_array($1, options)
         raise ArgumentError, "Timezone conflict: #{z} - #{options[:clock]}" if (z && options[:clock])
         options.delete(:abbr)
         z ||= options[:clock]
-        z = When.Clock(z) if (z =~ /^[A-Z]+$/)
+        z = When.Clock(z) if (z =~ /\A[A-Z]+\z/)
 
         unless (d)
           # ClockTime
@@ -840,7 +840,13 @@ module When::TM
 
       if prec < DAY && respond_to?(:most_significant_coordinate) &&
                  other.respond_to?(:most_significant_coordinate) && @frame.equal?(other.frame)
-        result = most_significant_coordinate <=> other.most_significant_coordinate
+        self_year  = most_significant_coordinate
+        other_year = other.most_significant_coordinate
+        if @cal_date.length + prec == 1
+          self_year  *= 1
+          other_year *= 1
+        end
+        result = self_year <=> other_year
         return result unless result == 0 && @cal_date.length + prec > 1
         (@cal_date.length + prec - 2).times do |i|
           result = @cal_date[i+1] <=> other.cal_date[i+1]
@@ -1393,7 +1399,7 @@ module When::TM
       # 時刻表現の解読 ( Time Zone の解釈 )
       if (time.kind_of?(String))
         case time
-        when /^([-+])?(\d{2,}?):?(\d{2})?:?(\d{2}(\.\d+)?)?$/
+        when /\A([-+])?(\d{2,}?):?(\d{2})?:?(\d{2}(\.\d+)?)?\z/
           sign, hh, mm, ss = $~[1..4]
           time = @frame._validate([0,0,0,0],
                  [0,
@@ -1401,7 +1407,7 @@ module When::TM
                   -(sign.to_s + "0" + mm.to_s).to_i,
                   Pair._en_number(-(sign.to_s + "0" + ss.to_s).to_f)])
           time[0] = Pair.new(0, time[0].to_i) if (time[0] != 0)
-        when /^Z$/
+        when /\AZ\z/
           time = [0,0,0,0]
         else
           raise ArgumentError, "Invalid Time Format"

@@ -164,7 +164,7 @@ module When
     def self.iast_akt(string, locale='ja')
       akt(
         string.gsub(IAST_K_keys) {|code| IAST_K[code] || code}.
-        downcase.gsub(/(.):-?(.)|(.):-?$/) {|code|
+        downcase.gsub(/(.):-?(.)|(.):-?\z/) {|code|
           "aeiou".index($2||':') ? $1 + $2   :
                          $1=='m' ? "ン#{$2}" :
                                    code.sub(':','i')

@@ -330,7 +330,7 @@ class When::CalendarNote
       @target  ||= When.Resource('_ep:Moon')
       events     = @root['Tide']
       form       = formula(date.location.iri)
-      type       = options[:tide] =~ /^horizon/i ? nil : 0
+      type       = options[:tide] =~ /\Ahorizon/i ? nil : 0
 
       now        = +date
       high_tides = []

@@ -51,22 +51,23 @@ module When
     # Initializations
     #
     # @param [Hash] options 以下の通り
-    # @option options [When::Parts::Timezone::Base] :local        デフォルトの地方時
-    # @option options [When::Coordinates::Spatial]  :location     デフォルトの空間位置
-    # @option options [When::TM::IntervalLength]    :until        V::Event::Enumerator の until
-    # @option options [Hash{String=>String}]        :alias        Locale の読替パターン         ({ 読替前のlocale=>読替後のlocale })
-    # @option options [String]                      :namespaces   名前空間定義の省略時に名前空間生成に用いる書式
-    # @option options [Hash{String=>String}]        :unification  漢字の包摂パターン            ({ 包摂前の文字列=>包摂後の文字列 })
-    # @option options [Array<String>]               :order        CalendarEra の検索順序        ([ IRI of When::TM::CalendarEra ])
-    # @option options [Hash{String=>Array, String}] :format       strftime で用いる記号の定義   ({ 記号=>[ 書式,項目名 ] or 記号列 })
-    # @option options [Array<Array>]                :leap_seconds 閏秒の挿入記録                ([ [JD, TAI-UTC, (MJD, OFFSET)] ])
-    # @option options [String]                      :base_uri     Base URI for When_exe Resources (Default When::SourceURI)
-    # @option options [String]                      :root_dir     Root Directory for When_exe Resources Cash data (Default When::RootDir)
-    # @option options [Boolean]                     :multi_thread マルチスレッド対応            (true: 対応, false/nil: 非対応)
-    # @option options [Boolean]                     :direct       '_' で終わるメソッドをキャッシュせずに毎回計算するか否か
-    # @option options [Hash{Symbol=>boolean}]       :escape       毎回 method_missing を発生させるメソッドを true にする
-    # @option options [false, nil]                  :escape       to_str, to_ary, to_hash のみ毎回 method_missing を発生させる
-    # @option options [true]                        :escape       すべて毎回 method_missing を発生させる
+    # @option options [When::Parts::Timezone::Base] :local                 デフォルトの地方時
+    # @option options [When::Coordinates::Spatial]  :location              デフォルトの空間位置
+    # @option options [When::TM::IntervalLength]    :until                 V::Event::Enumerator の until
+    # @option options [Hash{String=>String}]        :alias                 Locale の読替パターン         ({ 読替前のlocale=>読替後のlocale })
+    # @option options [String]                      :namespace_format      名前空間定義の省略時に名前空間生成に用いる書式
+    # @option options [Hash{String=>String}]        :unification           漢字の包摂パターン            ({ 包摂前の文字列=>包摂後の文字列 })
+    # @option options [Array<String>]               :order                 CalendarEra の検索順序        ([ IRI of When::TM::CalendarEra ])
+    # @option options [Hash{String=>Array, String}] :format                strftime で用いる記号の定義   ({ 記号=>[ 書式,項目名 ] or 記号列 })
+    # @option options [Array<Array>]                :leap_seconds          閏秒の挿入記録                ([ [JD, TAI-UTC, (MJD, OFFSET)] ])
+    # @option options [String]                      :base_uri              Base URI for When_exe Resources (Default When::SourceURI)
+    # @option options [Hash<String=>String>]        :additional_namespaces User defined namespaces (Default {})
+    # @option options [String]                      :root_dir              Root Directory for When_exe Resources Cash data (Default When::RootDir)
+    # @option options [Boolean]                     :multi_thread          マルチスレッド対応            (true: 対応, false/nil: 非対応)
+    # @option options [Boolean]                     :direct                '_' で終わるメソッドをキャッシュせずに毎回計算するか否か
+    # @option options [Hash{Symbol=>boolean}]       :escape                毎回 method_missing を発生させるメソッドを true にする
+    # @option options [false, nil]                  :escape                to_str, to_ary, to_hash のみ毎回 method_missing を発生させる
+    # @option options [true]                        :escape                すべて毎回 method_missing を発生させる
     #
     # @return [void]
     #
@@ -148,7 +149,7 @@ module When
   #
   # ライブラリのあるディレクトリ
   #
-  RootDir   = File.dirname(__FILE__).sub(/\/[^\/]*$/,'')
+  RootDir   = File.dirname(__FILE__).sub(/\/[^\/]*\z/,'')
 
   require 'when_exe/version'
   require 'when_exe/locales/locale'
@@ -440,9 +441,9 @@ module When
     when TM::TemporalPosition, Parts::GeometricComplex ; specification
     when TM::Position    ; specification.any_other
     when Array           ; begin options = TM::TemporalPosition._options(options) ; specification.map {|e| when?(e, options)} end
-    when /^today$/i      ; today(options)
-    when /^now$/i        ; now(options)
-    when /[JS]DN($|\^)/i ; TM::JulianDate.parse(specification, options)
+    when /\Atoday\z/i    ; today(options)
+    when /\Anow\z/i      ; now(options)
+    when /[JS]DN(\z|\^)/i; TM::JulianDate.parse(specification, options)
     when /[\n\r]+/       ; when?(specification.split(/[\n\r]+/), options)
     when String          ; TM::TemporalPosition._instance(EncodingConversion.to_internal_encoding(specification), options)
     when Numeric         ; TM::JulianDate.new(+specification, TM::TemporalPosition._options(options))
@@ -671,12 +672,12 @@ module When
   #
   def Clock(clock)
     case clock
-    when Parts::Timezone::Base            ; return clock
-    when 'Z', 0                           ; return UTC
-    when Numeric                          ; return Parts::Resource._instance("_tm:Clock?label=" + TM::Clock.to_hms(clock))
-    when /^#{CalendarTypes::TimeSystems}/ ; return Parts::Resource._instance('_c:' + clock)
-    when String                           ;
-    else                                  ; raise TypeError, "Invalid Type: #{clock.class}"
+    when Parts::Timezone::Base             ; return clock
+    when 'Z', 0                            ; return UTC
+    when Numeric                           ; return Parts::Resource._instance("_tm:Clock?label=" + TM::Clock.to_hms(clock))
+    when /\A#{CalendarTypes::TimeSystems}/ ; return Parts::Resource._instance('_c:' + clock)
+    when String                            ;
+    else                                   ; raise TypeError, "Invalid Type: #{clock.class}"
     end
     c    = TM::Clock[clock] || V::Timezone[clock]
     return c if c
@@ -719,8 +720,8 @@ module When
     longitude = latitude = nil
     args.each do |arg|
       case arg
-      when /^#{Coordinates::MATCH['EW']}\s*[.@\d]/, /[.@\d]\s*#{Coordinates::MATCH['EW']}$/; longitude = arg
-      when /^#{Coordinates::MATCH['NS']}\s*[.@\d]/, /[.@\d]\s*#{Coordinates::MATCH['NS']}$/; latitude  = arg
+      when /\A#{Coordinates::MATCH['EW']}\s*[.@\d]/, /[.@\d]\s*#{Coordinates::MATCH['EW']}\z/; longitude = arg
+      when /\A#{Coordinates::MATCH['NS']}\s*[.@\d]/, /[.@\d]\s*#{Coordinates::MATCH['NS']}\z/; latitude  = arg
       else ; rest << arg
       end
     end
@@ -789,8 +790,8 @@ module When
     when BasicTypes::M17n ; source
     when String
       source = EncodingConversion.to_internal_encoding(source)
-      return self[$1] if source =~ /^\s*\[((\.{1,2}|::)+[^\]]+)\]/ && self.kind_of?(When::Parts::Resource)
-      return Parts::Resource[$1] if source =~ /^\s*\[::([^\]]+)\]/
+      return self[$1] if source =~ /\A\s*\[((\.{1,2}|::)+[^\]]+)\]/ && self.kind_of?(When::Parts::Resource)
+      return Parts::Resource[$1] if source =~ /\A\s*\[::([^\]]+)\]/
       BasicTypes::M17n.new(source, namespace, locale, options)
     else ; raise TypeError, "Invalid Type: #{source.class}"
     end

@@ -66,7 +66,7 @@ module When::TM
     # @return [When::RS::Identifier]
     #
     def name
-      @name ||= When::RS::Identifier.new(label, @version, @remark)
+      @name ||= When::RS::Identifier.new(label, @version, @remarks)
     end
   end
 
@@ -406,7 +406,7 @@ module When::TM
           ss     = (ss == 0 && ff == '') ? '' : ("%02d" % ss)
           mm     = "%02d"  % mm
           hh     = "%02d" % hh
-        when /^([-+])(\d{2})([:=*])?(\d{2})?([:=*])?(\d{2})?(\.\d+)?$/
+        when /\A([-+])(\d{2})([:=*])?(\d{2})?([:=*])?(\d{2})?(\.\d+)?\z/
           sgn, hh, d1, mm, d2, ss, ff = $~[1..7]
           ff   ||= ''
           ss   ||= ''
@@ -1513,7 +1513,7 @@ module When::TM
       # reference_date & label
       if reference_date
         @reference_date = reference_date
-        @label          = m17n(@reference_date[/^\[[^\]]+\]|^[^-+0-9]+/], nil, nil, term_options)
+        @label          = m17n(@reference_date[/\A\[[^\]]+\]|^[^-+0-9]+/], nil, nil, term_options)
       end
       @label._pool['..'] ||= self
       @_pool[@label.to_s]  = @label
@@ -1547,7 +1547,7 @@ module When::TM
           term_options[:options][:frame] = When.Resource(f, '_c:') if (f)
           d.split(/;/).each do |v|
             v.strip!
-            if (v =~ /^[-+\d]|^Now$|^Unknown$|^[-+]Infinity$/i)
+            if (v =~ /\A[-+\d]|^Now$|^Unknown$|^[-+]Infinity\z/i)
               epoch = v
               break
             end

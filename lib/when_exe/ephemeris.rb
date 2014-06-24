@@ -1576,33 +1576,33 @@ module When::Ephemeris
           @formula['Rem'] = (-@formula['Epoch']) % @formula['Period']
           @is_dynamical ? proc {|t| (+t     + @formula['Rem']) / @formula['Period'] } :
                           proc {|t| (t.to_f + @formula['Rem']) / @formula['Period'] }
-        when /^(\d+)L->(\d+)S$/
+        when /\A(\d+)L->(\d+)S\z/
           m, s = $1.to_i, $2.to_i
           @lunation_0m =  _true_lunation_(CYCLE_0M)
           @lunation_1m = (_true_lunation_(CYCLE_1M) - @lunation_0m) / CYCLE_1M
           @is_dynamical ? proc {|t| s * p_lunation_to_sun(+t     / m) } :
                           proc {|t| s * p_lunation_to_sun(t.to_f / m) }
-        when /^(\d+)S->(\d+)L$/
+        when /\A(\d+)S->(\d+)L\z/
           s, m = $1.to_i, $2.to_i
           @sun_0m =  _true_sun_(CYCLE_0M)
           @sun_1m = (_true_sun_(CYCLE_1M) - @sun_0m) / CYCLE_1M
           @is_dynamical ? proc {|t| m * p_sun_to_lunation(+t     / s) } :
                           proc {|t| m * p_sun_to_lunation(t.to_f / s) }
-        when /^(\d+)M\+(\d+)S$/
+        when /\A(\d+)M\+(\d+)S\z/
           s, m = $2.to_i, $1.to_i
           @is_dynamical ? proc{|t| s * p_true_sun(+t)     + m * p_true_moon(+t)    } :
                           proc{|t| s * p_true_sun(t.to_f) + m * p_true_moon(t.to_f)}
-        when /^(\d+)m\+(\d+)s$/
+        when /\A(\d+)m\+(\d+)s\z/
           s, m = $2.to_i, $1.to_i
           @is_dynamical ? proc{|t| s * p_mean_sun(+t)     + m * p_mean_moon(+t)    } :
                           proc{|t| s * p_mean_sun(t.to_f) + m * p_mean_moon(t.to_f)}
-        when /^(\d+)S$/ ; s=$1.to_i; @is_dynamical ? proc{|t| s * p_true_sun(+t)     } : proc{|t| s * p_true_sun(t.to_f)     }
-        when /^(\d+)s$/ ; s=$1.to_i; @is_dynamical ? proc{|t| s * p_mean_sun(+t)     } : proc{|t| s * p_mean_sun(t.to_f)     }
-        when /^(\d+)M$/ ; m=$1.to_i; @is_dynamical ? proc{|t| m * p_true_moon(+t)    } : proc{|t| m * p_true_moon(t.to_f)    }
-        when /^(\d+)m$/ ; m=$1.to_i; @is_dynamical ? proc{|t| m * p_mean_moon(+t)    } : proc{|t| m * p_mean_moon(t.to_f)    }
-        when /^(\d+)L$/ ; m=$1.to_i; @is_dynamical ? proc{|t| m * p_true_lunation(+t)} : proc{|t| m * p_true_lunation(t.to_f)}
-        when /^(\d+)l$/ ; m=$1.to_i; @is_dynamical ? proc{|t| m * p_mean_lunation(+t)} : proc{|t| m * p_mean_lunation(t.to_f)}
-        when /^[YRH]\.(\w+)-(\w+)$/i
+        when /\A(\d+)S\z/ ; s=$1.to_i; @is_dynamical ? proc{|t| s * p_true_sun(+t)     } : proc{|t| s * p_true_sun(t.to_f)     }
+        when /\A(\d+)s\z/ ; s=$1.to_i; @is_dynamical ? proc{|t| s * p_mean_sun(+t)     } : proc{|t| s * p_mean_sun(t.to_f)     }
+        when /\A(\d+)M\z/ ; m=$1.to_i; @is_dynamical ? proc{|t| m * p_true_moon(+t)    } : proc{|t| m * p_true_moon(t.to_f)    }
+        when /\A(\d+)m\z/ ; m=$1.to_i; @is_dynamical ? proc{|t| m * p_mean_moon(+t)    } : proc{|t| m * p_mean_moon(t.to_f)    }
+        when /\A(\d+)L\z/ ; m=$1.to_i; @is_dynamical ? proc{|t| m * p_true_lunation(+t)} : proc{|t| m * p_true_lunation(t.to_f)}
+        when /\A(\d+)l\z/ ; m=$1.to_i; @is_dynamical ? proc{|t| m * p_mean_lunation(+t)} : proc{|t| m * p_mean_lunation(t.to_f)}
+        when /\A[YRH]\.(\w+)-(\w+)\z/i
           system  = 'YRH'.index($1.upcase)
           method  = $2.downcase
           target  = When.Resource($3.capitalize, '_ep:')

@@ -36,7 +36,7 @@ module When::Coordinates
       return src.to_r * Spatial::DEGREE if (src =~ /E[-+]/ || src !~ MATCH[dir])
       sign  = ($1 == dir[1..1]) ? -1 : +1
       value = src.gsub(MATCH[dir], '').strip
-      if ((value + "00000") =~ /^(\d+)\.(\d{2})(\d{2})(\d+)$/)
+      if ((value + "00000") =~ /\A(\d+)\.(\d{2})(\d{2})(\d+)\z/)
         deg, min, sec, frac = $~[1..4]
         sec += "." + frac
       else
@@ -119,15 +119,15 @@ module When::Coordinates
         else         ; return nil
         end
 
-        match = day[/^...|^.{1,2}$/]
+        match = day[/\A...|^.{1,2}\z/]
         if match
           week.size.times do |i|
-            return week[i] if week[i].label.=~(/^#{match}/i)
+            return week[i] if week[i].label.=~(/\A#{match}/i)
           end
         end
 
         ObjectSpace.each_object(self) do |object|
-          return object if object.registered? && object.label.=~(/^#{day}$/)
+          return object if object.registered? && object.label.=~(/\A#{day}\z/)
         end
 
         return nil
@@ -849,9 +849,9 @@ module When::Coordinates
       # @return [Array<When::Coordinates::Pair>]
       #
       def _en_pair_array(source)
-        source = $1 if (source=~/^\s*\[?(.+?)\]?\s*$/)
+        source = $1 if (source=~/\A\s*\[?(.+?)\]?\s*\z/)
         source.split(/,/).map {|v|
-           v =~ /^\s*(.+?)([^\d\s])?\s*$/
+           v =~ /\A\s*(.+?)([^\d\s])?\s*\z/
            _en_pair($1, $2)
         }
       end
@@ -864,7 +864,7 @@ module When::Coordinates
       # @return [Array<When::Coordinates::Pair>]
       #
       def _en_pair_date_time(source)
-        source = $1 if source =~ /^\s*\[(.+)\]\s*$/
+        source = $1 if source =~ /\A\s*\[(.+)\]\s*\z/
         trunk, branch, *rest = source.strip.split(/([^\d])/)
         if trunk == ''
           sign = branch
@@ -1573,7 +1573,7 @@ module When::Coordinates
           @border = When.Calendar(
             case @border
             when /\([-\d]+?\)/ ; "_c:MultiBorder?borders=#{@border}"
-            when /^[^A-Z_]/i   ; "_c:Border?border=#{@border}"
+            when /\A[^A-Z_]/i   ; "_c:Border?border=#{@border}"
             else               ; @border
             end)
         end

@@ -62,13 +62,13 @@ LIST
 
     def test__to_date
       if ::Object.const_defined?(:Date) && Date.respond_to?(:civil)
-        assert(/^Tue Jun  7 00:00:00 (\+00:00|Z) 2011$/ =~  When.when?("2011-06-07").to_date.strftime('%+'))
+        assert(/\ATue Jun  7 00:00:00 (\+00:00|Z) 2011\z/ =~  When.when?("2011-06-07").to_date.strftime('%+'))
       end
     end
 
     def test__to_date_time
       if ::Object.const_defined?(:Date) && Date.respond_to?(:civil)
-        assert(/Tue Jun  7 16:17:36 \+09:?00 2011$/ =~ When.when?("2011-06-07T16:17:36+09:00").to_date_time.strftime('%+'))
+        assert(/Tue Jun  7 16:17:36 \+09:?00 2011\z/ =~ When.when?("2011-06-07T16:17:36+09:00").to_date_time.strftime('%+'))
       end
     end
   end

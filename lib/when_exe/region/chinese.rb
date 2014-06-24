@@ -801,6 +801,7 @@ module When
         @vernal_month     ||=  2
         @cycle_offset     ||=  @vernal_month - 3
         @base_month       ||= 11
+        @base_month         = @base_month.to_i
         @intercalary_span ||= 12
         @intercalary_span   =  @intercalary_span.to_i
         @intercalary_month  = (@intercalary_month.to_i - @base_month) % 12 + 1 if @intercalary_month

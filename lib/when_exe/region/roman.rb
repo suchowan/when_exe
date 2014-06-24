@@ -13,6 +13,10 @@ module When
       "locale:[=en:, ja=ja:, alias]",
       "names:[Roman=]",
 
+      # Remarks
+      '[based on Chris Bennett "Roman Dates" (Retrieved 2013-05-13)=http://www.tyndalehouse.com/Egypt/ptolemies/chron/roman/chron_rom_intro_fr.htm,' +
+       '典拠 - Chris Bennett "Roman Dates" (2013-05-13 閲覧)=]',
+
       [self, # ..CE-44 / ..BCE45
         "names:[MonthA, 月=ja:%%<月_(暦)>]",
         "[Ianuarius,    1月]",
@@ -102,7 +106,7 @@ module When
                            "8-01-01^JulianC", "476-09-04"]
     ]]
 
-    # From http://www.tyndalehouse.com/Egypt/ptolemies/chron/roman/chron_rom_intro_fr.htm
+    # From Chris Bennett, http://www.tyndalehouse.com/Egypt/ptolemies/chron/roman/chron_rom_intro_fr.htm
     Roman = [self, [
       "locale:[=en:, ja=ja:, alias]",
       "period:[Roman=en:Roman_calendar, ローマ暦]",
@@ -159,7 +163,7 @@ module When
     #
     JulianC =  [Julian, {
       'indices' => _Indices12,
-      'note' => 'Roman'
+      'note'    => 'Roman'
     }]
 
     # From Chris Bennett, http://www.tyndalehouse.com/Egypt/ptolemies/chron/roman/chron_rom_intro_fr.htm
@@ -178,6 +182,7 @@ module When
     _IndicesB = [When.Index('Roman::MonthB', {:branch=>_Branch}), _Index0]
     _Indices  = [When.Index('Roman::Month',  {:branch=>_Branch}), _Index0]
     _IndicesD = [When.Index('Roman::MonthD', {:branch=>_Branch}), _Index0]
+    _remarks  = When.M17n('Roman::based on Chris Bennett "Roman Dates" (Retrieved 2013-05-13)')
     Options = {
       'origin_of_LSC'  =>  1625698,
       'origin_of_MSC'  =>  -261,
@@ -200,10 +205,10 @@ module When
       },
       'note' => 'Roman'
     }
-    RomanA =  [CyclicTableBased, Options.merge({'indices' => _IndicesA})]
-    RomanB =  [CyclicTableBased, Options.merge({'indices' => _IndicesB})]
-    RomanC =  [CyclicTableBased, Options]
-    RomanD =  [CyclicTableBased, Options.merge({'indices' => _IndicesD})]
+    RomanA =  [CyclicTableBased, Options.merge({'remarks'=>_remarks, 'indices' => _IndicesA})]
+    RomanB =  [CyclicTableBased, Options.merge({'remarks'=>_remarks, 'indices' => _IndicesB})]
+    RomanC =  [CyclicTableBased, Options.merge({'remarks'=>_remarks                        })]
+    RomanD =  [CyclicTableBased, Options.merge({'remarks'=>_remarks, 'indices' => _IndicesD})]
     Roman  =  [CyclicTableBased, Options]
   end
 
@@ -317,7 +322,7 @@ module When
     def _abbr_of_month(month)
       name = month.name('month').to_s
       return name.sub(/ (..).*/, ' \1.') if name.sub!(/Intercalaris(.*)?/, 'Int.\1')
-      name.size <= 3 ? name : name[/^...[^caeiou]*/] + '.'
+      name.size <= 3 ? name : name[/\A...[^caeiou]*/] + '.'
     end
   end
 end

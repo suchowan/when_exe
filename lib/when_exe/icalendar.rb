@@ -448,7 +448,7 @@ module When::V
       term_options = {'namespace'=>@namespace, 'locale'=>@locale}
       if @property['summary']
         text = @property['summary'].object
-        @summary = (text =~ /^\[/) ? m17n(text, nil, nil, term_options) : text
+        @summary = (text =~ /\A\[/) ? m17n(text, nil, nil, term_options) : text
       end
 
       # freebusy の登録
@@ -1192,7 +1192,7 @@ module When::V
         else
           rule = {}
           description.split(/;/).each do |pair|
-            raise ArgumentError, "Invalid RRULE format" unless pair =~ /^([^\/=]+)(\/(.+))?=(.*)$/
+            raise ArgumentError, "Invalid RRULE format" unless pair =~ /\A([^\/=]+)(\/(.+))?=(.*)\z/
             k, f, c, v = $~[1..4]
             case k
             when 'BYYEAR', 'BYDAY', 'YEARPOS', 'DAYPOS', 'YEARST', 'DAYST'
@@ -1213,7 +1213,7 @@ module When::V
         rule['FREQ'] = When.Duration(rule['FREQ']) unless rule['FREQ'].kind_of?(When::TM::Duration) ||
                                                            FreqIndex.key?(rule['FREQ'])
         if (rule['UNTIL'].kind_of?(String))
-          rule['UNTIL']   += new_zone unless rule['UNTIL'] =~ /Z$/
+          rule['UNTIL']   += new_zone unless rule['UNTIL'] =~ /Z\z/
           rule['UNTIL']    = When.when?(rule['UNTIL'])
         end
         unless rule['UNTIL']
@@ -1465,7 +1465,7 @@ module When::V
             @by_part = by_part
             divisor  = When::Coordinates::Pair._en_number(ref)
             @list    = list.split(/,/).map {|w|
-              raise ArgumentError, "The #{by_part} rule format error" unless w =~ /^(([-+]?\d+)\*)?(.+?)([-+]\d+)?$/
+              raise ArgumentError, "The #{by_part} rule format error" unless w =~ /\A(([-+]?\d+)\*)?(.+?)([-+]\d+)?\z/
               nth, spec, period = $~[2..4]
               nth    = (nth) ? nth.to_i : position
               period = When::TM::PeriodDuration.new((period||0).to_i, PostFreqIndex[@by_part])
@@ -1528,7 +1528,7 @@ module When::V
             @ref     = When.Resource(ref, '_n:')
             @start   = start
             @list    = list.split(/,/).map {|w|
-              raise ArgumentError, "The #{by_part} rule format error" unless w =~ /^(([-+]?\d+)\*)?(.+?)([-+]\d+)?$/
+              raise ArgumentError, "The #{by_part} rule format error" unless w =~ /\A(([-+]?\d+)\*)?(.+?)([-+]\d+)?\z/
               nth, spec, period = $~[2..4]
               nth    = (nth) ? nth.to_i : position
               period  = When::TM::PeriodDuration.new((period||0).to_i, PostFreqIndex[@by_part])
@@ -1581,7 +1581,7 @@ module When::V
           def initialize(by_part, list)
             @by_part = by_part
             @list    = list.split(/,/).map {|w|
-              raise ArgumentError, "The BYDAY rule format error" unless w =~ /^([-+]?\d+)?(MO|TU|WE|TH|FR|SA|SU)([-+]\d+)?$/
+              raise ArgumentError, "The BYDAY rule format error" unless w =~ /\A([-+]?\d+)?(MO|TU|WE|TH|FR|SA|SU)([-+]\d+)?\z/
               nth, spec, period = $~[1..3]
               if nth
                 nth = nth.to_i

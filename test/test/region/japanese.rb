@@ -205,7 +205,7 @@ module Test
       diff = []
       open('test/region/japanese-calendar.txt', "1".respond_to?(:force_encoding) ? 'r:utf-8' : 'r') do |f|
         while (line = f.gets)
-          next if line =~ /^ *#/
+          next if line =~ /\A *#/
           x, x, jdn, x, x, x, gy, gm, gd, x, x, jy, jm, jd = line.split(/ +/).map {|v| v.to_i}
           jm, leap = (jm > 0) ? [jm, '-'] : [-jm, '=']
           date = When.when?("%04d-%02d%s%02d" % [(gm >= jm) ? gy : gy-1, jm, leap, jd], {:frame=>jc})

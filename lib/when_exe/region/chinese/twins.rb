@@ -121,6 +121,14 @@ module When
       ],
 
       [ChineseLuniSolar,
+        'name:[顓頊暦後期]',
+        'formula:MeanLunation?year_length=1461/4&lunation_length=27759/940&day_epoch=1171396&longitude_shift=-1/8',
+        'time_basis:+00,+#{P:12}',
+        'base_month:1',
+        'intercalary_month:9'
+      ],
+
+      [ChineseLuniSolar,
         'name:[夏暦]',
         'formula:MeanLunation?year_length=1461/4&lunation_length=27759/940&day_epoch=1328411',
         'intercalary_month:12'
