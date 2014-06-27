@@ -92,8 +92,8 @@ module Test
     def test__epoch_in_CE
       cals  = [
         'Gregorian',
-      # 'Dee',
-      # 'DeeCecil',
+        'Dee',
+        'DeeCecil',
         'Coptic?Epoch=284Y',
         'Coptic?Epoch=8Y',
         'IndianNationalSolar',
@@ -126,7 +126,7 @@ module Test
         'Tibetan',
       ]
       eto   = When.Resource('_co:Common::干支').to('year')
-      today = When.when?('2012-06-13')
+      today = When.when?('2012-06-15')
       assert_equal([[28, 246778, 246778]],
         cals.map { |cal|
           date = When.Calendar(cal) ^ today

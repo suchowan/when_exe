@@ -393,6 +393,29 @@ module When::TimeStandard
   end
 
   #
+  # Local Time と Universal Time の差分
+  #
+  # @private
+  module LocalTime
+
+    # local time と universal time の差 / 日
+    #
+    # @return [Numeric] difference / day
+    #
+    def localdate_difference
+      @localdate_difference ||= @location.long  / (360.0 * When::Coordinates::Spatial::DEGREE)
+    end
+
+    # local time と universal time の差 / 128秒
+    #
+    # @return [Numeric] difference / day
+    #
+    def localtime_difference
+      @localtime_difference ||= When::TM::Duration::DAY * localdate_difference
+    end
+  end
+
+  #
   # 時刻系のひながた
   #
   class TimeStandard < When::BasicTypes::Object
@@ -529,6 +552,8 @@ module When::TimeStandard
   #
   class LocalMeanTime < TimeStandard
 
+    include LocalTime
+
     # local mean time  を dynamical time に変換する
     #
     # @param [Numeric] time local mean time
@@ -536,7 +561,7 @@ module When::TimeStandard
     # @return [Numeric] dynamical time
     #
     def to_dynamical_time(time)
-      super(time - When::TM::Duration::DAY * @location.long / (360.0 * When::Coordinates::Spatial::DEGREE))
+      super(time - localtime_difference)
     end
 
     # dynamical time を local mean time  に変換する
@@ -546,7 +571,7 @@ module When::TimeStandard
     # @return [Numeric] local mean time
     #
     def from_dynamical_time(time)
-      super(time) + When::TM::Duration::DAY * @location.long  / (360.0 * When::Coordinates::Spatial::DEGREE)
+      super(time) + localtime_difference
     end
 
     private
@@ -563,6 +588,8 @@ module When::TimeStandard
   #
   class LocalApparentTime < TimeStandard
 
+    include LocalTime
+
     # local apparent time  を dynamical time に変換する
     #
     # @param [Numeric] time local apparent time
@@ -570,7 +597,7 @@ module When::TimeStandard
     # @return [Numeric] dynamical time
     #
     def to_dynamical_time(time)
-      date   = When::TM::JulianDate._t_to_d(time) - @location.long / (360.0 * When::Coordinates::Spatial::DEGREE)
+      date   = When::TM::JulianDate._t_to_d(time) - localdate_difference
       diff   = 0
       2.times do
         diff = @datum.equation_of_time(date-diff)
@@ -585,8 +612,7 @@ module When::TimeStandard
     # @return [Numeric] local apparent time
     #
     def from_dynamical_time(time)
-      super(time) + When::TM::Duration::DAY * (@location.long  / (360.0 * When::Coordinates::Spatial::DEGREE) +
-                                               @datum.equation_of_time(When::TM::JulianDate._t_to_d(time)))
+      super(time) + When::TM::Duration::DAY * (localdate_difference + @datum.equation_of_time(When::TM::JulianDate._t_to_d(time)))
     end
 
     private

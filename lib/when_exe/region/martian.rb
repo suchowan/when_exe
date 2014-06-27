@@ -174,12 +174,12 @@ module When
       # @param [When::TM::TemporalPosition] date
       # @param [When::TM::CalDate] base (not used)
       #
-      # @return [Array<When::CalendarNote::Week::DayOfWeek, Array<Integer,Integer>>]
+      # @return [Hash<:value=>When::CalendarNote::Week::DayOfWeek, :position=>Array<Integer>>]
       #
       def week(date, base=nil)
         date  = _to_date_for_note(date)
         index = (date.cal_date.last - 1) % 7
-        [@days_of_week[index], [index, 7]]
+        {:value=>@days_of_week[index], :position=>[index, 7]}
       end
 
       #
@@ -217,14 +217,17 @@ module When
     #
     # Martian Time, Coordinated
     #
-    class MTC < LocalTime
+    class MTC < UTC
 
       private
 
       # オブジェクトの正規化
       def _normalize(args=[], options={})
-        @label         = m17n('MTC')
-        @time_standard = When.Resource("_t:MartianTimeCoordinated?location=(_l:long=#{@long||0}&datum=Mars)")
+        label  = 'MTC'
+        long   = @long||0
+        label += "?long=#{long}" unless long.to_f == 0
+        @label = m17n(label)
+        @time_standard = When.Resource("_t:MartianTimeCoordinated?location=(_l:long=#{long}&datum=Mars)")
         super
       end
     end

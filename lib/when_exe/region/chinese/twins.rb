@@ -11,7 +11,7 @@ module When
 
     # Chinese Luni-Solar Calendar Series for Chinese Note
     ChineseLuniSolar = [self, [
-      'locale:[ja=ja:, en=en:]',
+      'locale:[=ja:, en=en:]',
       'area:[中国の暦月=, *ChineseLuniSolar=]',
       ['[太初暦]1.01.01',      '@CR',   '1-01-01^ChineseTwin::太初暦',    '85-01-01'], # 西暦が正になるところから開始(実際は-103.01.01)
       ['[四分暦]85.01.01',     '@CR',  '85-01-01^ChineseTwin::四分暦',    '265-01-01'],
@@ -43,7 +43,7 @@ module When
 
     # Chinese Solar Calendar Series for Chinese Note
     ChineseSolar = [self, [
-      'locale:[ja=ja:, en=en:]',
+      'locale:[=ja:, en=en:]',
       'area:[中国の節月=, *ChineseSolar=]',
       ['[太初暦]1.01.01',     '@CR',    '1-01-01^ChineseTwin::太初暦(節月)',    '85-01-06'], # 西暦が正になるところから開始(実際は-103.01.15)
       ['[四分暦]85.01.07',    '@CR',   '85-01-07^ChineseTwin::四分暦(節月)',   '264-12-28'],

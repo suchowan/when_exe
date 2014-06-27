@@ -84,9 +84,9 @@ module When::CalendarTypes
     #   T00:00:00Z からの参照事象の経過時間 / 128秒
     #
     def universal_time(sdn=nil)
-      return super unless sdn
+      return super - @time_standard.localtime_difference unless sdn
       time = When::TM::JulianDate._d_to_t(sdn-0.5)
-      @time_standard.to_dynamical_time(time) - When::TimeStandard.to_dynamical_time(time)
+      @time_standard.to_dynamical_time(time) - When::TimeStandard.to_dynamical_time(time) - @time_standard.localtime_difference
     end
 
     #
@@ -96,6 +96,14 @@ module When::CalendarTypes
     #
     def zone
       iri.split('/')[-1]
+    end
+
+    private
+
+    # オブジェクトの正規化
+    def _normalize(args=[], options={})
+      @origin_of_LSC = - @time_standard.localtime_difference / When::TM::Duration::SECOND
+      super
     end
   end
 
