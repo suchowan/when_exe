@@ -1476,6 +1476,7 @@ module When::TM
     #   - go back [Boolean] 参照イベントより前の暦日か(true)、否か(false,nil)
     #
     attr_accessor :calendar_era_name
+    private :calendar_era_name=
     alias :calendarEraName :calendar_era_name
 
     # 暦年代
@@ -1483,6 +1484,7 @@ module When::TM
     # @return [When::TM::CalendarEra]
     #
     attr_accessor :calendar_era
+    private :calendar_era=
     alias :calendarEra :calendar_era
 
     # 時法の取得 - ダミー

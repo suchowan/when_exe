@@ -937,8 +937,6 @@ module When::TM
   #
   class CalendarEra < When::TM::Object
 
-    include When
-
     class << self
 
       include When::Parts::Resource::Pool
@@ -1194,7 +1192,7 @@ module When::TM
     #   [ false - 昇順 (Common Era 方式) ]
     #
     def reverse?
-      @epoch[0].indeterminated_position == TimeValue::Min
+      @epoch[0].indeterminated_position == When::TimeValue::Min
     end
 
     # 未来永劫使用するか?
@@ -1204,7 +1202,7 @@ module When::TM
     #   [ false - しない ]
     #
     def unlimited?
-      @epoch[-1].indeterminated_position == TimeValue::Max
+      @epoch[-1].indeterminated_position == When::TimeValue::Max
     end
 
     # 時間の歩度
@@ -1238,7 +1236,7 @@ module When::TM
         case date
         when Array                   ; _trans_array(date)
         when JulianDate, DateAndTime ; _trans_date(date, date.clock)
-        when TimeValue               ; _trans_date(date)
+        when When::TimeValue         ; _trans_date(date)
         when Numeric                 ; _trans_date(JulianDate.universal_time((date-JulianDate::JD19700101)*Duration::DAY))
         else ; raise TypeError, "Irregal Seed Date Type"
         end
@@ -1246,15 +1244,15 @@ module When::TM
 
       # 上下限の確認
       trans_options ||= {}
-      return TimeValue::Before if cal_date.to_i < lower_bound(trans_options[:lower] || :reference_date)
-      return TimeValue::After  if cal_date.to_i > upper_bound(trans_options[:upper] || true)
+      return When::TimeValue::Before if cal_date.to_i < lower_bound(trans_options[:lower] || :reference_date)
+      return When::TimeValue::After  if cal_date.to_i > upper_bound(trans_options[:upper] || true)
 
       # 発見した日時の属性設定
-      cal_date.calendar_era      = self
-      cal_date.calendar_era_name = [@label, @epoch_year, reverse?, cal_date.to_i < @epoch[0].to_i]
+      cal_date.send(:calendar_era=, self)
+      cal_date.send(:calendar_era_name=, [@label, @epoch_year, reverse?, cal_date.to_i < @epoch[0].to_i])
       cal_date.cal_date[0]      -= @epoch_year
       cal_date.trans             = trans_options.dup
-      cal_date.query             = epoch.query.dup
+      cal_date.query             = (epoch.query || {}).dup
       return cal_date
     end
 
@@ -1280,9 +1278,9 @@ module When::TM
     # 暦年代の下限
     # @private
     def lower_bound(type=nil)
-      @lower_bound[type] ||= @epoch[0].indeterminated_position == TimeValue::Min  ? -Float::MAX :
-        @reference_date.precision == YEAR &&
-        @reference_date.cal_date[YEAR-1] == 0 ? @epoch[0].ceil(YEAR).to_i :
+      @lower_bound[type] ||= @epoch[0].indeterminated_position == When::TimeValue::Min  ? -Float::MAX :
+        @reference_date.precision == When::YEAR &&
+        @reference_date.cal_date[When::YEAR-1] == 0 ? @epoch[0].ceil(When::YEAR).to_i :
         case type
         when true            ;  @epoch[0].to_i
         when :reference_date ;  @reference_date.to_i
@@ -1293,13 +1291,13 @@ module When::TM
     # 暦年代の上限
     # @private
     def upper_bound(type=nil)
-      @upper_bound[type] ||= @epoch[-1].indeterminated_position == TimeValue::Max ? +Float::MAX :
+      @upper_bound[type] ||= @epoch[-1].indeterminated_position == When::TimeValue::Max ? +Float::MAX :
         begin
           next_era = succ
           next_ref = next_era.reference_date if next_era.respond_to?(:reference_date)
           next_ref &&
-          next_ref.precision == YEAR &&
-          next_ref.cal_date[YEAR-1] == 0 ? @epoch[-1].ceil(YEAR).to_i - 1 :
+          next_ref.precision == When::YEAR &&
+          next_ref.cal_date[When::YEAR-1] == 0 ? @epoch[-1].ceil(When::YEAR).to_i - 1 :
           case type
           when true            ;  @epoch[-1].to_i - 1
           when :reference_date ;  @reference_date.to_i
@@ -1323,13 +1321,13 @@ module When::TM
       r_era, r_year = r_era
 
       epochs = @epoch.dup
-      epochs.shift if (epochs[0].indeterminated_position == TimeValue::Min)
+      epochs.shift if (epochs[0].indeterminated_position == When::TimeValue::Min)
       # j_date and calculated reference_date !((julian_reference == nil) && (reference_date != nil))
       if @julian_reference
         jdn = @julian_reference.to_i
         epoch = epochs[0]
         epochs.each do |e|
-          if (e.indeterminated_position == TimeValue::Max)
+          if (e.indeterminated_position == When::TimeValue::Max)
             epoch = e
             break
           elsif (jdn < e.to_i)
@@ -1360,7 +1358,7 @@ module When::TM
         epochs.each_index do |i|
           e = epochs[i]
           d = CalDate.new(j_date,{:frame=>e.frame})
-          if (e.indeterminated_position == TimeValue::Max)
+          if (e.indeterminated_position == When::TimeValue::Max)
             @reference_date = d
             break
           elsif (d.to_i < e.to_i)
@@ -1375,15 +1373,15 @@ module When::TM
       # julian_reference and reference_date
       @julian_reference = JulianDate.universal_time(@reference_date.universal_time)
       @reference_date.cal_date[0] -= @epoch_year
-      @reference_date.calendar_era_name = [(r_era ? r_era : @label), @epoch_year]
+      @reference_date.send(:calendar_era_name=, [(r_era ? r_era : @label), @epoch_year])
       if (r_date)
         raise ArgumentError, "JulianReference and ReferenceDate are mismatch" unless (@epoch_year == +j_date[0]-(+r_date[0]))
         raise ArgumentError, "JulianReference and ReferenceDate are mismatch" unless (j_date[1..-1] == r_date[1..-1])
         #raise ArgumentError, "JulianReference and ReferenceDate are mismatch" unless (j_date == r_date)
         if    (r_date[1] == nil)
-          @reference_date.precision = YEAR
+          @reference_date.precision = When::YEAR
         elsif (r_date[2] == nil)
-          @reference_date.precision = MONTH
+          @reference_date.precision = When::MONTH
         end
       end
     end
@@ -1460,15 +1458,15 @@ module When::TM
     def _normalize(args=[], options={})
       # area, period
       term_options = {:namespace=>@namespace, :locale=>@locale, :options=>options}
-      @area        = m17n(@area,   nil, nil, term_options) if (@area.instance_of?(String))
-      @period      = m17n(@period, nil, nil, term_options) if (@period.instance_of?(String))
+      @area        = m17n(@area,   nil, nil, term_options) if @area.instance_of?(String)
+      @period      = m17n(@period, nil, nil, term_options) if @period.instance_of?(String)
 
       # 暦年代の上下限
       @lower_bound = {}
       @upper_bound = {}
 
       # other attributes
-      if (@child && @child.length>0)
+      if @child && @child.length>0
         _non_leaf_era(args, term_options)
         _register_calendar_era unless _pool['..'].kind_of?(CalendarEra)
         @child.each do |era|
@@ -1476,7 +1474,7 @@ module When::TM
         end
       else
         _set_leaf_era(args, term_options)
-        _normalize_leaf_era unless @epoch[0].indeterminated_position == TimeValue::Min
+        _normalize_leaf_era unless @epoch[0].indeterminated_position == When::TimeValue::Min
       end
     end
 
@@ -1490,7 +1488,7 @@ module When::TM
       # reference_date, reference_event & label
       @reference_date    = @child[0].reference_date
       @reference_event   = @child[0].reference_event
-      @epoch_year        = @child[0].epoch_year
+      @epoch_year        = 0 # @child[0].epoch_year
       @julian_reference  = @child[0].julian_reference
 
       # options
@@ -1513,7 +1511,7 @@ module When::TM
       # reference_date & label
       if reference_date
         @reference_date = reference_date
-        @label          = m17n(@reference_date[/\A\[[^\]]+\]|^[^-+0-9]+/], nil, nil, term_options)
+        @label        ||= m17n(@reference_date[/\A\[[^\]]+\]|^[^-+0-9]+/], nil, nil, term_options)
       end
       @label._pool['..'] ||= self
       @_pool[@label.to_s]  = @label
@@ -1570,11 +1568,11 @@ module When::TM
       # normalize for last era
       last_era = _pool['..'].child[-1] if _pool['..'].kind_of?(CalendarEra)
       if last_era
-        if last_era.epoch[0].indeterminated_position == TimeValue::Min
+        if last_era.epoch[0].indeterminated_position == When::TimeValue::Min
           last_era.epoch[0].frame = @epoch[0].frame
           last_era.epoch[1]       = @epoch[0]
           last_era._normalize_leaf_era
-        elsif last_era.epoch[-1].indeterminated_position == TimeValue::Max
+        elsif last_era.epoch[-1].indeterminated_position == When::TimeValue::Max
           last_era.epoch[-1] = @epoch[0]
         end
       end
@@ -1613,7 +1611,7 @@ module When::TM
       @epoch.each do |e|
         cal_date   = CalDate.new(date,{:frame=>e.frame}) unless (frame == e.frame)
         frame = e.frame
-        break if (e.indeterminated_position == TimeValue::Max)
+        break if (e.indeterminated_position == When::TimeValue::Max)
         break if (cal_date < e)
         epoch = e
       end
@@ -1630,8 +1628,8 @@ module When::TM
       sdn, time = (date.universal_time - frac).divmod(Duration::DAY)
       sdn      += JulianDate::JD19700101
       epoch     = @epoch[0]
-      return TimeValue::Before if sdn < lower_bound
-      return TimeValue::After  if sdn > upper_bound
+      return When::TimeValue::Before if sdn < lower_bound
+      return When::TimeValue::After  if sdn > upper_bound
       @epoch.each do |e|
         break if (e.indeterminated_position == When::TimeValue::Max)
         break if (sdn < e.to_i)

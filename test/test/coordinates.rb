@@ -133,7 +133,7 @@ module Test::Coordinates
 
       assert_equal(2426467, (date2+When::Duration('P30Y')).to_i)
       sample = [
-        ["ModernJapanese64(1931).05.05", false],
+        ["ModernJapanese1931.05.05", false],
         ["S06(1931).05.05", true]
       ]
       ((date2+When::Duration('P30Y')).scan(When.Resource('ModernJapanese', '_e:'))).each do |d|

@@ -26,12 +26,16 @@ module When
           default_internal = Encoding.default_internal||'UTF-8'
           case source
           when Locale ;  source.to_internal_encoding
-          when String ; (source.encoding == default_internal) ?
-                         source :
-                         source.encode(default_internal)
-          when Regexp ; (source.encoding == default_internal) ?
-                         source :
-                         Regexp.new(source.to_s.encode(default_internal))
+          when String ; case source.encoding
+                        when default_internal     ; source
+                        when Encoding::ASCII_8BIT ; source.dup.force_encoding(default_internal)
+                        else                      ; source.encode(default_internal)
+                        end
+          when Regexp ; case source.encoding
+                        when default_internal     ; source
+                        when Encoding::ASCII_8BIT ; Regexp.new(source.dup.force_encoding(default_internal))
+                        else                      ; Regexp.new(source.to_s.encode(default_internal))
+                        end
           when Array  ;  source.map {|e| to_internal_encoding(e)}
           when Hash
             hash = {}
@@ -55,12 +59,16 @@ module When
           default_external = Encoding.default_external
           case source
           when Locale ;  source.to_external_encoding
-          when String ; (source.encoding == default_external) ?
-                         source :
-                         source.encode(default_external)
-          when Regexp ; (source.encoding == default_external) ?
-                         source :
-                         Regexp.new(source.to_s.encode(default_external))
+          when String ; case source.encoding
+                        when default_external     ; source
+                        when Encoding::ASCII_8BIT ; source.dup.force_encoding(default_external)
+                        else                      ; source.encode(default_external)
+                        end
+          when Regexp ; case source.encoding
+                        when default_external     ; source
+                        when Encoding::ASCII_8BIT ; Regexp.new(source.dup.force_encoding(default_external))
+                        else                      ; Regexp.new(source.to_s.encode(default_external))
+                        end
           when Array  ;  source.map {|e| to_external_encoding(e)}
           when Hash
             hash = {}
