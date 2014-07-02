@@ -37,7 +37,7 @@ module When
     # ヒジュラ紀元
      Hijra = [self, [
       "area:[Islamic=]",
-      ["[AfterHijra=en:Islamic_calendar,*alias:AH]1.1.1", "Calendar Epoch", "01-01-01^TabularIslamic"],
+      ["[AfterHijra=en:Islamic_calendar,*alias:AH]1.1.1", '@CE', "01-01-01^TabularIslamic"],
     ]]
   end
 

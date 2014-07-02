@@ -262,17 +262,17 @@ module When
 
         def _completion(digits, base)
           case digits
-          when nil           ; return nil
-          when /\A\d{5}/      ; raise ArgumentError, "Wrong date format: #{digits}"
-          else               ; return digits.to_i unless base
+          when nil             ; return nil
+          when /\A\d{5}/       ; raise ArgumentError, "Wrong date format: #{digits}"
+          else                 ; return digits.to_i unless base
           end
 
           base = base.to_i
           case digits
-          when '-'           ; return base
+          when '-'             ; return base
           when /\A-?(\d{1})\z/ ; return _decade( $1, base)
           when /\A-?(\d{2})\z/ ; return _century($1, base)
-          else               ; return digits.to_i
+          else                 ; return digits.to_i
           end
         end
 

@@ -503,7 +503,7 @@ class When::CalendarNote
       result = dates.cal4note.s_terms.term(date, parameter)
       patch  = SolarTerms::Patch[result.to_i]
       return result unless patch
-      num, den  = parameter.kind_of?(String) ? parameter.split(/\//, 2) : parameter
+      num, den  = parameter.kind_of?(String) ? parameter.split('/', 2) : parameter
       num  = (num ||   0).to_f
       den  = (den || 360).to_f
       diff = (num - patch[0] + 1) % den - 1

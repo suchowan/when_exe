@@ -67,11 +67,11 @@ module When
     # イラン暦
      Iranian = [self, [
       "area:[Iranian]",
-      ["[Anno_Persico=en:Iranian_calendars,*alias:AP]1.1.1",  "Calendar Epoch", "0001-01-01^TableBasedJalali",
-                                                                                "1230-01-01^Borji",
-                                                                                "1304-01-01^SolarHijri", ""],
-      ["[Anno_Cyrus=,*alias:AC]2535.1.1",                     "",               "1355-01-01^SolarHijri"],
-      ["[Anno_Hijra=en:Iranian_calendars,*alias:AH]1357.6.5", "",               "1357-06-05^SolarHijri"]
+      ["[Anno_Persico=en:Iranian_calendars,*alias:AP]1.1.1",  '@CE', "0001-01-01^TableBasedJalali",
+								     "1230-01-01^Borji",
+								     "1304-01-01^SolarHijri", ""],
+      ["[Anno_Cyrus=,*alias:AC]2535.1.1",		     "",    "1355-01-01^SolarHijri"],
+      ["[Anno_Hijra=en:Iranian_calendars,*alias:AH]1357.6.5", "@CR", "1357-06-05^SolarHijri"]
     ]]
   end
 

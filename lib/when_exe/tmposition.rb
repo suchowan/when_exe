@@ -1008,10 +1008,10 @@ module When::TM
           return date
         when date.to_i > jdn
           next_date = date - When::P1D
-          date = (date.to_i == next_date.to_i) ? date - When::P1D * 2 : next_date
+          date = (date.to_i == next_date.to_i) ? date - When::P2D : next_date
         when date.to_i < jdn
           next_date = date + When::P1D
-          date = (date.to_i == next_date.to_i) ? date + When::P1D * 2 : next_date
+          date = (date.to_i == next_date.to_i) ? date + When::P2D : next_date
         end
         raise RangeError, "can't find target date: #{self} -> #{jdn}" if done.key?(date.to_i)
         done[date.to_i] = true
@@ -1577,10 +1577,11 @@ module When::TM
       case other.event
       when 'day'
       # 指定の剰余となる日
-        other   -= @frame.indices[-1].shift unless @frame.indices[-1].shift == 0
-        date     = @frame.to_cal_date(other & to_i)
+        sdn      = other & to_i
+        date     = @frame.to_cal_date(sdn)
         date[0] -= @calendar_era_name[1] if @calendar_era_name
-        return self.dup._copy({:events=>nil, :query=>@query, :validate=>:done, :date=>date})
+        result   = self.dup._copy({:events=>nil, :query=>@query, :validate=>:done, :date=>date})
+        result.send(:_force_euqal_day, sdn-result.to_i)
 
       when 'year'
       # 指定の剰余となる年
@@ -1791,9 +1792,9 @@ module When::TM
 
     # 加減算共通処理
     def _plus(period)
-      self.dup._copy({:date=>_date_with_era(@frame._validate(_date_without_era,
-                                            @frame._arrange_length(period.date))),
-                      :events=>nil, :query=>nil, :validate=>:done})
+      _frame_adjust(period, self.dup._copy({:date=>_date_with_era(@frame._validate(_date_without_era,
+                                                     @frame._arrange_length(period.date))),
+                               :events=>nil, :query=>nil, :validate=>:done}))
     end
 
     # 年号を除外した @frame の暦法に対応する日付
@@ -1807,6 +1808,14 @@ module When::TM
     def _date_with_era(date)
       date[0] -= @calendar_era_name[1] if @calendar_era_name
       date
+    end
+
+    # 暦法が変わった場合の補正
+    def _frame_adjust(period, date)
+      return date if @frame.equal?(date.frame) || (period.to_day||0) == 0
+      diff = period.to_day - (date.to_i - to_i)
+      return date if diff == 0
+      date.send(:_force_euqal_day, diff)
     end
   end
 
@@ -1869,10 +1878,11 @@ module When::TM
       case other.event
       when 'day'
         # 指定の剰余となる日
-        other -= @frame.indices[-1].shift unless @frame.indices[-1].shift == 0
-        return self.dup._copy({:events=>nil, :query=>@query, :validate=>:done,
-                               :date=>_date_with_era(@frame.to_cal_date(other & to_i)),
-                               :time=>@clk_time.clk_time.dup})
+        sdn    = other & to_i
+        result = self.dup._copy({:events=>nil, :query=>@query, :validate=>:done,
+                                 :date=>_date_with_era(@frame.to_cal_date(sdn)),
+                                 :time=>@clk_time.clk_time.dup})
+        result.send(:_force_euqal_day, sdn-result.to_i)
 
       when 'year'
         # 指定の剰余となる年
@@ -2089,7 +2099,7 @@ module When::TM
       })
 
       # オブジェクトの生成
-      self.dup._copy({:date=>date, :time=>time, :validate=>:done, :events=>nil, :query=>nil})
+      _frame_adjust(period, self.dup._copy({:date=>date, :time=>time, :validate=>:done, :events=>nil, :query=>nil}))
     end
   end
 end

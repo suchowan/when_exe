@@ -45,7 +45,7 @@ module When
     Jewish = [self, [
       "locale:[=en:, ja=ja:, alias]",
       "area:[Israel, イスラエル]",
-      ["[AnnoMundi=en:Anno_Mundi, ユダヤ紀元, *alias:HY]1.1.1", "Calendar Epoch", "01-01-01^Jewish"],
+      ["[AnnoMundi=en:Anno_Mundi, ユダヤ紀元, *alias:HY]1.1.1", '@CE', "01-01-01^Jewish"],
     ]]
   end
 

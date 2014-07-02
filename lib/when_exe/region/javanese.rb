@@ -144,9 +144,9 @@ module When
      JavaneseLunar = [self, [
       "locale:[=en:, ja=ja:, alias]",
       "period:[JavaneseLunar=, ジャワ・イスラーム暦=]",
-      ["[SE=, サカ暦=, alias:Javanese_Saka_Era]1547.1.1", "Calendar Epoch", "1035-01-01^Javanese1547",
-                                                                            "1163-01-01^Javanese1675",
-                                                                            "1237-01-01^Javanese1749", '+Infinity']
+      ["[SE=, サカ暦=, alias:Javanese_Saka_Era]1547.1.1", '@CE', "1035-01-01^Javanese1547",
+								 "1163-01-01^Javanese1675",
+								 "1237-01-01^Javanese1749", '+Infinity']
     ]]
   end
 

@@ -80,7 +80,7 @@ module Test
          era['::_m:EpochEvents::Accession'].iri])
 
       assert_equal(era['::_m:EpochEvents::*'].map {|v| v.to_s},
-        ["Accession", "FelicitousEvent", "NaturalDisaster", "InauspiciousYear", "Foundation", "CalendarReform"])
+        ["Accession", "FelicitousEvent", "NaturalDisaster", "InauspiciousYear", "Foundation", "CalendarReform", "CalendarEpoch"])
 
       term = []
       term << When.m17n('[日本語, English]', nil, ', en').translate('ja')

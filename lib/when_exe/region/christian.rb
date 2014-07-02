@@ -26,7 +26,7 @@ module When
       "locale:[=en:, ja=ja:, alias]",
       "period:[Byzantine=en:Byzantine_calendar, ビザンティン暦=ja:%%<世界創造紀元>]",
       ["[AM=en:Anno_Mundi, 世界創造紀元, alias:Anno_Mundi]6497.9.1",
-       "Calendar Epoch", "989-09-01^Julian?border=[-1,9,1]&note=Roman", "1453=5-29"]
+       '@CE', "989-09-01^Julian?border=[-1,9,1]&note=Roman", "1453=5-29"]
     ]]
   end
 

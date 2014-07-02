@@ -1367,6 +1367,8 @@ module When::Ephemeris
         event == 0 ? (root(t0, meridian, 1) {|t1| _coords(t1, When::Coordinates::Spatial::EQUATORIAL_HA, target).phi}) :
                      (root(t0, height     ) {|t1| _coords(t1, When::Coordinates::Spatial::HORIZONTAL, target).theta }),
        t)
+    rescue RangeError
+      nil
     end
 
     # 日の出の日時
@@ -1520,6 +1522,8 @@ module When::Ephemeris
         lam += 1
       end
       _to_seed_type(day_event((tt+long/360.0).round, Sgn[event][0], When.Resource('_ep:Sun'), bs), t)
+    rescue RangeError
+      nil
     end
 
     # ユリウス日(Numeric)を seed と同じ型に変換して返します。

@@ -398,7 +398,8 @@ module When
                               ['@ND', 'NaturalDisaster' ],
                               ['@IY', 'InauspiciousYear'],
                               ['@F',  'Foundation'      ],
-                              ['@CR', 'CalendarReform'  ]].map {|e|
+                              ['@CR', 'CalendarReform'  ],
+                              ['@CE', 'CalendarEpoch'   ]].map {|e|
         [e[0], When::Parts::Resource._instance('EpochEvents::'+e[1], '_m:')]
       }.flatten)]
 
@@ -406,8 +407,8 @@ module When
       Common = [{}, self, [
         'area:Common#{?Reform=Reform}',
         ['[BeforeCommonEra=en:BCE_(disambiguation),*alias:BCE]0.1.1'],
-        ['[CommonEra=en:Common_Era,*alias:CE]1.1.1', 'Calendar Epoch', '01-01-01^Julian'],
-        ['[CommonEra=en:Common_Era,*alias:CE]#{Reform:1582.10.15}', 'Calendar Reform', '#{Reform:1582.10.15}^Gregorian']
+        ['[CommonEra=en:Common_Era,*alias:CE]1.1.1', '@CE', '01-01-01^Julian'],
+        ['[CommonEra=en:Common_Era,*alias:CE]#{Reform:1582.10.15}', '@CR', '#{Reform:1582.10.15}^Gregorian']
       ]]
 
       # Modern Japanese Eras after the calendar reform to the Gregorian Calendar
@@ -643,7 +644,20 @@ module When
   # @return [When::TM::CalendarEra] era に対応する When::TM::CalendarEra オブジェクト
   #
   def CalendarEra(era)
-    Parts::Resource._instance(era, '_e:')
+    Parts::Resource._instance(era, '_e:') do |iri|
+      base = iri.dup.sub!('/TM/CalendarEra/','/CalendarTypes/')
+      return nil unless base
+      calendar = Parts::Resource._instance(base)
+      date    = tm_pos(1, {:frame=>calendar}).floor
+      options = {:label=>calendar.label}
+      %w(period area).each do |name|
+        value = calendar.instance_variable_get('@' + name)
+        options[name.to_sym] = value if value
+      end
+      era = TM::CalendarEra.new(date, '@CE', date, options)
+      era.send(:_register_calendar_era)
+      era
+    end
   end
 
   # When::TM::CalendarEra の検索

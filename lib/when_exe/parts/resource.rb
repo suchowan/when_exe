@@ -184,14 +184,15 @@ module When::Parts
       # @private
       def _abbreviation_to_iri(abbreviation, abbreviation_types=ConstTypes)
         abbreviation_types[:pattern] ||= /\A(?=[A-Z])(.*?)(#{abbreviation_types.keys.compact.join('|')})?(\?.+|::.+)?\z/
-        abbreviation =~ abbreviation_types[:pattern]
+        abbreviation.to_s =~ abbreviation_types[:pattern]
         return nil unless $1
         klass, name, iri = abbreviation_types[$2]
+        key,   name, iri = $2, name % $1, iri % [$1,$3]
         if klass.kind_of?(String)
           klass = klass.split('::').inject(When) {|k,n| k.const_get(n)}
-          abbreviation_types[$2][0] = klass
+          abbreviation_types[key][0] = klass
         end
-        klass.const_defined?(name % $1) ? iri % [$1,$3] : nil
+        klass.const_defined?(name) ? iri : nil
       end
 
       # @private
@@ -262,10 +263,11 @@ module When::Parts
       #
       # @param [String] iri International Resource Identifier
       # @param [String] namespace (デフォルトの名前空間, 指定がないときは名前空間を省略しない)
+      # @param [Block] block オブジェクトが見つからない場合の代替処理
       #
       # @return [When::Parts::Resource]
       #
-      def _instance(iri, namespace=nil)
+      def _instance(iri, namespace=nil, &block)
         _setup_ unless @_pool
 
         case iri
@@ -300,13 +302,13 @@ module When::Parts
             end
           end
           case @_pool[iri]
-          when my_mutex; my_mutex.synchronize    {@_pool[iri] = _create_object(iri, path, query) }
+          when my_mutex; my_mutex.synchronize    {@_pool[iri] = _create_object(iri, path, query, &block) }
           when Mutex   ; @_pool[iri].synchronize {@_pool[iri]}
           else         ; @_pool[iri]
           end
         else
           @_pool      ||= {}
-          @_pool[iri] ||= _create_object(iri, path, query)
+          @_pool[iri] ||= _create_object(iri, path, query, &block)
         end
       end
 
@@ -435,7 +437,7 @@ module When::Parts
       private
 
       # オブジェクト生成
-      def _create_object(iri, path, query)
+      def _create_object(iri, path, query, &block)
         # query analyzation
         options = {}
         replace = {}
@@ -457,6 +459,8 @@ module When::Parts
           if list
             return _internal(list, replace, options)
           else
+            object = yield(iri) if block_given?
+            return object if object
             raise IOError, 'IRI not found - ' + path
           end
         end
@@ -491,11 +495,22 @@ module When::Parts
         end
       end
 
+      # 指定のモジュール/クラスで直接定数が定義されているか
+      if method(:const_defined?).arity == 1
+        def _directry_defined?(klass, const)
+          klass.const_defined?(const)
+        end
+      else
+        def _directry_defined?(klass, const)
+          klass.const_defined?(const, false)
+        end
+      end
+
       # 内部形式定義の取得
       def _class(path)
         list = [When]
         path[Resource.base_uri.length..-1].split(/\//).each do |mod|
-          if list[0].kind_of?(Module) && list[0].const_defined?(mod)
+          if list[0].kind_of?(Module) && _directry_defined?(list[0], mod)
             list.unshift(list[0].const_get(mod))
           else
             return nil unless list[0] == When::V
@@ -577,22 +592,23 @@ module When::Parts
           line.chomp!
           case line
           when /\A\s*BEGIN:(.*)\z/
-            if (type)
+            if type
+              subtype = $1
               obj[-1] = _parse(obj[-1], type) if obj.length > 1
-              obj << _ics(ics, $1)
+              obj << _ics(ics, subtype)
             else
               type = $1
               obj  = [type]
             end
           when /\A\s*END:(.*)\z/
-            raise TypeError, "Irregal Type : #{$1}" unless (type == $1)
+            raise TypeError, "Irregal Type : #{$1}" unless type == $1
             obj[0]  = _class(_extract_prefix(type, true))[0]
             obj[-1] = _parse(obj[-1], type)
             return obj
           when /\A\s*#/
           when /\A(\s*)(.*)\z/
             indent  = $1 unless indent
-            if (indent.length < $1.length)
+            if indent.length < $1.length
               obj[-1] += line[(indent.length+1)..-1] # See RFC5545 3.1 Content Lines
             else
               obj << $2

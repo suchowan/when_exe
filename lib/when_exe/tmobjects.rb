@@ -951,26 +951,34 @@ module When::TM
       end
     end
 
+    # 期間の日数
+    #
+    # @return [Integer]
+    #
+    # @note 固定の整数で表現できない場合は nil
+    #
+    attr_reader :to_day
+
     # 期間の日付要素
     #
     # @return [Array<Numeric>]
     #
     attr_accessor :date
-    protected :date=
+    private :date=
 
     # 期間の週日要素
     #
     # @return [Array<Numeric>]
     #
     attr_accessor :week
-    protected :week=
+    private :week=
 
     # 期間の時刻要素
     #
     # @return [Array<Numeric>]
     #
     attr_accessor :time
-    protected :time=
+    private :time=
 
     # 要素の参照
     #
@@ -979,14 +987,14 @@ module When::TM
     # @return [Numeric]
     #
     def [](index)
-      if (index == WEEK)
-        return nil unless (@week)
+      if index == WEEK
+        return nil unless @week
         return @week[0]
-      elsif (index <= 0)
-        return nil unless (@date)
+      elsif index <= 0
+        return nil unless @date
         return @date[index-1]
       else
-        return nil unless (@time)
+        return nil unless @time
         return @time[index]
       end
     end
@@ -1001,37 +1009,37 @@ module When::TM
 
     # 期間に含まれる年数を示す
     #
-    # @return [Numeric]
+    # @return [String]
     #
     def years
-      return nil unless (@date)
+      return nil unless @date
       return @date[YEAR-1].to_s
     end
 
     # 期間に含まれる月数を示す
     #
-    # @return [Numeric]
+    # @return [String
     #
     def months
-      return nil unless (@date)
+      return nil unless @date
       return @date[MONTH-1].to_s
     end
 
     # 期間に含まれる週数を示す
     #
-    # @return [Numeric]
+    # @return [String]
     #
     def weeks
-      return nil unless (@week)
+      return nil unless @week
       return @week[0].to_s
     end
 
     # 期間に含まれる日数を示す
     #
-    # @return [Numeric]
+    # @return [String]
     #
     def days
-      return nil unless (@date)
+      return nil unless @date
       return @date[DAY-1].to_s
     end
 
@@ -1046,28 +1054,28 @@ module When::TM
 
     # 期間に含まれる時間数を示す
     #
-    # @return [Numeric]
+    # @return [String]
     #
     def hours
-      return nil unless (@time)
+      return nil unless @time
       return @time[HOUR].to_s
     end
 
     # 期間に含まれる分数を示す
     #
-    # @return [Numeric]
+    # @return [String]
     #
     def minutes
-      return nil unless (@time)
+      return nil unless @time
       return @time[MINUTE].to_s
     end
 
     # 期間に含まれる秒数を示す
     #
-    # @return [Numeric]
+    # @return [String]
     #
     def seconds
-      return nil unless (@time)
+      return nil unless @time
       return @time[SECOND].to_s
     end
 
@@ -1077,9 +1085,10 @@ module When::TM
     #
     def -@
       period = self.dup
-      period.date = @date.map {|v| -v} if @date
-      period.week = @week.map {|v| -v} if @week
-      period.time = @time.map {|v| -v} if @time
+      period.send(:date=, @date.map {|v| -v}) if @date
+      period.send(:week=, @week.map {|v| -v}) if @week
+      period.send(:time=, @time.map {|v| -v}) if @time
+      period.send(:_duration)
       return period
     end
 
@@ -1169,9 +1178,10 @@ module When::TM
     #
     def *(times)
       period = self.dup
-      period.date = @date.map {|v| v *= times; v.to_i==v.to_f ? v.to_i : v} if @date
-      period.week = @week.map {|v| v *= times; v.to_i==v.to_f ? v.to_i : v} if @week
-      period.time = @time.map {|v| v *= times; v.to_i==v.to_f ? v.to_i : v} if @time
+      period.send(:date=, @date.map {|v| v *= times; v.to_i==v.to_f ? v.to_i : v}) if @date
+      period.send(:week=, @week.map {|v| v *= times; v.to_i==v.to_f ? v.to_i : v}) if @week
+      period.send(:time=, @time.map {|v| v *= times; v.to_i==v.to_f ? v.to_i : v}) if @time
+      period.send(:_duration)
       return period
     end
 
@@ -1283,23 +1293,33 @@ module When::TM
     # 属性 @duration の計算
     #
     def _duration
+      @duration = nil
+
       if @time
         @duration  = +@time[HOUR  ] * Duration::HOUR
         @duration += +@time[MINUTE] * Duration::MINUTE if @time[MINUTE]
         @duration += +@time[SECOND] * Duration::SECOND if @time[SECOND]
       end
+
       if @week
         @duration = +@week[0] * Duration::WEEK + +@week[1] * Duration::DAY + (@duration||0)
+
       elsif @date
         date = @date.dup
-        date.shift while date[0] == 0
+        date.shift while date.first == 0
         case date.size
         when 0 ; @duration ||= 0
         when 1 ; @duration   = +@date[DAY-1] * Duration::DAY + (@duration||0)
         else   ; @duration   = nil
         end
       end
-      extend NoDuration unless @duration
+
+      if @duration
+        length  = @duration / Duration::DAY
+        @to_day = length.to_i if length.to_i == length.to_f
+      else
+        extend NoDuration
+      end
     end
 
     # 加減算共通処理
@@ -1316,9 +1336,10 @@ module When::TM
         raise ArgumentError, "PeriodDuration structure mismatch"
       end
       period = self.dup
-      period.week = (0...@week.size).to_a.map {|i| @week[i] + sgn * other.week[i]} if @week
-      period.date = (0...@date.size).to_a.map {|i| @date[i] + sgn * other.date[i]} if @date
-      period.time = (0...@time.size).to_a.map {|i| @time[i] + sgn * other.time[i]} if @time
+      period.send(:week=, (0...@week.size).to_a.map {|i| @week[i] + sgn * other.week[i]}) if @week
+      period.send(:date=, (0...@date.size).to_a.map {|i| @date[i] + sgn * other.date[i]}) if @date
+      period.send(:time=, (0...@time.size).to_a.map {|i| @time[i] + sgn * other.time[i]}) if @time
+      period.send(:_duration)
       return period
     end
   end

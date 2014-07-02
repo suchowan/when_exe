@@ -849,7 +849,7 @@ module When::Coordinates
       # @return [Array<When::Coordinates::Pair>]
       #
       def _en_pair_array(source)
-        source = $1 if (source=~/\A\s*\[?(.+?)\]?\s*\z/)
+        source = $1 if source=~/\A\s*\[?(.+?)\]?\s*\z/
         source.split(/,/).map {|v|
            v =~ /\A\s*(.+?)([^\d\s])?\s*\z/
            _en_pair($1, $2)

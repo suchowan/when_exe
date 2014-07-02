@@ -91,7 +91,8 @@ module When
         "[NaturalDisaster=,  災異]",
         "[InauspiciousYear=, 革年]",
         "[Foundation=,       創業]",
-        "[CalendarReform=,   改暦]"
+        "[CalendarReform=,   改暦]",
+        "[CalendarEpoch=,    暦元]"
       ]]
 
       # Formats

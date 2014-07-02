@@ -1605,18 +1605,19 @@ module When::TM
     end
 
     def _trans_array(date)
-      date = date.dup
-      cal_date = frame = nil
-      epoch = @epoch[0]
-      @epoch.each do |e|
-        cal_date   = CalDate.new(date,{:frame=>e.frame}) unless (frame == e.frame)
-        frame = e.frame
-        break if (e.indeterminated_position == When::TimeValue::Max)
-        break if (cal_date < e)
-        epoch = e
+      date   = date.dup
+      epoch0 = @epoch.first
+      date0  = date1 = CalDate.new(date, {:frame=>epoch0.frame}) if epoch0.frame
+      @epoch.each do |epoch1|
+        date1 = CalDate.new(date, {:frame=>epoch1.frame}) unless epoch0.frame.equal?(epoch1.frame)
+        return [epoch0, date0] if epoch1.indeterminated_position == When::TimeValue::Max
+        if date1.to_i < epoch1.to_i
+          return [epoch0, date0] if date0.to_i < epoch1.to_i
+          return [epoch1, epoch1.frame ^ date0.to_i]
+        end
+        date0, epoch0 = date1, epoch1
       end
-      cal_date = CalDate.new(date, {:frame=>epoch.frame}) unless (frame == epoch.frame)
-      return epoch, cal_date
+      return [@epoch.last, date1]
     end
 
     def _trans_date(date, clock=nil)
@@ -1624,15 +1625,15 @@ module When::TM
         date  = JulianDate.dynamical_time(date.dynamical_time, {:time_standard=>_typical_epoch.time_standard})
         clock = _typical_epoch.clock
       end
-      frac      = (clock) ? clock.universal_time : 0
+      frac      = clock ? clock.universal_time : 0
       sdn, time = (date.universal_time - frac).divmod(Duration::DAY)
       sdn      += JulianDate::JD19700101
       epoch     = @epoch[0]
       return When::TimeValue::Before if sdn < lower_bound
       return When::TimeValue::After  if sdn > upper_bound
       @epoch.each do |e|
-        break if (e.indeterminated_position == When::TimeValue::Max)
-        break if (sdn < e.to_i)
+        break if e.indeterminated_position == When::TimeValue::Max
+        break if sdn < e.to_i
         epoch   = e
       end
       frame     = epoch.frame

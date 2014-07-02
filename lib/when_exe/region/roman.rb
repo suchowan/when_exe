@@ -101,9 +101,9 @@ module When
       "locale:[=en:, ja=ja:, alias]",
       "period:[Roman=en:Roman_calendar, ローマ暦]",
       ["[AUC=en:Ab_urbe_condita, 建国紀元=ja:%%<ローマ建国紀元>, alias:Ab_urbe_condita]709.1.1",
-       "Calendar Epoch", "-44-01-01^JulianA",
-                          "-7-03-01^JulianB",
-                           "8-01-01^JulianC", "476-09-04"]
+       '@CE', "-44-01-01^JulianA",
+               "-7-03-01^JulianB",
+                "8-01-01^JulianC", "476-09-04"]
     ]]
 
     # From Chris Bennett, http://www.tyndalehouse.com/Egypt/ptolemies/chron/roman/chron_rom_intro_fr.htm
@@ -111,13 +111,13 @@ module When
       "locale:[=en:, ja=ja:, alias]",
       "period:[Roman=en:Roman_calendar, ローマ暦]",
       ["[AUC=en:Ab_urbe_condita, 建国紀元=ja:%%<ローマ建国紀元>, alias:Ab_urbe_condita]492.5.1",
-       "Calendar Epoch", "-261-05-01^RomanA?border=0-5-1",
-                         "-221-03-01^RomanA?border=0-3-1",
-                         "-152-01-01^RomanA",
-                          "-43-01-01^RomanB",
-                           "-7-01-01^RomanC",
-                           "37-01-01^RomanD",
-                           "41-01-01^Roman", "476-09-04"]
+       '@CE', "-261-05-01^RomanA?border=0-5-1",
+              "-221-03-01^RomanA?border=0-3-1",
+              "-152-01-01^RomanA",
+               "-43-01-01^RomanB",
+                "-7-01-01^RomanC",
+                "37-01-01^RomanD",
+                "41-01-01^Roman", "476-09-04"]
     ]]
 
   end

@@ -279,7 +279,7 @@ module When
         query    = options.delete(:query)
         interval = options.key?(:interval) ? options.delete(:interval) : @wikipedia_interval
         return nil unless Object.const_defined?(:JSON) && path =~ Ref
-        _wikipedia_relation(_wikipedia_object(path, $~[1], $~[2], query, interval, options), path, query)
+        _wikipedia_relation(_wikipedia_object(path, $1, $2, query, interval, options), path, query)
       end
 
       # wikipedia の読み込み
@@ -329,8 +329,8 @@ module When
           :link  => {''=>path,   locale=>path  }
         }
         contents.scan(Link) do |link|
-          word[:names][$~[1]] = $~[4]
-          word[:link ][$~[1]] = "http://#{$~[1]}.wikipedia.org/wiki/#{$~[3]}"
+          word[:names][$1] = $4
+          word[:link ][$1] = "http://#{$1}.wikipedia.org/wiki/#{$3}"
         end
         object = When::BasicTypes::M17n.new(word)
 
@@ -708,7 +708,7 @@ module When
       end
       if Locale.wikipedia_interval && Locale.wikipedia_interval <= 0
         ['en', ''].each do |lc|
-          if Locale::Ref =~ @link[lc] && $~[1] == 'en'
+          if Locale::Ref =~ @link[lc] && $1 == 'en'
             object = Locale.send(:wikipedia_object, @link[lc])
             if object
               @names = object.names.merge(@names)

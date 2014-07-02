@@ -135,11 +135,11 @@ module When
     BalineseLuniSolar = [self, [
       "locale:[=en:, ja=ja:, alias]",
       "period:[BalineseLuniSolar=, バリ・サカ暦=]",
-      ["[SE=, サカ暦=, alias:Balinese_Saka_Era]1887-07<13", "Calendar Epoch", "1965-07<13^BalineseLuniSolar1965",
-                                                            "1971-07-04^BalineseLuniSolar1971",
-                                                            "1993-07-08^BalineseLuniSolar1993",
-                                                            "1999-06<10^BalineseLuniSolar2000",
-                                                            "2003-07<14^BalineseLuniSolar2003", '+Infinity']
+      ["[SE=, サカ暦=, alias:Balinese_Saka_Era]1887-07<13", '@CE', "1965-07<13^BalineseLuniSolar1965",
+								   "1971-07-04^BalineseLuniSolar1971",
+								   "1993-07-08^BalineseLuniSolar1993",
+								   "1999-06<10^BalineseLuniSolar2000",
+								   "2003-07<14^BalineseLuniSolar2003", '+Infinity']
     ]]
   end
 
