@@ -357,7 +357,7 @@ module When::TimeStandard
       # @return [Integer]
       #
       def solar_sdn(t)
-        time_basis.time_standard.from_dynamical_date(t + 0.5 + @_time_basis_offset[0]).floor
+        time_basis.time_standard.from_dynamical_date(t + 0.5).floor
       end
 
       # 月の位相のための日付境界のオフセットを反映した通日
@@ -367,7 +367,7 @@ module When::TimeStandard
       # @return [Integer]
       #
       def lunar_sdn(t)
-        time_basis.time_standard.from_dynamical_date(t + 0.5 + @_time_basis_offset[-1]).floor
+        time_basis.time_standard.from_dynamical_date(t + 0.5).floor
       end
     end
 

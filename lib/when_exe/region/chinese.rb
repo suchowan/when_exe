@@ -497,8 +497,24 @@ module When
           @day_epoch + mean_lunation - send('_anomaly_' + @anomaly_method.downcase, mean_lunation, year, solar_unit, mean_motion)
         end
 
-        # 経朔 - 定朔 ( A 方式 - 差分)
+        # 経朔 - 定朔 ( A 方式 - 階差)
         def _anomaly_a(mean_lunation, year, solar_unit, mean_motion)
+
+          # 盈縮差(太陽の中心差) / (日 / 10000_0000)
+          solar_anomaly = solar_unit * equation_of_centre(((mean_lunation - _perihelion(year)) / solar_unit) % @year_length, @s)
+
+          # 遅速差(月の中心差) / (日 / 10000_0000)
+          gen = ((mean_lunation + @anomalistic_month_shift) % @anomalistic_month_length) / @lunar_unit
+          lunar_anomalies = [gen.floor, gen, gen.ceil].map {|g|
+            equation_of_centre(g, @m)
+          }
+
+          # 経朔 - 定朔
+          (lunar_anomalies[1] - solar_anomaly) / ((lunar_anomalies[2] - lunar_anomalies[0]) / @lunar_unit + mean_motion)
+        end
+
+        # 経朔 - 定朔 ( D 方式 - 差分)
+        def _anomaly_d(mean_lunation, year, solar_unit, mean_motion)
 
           # 盈縮差(太陽の中心差) / (日 / 10000_0000)
           solar_anomalies = (0..@solar_weight).to_a.map {|day|
