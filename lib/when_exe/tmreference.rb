@@ -1059,6 +1059,21 @@ module When::TM
           end
         }
       end
+
+      def _behalf_of(iri)
+        base = iri.dup.sub!('/TM/CalendarEra/','/CalendarTypes/')
+        return nil unless base
+        calendar = When::Parts::Resource._instance(base)
+        date     = When.tm_pos(1, {:frame=>calendar}).floor
+        options  = {:label=>calendar.label, '..'=>iri}
+        %w(period area).each do |name|
+          value  = calendar.instance_variable_get('@' + name)
+          options[name.to_sym] = value if value
+        end
+        era = self.new(date, '@CE', date, options)
+        era.send(:_register_calendar_era)
+        era
+      end
     end
 
     # @private

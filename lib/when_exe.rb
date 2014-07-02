@@ -645,18 +645,7 @@ module When
   #
   def CalendarEra(era)
     Parts::Resource._instance(era, '_e:') do |iri|
-      base = iri.dup.sub!('/TM/CalendarEra/','/CalendarTypes/')
-      return nil unless base
-      calendar = Parts::Resource._instance(base)
-      date    = tm_pos(1, {:frame=>calendar}).floor
-      options = {:label=>calendar.label}
-      %w(period area).each do |name|
-        value = calendar.instance_variable_get('@' + name)
-        options[name.to_sym] = value if value
-      end
-      era = TM::CalendarEra.new(date, '@CE', date, options)
-      era.send(:_register_calendar_era)
-      era
+      TM::CalendarEra.send(:_behalf_of, iri)
     end
   end
 
