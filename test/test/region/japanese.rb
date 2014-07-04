@@ -10,12 +10,8 @@ module Test
 
   class Japanese < Test::Unit::TestCase
 
-    if ''.respond_to?(:encoding)
-      include When::CalendarNote::Japanese::Index
-      Masks = MD廿四節気|MD七十二候|MD六十卦|MD没|MD往亡
-    else
-      Masks = 13<<9|1<<49|1<<72
-    end
+  # Masks = MD廿四節気|MD七十二候|MD六十卦|MD没|MD往亡
+    Masks = 13<<9|1<<49|1<<72
 
     def test_japanese_epoch
       eras = When.Resource('_e:Japanese')

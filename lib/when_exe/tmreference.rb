@@ -1065,7 +1065,10 @@ module When::TM
         return nil unless base
         calendar = When::Parts::Resource._instance(base)
         date     = When.tm_pos(1, {:frame=>calendar}).floor
-        options  = {:label=>calendar.label, '..'=>iri}
+        label    = calendar.label
+        era      = label.names['era']
+        label    = label.dup.send(:_copy, {:label=>era}) if era
+        options  = {:label=>label, '..'=>iri}
         %w(period area).each do |name|
           value  = calendar.instance_variable_get('@' + name)
           options[name.to_sym] = value if value

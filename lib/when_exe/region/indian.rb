@@ -13,7 +13,7 @@ module When
     Indian = [self, [
       "locale:[=en:, ja=ja:, hi=hi:, alias]",
       "names:[Indian=]",
-      "[IndianNationalSolar=en:Indian_national_calendar, インド国定暦]",
+      "[IndianNationalSolar=en:Indian_national_calendar, インド国定暦, era:SE=]",
       "[Nanakshahi=en:Nanakshahi_calendar,  ナーナク暦=]",
       "[RevisedBengali=en:Bengali_calendar, 改訂ベンガル暦=]",
       "[HinduSolar=en:Hindu_calendar,       インド太陽暦=ja:%%<ヒンドゥー暦>]",
@@ -1230,6 +1230,9 @@ module When
     # 日の出の九惑星の位置まで計算
     #
     class HinduNoteDetailed < HinduNote
+
+      Notes = HinduNote::Notes
+
       #
       # ヴァーラ (七曜)と九惑星の位置
       #

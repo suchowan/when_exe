@@ -169,25 +169,29 @@ module When
           end
 
           # 月の遅速表の生成
-          #   [変日差, 損益率]
-          #      ↓
-          #   [変日(区間の終わりの遠/近地点からの経過日数), 区間の終わりの朓朒積, 区間の変日差/日, 区間の損益率]
-          @m = @m.map {|item| item.dup}
-          sum_t = sum_v = 0
+          @m  = @m.map {|item| item.dup}
+          sum = [0,0]
           (0...@m.size).each do |i|
-            sum_t += @m[i][0]
-            sum_v += @m[i][1]
-            @m[i]  = [sum_t / @denominator, sum_v, @m[i][0] / @denominator, @m[i][1]]
+            @m[i]  = _rissei_m(i, sum)
           end
         end
 
-        # 戊寅元暦 立成 １次補間
+        # 月の立成 - 月の遅速表の生成 一行分
+        #   [変日差, 損益率]
+        #      ↓
+        #   [変日(区間の終わりの遠/近地点からの経過日数), 区間の終わりの朓朒積, 区間の変日差/日, 区間の損益率]
+        def _rissei_m(i, sum)
+          [0,1].each {|k| sum[k] += @m[i][k]}
+          [sum[0] / @denominator, sum[1], @m[i][0] / @denominator, @m[i][1]]
+        end
+
+        # 太陽の立成 - 戊寅元暦 １次補間
         def _rissei_a(k)
           tv = [0,1].map {|i| _tv_s(k+i)}
           [(tv[1][1]-tv[0][1]) / (tv[1][0]-tv[0][0]), 0.0]
         end
 
-        # 儀鳳暦 立成
+        # 太陽の立成 - 儀鳳暦
         def _rissei_b(k)
           v =
             if k % 3 < 2
@@ -206,7 +210,7 @@ module When
           [v * r, (t12-t01) * r * r]
         end
 
-        # 宣明暦 立成 ２次補間
+        # 太陽の立成 - 宣明暦 ２次補間
         def _rissei_c(k)
           i = [k, k+1, k+2, k % 6 == 5 ? -1 : 0]
           t0, v0 = _tv_s(i[0]+i[3])
@@ -394,6 +398,49 @@ module When
       MethodB = MethodC
 
       #
+      # 戊寅元暦
+      #
+      # @private
+      module MethodW
+
+        include MethodA
+
+        private
+
+        # 太陽の立成 - 戊寅元暦 １次補間
+        def _rissei_a(k)
+          tv = [0,1].map {|i| _tv_s(k+i)}
+          [(tv[1][1]-tv[0][1]) / (tv[1][0]-tv[0][0]).round.to_f, 0.0]
+        end
+
+        # 月の立成 - 月の遅速表の生成 一行分
+        #   [変日差, 盈縮率]
+        #      ↓
+        #   [変日(区間の終わりの遠/近地点からの経過日数), 区間の始まりの盈縮積分, 区間の始まりの経過日数, 区間の損益率]
+        def _rissei_m(i, sum)
+          progress_difference = (-@m[i][1]*9037 / @m[i][0]).round.to_f
+          progress = progress_difference + 8361
+          line = [sum[1]*9037/progress, sum[0]/@denominator, # ↓28968 が正しいはず
+                      -(progress_difference*13006/28968).round * 13006/ progress]
+          [0,1].each {|k| sum[k] += @m[i][k]}
+          line.unshift(sum[0] / @denominator)
+        end
+
+        # 月行遅速
+        #
+        # @param [Numeric] t 直前の遠/近地点からの経過日数
+        #
+        # @return [区間の始めからの経過日数, 区間の始めの盈縮積分, 区間の変日差/日, 区間の損益率]
+        #
+        def _tv_m(t)
+          (0...@m.size).each do |i|
+            next if t > @m[i][0]
+            return [t - @m[i][2], @m[i][1], 1.0, @m[i][3]]
+          end
+        end
+      end
+
+      #
       # 元明代のアルゴリズム
       #
       # @private
@@ -500,32 +547,38 @@ module When
         # 経朔 - 定朔 ( A 方式 - 階差)
         def _anomaly_a(mean_lunation, year, solar_unit, mean_motion)
 
-          # 盈縮差(太陽の中心差) / (日 / 10000_0000)
-          solar_anomaly = solar_unit * equation_of_centre(((mean_lunation - _perihelion(year)) / solar_unit) % @year_length, @s)
-
           # 遅速差(月の中心差) / (日 / 10000_0000)
-          gen = ((mean_lunation + @anomalistic_month_shift) % @anomalistic_month_length) / @lunar_unit
-          lunar_anomalies = [gen.floor, gen, gen.ceil].map {|g|
-            equation_of_centre(g, @m)
+          gen   = ((mean_lunation + @anomalistic_month_shift) % @anomalistic_month_length) / @lunar_unit
+          minus = gen - gen.floor
+          plus  = 1 - minus
+          lunar_anomalies = [-minus, 0, +plus].map {|diff|
+            equation_of_centre(gen+diff, @m)
           }
 
+          # 盈縮差(太陽の中心差) / (日 / 10000_0000)
+          solar_anomalies = (@solar_weight == 0 ? [0] : [-minus * @lunar_unit, 0, plus * @lunar_unit]).map {|diff|
+            solar_unit * equation_of_centre(((mean_lunation - _perihelion(year) + diff) / solar_unit) % @year_length, @s)
+          }
+          solar_anomalies = solar_anomalies * 3 if @solar_weight == 0
+
           # 経朔 - 定朔
-          (lunar_anomalies[1] - solar_anomaly) / ((lunar_anomalies[2] - lunar_anomalies[0]) / @lunar_unit + mean_motion)
+          (lunar_anomalies[1] - solar_anomalies[1]) / (((lunar_anomalies[2] - lunar_anomalies[0]) -
+                                                        (solar_anomalies[2] - solar_anomalies[0])) / @lunar_unit + mean_motion)
         end
 
         # 経朔 - 定朔 ( D 方式 - 差分)
         def _anomaly_d(mean_lunation, year, solar_unit, mean_motion)
+
+          # 遅速差(月の中心差) / (日 / 10000_0000)
+          lunar_anomalies = [0,1].map {|day|
+            equation_of_centre(((mean_lunation + day + @anomalistic_month_shift) % @anomalistic_month_length) / @lunar_unit, @m)
+          }
 
           # 盈縮差(太陽の中心差) / (日 / 10000_0000)
           solar_anomalies = (0..@solar_weight).to_a.map {|day|
             solar_unit * equation_of_centre(((mean_lunation + day - _perihelion(year)) / solar_unit) % @year_length, @s)
           }
           solar_anomalies[1] ||= solar_anomalies[0]
-
-          # 遅速差(月の中心差) / (日 / 10000_0000)
-          lunar_anomalies = [0,1].map {|day|
-            equation_of_centre(((mean_lunation + day + @anomalistic_month_shift) % @anomalistic_month_length) / @lunar_unit, @m)
-          }
 
           # 経朔 - 定朔
           (lunar_anomalies[0] - solar_anomalies[0]) / ((lunar_anomalies[1] - lunar_anomalies[0]) -
@@ -535,16 +588,16 @@ module When
         # 経朔 - 定朔 ( B 方式 - 微分)
         def _anomaly_b(mean_lunation, year, solar_unit, mean_motion)
 
+          # 遅速差(月の中心差) / (日 / 10000_0000)
+          lunar_anomalies = [0,1].map {|diff|
+            equation_of_centre(((mean_lunation + @anomalistic_month_shift) % @anomalistic_month_length) / @lunar_unit, @m, diff)
+          }
+
           # 盈縮差(太陽の中心差) / (日 / 10000_0000)
           solar_anomalies = (0..@solar_weight).to_a.map {|diff|
             solar_unit * equation_of_centre(((mean_lunation - _perihelion(year)) / solar_unit) % @year_length, @s, diff)
           }
           solar_anomalies[1] ||= 0
-
-          # 遅速差(月の中心差) / (日 / 10000_0000)
-          lunar_anomalies = [0,1].map {|diff|
-            equation_of_centre(((mean_lunation + @anomalistic_month_shift) % @anomalistic_month_length) / @lunar_unit, @m, diff)
-          }
 
           # 経朔 - 定朔
           (lunar_anomalies[0] - solar_anomalies[0]) / (lunar_anomalies[1] / @lunar_unit -
@@ -556,11 +609,11 @@ module When
           diff = 0
           loop do
 
-            # 盈縮差(太陽の中心差) / (日 / 10000_0000)
-            solar_anomaly = solar_unit * equation_of_centre(((mean_lunation - diff - _perihelion(year)) / solar_unit) % @year_length, @s)
-
             # 遅速差(月の中心差) / (日 / 10000_0000)
             lunar_anomaly = equation_of_centre(((mean_lunation - diff + @anomalistic_month_shift) % @anomalistic_month_length) / @lunar_unit, @m)
+
+            # 盈縮差(太陽の中心差) / (日 / 10000_0000)
+            solar_anomaly = solar_unit * equation_of_centre(((mean_lunation - diff - _perihelion(year)) / solar_unit) % @year_length, @s)
 
             # 次の差分
             next_diff = (lunar_anomaly - solar_anomaly) / mean_motion
