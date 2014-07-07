@@ -14,6 +14,11 @@ module When
       "names:[Coptic=]",
       "[Coptic=en:Coptic_calendar,       コプト暦    ]",
       "[Ethiopian=en:Ethiopian_calendar, エチオピア暦=en:Ethiopian_calendar]",
+      "[Ptolemaic=en:Ptolemaic_dynasty, プトレマイオス朝]",
+
+      # Remarks
+      '[based on Chris Bennett "Egyptian Dates" (Retrieved 2014-06-29)=http://www.tyndalehouse.com/Egypt/ptolemies/chron/egyptian/chron_eg_intro.htm,' +
+       '典拠 - Chris Bennett "Egyptian Dates" (2014-06-29 閲覧)=]',
 
       [self,
         "names:[EgyptianMonth=, 月=ja:%%<月_(暦)>]",
@@ -66,9 +71,8 @@ module When
     #
     # Coptic Calendar in Egypt and Ethiopia
     #
-    Coptic =  [{'Epoch'=>{'284Y'=>{'origin_of_MSC' =>   1,
-                                   'label'         => 'Coptic::Coptic',
-                                   'indices'       => _egyptian_month_indices},
+    Coptic =  [{'Epoch'=>{'284Y'=>{'origin_of_MSC' =>   1},
+                            '0Y'=>{'origin_of_MSC' => 285},
                             '8Y'=>{'origin_of_MSC' => 277,
                                    'label'         => 'Coptic::Ethiopian',
                                    'indices'       => _ethiopian_month_indices}}}, CyclicTableBased, {
@@ -81,6 +85,21 @@ module When
         'T' => {'Rule'  =>[365,365,366,365]},
         365 => {'Length'=>[30]*12+[5]},
         366 => {'Length'=>[30]*12+[6]}
+      }
+    }]
+
+    #
+    # Egyptian Calendar based on Chris Bennett, http://www.tyndalehouse.com/Egypt/ptolemies/chron/babylonian/chron_bab_intro_fr.htm
+    #
+    Egyptian =  [CyclicTableBased, {
+      'label'         => 'Coptic::Ptolemaic',
+      'remarks'       => When.M17n('Coptic::based on Chris Bennett "Egyptian Dates" (Retrieved 2014-06-29)'),
+      'origin_of_LSC' => 1600478,
+      'origin_of_MSC' =>    -330,
+      'indices'       => _egyptian_month_indices,
+      'rule_table' => {
+        'T' => {'Rule'  =>[365]},
+        365 => {'Length'=>[30]*12+[5]}
       }
     }]
   end

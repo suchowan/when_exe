@@ -96,6 +96,12 @@ module Test
         'DeeCecil',
         'Coptic?Epoch=284Y',
         'Coptic?Epoch=8Y',
+        'Coptic?Epoch=0Y',
+        'Babylonian',
+        'BabylonianPD',
+        'Seleucid',
+        'SeleucidPD',
+       ['Egyptian', +2],
         'IndianNationalSolar',
         'Nanakshahi',
         'RevisedBengali',
@@ -126,11 +132,13 @@ module Test
         'Tibetan',
       ]
       eto   = When.Resource('_co:Common::干支').to('year')
-      today = When.when?('2012-06-15')
+      today = When.when?('2012-06-16')
       assert_equal([[28, 246778, 246778]],
-        cals.map { |cal|
+        cals.map { |list|
+          cal, shift = list
+          shift    ||= 0
           date = When.Calendar(cal) ^ today
-          [date % eto, (eto & date).to_i/10, (date & eto).to_i/10]
+          [date % eto - shift, (eto & date).to_i/10 + 37*shift, (date & eto).to_i/10 + 37*shift]
         }.uniq
       )
     end

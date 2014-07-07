@@ -224,11 +224,11 @@ module When
       # オブジェクトの正規化
       # @private
       def _normalize(args=[], options={})
-        @origin_of_LSC =  2393198
-        @origin_of_MSC =     1202
-        @epoch_in_CE   =     1840
-        @indices       = ThaiP::Indices
-        pattern        = Pattern.dup
+        @origin_of_LSC ||=  2393198
+        @origin_of_MSC ||=     1202
+        @epoch_in_CE   ||=     1840
+        @indices       ||= ThaiP::Indices
+        pattern        ||= Pattern.dup
         if @patch
           @patch.scan(/\d+[ABC]/i) do |patch|
             pattern[patch[0..-2].to_i-@epoch_in_CE] = patch[-1..-1].upcase

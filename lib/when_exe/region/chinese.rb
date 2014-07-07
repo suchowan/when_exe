@@ -420,8 +420,8 @@ module When
         def _rissei_m(i, sum)
           progress_difference = (-@m[i][1]*9037 / @m[i][0]).round.to_f
           progress = progress_difference + 8361
-          line = [sum[1]*9037/progress, sum[0]/@denominator, # ↓28968 が正しいはず
-                      -(progress_difference*13006/28968).round * 13006/ progress]
+          line = [sum[1]*9037/progress, sum[0]/@denominator,
+                      -(progress_difference*13006/28968).round * 28968 / progress]
           [0,1].each {|k| sum[k] += @m[i][k]}
           line.unshift(sum[0] / @denominator)
         end
