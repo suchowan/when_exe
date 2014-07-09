@@ -101,7 +101,7 @@ module Test
         'BabylonianPD',
         'Seleucid',
         'SeleucidPD',
-       ['Egyptian', +2],
+       ['Ptolemaic', +2],
         'IndianNationalSolar',
         'Nanakshahi',
         'RevisedBengali',

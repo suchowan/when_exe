@@ -262,7 +262,7 @@ module When
     autoload :BabylonianPD,            'when_exe/region/babylonian'
     autoload :Seleucid,                'when_exe/region/babylonian'
     autoload :SeleucidPD,              'when_exe/region/babylonian'
-    autoload :Egyptian,                'when_exe/region/coptic'
+    autoload :Ptolemaic,               'when_exe/region/coptic'
     autoload :Coptic,                  'when_exe/region/coptic'
     autoload :JulianA,                 'when_exe/region/roman'
     autoload :JulianB,                 'when_exe/region/roman'

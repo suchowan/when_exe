@@ -91,7 +91,7 @@ module When
     #
     # Egyptian Calendar based on Chris Bennett, http://www.tyndalehouse.com/Egypt/ptolemies/chron/babylonian/chron_bab_intro_fr.htm
     #
-    Egyptian =  [CyclicTableBased, {
+    Ptolemaic =  [CyclicTableBased, {
       'label'         => 'Coptic::Ptolemaic',
       'remarks'       => When.M17n('Coptic::based on Chris Bennett "Egyptian Dates" (Retrieved 2014-06-29)'),
       'origin_of_LSC' => 1600478,
