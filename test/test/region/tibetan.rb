@@ -6,9 +6,9 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module Test
+module MiniTest
 
-  class Tibetan < Test::Unit::TestCase
+  class Tibetan < MiniTest::TestCase
     Sample = [
       "1991-05-01-", "1991-05-02-", "1991-05-03-", "1991-05-04-", "1991-05-05%", "1991-05-07-", "1991-05-08-", "1991-05-09-",
       "1991-05-10-", "1991-05-11-", "1991-05-12-", "1991-05-13-", "1991-05-14-", "1991-05-15-", "1991-05-15=", "1991-05-16-",

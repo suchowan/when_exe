@@ -6,25 +6,25 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module Test::Ephemeris
+module MiniTest::Ephemeris
 
-  class Ephemeris < Test::Unit::TestCase
+  class Ephemeris < MiniTest::TestCase
     def test_nothing
     end
   end
 
-  class CelestialObject < Test::Unit::TestCase
+  class CelestialObject < MiniTest::TestCase
     def test_nothing
     end
   end
 
-  class Star < Test::Unit::TestCase
+  class Star < MiniTest::TestCase
 
     def test_nothing
     end
 
     # 恒星
-    class Fixed < Test::Unit::TestCase
+    class Fixed < MiniTest::TestCase
       def test__access_hr
         polaris = When::Resource('_sc:HR0424')
         assert_equal("Alp UMi", polaris.bayer_name)
@@ -32,29 +32,29 @@ module Test::Ephemeris
     end
 
     # 春分点
-    class Vernal < Test::Unit::TestCase
+    class Vernal < MiniTest::TestCase
       def test_nothing
       end
     end
 
     # 北極
-    class Pole < Test::Unit::TestCase
+    class Pole < MiniTest::TestCase
       def test_nothing
       end
     end
   end
 
-  class Planet < Test::Unit::TestCase
+  class Planet < MiniTest::TestCase
     def test_nothing
     end
   end
 
-  class Coords < Test::Unit::TestCase
+  class Coords < MiniTest::TestCase
     def test_nothing
     end
   end
 
-  class Formula < Test::Unit::TestCase
+  class Formula < MiniTest::TestCase
     def test__sunrise
 
       today = '2014-3-4'

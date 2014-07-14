@@ -43,7 +43,11 @@ class Date
 
   alias :_minus_ :-
   def -(other)
-    other.kind_of?(When::TM::Duration) ? self - other.rational_duration : self._minus_(other)
+    case other
+    when When::TM::Duration ; self - other.rational_duration
+    when When::TimeValue    ; self._minus_(kind_of?(DateTime) ? other.to_date_time : other.to_date)
+    else                    ; self._minus_(other)
+    end
   end
 end
 

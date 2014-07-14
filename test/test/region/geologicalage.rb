@@ -6,8 +6,8 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module Test::TM
-  class GeologicalAge < Test::Unit::TestCase
+module MiniTest::TM
+  class GeologicalAge < MiniTest::TestCase
     def test__geological_age
       age = When.Resource('_tm:OrdinalReferenceSystem/GeologicalAge')
       assert_equal("-2500000000", age['始生代::新始生代'].end.to_s)

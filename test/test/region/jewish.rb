@@ -6,9 +6,9 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module Test
+module MiniTest
 
-  class Jewish < Test::Unit::TestCase
+  class Jewish < MiniTest::TestCase
     def test__jewish
       date = When.when? 'HY5700.1.1'
       [["HY5700.01.01", 2429521],

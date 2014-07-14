@@ -6,9 +6,9 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module Test
+module MiniTest
 
-  class Indian < Test::Unit::TestCase
+  class Indian < MiniTest::TestCase
     Sample1 = [
       "1913-03-01-", "1913-03-02-", "1913-03-03-", "1913-03-04-", "1913-03-05%", "1913-03-07-", "1913-03-08-", "1913-03-09-",
       "1913-03-10-", "1913-03-11-", "1913-03-12-", "1913-03-13-", "1913-03-14-", "1913-03-15-", "1913-03-15=", "1913-03<01-",

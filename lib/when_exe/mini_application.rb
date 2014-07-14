@@ -104,7 +104,7 @@ module When
 
     # 日付の自由変換
     #
-    # @param [Array<String>] args コマンドライン入力
+    # @param [Array<String, When::TM::TemporalPosition, When::TM::CalendarEra or When::TM::Calendar>] args コマンドライン入力
     # @param [Block] block ブロック
     #
     # @return [Array<Hash>] 変換結果
@@ -177,10 +177,12 @@ module When
       config    = When.config
       args.flatten.each do |arg|
         case arg
-        when Numeric ; dates << arg ; numbers << arg
-        when Hash    ; options.update(arg)
-        when Range   ; arg.each {|d| dates << d}
-        when Symbol  ; output = [arg]
+        when Numeric            ; dates << arg ; numbers << arg
+        when Hash               ; options.update(arg)
+        when Range              ; arg.each {|d| dates << d}
+        when Symbol             ; output = [arg]
+        when When::TM::CalendarEra,
+             When::TM::Calendar ; calendars << arg
         when String
           arg = When::EncodingConversion.to_internal_encoding(arg)
           case arg

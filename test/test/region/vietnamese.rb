@@ -6,9 +6,9 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module Test
+module MiniTest
 
-  class Vietnamese < Test::Unit::TestCase
+  class Vietnamese < MiniTest::TestCase
 
     Sample1 = [%w(紹明2.1.1                                1139-02-08 紹明02(1139).01.01),
                %w(ベトナム?LY=VSL::李朝::紹明2.1.1         1138-02-19 ベトナム?LY=VSL::李朝::紹明02(1138).01.01),

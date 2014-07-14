@@ -6,14 +6,14 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module Test
+module MiniTest
 
   module BasicTypes
 
     #
     # ISO 8601 Date and Time Representation
     #
-    class DateTime < Unit::TestCase
+    class DateTime < TestCase
 
       def test__to_array_assert
        assert_raises(TypeError)     { When::BasicTypes::DateTime._to_array(1)  }
@@ -331,7 +331,7 @@ module Test
     #
     # ISO 8601 Date Representation
     #
-    class Date < Unit::TestCase
+    class Date < TestCase
       def test__to_array_basic_ISO8601
         assert_equal([nil, [1985,4,12]], When::BasicTypes::Date._to_array_basic_ISO8601('19850412'))
         assert_equal([nil, [1985]], When::BasicTypes::Date._to_array_basic_ISO8601('1985'))
@@ -348,7 +348,7 @@ module Test
     #
     # ISO 8601 Time Representation
     #
-    class Time < Unit::TestCase
+    class Time < TestCase
       def test_nothing
       end
     end
@@ -356,7 +356,7 @@ module Test
     #
     # M17n String
     #
-    class M17n < Unit::TestCase
+    class M17n < TestCase
       Term1 = When::BasicTypes::M17n.new('Tokyo', 'zip')
       Term2 = When::BasicTypes::M17n.new(<<LABEL, <<NS, <<LOCALE)
 [
@@ -383,7 +383,7 @@ LOCALE
       end
     end
 
-    class Object < Unit::TestCase
+    class Object < TestCase
       def test_nothing
       end
     end
@@ -391,7 +391,7 @@ LOCALE
   end
 
   module RS
-    class Identifier < Unit::TestCase
+    class Identifier < TestCase
       def test__forward
         name   = When.Residue('Monday').label
         monday = When::RS::Identifier.new(name)
@@ -401,7 +401,7 @@ LOCALE
   end
 
   module EX
-    class Extent < Unit::TestCase
+    class Extent < TestCase
       def test_nothing
       end
     end

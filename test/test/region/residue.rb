@@ -6,9 +6,9 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module Test
+module MiniTest
 
-  class Residue < Test::Unit::TestCase
+  class Residue < MiniTest::TestCase
     def test__enumerator0
       list = []
       res = When::Coordinates::Residue.new(365.2422, 29.530589)

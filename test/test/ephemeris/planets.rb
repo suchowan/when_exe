@@ -6,8 +6,8 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module Test::Ephemeris
-  class Planets < Test::Unit::TestCase
+module MiniTest::Ephemeris
+  class Planets < MiniTest::TestCase
     def test_nothing
     end
   end

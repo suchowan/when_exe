@@ -6,9 +6,9 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module Test
+module MiniTest
 
-  class Mayan < Test::Unit::TestCase
+  class Mayan < MiniTest::TestCase
     def test__mayan_epoch
       # No offset
       [['PHLC13.0.0.0.0', 'PHLC13(00).00.00.00.00',  584283],

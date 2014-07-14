@@ -6,12 +6,12 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module Test
+module MiniTest
 
-  class Japanese < Test::Unit::TestCase
+  class Japanese < MiniTest::TestCase
 
-  # Masks = MD廿四節気|MD七十二候|MD六十卦|MD没|MD往亡
-    Masks = 13<<9|1<<49|1<<72
+    include When::CalendarNote::Japanese::Index
+    Masks = MD廿四節気|MD七十二候|MD六十卦|MD没|MD往亡
 
     def test_japanese_epoch
       eras = When.Resource('_e:Japanese')

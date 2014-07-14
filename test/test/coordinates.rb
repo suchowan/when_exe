@@ -6,12 +6,12 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module Test::Coordinates
+module MiniTest::Coordinates
 
   #
   # 剰余類
   #
-  class Residue < Test::Unit::TestCase
+  class Residue < MiniTest::TestCase
 
     def test__intersection
       r1 = When::Coordinates::Residue.new(3,10)
@@ -70,7 +70,7 @@ module Test::Coordinates
       end
     end
 
-    class BestRationalApproximations < Test::Unit::TestCase
+    class BestRationalApproximations < MiniTest::TestCase
       def test__continued_fraction
         it = When.Resource("_co:Residue?remainder=365.2421875&divisor=1").each
         [[365, 1], [1461, 4], [10592, 29], [12053, 33], [46751, 128]].each do |ratio|
@@ -79,14 +79,14 @@ module Test::Coordinates
       end
     end
 
-    class Enumerator < Test::Unit::TestCase
+    class Enumerator < MiniTest::TestCase
       def test_nothing
       end
     end
   end
 
   # 暦座標番号
-  class Index < Test::Unit::TestCase
+  class Index < MiniTest::TestCase
     def test__trunk
       month = When::Coordinates::Index.new({:label=>'month', :unit=>12, :base=>1,
         :trunk => %w(January February March April May June July August September October November December).map {|v| When.m17n(v)}})
@@ -108,12 +108,12 @@ module Test::Coordinates
   end
 
   # 暦座標要素
-  class Pair < Test::Unit::TestCase
+  class Pair < MiniTest::TestCase
     def test_nothing
     end
   end
 
-  class Temporal < Test::Unit::TestCase
+  class Temporal < MiniTest::TestCase
     def test__validate
 
       midJulian = When.Resource("_c:Julian?border=[0,3,25]")
@@ -193,7 +193,7 @@ module Test::Coordinates
   #
   # 空間位置
   #
-  class Spatial < Test::Unit::TestCase
+  class Spatial < MiniTest::TestCase
     Indian = [
       ["CentralIndia",
        "インド中部",

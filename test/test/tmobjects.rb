@@ -6,54 +6,54 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module Test::TM
+module MiniTest::TM
 
 #
 # (5.2) Temporal Objects Package
 #
 #
 
-  class Separation < Test::Unit::TestCase
+  class Separation < MiniTest::TestCase
     def test_nothing
     end
   end
 
-  class Order < Test::Unit::TestCase
+  class Order < MiniTest::TestCase
     def test_nothing
     end
   end
 
-  class RelativePosition < Test::Unit::TestCase
+  class RelativePosition < MiniTest::TestCase
     def test_nothing
     end
   end
 
-  class Object < Test::Unit::TestCase
+  class Object < MiniTest::TestCase
     def test_nothing
     end
   end
 
-  class Complex < Test::Unit::TestCase
+  class Complex < MiniTest::TestCase
     def test_nothing
     end
   end
 
-  class TopologicalComplex < Test::Unit::TestCase
+  class TopologicalComplex < MiniTest::TestCase
     def test_nothing
     end
   end
 
-  class Primitive < Test::Unit::TestCase
+  class Primitive < MiniTest::TestCase
     def test_nothing
     end
   end
 
-  class GeometricPrimitive < Test::Unit::TestCase
+  class GeometricPrimitive < MiniTest::TestCase
     def test_nothing
     end
   end
 
-  class Instant < Test::Unit::TestCase
+  class Instant < MiniTest::TestCase
 
     include When::TM::RelativePosition
 
@@ -98,7 +98,7 @@ module Test::TM
     end
   end
 
-  class Period < Test::Unit::TestCase
+  class Period < MiniTest::TestCase
 
     include When::TM::RelativePosition
 
@@ -212,22 +212,22 @@ module Test::TM
     end
   end
 
-  class TopologicalPrimitive < Test::Unit::TestCase
+  class TopologicalPrimitive < MiniTest::TestCase
     def test_nothing
     end
   end
 
-  class Node < Test::Unit::TestCase
+  class Node < MiniTest::TestCase
     def test_nothing
     end
   end
 
-  class Edge < Test::Unit::TestCase
+  class Edge < MiniTest::TestCase
     def test_nothing
     end
   end
 
-  class Duration < Test::Unit::TestCase
+  class Duration < MiniTest::TestCase
     def test__duration_constructors
        assert_equal(    1,       When::TM::Duration.new(1).duration)
        assert_equal(    1.0/128, When::TM::Duration.second(1).duration)
@@ -269,7 +269,7 @@ module Test::TM
        duration = When::TM::Duration.dhms(1,2,3,4.4)
        stop  = start + duration
        assert_equal((RUBY_VERSION.to_f<1.9 ? 93784.4 : 93784), stop-start)
-       assert_raise(TypeError) {
+       assert_raises(TypeError) {
          ::Date.today + duration
        }
        require 'when_exe/core/duration'
@@ -285,13 +285,13 @@ module Test::TM
        stop  = start + When.Duration('P1DT2H3M4S')
        assert_equal(93784, stop-start)
 
-       assert_raise(TypeError) {
+       assert_raises(TypeError) {
          stop  = start + When.Duration('P2M1DT2H3M4S')
        }
     end
   end
 
-  class PeriodDuration < Test::Unit::TestCase
+  class PeriodDuration < MiniTest::TestCase
     def test__period_duration
       period = When.Duration('P2Y3M4D')
       [[-2, 2], [-1, 3], [0, 4]].each do |sample|
@@ -312,7 +312,7 @@ module Test::TM
     end
   end
 
-  class IntervalLength < Test::Unit::TestCase
+  class IntervalLength < MiniTest::TestCase
     def test__interval_length
       [
        ['7E-3s',      7,  3, 10, 'second', '7E-3s'      ],

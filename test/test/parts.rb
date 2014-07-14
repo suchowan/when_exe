@@ -15,9 +15,9 @@ module When::Parts
   end
 end
 
-module Test::Parts
+module MiniTest::Parts
 
-  class MethodCash < Test::Unit::TestCase
+  class MethodCash < MiniTest::TestCase
     class A
       include When::Parts::MethodCash
 
@@ -75,7 +75,7 @@ module Test::Parts
     end
   end
 
-  class Locale < Test::Unit::TestCase
+  class Locale < MiniTest::TestCase
     Term1 = When.m17n('Tokyo', 'zip')
     Term2 = When.m17n(<<LABEL, <<NS, <<LOCALE)
 [
@@ -136,28 +136,28 @@ LOCALE
     end
   end
 
-  class Resource < Test::Unit::TestCase
+  class Resource < MiniTest::TestCase
     def test_nothing
     end
   end
 
-  class Enumerator < Test::Unit::TestCase
+  class Enumerator < MiniTest::TestCase
 
     def test_nothing
     end
 
-    class Array < Test::Unit::TestCase
+    class Array < MiniTest::TestCase
       def test_nothing
       end
     end
 
-    class Integrated < Test::Unit::TestCase
+    class Integrated < MiniTest::TestCase
       def test_nothing
       end
     end
   end
 
-  class GeometricComplex < Test::Unit::TestCase
+  class GeometricComplex < MiniTest::TestCase
 
     def test__include
 

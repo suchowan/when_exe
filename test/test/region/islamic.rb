@@ -6,10 +6,10 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module Test
+module MiniTest
 
   module CalendarTypes
-    class Islamic < Test::Unit::TestCase
+    class Islamic < MiniTest::TestCase
       def test_nothing
       end
     end

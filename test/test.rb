@@ -10,17 +10,22 @@
 require 'pp'
 require 'date'
 begin
-  require 'minitest/unit'
   require 'minitest/autorun'
-  Test = MiniTest
-  class Test::Unit::TestCase
-    alias :assert_raise :assert_raises
+  module MiniTest
+    TestCase = MiniTest.const_defined?(:Test) ? Test : Unit::TestCase
   end
 rescue LoadError
   require 'test/unit'
+  MiniTest = Test
+  module Test
+    TestCase = Unit::TestCase
+    class Unit::TestCase
+      alias :assert_raises :assert_raise
+    end
+  end
 end
 
-class Test::Unit::TestCase
+class MiniTest::TestCase
   def setup
     When._setup_({:multi_thread=>true})
   end

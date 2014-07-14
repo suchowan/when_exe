@@ -6,9 +6,9 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module Test
+module MiniTest
 
-  class Chinese < Test::Unit::TestCase
+  class Chinese < MiniTest::TestCase
     def test_chinese_date
 
       emd = When.Resource('_c:EphemerisBasedSolar?time_basis=+09:00')
