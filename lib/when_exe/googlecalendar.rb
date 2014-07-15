@@ -39,7 +39,7 @@ module GoogleCalendar
       options = {'summary'=>@title, 'description'=>@desc, 'location'=>@where}
       if @recurrence
         @recurrence.each_line do |line|
-          options[$1.downcase] ||= $2 if line =~ /\A(DTSTART|DTEND|RRULE).(.+)\z/i
+          options[$1.downcase] ||= $2 if line =~ /^(DTSTART|DTEND|RRULE).(.+)$/i
         end
       else
         options.update({'dtstart'=>When.when?(@st), 'dtend'=>When.when?(@en)})
@@ -55,7 +55,7 @@ module GoogleCalendar
     #   [ 'canceled'  - 無効 ]
     #
     def event_status
-      @xml.root.elements['gd:eventStatus'].attributes['value'][/[^.]+\z/]
+      @xml.root.elements['gd:eventStatus'].attributes['value'][/[^.]+$/]
     end
   end
 
