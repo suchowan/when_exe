@@ -11,7 +11,16 @@ module When
     # option key for _m17n_form
     # @private
     FormOptions = [:precision, :camel, :method, :locale, :prefix]
-   
+
+    # When::Parts::Resource オブジェクトを分かりやすい文字列にして返します
+    #
+    # @return [String] 先頭部分を簡約表現にした IRI
+    #
+    def inspect
+      expression = iri(true)
+      expression == '' ? super : expression
+    end
+
     #
     # オブジェクトの内容を Hash 化
     #
@@ -287,6 +296,14 @@ module When
         def format
           @format ||= Format
         end
+      end
+
+      # When::TM::TemporalPosition オブジェクトを分かりやすい文字列にして返します
+      #
+      # @return [String] to_s と同様
+      #
+      def inspect
+        to_s
       end
 
       #

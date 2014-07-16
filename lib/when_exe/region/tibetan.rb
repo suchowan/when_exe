@@ -21,8 +21,8 @@ module When
 
       [self,
         "names:[IntercalaryDay=en:Intercalation, 閏日=ja:%%<閏>]",
-        "[Double %s=,      欠=]",
-        "[Intercalary %s=, 重=]"
+        "[%s and next day=, %sと翌日=]",
+        "[Intercalary %s=,  重%s=]"
       ],
 
       [self,
@@ -159,15 +159,16 @@ module When
       def _normalize(args=[], options={})
         intercalary_month = When.Resource('_m:Tibetan::IntercalaryMonth::*')
         intercalary_day   = When.Resource('_m:Tibetan::IntercalaryDay::*')
+      # trunk_of_day      = (1..30).to_a.map {|d| When.m17n(d.to_s)}
         @indices ||= @index_of_MSC && @index_of_MSC.to_i == 1 ? 
           [
             When.Index({:unit=>60}),
             When.Index('Tibetan::Month', {:branch=>{0=>intercalary_month[0], 1=>intercalary_month[1]}, :shift=>2}),
-            When.Index({:branch=>{-2=>intercalary_day[0], -1=>intercalary_day[1]}})
+            When.Index({:branch=>{-2=>intercalary_day[0], +1=>intercalary_day[1]}})
           ] :
           [
             When.Index('Tibetan::Month', {:branch=>{0=>intercalary_month[0], 1=>intercalary_month[1]}, :shift=>2}),
-            When.Index({:branch=>{-2=>intercalary_day[0], -1=>intercalary_day[1]}})
+            When.Index({:branch=>{-2=>intercalary_day[0], +1=>intercalary_day[1]}})
           ]
         @label       ||= 'Tibetan::Tibetan'
         @epoch_in_CE ||= 0

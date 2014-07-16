@@ -29,8 +29,8 @@ module When
 
       [self,
         "names:[IntercalaryDay=en:Intercalation, 閏日=ja:%%<閏>]",
-        "[Double %s=,           欠=       ]",
-        "[Intercalary %s=,      重=       ]"
+        "[%s and next day=, %sと翌日=]",
+        "[Intercalary %s=,  重%s=]"
       ],
 
       [self,
@@ -852,7 +852,7 @@ module When
                                                        0   => intercalary_month[0],  #   白分
                                                       +0.5 => intercalary_month[1]}, #   黒分
                                             :shift=>@start_month-1}),
-          When.Index({:branch=>{-2=>intercalary_day[0], -1=>intercalary_day[1]}})
+          When.Index({:branch=>{-2=>intercalary_day[0], +1=>intercalary_day[1]}})
         ]
 
         super

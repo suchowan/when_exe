@@ -205,7 +205,7 @@ module When
     end
 
     #
-    # The Calendar of Thai people in China (Table based)
+    # The Calendar of Thai people in China CE1840..2049 (Table based)
     #
     class ThaiT < CyclicTableBased
 
@@ -227,6 +227,7 @@ module When
         @origin_of_LSC ||=  2393198
         @origin_of_MSC ||=     1202
         @epoch_in_CE   ||=     1840
+      # @before = @after =  'ThaiC'
         @indices       ||= ThaiP::Indices
         pattern        ||= Pattern.dup
         if @patch

@@ -61,9 +61,10 @@ module When::Parts
       def [](label)
         ref = _get(label)
         return ref if ref
+        return nil unless label =~ /\A[A-Z]/i
         self[label] = self.new(label)
-      rescue
-        nil
+      rescue NameError
+        raise NameError, 'Prease install TZInfo - gem install tzinfo'
       end
       alias :get :[]
 
@@ -140,7 +141,8 @@ module When::Parts
     # @param [String] identifier 識別名 ( "America/New_York" など)
     #
     def initialize(identifier)
-      @timezone   = TZInfo::Timezone.get(identifier)
+      id, query = identifier.split('?', 2)
+      @timezone = TZInfo::Timezone.get(id)
       unless TZInfo::TimeOrDateTime.method_defined?(:_to_datetime)
         if TZInfo::RubyCoreSupport.respond_to?(:datetime_new)
           TZInfo::TimeOrDateTime.class_eval %Q{
@@ -165,12 +167,13 @@ module When::Parts
         end
       end
       dst, std  = _offsets(Time.now.to_i)
-      @standard = When::TM::Clock.new({:zone=>std, :tz_prop=>self})
+      options   = query ? Hash[*(query.split('&').map {|item| item.split('=',2)}.flatten)] : {}
+      @standard = When::TM::Clock.new(options.merge({:zone=>std, :tz_prop=>self}))
       if std == dst
         @daylight      = @standard
         @tz_difference = 0
       else
-        @daylight      = When::TM::Clock.new({:zone=>dst, :tz_prop=>self})
+        @daylight      = When::TM::Clock.new(options.merge({:zone=>dst, :tz_prop=>self}))
         @tz_difference = @standard.universal_time - @daylight.universal_time
       end
       @indices = When::Coordinates::DefaultTimeIndices
@@ -179,18 +182,20 @@ module When::Parts
     # @private
     def _daylight(time)
       frame, cal_date, clk_time = time
-      clocks = {}
+      clocks  = {}
+      border  = @standard.instance_variable_get('@border')
+      options = border ? {'border'=>border.dup} : {}
       if clk_time
         time    = frame.to_universal_time(cal_date, clk_time, @standard)
         offsets = _offsets((time/When::TM::Duration::SECOND).floor)
         offsets.each do |offset|
-          clocks[offset] ||= When::TM::Clock.new({:zone=>offset, :tz_prop=>self})
+          clocks[offset] ||= When::TM::Clock.new(options.merge({:zone=>offset, :tz_prop=>self}))
           return clocks[offsets[0]] if @timezone.period_for_utc(
             (frame.to_universal_time(cal_date, clk_time, clocks[offset])/When::TM::Duration::SECOND).floor).dst?
         end
       end
       offset = @timezone.period_for_utc((time/When::TM::Duration::SECOND).floor).utc_total_offset
-      clocks[offset] || When::TM::Clock.new({:zone=>offset, :tz_prop=>self})
+      clocks[offset] || When::TM::Clock.new(options.merge({:zone=>offset, :tz_prop=>self}))
     end
 
     # @private

@@ -5,7 +5,11 @@
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
 
-require 'gcalapi'
+begin
+  require 'gcalapi'
+rescue LoadError
+  raise LoadError, "Please install gcalapi from https://github.com/suchowan/gcalapi"
+end
 
 #
 # gcalapi の GoogleCalendar モジュールへの機能追加

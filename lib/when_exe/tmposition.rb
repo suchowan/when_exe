@@ -1507,10 +1507,16 @@ module When::TM
     #
     # @return [Integer]
     #
-    #   -4712-01-01T12:00:00Z からの経過日数に対応する通番(日の境界で1進める)
+    #   -4712-01-01からの経過日数に対応する通番
     #
     def to_i
-      return @sdn if @sdn
+      @sdn ||= _to_i
+    end
+
+    #
+    # 暦法上の通日
+    #
+    def _to_i
       name, base = @calendar_era_name
       if base
         date     = @cal_date.dup
@@ -1518,8 +1524,9 @@ module When::TM
       else
         date     = @cal_date
       end
-      @sdn = @frame.to_julian_date(date)
+      @frame.to_julian_date(date)
     end
+    private :_to_i
 
     # 剰余類化
     #
@@ -1856,6 +1863,16 @@ module When::TM
                                    @clk_time.universal_time
     end
 
+    # ユリウス日
+    #
+    # @return [Integer]
+    #
+    #   -4712-01-01T12:00:00Z からの経過日数に対応する通番(日の境界で1進める)
+    #
+    def to_i
+      @sdn ||= _to_i + +@clk_time.clk_time[When::DAY]
+    end
+
     # 要素の参照
     #
     # @param [Integer] index 参照する要素の指定
@@ -2063,7 +2080,7 @@ module When::TM
           end
           clock = clock._daylight([@frame, cal_date, time])
         end
-        time = time.map {|t| t * 1}
+        time = [time[0]] +  time[1..-1].map {|t| t * 1}
         @clk_time = ClockTime.new(time, {:frame=>clock, :precision=>precision, :validate=>:done}) if clock_is_timezone
 
         # 閏秒
