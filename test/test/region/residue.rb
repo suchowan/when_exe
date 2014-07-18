@@ -138,7 +138,7 @@ module MiniTest
           cal, shift = list
           shift    ||= 0
           date = When.Calendar(cal) ^ today
-          [date % eto - shift, (eto & date).to_i/10 + 37*shift, (date & eto).to_i/10 + 37*shift]
+          [date % eto - shift, ((eto & date).to_i/10).to_i + 37*shift, ((date & eto).to_i/10).to_i + 37*shift]
         }.uniq
       )
     end

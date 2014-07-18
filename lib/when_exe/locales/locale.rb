@@ -696,6 +696,7 @@ module When
           mark[1]  = locale if asterisk[1]
           mark[2]  = locale unless mark[2]
           name = _replacement($1, locale, ($3 || @names['en'] || @names[''])) if name =~ /\A_([A-Z_]+)_(\((.+)\))?\z/
+          name.gsub!(/<[0-9A-F]{2}>/i) {|code| code[1..2].to_i(16).chr}
           @names[locale] = name
           if ref =~ /\A(.+):/
             prefix = namespace[$1] || Locale.send(:_namespaces)[$1]

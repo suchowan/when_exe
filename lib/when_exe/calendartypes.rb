@@ -484,7 +484,7 @@ module When::CalendarTypes
       n_key = (n_date.length<=1) ? n_date[0] : n_date
       c_sdn = (@_m_cash_["_sdn"][c_key] ||= _sdn_(c_date))
       n_sdn = (@_m_cash_["_sdn"][n_key] ||= _sdn_(n_date))
-      key   = n_sdn - c_sdn
+      key   = (n_sdn - c_sdn).to_i
       rule  = (@_m_cash_["_rule"][key]  ||= _rule_(key))
       @_m_cash_["_key"]        ||= {}
       @_m_cash_["_ids"]        ||= {}
@@ -513,7 +513,7 @@ module When::CalendarTypes
     def _key_(date)
       n_date = date.dup
       n_date[-1] += 1
-     _sdn(n_date) - _sdn(date)
+     (_sdn(n_date) - _sdn(date)).to_i
     end
 
     # 日時要素の翻訳表の取得
@@ -1492,7 +1492,7 @@ module When::CalendarTypes
         clock._number_to_coordinates(clock.second *
           clock.time_standard.from_dynamical_time(
             When::TM::JulianDate._d_to_t(
-              clock.formula[-1].day_event(
+              clock.formula.first.day_event(
                 clock.time_standard.to_dynamical_date(date[0]), @event, When.Resource('_ep:Sun'), @height
               )))), false)
     end

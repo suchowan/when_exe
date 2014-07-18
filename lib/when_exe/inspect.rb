@@ -602,29 +602,27 @@ module When
 
       # 指定の日時が指定イベントに該当するか?
       #
-      # @param [String]  options { :notes   => String  }  または  { :notes   => String } または { :value => String } という Hash の指定と等価
-      #   (指定の event が存在する場合は前者、指定の notes が存在する場合は中央、しない場合は後者)
-      # @param [Integer] options { :indices => Integer } という Hash の指定と等価
-      # @param [Hash] options 下記のとおり
-      # @option options [String] :event 確認するイベント名
-      # @option options [Object] :value 確認する暦注の値
-      # @option options [Object] その他のキー {When::CalendarNote#notes} を参照
+      # @overload is?(event=nil, options={})
+      #   @param [String]  event options={:notes=>String} または {:notes=>String} または {:value=>String} という指定と等価
+      #     (指定の event が存在する場合は前者、指定の notes が存在する場合は中央、しない場合は後者)
+      #   @param [Integer] event options={:indices=> Integer} という指定と等価
+      #   @param [Hash] options 下記のとおり
+      #   @option options [When::CalendarNote or String] :calendar_note 該当判断に用いる CalendarNoteオブジェクトまたはその IRI
+      #   @option options [String] :event 確認するイベント名
+      #   @option options [Object] :value 確認する暦注の値
+      #   @option options [Object] その他のキー {When::CalendarNote#notes} を参照
       #
       # @return [Boolean]
       #   [ true  - 該当する   ]
       #   [ false - 該当しない ]
       #
-      def is?(options=nil)
-        calendar_note = _calendar_note(options)
-        event = 
-          case options
-          when String ; options
-          when Hash   ; options.delete(:event)
-          else        ; calendar_note.event
-          end
-        event.to_s =~ /\A([^\d]+)/ && calendar_note.respond_to?($1.downcase) ?
-          calendar_note.include?(self, event) :
-          calendar_note.note?(self,  options)
+      def is?(*args)
+        options = args.last.kind_of?(Hash) ? args.pop.dup : {}
+        note    = _calendar_note(options)
+        event   = args.first || options.delete(:event) || note.event
+        return note.note?(self, options) unless options.empty?
+        return note.note?(self, event) unless event.to_s =~ /\A([^\d]+)/ && note.respond_to?($1.downcase)
+        return note.include?(self, event)
       end
 
       #

@@ -279,6 +279,14 @@ module When
       end
       alias :ago :before
 
+      # When::TM::Duration オブジェクトを分かりやすい文字列にして返します
+      #
+      # @return [String] to_s と同様
+      #
+      def inspect
+        to_s
+      end
+
       # 文字列化
       #
       # @return [String]

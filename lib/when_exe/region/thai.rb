@@ -179,8 +179,8 @@ module When
       # @private
       def _normalize(args=[], options={})
         super
-        @thoreshold    = (@mean_month * 13) % 1
-        @eoch_new_moon = (@origin_of_LSC - 18.90409 + 12 * @mean_month / 19)
+        @thoreshold     = (@mean_month * 13) % 1
+        @epoch_new_moon = (@origin_of_LSC - 18.90409 + 12 * @mean_month / 19)
       end
 
       # 年初の通日
@@ -194,13 +194,13 @@ module When
         prev  = _meton(year-1)
         this  = _meton(year)
         this += 1 if this.floor - prev.floor > 360 && this % 1 > @thoreshold
-        this.floor
+        this.floor - 148
       end
 
       private
 
       def _meton(year)
-        (((year + 9) * 235 / 19) - 111) * @mean_month + @eoch_new_moon
+        (((year + 9) * 235 / 19) - 111) * @mean_month + @epoch_new_moon
       end
     end
 
@@ -212,7 +212,7 @@ module When
       include Lunar
       include Songkran
 
-      Pattern = %w(
+      Pattern =  %w(C
         B A C A C B A C A B  C A A C B C A A C B  A C A C B A C A A C
         B A C A C A B C A A  C B C A A C B A C A  C B A C A B C A A C
         B C A A C B A C A C  B A C A B C A A C A  C B A C A B C A A C
@@ -224,15 +224,15 @@ module When
       # オブジェクトの正規化
       # @private
       def _normalize(args=[], options={})
-        @origin_of_LSC ||=  2393198
-        @origin_of_MSC ||=     1202
-        @epoch_in_CE   ||=     1840
-      # @before = @after =  'ThaiC'
+        @origin_of_LSC ||=  2392666
+        @origin_of_MSC ||=     1201
+        @epoch_in_CE   ||=     1839
+        @before = @after =  'ThaiC'
         @indices       ||= ThaiP::Indices
         pattern        ||= Pattern.dup
         if @patch
-          @patch.scan(/\d+[ABC]/i) do |patch|
-            pattern[patch[0..-2].to_i-@epoch_in_CE] = patch[-1..-1].upcase
+          @patch.scan(/(\d+)([ABC])/i) do |year,type|
+            pattern[year.to_i-@epoch_in_CE] = type.upcase
           end
         end
         @rule_table    = {

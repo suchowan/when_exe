@@ -1563,13 +1563,14 @@ module When::Coordinates
       def _normalize_spatial
 
         # Location
-        if ((@location||@long||@lat||@alt).kind_of?(String))
+        if (@location||@long||@lat||@alt).kind_of?(String)
           @location ||= "_l:long=#{@long||0}&lat=#{@lat||0}&alt=#{@alt||0}"
           @location   = When.Resource(@location)
         end
+        @location   ||= @tz_prop.location if @tz_prop
 
         # Border
-        if (@border.kind_of?(String))
+        if @border.kind_of?(String)
           @border = When.Calendar(
             case @border
             when /\([-\d]+?\)/ ; "_c:MultiBorder?borders=#{@border}"

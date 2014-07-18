@@ -1084,16 +1084,16 @@ module When::TM
         case time
         when Numeric
           options[:frame] ||= When::UTC unless time.kind_of?(Integer)
-          universal_time     = (2*time - (2*JulianDate::JD19700101-1)) * Duration::DAY.to_i / 2.0
+          universal_time    = (2*time - (2*JulianDate::JD19700101-1)) * Duration::DAY.to_i / 2.0
         when ClockTime
           options[:frame] ||= time.clock
-          universal_time     = time.clk_time[0] + time.universal_time
+          universal_time    = time.clk_time[0] + time.universal_time
         when ::Time
           options[:frame] ||= When.Clock(time.gmtoff)
-          universal_time     = When.Resource('_t:UniversalTime').from_time_object(time)
+          universal_time    = options[:frame].time_standard.from_time_object(time)
         when TimeValue
           options[:frame] ||= time.clock
-          universal_time     = time.universal_time
+          universal_time    = time.universal_time
         else
           if ::Object.const_defined?(:Date) && time.respond_to?(:ajd)
             case time

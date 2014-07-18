@@ -183,8 +183,13 @@ module When::Parts
     def _daylight(time)
       frame, cal_date, clk_time = time
       clocks  = {}
-      border  = @standard.instance_variable_get('@border')
-      options = border ? {'border'=>border.dup} : {}
+      options = {}
+      %w(border location).each do |attr|
+        value = @standard.instance_variable_get("@#{attr}")
+        next unless value
+        value = value.dup unless value.kind_of?(When::Parts::Resource) && value.registered?
+        options[attr] = value
+      end
       if clk_time
         time    = frame.to_universal_time(cal_date, clk_time, @standard)
         offsets = _offsets((time/When::TM::Duration::SECOND).floor)

@@ -266,15 +266,15 @@ module MiniTest::TM
 
     def test__duration_and_time
        start    = Time.now
-       duration = When::TM::Duration.dhms(1,2,3,4.4)
+       duration = When::TM::Duration.dhms(1,2,3,4.25)
        stop  = start + duration
-       assert_equal((RUBY_VERSION.to_f<1.9 ? 93784.4 : 93784), stop-start)
+       assert_equal((RUBY_VERSION.to_f<1.9 ? 93784.25 : 93784), stop-start)
        assert_raises(TypeError) {
          ::Date.today + duration
        }
        require 'when_exe/core/duration'
        stop  = start + duration
-       assert_equal(93784.4, stop-start)
+       assert_equal(93784.25, stop-start)
 
        now_date = DateTime.now
        duration = When::TM::Duration.hour(8)
