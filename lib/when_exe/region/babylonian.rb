@@ -9,9 +9,9 @@ module When
 
   class BasicTypes::M17n
 
-    Babylonian = [self, [
+    AncientOrient = [self, [
       "locale:[=en:, ja=ja:, alias]",
-      "names:[Babylonian=]",
+      "names:[AncientOrient=en:Ancient_Orient, 古代オリエント]",
       "[Babylonian=en:Babylonian_calendar, バビロニア暦]",
       "[Seleucid=en:Seleucid_era, セレウコス紀元=]",
 
@@ -19,6 +19,10 @@ module When
       '[based on Chris Bennett "Babylonian and Seleucid Dates" (Retrieved 2014-06-29)=' +
        'http://www.excite-webtl.jp/world/english/web/?wb_url=http%3a%2f%2fsuchowan%2eat%2ewebry%2einfo%2f201407%2farticle_8%2ehtml&wb_lp=JAEN,' +
        '典拠 - Chris Bennett "Babylonian and Seleucid Dates" (2014-06-29 閲覧)=http://suchowan.at.webry.info/201407/article_8.html]',
+
+      '[based on R.A.Parker & W.H.Dubberstein "Babylonian Chronology 626B.C.-A.D.75"=' +
+       'http://www.excite-webtl.jp/world/english/web/?wb_url=http%3a%2f%2fsuchowan%2eat%2ewebry%2einfo%2f201407%2farticle_23%2ehtml&wb_lp=JAEN,' +
+       '典拠 - R.A.Parker & W.H.Dubberstein "Babylonian Chronology 626B.C.-A.D.75"=http://suchowan.at.webry.info/201407/article_23.html]',
 
       [self,
         "names:[IntercalaryMonth=en:Intercalation, 閏月]",
@@ -63,12 +67,12 @@ module When
   module CalendarTypes
 
     #
-    #  Babylonian Dates
+    #  Ancient Orient Dates
     #
     # From Chris Bennett, http://www.tyndalehouse.com/Egypt/ptolemies/chron/babylonian/chron_bab_intro_fr.htm
     #
 
-    # Chris Bennett
+    # Chris Bennett -330..-29
     _table_CB = %w(							AbCDeFgHIjkL
 	aBcDeFGhIJklL	abcdEFGHIJkl	AbcDeFgHIjKL	aBcdEfGhIJkLL	AbCdEfGhIjkL
 	aBcDeFGhiJkL	aBCdEFgHijKLl	abCDEFgHijkL	aBcDEfGhIJkLl	aBcDEFGhiJkL
@@ -138,7 +142,76 @@ module When
 	AbCdEfgHiJKL	aBcDeFghIjKLl	ABcDefGhIjKl	ABcDEfGhiJkL	aBcDEfGhIjKlL
 	aBcDeFGHiJkl)
 
-    _table_PD = %w(							AbCDeFgHIjkL
+    # Parker & Dubberstein -625..-331
+    _table_PD1 = %w(							ABcDefGhIjKl
+	ABcDeFGhIjkL	aBcDEfGHiJklL	aBcDeFGHiJkl	AbcDeFGHiJKl	aBcdEfFGHIjKl
+	aBcdEfGHIjKl	AbCdeFGhIjKlL	AbCdeFGhiJkL	AbCDeFgHijKl	AbCDEfFgHijKl
+	AbCDEfGhIjkL	abCDEFgHijKlL	abCDeFGhIjKl	AbcDEfGhIJkL	aBcdEfFgHIJkL
+	aBcDefGhIJkL	AbCdEfgHiJkL	AbCDefGhIjKl	AbCDeFfGhIjKl	AbCdEFgHIjkLl
+	aBcDEFgHIjkL	abCdEFgHIJkl	AbcdEFFgHIjKl	AbcDeFGhIjKL	aBcdEfGHiJkL
+
+	aBcDeffGHIjkL	ABcDEfGhiJkL	aBcDEFfGhiJkl	AbCDEFghIjKl	aBcDEFFghIjKl
+	aBcDEfGHiJkL	abCdEFgHiJKlL	abCdEfGhIJKl	AbCdeFghIJKl	ABcDefGhiJKlL
+	AbCdEfGhIjkL	AbCdEFgHiJkl	AbCdEFGhIjKll	AbCdEFGhIjKl	aBcdEFGHiJkL
+	abCdeFGHiJKl	AbcDefFGHiJkL	aBcDeFgHiJkL	AbCdEfGhIjKlL	aBCdEFghIjkL
+	aBCDeFGhiJkl	AbCDEfGHijKll	AbCdEFGhIjKl	aBcDeFGhIJkLl	aBcDeFgHIjKL
+	abCdEfGhIjKL	aBcDeFfgHiJKL	aBcDeFghIjKL	aBCdEfGhiJkLl	ABcDEfGhIjkL
+	aBcDeFGHiJkl	AbcDEfGHIjKll	AbcDeFGHIjKl	aBcdEfGHIjKl	AbcDeFgHIjKL
+	aBcdEfGHiJkL	aBcDeFFgHijKl	ABcDEfGhIjkLl	AbCDEFghIjkL	abCDEFgHiJkl
+	aBcDEFGhIjKll	AbcDEFgHiJkL	aBcDeFgHiJKl	AbCdEfgHiJKlL	AbCdEfgHijKL
+	ABcDeFghIjKlL	AbCdEFghIjKl	AbCdEFgHiJkLl	aBcDEFgHIjkL	abCdEFgHIJkl
+
+	AbcDeFGhIJkLl	AbcDeFGhIJkL	aBcdEfGHiJkL	AbcDeFgHiJkL	AbCdEfFGhiJkL
+	aBcDEfGHijKl	aBcDEFGhIjkLl	aBcDEFGhIjkl	AbCdEFgHIjKl	AbcDeFgHIJkLl
+	AbcDeFGhIjKL	aBcDefGhiJKL	aBcDEfgHiJkL	aBCdEFfgHijKL	aBCdEFghIjKll
+	ABcDEfGhiJkL	aBCdEfGHiJkL	abCDefGHIjKlL	abCdeFGHiJKl	AbcdEfGHIjKL
+	aBcdEfFgHiJKl	AbCdEfGhIjKl	AbCDeFGhiJkl	AbCDeFFGhiJkl	AbCDEFghIjKl
+	abCDEFgHiJkLl	abCDEfGHiJkL	abCdEFgHiJKl	aBcDeFgHiJKlL	aBcDeFgHiJkL
+	AbCDefGhiJkL	AbCDEffGhiJkL	aBCDeFgHijKl	AbCDeFGhIjKll	AbCdEFgHIjKl
+	aBcdEFgHIJkL	abCdeFgHIJkLL	abCdEfgHIJkL	aBcdEFgHIjkL	aBCdeFFgHijKL
+	aBcDEfGhIjkL	aBcDEFgHiJklL	abCDEFGhiJkl	aBcDEFGhIjKl	abCdEFGhIJklL
+	abCdEFgHIjKl	AbCdEfGhIjKL	aBcDeFfGhiJKl	ABcDeFghIjKl	ABcDEfGhiJkL
+
+	aBcDEFgHijKlL	aBcDEfGhIjKl	AbcDEfGHiJKll	AbcDeFGhIJkL	aBcdEfGhIJkL
+	AbCdeFgHiJKlL	AbCdeFgHiJKl	AbCdEfGhIjKlL	aBCdEFgHijKl	AbCdEFGhIjkL
+	abCdEFGHiJkll	AbCdEFGHijKl	aBcDeFGHiJkL	aBcdEFgHiJkLL	abCdEFghIjKL
+	aBCdEfGhiJkL	AbCDeFfgHijKL	aBCDeFghIjkL	aBCDeFGhiJklL	aBCdEFgHiJkL
+	abCdEFgHIjKl	AbcDeFgHIJkLl	AbcDefGHIjKL	aBcdEfgHIjKL	aBcDeFgHiJkLl
+	ABcDeFgHiJkL	aBcDEfGHijKll	AbCDEfGHijkL	aBCDeFgHIjkl	AbcDEFGhIjKlL
+	abcDEFgHIjKl	aBcDeFgHIjKl	AbCdEfGhIjKlL	AbCDeFghiJkL	AbCDEfGhijKl
+	ABcDEFfgHijKl	AbCDEfGhIjkL	aBcDEfGHiJkLl	aBcDeFGhIJkL	abCdEfGhIJkL
+	AbcDefGhIJKlL	aBcDefGhIJkL	AbCdEfgHiJKl	AbCDeFgHiJklL	aBCdEFgHiJkl
+	AbCdEFGhIjKll	aBcDEFGhIjKl	abCdEFGHiJkL	abcDeFGHiJkLl	AbcDEfGhIjKL
+
+	aBcDeFghIjKL	aBCdEfGhiJkLl	ABCdEFghiJkL	aBCdEFgHijKl	AbCdEFGhIjkLl
+	aBCdEFgHiJkL	aBcDeFgHIjKlL	aBcdEfGHiJKl	AbCdeFgHiJKL	aBcDefGhIjKlL
+	ABcDefGhIjKl	ABcDeFgHiJkL	aBcDEfGHiJkll	AbCDeFGHiJkl	aBcDeFGHIjKll
+	aBcDeFGHiJkL	abCdEfGHiJKl	AbcDeFGhIjKlL	aBcDEfGhiJkL	AbCDeFgHijKl
+	AbCDEfGhiJklL	aBCDEfGhiJkl	AbCDEfGHijKl	aBcDEFgHiJkLl	aBcDeFGhIJkL
+	aBcdEfGhIJkLL	aBcdEfGhIjKL	AbCdeFgHiJkL	AbCDefGhIjKlL	aBCdEfGhIjKl
+	aBCdEFgHiJkl	AbCdEFGhIjKll	AbcDEFgHIjKl	aBcdEFGhIJkLl	aBcdEFGhIjKL
+	abCdEfGhIjKL	aBcDeFGhiJkLl	ABcDEfGhijKl	ABcDEFgHijkL	aBcDEFGhiJklL
+	aBcDEFgHiJkl	AbCdEFgHIJkl	aBcDeFfGHiJKl	AbcDeFgHiJKl	ABcdEfgHiJKlL
+	AbCdEfgHiJKl	ABcDeFghIjKl	ABcDEfGhIjkLl	AbCDeFGhIjkL	aBcDeFGHiJkl
+
+	AbcDeFGHIjKll	AbcDeFGHiJKl	aBcdEfGHiJKlL	aBcdEFgHiJkL	AbCdEfGhIjkL
+	AbCDeFgHijKlL	aBCDeFGhijKl	aBCDEfGhIjkL	abCDeFGHiJklL	abCDeFGhIjKl
+	AbCdEfGhIJkL	aBcDeFfgHIjKL	aBcDefGhIjKL	aBCdEfgHiJkLl	ABCdEfgHiJkL
+	aBCdEfGHijKlL	aBcDEfGhIJkl	aBcDEfGHIjKl	abCdEfGHIjKl	AbcDeFgHIJkLl
+	AbcDeFgHIjKL	aBcdEFgHijKLl	AbCdEFgHijKl	AbCDEfGhiJkL	abCDEFgHijKll
+	AbCDEFgHijKl	aBcDEFgHiJkL	abCdEFgHIjKlL	abCdEFgHiJKl	AbCdEfgHiJKl
+	ABcDeFfgHiJkL	AbCdEfGhIjKl	AbCDEfgHiJklL	AbCDeFgHiJkl	AbCDeFGhIjKl
+	aBcDeFGhIJkLl	aBcdEFgHIJkL	abCdeFGhIJKl	AbcDeFgHiJKlL	aBcDeFgHiJkL
+	aBCdEfGhIjKlL	aBcDEFgHijkL	aBcDEFGhiJkl	AbCdEFGHijKll	AbCdEFGhIjKl
+	aBcDeFGhIjKL	abCdEfGhIjKLl	ABcdEfGhIjKL	aBCdEfghIjKL	aBCDeFfghIjKl
+
+	ABCdEfGhIjkL	aBCdEFgHiJklL	aBcDEfGHiJkl	AbCdEfGHIjKl	aBcdEfGHIjKLl
+	aBcdEfGHiJKl	AbCdeFgHIjKl	ABcDeFgHiJkLl	AbCDeFgHijKl	AbCDEfGHijkLl
+	AbCDEfGhIjkL	abCDEFgHiJkl	AbcDEFgHIjKll	AbcDEfGHiJkL	aBcDeFgHiJKl
+	AbCdEfGhiJKlL	AbCdEfgHiJkL	AbCDeFghIjKl	AbCDEfFghIjKl) #AbCDeFgHIjkL
+
+    # Parker & Dubberstein -330..-29
+    _table_PD2 = %w(							AbCDeFgHIjkL
 	aBcDeFGhIJklL	abCdEFgHIJkl	AbcDeFgHIJkL	aBcdEfGhIJkLL	AbCdEfGhIjkL
 	aBcDeFGhiJkL	aBCdEFgHijKLl	aBcDEFgHijKl	AbcDEFGhIjkLl	aBcDEFGhiJkL
 	abCdEFGhIjKl	AbcDeFGhIjKlL	AbCdEfGhiJKl	ABcDeFghIjKl	ABcDEfGhiJkLl
@@ -207,62 +280,131 @@ module When
 	AbCdEfgHiJKL	aBcDeFghIjKLl	ABcDefGhIjKl	ABcDEfGhiJkL	aBcDEfGhIjKlL
 	aBcDeFGHiJkl)
 
-    _remarks  = When.M17n('Babylonian::based on Chris Bennett "Babylonian and Seleucid Dates" (Retrieved 2014-06-29)')
+    _table_PD   = _table_PD1 + _table_PD2
+
+    _remarksCB  = When.M17n('AncientOrient::based on Chris Bennett "Babylonian and Seleucid Dates" (Retrieved 2014-06-29)')
+
+    _remarksPD  = When.M17n('AncientOrient::based on R.A.Parker & W.H.Dubberstein "Babylonian Chronology 626B.C.-A.D.75"')
+
+    _babylonian = [
+      When.Index('AncientOrient::BabylonianMonth', {:branch=>{1=>When.Resource('_m:AncientOrient::IntercalaryMonth::*')[1]}}),
+      When::Coordinates::DefaultDayIndex
+    ]
+
+    _seleucid = [
+      When.Index('AncientOrient::SeleucidMonth', {:branch=>{1=>When.Resource('_m:AncientOrient::IntercalaryMonth::*')[1]}}),
+      When::Coordinates::DefaultDayIndex
+    ]
 
     # Chris Bennett
     Babylonian = [PatternTableBasedLuniSolar, {
-      'label'        => 'Babylonian::Babylonian',
-      'remarks'      => _remarks,
+      'label'        => 'AncientOrient::Babylonian',
+      'remarks'      => _remarksCB,
       'origin_of_LSC'=> 1600628,
       'origin_of_MSC'=> -330,
+      'before'       => 'BabylonianPD',
       'rule_table'   => _table_CB,
-      'indices'      => [
-          When.Index('Babylonian::BabylonianMonth', {:branch=>{1=>When.Resource('_m:Babylonian::IntercalaryMonth::*')[1]}}),
-          When::Coordinates::DefaultDayIndex
-        ]
+      'indices'      => _babylonian
       }
     ]
 
     Seleucid = [PatternTableBasedLuniSolar, {
-      'label'        => 'Babylonian::Seleucid',
-      'remarks'      => _remarks,
+      'label'        => 'AncientOrient::Seleucid',
+      'remarks'      => _remarksCB,
       'origin_of_LSC'=> 1600628,
       'origin_of_MSC'=>  -19,
       'epoch_in_CE'  => -330,
+      'before'       => 'SeleucidPD',
       'rule_table'   => _table_CB,
-      'indices'      => [
-          When.Index('Babylonian::SeleucidMonth', {:branch=>{1=>When.Resource('_m:Babylonian::IntercalaryMonth::*')[1]}}),
-          When::Coordinates::DefaultDayIndex
-        ]
+      'indices'      => _seleucid
       }
     ]
 
     # R. A. Parker & W. H. Dubberstein
+    BabylonianPDE = [PatternTableBasedLuniSolarWithEphemeris, {
+      'label'        => 'AncientOrient::Babylonian',
+      'remarks'      => _remarksPD,
+      'origin_of_LSC'=> 1492871,
+      'origin_of_MSC'=> -625,
+      'engine'       => 'ChineseLuniSolar?time_basis=+03',
+      'rule_table'   => %w(              N N A N N U N A N N U N
+                           A N N U N N N U A N N U N N U N U N U
+                           N A N N A N N A N N N U N A N N A N A
+                           N N U N A N N A N N N N U A N N A N N
+                           A N A N A N N A N N N U N A N N A N N
+                           N U A N N A N N U N N U N A N N A N N
+                           U N A N N A N N U N A N N A N N U N N
+                           A N A N N A N a N N A N N A N N U N A
+                           N N a N N a N A N N A N N A N N U N A
+                           N N A N N a N A N N A N N A N N A N A
+                           N N A N N a N A N N A N N A N N A N A
+                           N N A N N A N A N N A N N A N N U N A
+                           N N A N N A N A N N A N N a N N U N A
+                           N A N N N A N A N N A N N A N N U N A
+                           N N A N N A N A N N A N N A N N U N A
+                           N N A N N A N A N N A N N A N N U N A),
+      'subkey_table' => {'N'=>'ABCDEFGHIJKL',
+                         'A'=>'ABCDEFGHIJKLL',
+                         'a'=>'ABCDEFGHIJKLL',
+                         'U'=>'ABCDEFFGHIJKL'
+                        },
+      'indices'      => _babylonian
+      }
+    ]
+
     BabylonianPD = [PatternTableBasedLuniSolar, {
-      'label'        => 'Babylonian::Babylonian',
-      'remarks'      => _remarks,
-      'origin_of_LSC'=> 1600628,
-      'origin_of_MSC'=> -330,
+      'label'        => 'AncientOrient::Babylonian',
+      'remarks'      => _remarksPD,
+      'origin_of_LSC'=> 1492871,
+      'origin_of_MSC'=> -625,
       'rule_table'   => _table_PD,
-      'indices'      => [
-          When.Index('Babylonian::BabylonianMonth', {:branch=>{1=>When.Resource('_m:Babylonian::IntercalaryMonth::*')[1]}}),
-          When::Coordinates::DefaultDayIndex
-        ]
+      'indices'      => _babylonian
       }
     ]
 
     SeleucidPD = [PatternTableBasedLuniSolar, {
-      'label'        => 'Babylonian::Seleucid',
-      'remarks'      => _remarks,
-      'origin_of_LSC'=> 1600628,
-      'origin_of_MSC'=>  -19,
-      'epoch_in_CE'  => -330,
+      'label'        => 'AncientOrient::Seleucid',
+      'remarks'      => _remarksPD,
+      'origin_of_LSC'=> 1492871,
+      'origin_of_MSC'=> -314,
+      'epoch_in_CE'  => -625,
       'rule_table'   => _table_PD,
-      'indices'      => [
-          When.Index('Babylonian::SeleucidMonth', {:branch=>{1=>When.Resource('_m:Babylonian::IntercalaryMonth::*')[1]}}),
-          When::Coordinates::DefaultDayIndex
-        ]
+      'indices'      => _seleucid
       }
     ]
+  end
+
+  class TM::CalendarEra
+
+    # 古代オリエント
+    AncientOrient = [self, [
+      "locale:[=en:, ja=ja:]",
+      "area:[AncientOrient=en:Ancient_Orient, 古代オリエント]",
+      [self,
+	"period:[Neo-Babylonian,新バビロニア]",
+	["[Nabopolassar,                              ナボポラッサル                                    ]0",	"@F",	"-0625^BabylonianPD"],
+	["[NebuchadnezzarII=en:Nebuchadnezzar_II,     ネブカドネザルII=ja:%%<ネブカドネザル2世>         ]1",	"@A",	"-0603"],
+	["[AmelMarduk=en:Amel-Marduk,                 アメル・マルドゥク                                ]1",	"@A",	"-0561"], # 0?
+	["[Neriglissar=en:Nergal-sharezer,            ネルガル・シャレゼル                              ]1",	"@A",	"-0559"], # 0?
+	["[LabashiMarduk=en:Labashi-Marduk,           ラバシ・マルドゥク                                ]1",	"@A",	"-0555"], # 0?
+	["[Nabonidus,                                 ナボニドゥス                                      ]1",	"@A",	"-0554", "-0538.10="]
+      ],
+      [self,
+	"period:[Achaemenid,アケメネス朝]",
+	["[CyrusII=en:Cyrus_the_Great,                キュロスII=ja:%%<キュロス2世>                     ]1",	"@F",	"-0549^BabylonianPD"],
+	["[CambysesII=en:Cambyses_II,                 カンビュセスII=ja:%%<カンビュセス2世>             ]1",	"@A",	"-0528"],
+	["[Bardiya,                                   スメルディス                                      ]1",	"@A",	"-0521"],
+	["[DariusI=en:Darius_I,                       ダレイオスI=ja:%%<ダレイオス1世>                  ]1",	"@A",	"-0520"],
+	["[XerxesI=en:Xerxes_I_of_Persia,             クセルクセスI=ja:%%<クセルクセス1世>              ]1",	"@A",	"-0484"],
+	["[ArtaxerxesI=en:Artaxerxes_I_of_Persia,     アルタクセルクセスI=ja:%%<アルタクセルクセス1世>  ]1",	"@A",	"-0464"], # 0?
+	["[XerxesII=en:Xerxes_II_of_Persia,           クセルクセスII=ja:%%<クセルクセス2世>             ]1",	"@A",	"-0423"],
+	["[Sogdianus,                                 ソグディアノス                                    ]1",	"@A",	"-0423"],
+	["[DariusII=en:Darius_II_of_Persia,           ダレイオスII=ja:%%<ダレイオス2世>                 ]1",	"@A",	"-0422"],
+	["[ArtaxerxesII=en:Artaxerxes_II,             アルタクセルクセスII=ja:%%<アルタクセルクセス2世> ]1",	"@A",	"-0403"],
+	["[ArtaxerxesIII=en:Artaxerxes_III_of_Persia, アルタクセルクセスIII=ja:%%<アルタクセルクセス3世>]1",	"@A",	"-0357"],
+	["[ArtaxerxesIV=en:Arses_of_Persia,           アルセス                                          ]1",	"@A",	"-0337"], # 0?
+	["[DariusIII=en:Darius_III_of_Persia,         ダレイオスIII=ja:%%<ダレイオス3世>                ]1",	"@A",	"-0335", "-0329="]
+      ]
+    ]]
   end
 end

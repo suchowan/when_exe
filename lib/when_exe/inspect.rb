@@ -136,6 +136,14 @@ module When
       def _to_hash_value(options={})
         options[:method] == :to_m17n ? to_s : self
       end
+
+      # When::Coordinates::Pair オブジェクトを分かりやすい文字列にして返します
+      #
+      # @return [String] to_s と同様
+      #
+      def inspect
+        to_s
+      end
     end
 
     class Residue

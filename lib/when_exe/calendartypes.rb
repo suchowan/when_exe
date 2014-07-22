@@ -701,6 +701,7 @@ module When::CalendarTypes
         if subkey.kind_of?(Array)
           subkey, *offsets = rule['Rule'][k]
         else
+          subkey = _make_subkey(subkey)
           rule['Rule'][k] = [subkey] + offsets
         end
         _increment_offsets(offsets, subkey)
@@ -712,6 +713,9 @@ module When::CalendarTypes
 
       @entry_key     ||= key
     end
+
+    # 恒等変換
+    alias :_make_subkey :_do_nothing
 
     # オフセットの更新
     def _increment_offsets(offsets, subkey)
@@ -799,7 +803,7 @@ module When::CalendarTypes
 
   # 表引きにより実現する太陰太陽暦(29,30日以外の月がある場合)
   #
-  #   Luni-Solar calendar which uses year / month /day table
+  #   Luni-Solar calendar which has months with irregular length
   #
   class PatternTableBasedLuniSolarExtended < PatternTableBasedLuniSolar
 
@@ -815,6 +819,40 @@ module When::CalendarTypes
       return super unless subkey.kind_of?(Hash)
       offsets[1] += subkey['Months'] # 月のオフセットを月数分進める
       offsets[0] += subkey['Days']   # 日のオフセットを日数分進める
+    end
+  end
+
+  # 表引きにより実現する太陰太陽暦(Ephemerisにより朔を決定する)
+  #
+  #   Luni-Solar calendar whose new moon is determined by 'engine' calendar
+  #
+  class PatternTableBasedLuniSolarWithEphemeris < PatternTableBasedLuniSolar
+
+    private
+
+    # subkeyの生成
+    def _make_subkey(key)
+      pattern = @subkey_table[key]
+      subkey  = ''
+      pattern.length.times do |i|
+        @month_no    += 1
+        next_new_moon = @engine._new_month(@month_no)
+        subkey       += next_new_moon - @new_moon >= 30 ? pattern[i..i].upcase : pattern[i..i].downcase
+        @new_moon     = next_new_moon
+      end
+      subkey
+    end
+
+    # オブジェクトの正規化
+    #
+    #   YearLengthTableBased+オブジェクトの性質定義を初期設定します。
+    #
+    def _normalize(args=[], options={})
+      @engine   = When.Calendar(@engine)
+      divmod    = When::Coordinates::Residue.mod(@origin_of_LSC.to_i+3) {|cn| @engine.formula[-1].cn_to_time(cn)}
+      @month_no = divmod[0]
+      @new_moon = @origin_of_LSC.to_i+3 - divmod[1]
+      super
     end
   end
 
@@ -1501,7 +1539,7 @@ module When::CalendarTypes
   #
   # 日時要素の境界 - 日の出
   #
-  class SunRise < DayBorder
+  class Sunrise < DayBorder
 
     private
 
@@ -1516,7 +1554,7 @@ module When::CalendarTypes
   #
   # 日時要素の境界 - 日の入り
   #
-  class SunSet < DayBorder
+  class Sunset < DayBorder
 
     private
 

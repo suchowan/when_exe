@@ -205,7 +205,8 @@ module When
     autoload :Iranian,                 'when_exe/region/iranian'
     autoload :Islamic,                 'when_exe/region/islamic'
     autoload :Jewish,                  'when_exe/region/jewish'
-    autoload :Armenian,                'when_exe/region/Armenian'
+    autoload :AncientOrient,           'when_exe/region/babylonian'
+    autoload :Armenian,                'when_exe/region/armenian'
     autoload :Roman,                   'when_exe/region/roman'
     autoload :Coptic,                  'when_exe/region/coptic'
     autoload :French,                  'when_exe/region/french'
@@ -379,6 +380,7 @@ module When
       autoload :Iranian,               'when_exe/region/iranian'
       autoload :Hijra,                 'when_exe/region/islamic'
       autoload :Jewish,                'when_exe/region/jewish'
+      autoload :AncientOrient,         'when_exe/region/babylonian'
       autoload :Roman,                 'when_exe/region/roman'
       autoload :Julian,                'when_exe/region/roman'
       autoload :Pope,                  'when_exe/region/pope'
@@ -387,8 +389,8 @@ module When
 
       # Defualt search path for Epochs and Eras
       DefaultEpochs = ['Common',     'ModernJapanese',
-                       'Hijra',      'Jewish', 'Iranian',
-                       'Roman',      'Byzantine', 'LongCount',
+                       'Hijra',      'Jewish',    'Iranian',
+                       'Roman',      'Byzantine', 'AncientOrient', 'LongCount',
                        'BalineseLuniSolar',  'JavaneseLunar',
                        'Japanese',   'JapanesePrimeMinister', 'NihonKoki', 'NihonShoki',
                        'Chinese',    'Ryukyu',  'Vietnamese', 'Korean',
