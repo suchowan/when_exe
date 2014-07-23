@@ -16,13 +16,11 @@ module When
       "[Seleucid=en:Seleucid_era, セレウコス紀元=]",
 
       # Remarks
-      '[based on Chris Bennett "Babylonian and Seleucid Dates" (Retrieved 2014-06-29)=' +
-       'http://www.excite-webtl.jp/world/english/web/?wb_url=http%3a%2f%2fsuchowan%2eat%2ewebry%2einfo%2f201407%2farticle_8%2ehtml&wb_lp=JAEN,' +
-       '典拠 - Chris Bennett "Babylonian and Seleucid Dates" (2014-06-29 閲覧)=http://suchowan.at.webry.info/201407/article_8.html]',
+      '[based on Chris Bennett "Babylonian and Seleucid Dates" (Retrieved 2014-06-29)=http://suchowan.at.webry.info/201407/article_8.html,' +
+       '典拠 - Chris Bennett "Babylonian and Seleucid Dates" (2014-06-29 閲覧)=]',
 
-      '[based on R.A.Parker & W.H.Dubberstein "Babylonian Chronology 626B.C.-A.D.75"=' +
-       'http://www.excite-webtl.jp/world/english/web/?wb_url=http%3a%2f%2fsuchowan%2eat%2ewebry%2einfo%2f201407%2farticle_23%2ehtml&wb_lp=JAEN,' +
-       '典拠 - R.A.Parker & W.H.Dubberstein "Babylonian Chronology 626B.C.-A.D.75"=http://suchowan.at.webry.info/201407/article_23.html]',
+      '[based on R.A.Parker & W.H.Dubberstein "Babylonian Chronology 626B.C.-A.D.75"=http://suchowan.at.webry.info/201407/article_23.html,' +
+       '典拠 - R.A.Parker & W.H.Dubberstein "Babylonian Chronology 626B.C.-A.D.75"=]',
 
       [self,
         "names:[IntercalaryMonth=en:Intercalation, 閏月]",
@@ -73,7 +71,7 @@ module When
     #
 
     # Chris Bennett -330..-29
-    _table_CB = %w(							AbCDeFgHIjkL
+    _table_CB2 = %w(							AbCDeFgHIjkL
 	aBcDeFGhIJklL	abcdEFGHIJkl	AbcDeFgHIjKL	aBcdEfGhIJkLL	AbCdEfGhIjkL
 	aBcDeFGhiJkL	aBCdEFgHijKLl	abCDEFgHijkL	aBcDEfGhIJkLl	aBcDEFGhiJkL
 	abCdEFGhIjKl	AbcDeFGhIjKlL	AbCdEfGhiJKl	ABcDeFghIjKl	ABcDEfGhiJkLl
@@ -280,10 +278,9 @@ module When
 	AbCdEfgHiJKL	aBcDeFghIjKLl	ABcDefGhIjKl	ABcDEfGhiJkL	aBcDEfGhIjKlL
 	aBcDeFGHiJkl)
 
+    _table_CB   = _table_PD1 + _table_CB2
     _table_PD   = _table_PD1 + _table_PD2
-
     _remarksCB  = When.M17n('AncientOrient::based on Chris Bennett "Babylonian and Seleucid Dates" (Retrieved 2014-06-29)')
-
     _remarksPD  = When.M17n('AncientOrient::based on R.A.Parker & W.H.Dubberstein "Babylonian Chronology 626B.C.-A.D.75"')
 
     _babylonian = [
@@ -300,9 +297,8 @@ module When
     Babylonian = [PatternTableBasedLuniSolar, {
       'label'        => 'AncientOrient::Babylonian',
       'remarks'      => _remarksCB,
-      'origin_of_LSC'=> 1600628,
-      'origin_of_MSC'=> -330,
-      'before'       => 'BabylonianPD',
+      'origin_of_LSC'=> 1492871,
+      'origin_of_MSC'=> -625,
       'rule_table'   => _table_CB,
       'indices'      => _babylonian
       }
@@ -311,10 +307,9 @@ module When
     Seleucid = [PatternTableBasedLuniSolar, {
       'label'        => 'AncientOrient::Seleucid',
       'remarks'      => _remarksCB,
-      'origin_of_LSC'=> 1600628,
-      'origin_of_MSC'=>  -19,
-      'epoch_in_CE'  => -330,
-      'before'       => 'SeleucidPD',
+      'origin_of_LSC'=> 1492871,
+      'origin_of_MSC'=> -314,
+      'epoch_in_CE'  => -625,
       'rule_table'   => _table_CB,
       'indices'      => _seleucid
       }

@@ -48,6 +48,14 @@ module When
     #
     attr_reader :multi_thread
 
+    #
+    # Logger オブジェクト
+    #
+    # @return [Logger]
+    #
+    attr_accessor :logger
+    private :logger=
+
     # Initializations
     #
     # @param [Hash] options 以下の通り
@@ -63,11 +71,12 @@ module When
     # @option options [String]                      :base_uri              Base URI for When_exe Resources (Default When::SourceURI)
     # @option options [Hash<String=>String>]        :additional_namespaces User defined namespaces (Default {})
     # @option options [String]                      :root_dir              Root Directory for When_exe Resources Cash data (Default When::RootDir)
-    # @option options [Boolean]                     :multi_thread          マルチスレッド対応            (true: 対応, false/nil: 非対応)
     # @option options [Boolean]                     :direct                '_' で終わるメソッドをキャッシュせずに毎回計算するか否か
     # @option options [Hash{Symbol=>boolean}]       :escape                毎回 method_missing を発生させるメソッドを true にする
     # @option options [false, nil]                  :escape                to_str, to_ary, to_hash のみ毎回 method_missing を発生させる
     # @option options [true]                        :escape                すべて毎回 method_missing を発生させる
+    # @option options [Boolean]                     :multi_thread          マルチスレッド対応            (true: 対応, false/nil: 非対応)
+    # @option options [Logger]                      :logger                Logger オブジェクト
     #
     # @return [void]
     #
@@ -77,6 +86,7 @@ module When
     #
     def _setup_(options={})
       @multi_thread = options[:multi_thread]
+      @logger       = options[:logger]
       Parts::MethodCash._setup_(options)
       Parts::Resource._setup_(options)
       Locale._setup_(options)

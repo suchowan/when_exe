@@ -453,7 +453,7 @@ module When::TimeStandard
     def to_dynamical_date(date)
       When::TM::JulianDate._t_to_d(
         to_dynamical_time(
-          When::TM::JulianDate._d_to_t(date)))
+          When::TM::JulianDate._d_to_t(+date)))
     end
 
     # dynamical date を当該時刻系の日付に変換する
@@ -465,7 +465,7 @@ module When::TimeStandard
     def from_dynamical_date(date)
       When::TM::JulianDate._t_to_d(
         from_dynamical_time(
-          When::TM::JulianDate._d_to_t(date)))
+          When::TM::JulianDate._d_to_t(+date)))
     end
 
     # Time オブジェクトを universal time に変換する

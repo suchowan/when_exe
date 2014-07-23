@@ -21,10 +21,10 @@ module When
     Zoroastrian = [self, [
       "locale:[=en:, ja=ja:, ar=ar:, alias=ja:]",
       "names:[Zoroastrian=]",
-      "[Zoroastrian=en:Zoroastrian_calendar#The_reckoning_of_years,   ゾロアスター暦=  ]",
-      "[Qadimi=en:Zoroastrian_calendar#The_Qadimi_calendar ,          カディミ暦=      ]",
-      "[Shahanshahi=en:Zoroastrian_calendar#The_Shahanshahi_calendar, シャハンシャヒ暦=]",
-      "[Fasli=en:Zoroastrian_calendar#The_Fasli_calendar ,            ファスリ暦=      ]"
+      "[Zoroastrian=en:Zoroastrian_calendar#The_reckoning_of_years,   ゾロアスター暦=]",
+      "[Qadimi=en:Zoroastrian_calendar#The_Qadimi_calendar ,          カディミ暦=    ]",
+      "[Shahanshahi=en:Zoroastrian_calendar#The_Shahanshahi_calendar, 諸王の王の暦=  ]",
+      "[Fasli=en:Zoroastrian_calendar#The_Fasli_calendar ,            ファスリ暦=    ]"
     ]]
   end
 

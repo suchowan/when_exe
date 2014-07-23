@@ -13,9 +13,8 @@ module When
       "names:[Japanese=]",
 
       # Remarks
-      "[based on Research Project 22520700=http://www.excite-webtl.jp/world/english/web/?" +
-       "wb_url=http%3a%2f%2fsuchowan%2eat%2ewebry%2einfo%2f201401%2farticle_25%2ehtml&wb_lp=JAEN," +
-       "典拠 - 科研22520700=http://suchowan.at.webry.info/201401/article_25.html]",
+      "[based on Research Project 22520700=http://suchowan.at.webry.info/201401/article_25.html," +
+       "典拠 - 科研22520700=]",
 
       [self,
         "names:[Month, 月=ja:%%<月_(暦)>]",

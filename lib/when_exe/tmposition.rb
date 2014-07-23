@@ -1102,6 +1102,10 @@ module When::TM
               universal_time    = (2*time.ajd - (2*JulianDate::JD19700101-1)) * Duration::DAY.to_i / 2.0
             when ::Date
               universal_time    = JulianDate._d_to_t(time.jd)
+              if options[:frame] && options[:frame].rate_of_clock != 1.0
+                universal_time  = options[:frame].time_standard.from_dynamical_time(
+                                               When::TimeStandard.to_dynamical_time(universal_time))
+              end
             end
           end
         end
@@ -1861,16 +1865,6 @@ module When::TM
       raise NameError, "Temporal Reference System is not defined" unless (@frame && clock)
       @universal_time ||= (to_i - +@clk_time.clk_time[0] - JulianDate::JD19700101) * Duration::DAY +
                                    @clk_time.universal_time
-    end
-
-    # ユリウス日
-    #
-    # @return [Integer]
-    #
-    #   -4712-01-01T12:00:00Z からの経過日数に対応する通番(日の境界で1進める)
-    #
-    def to_i
-      @sdn ||= _to_i + +@clk_time.clk_time[When::DAY]
     end
 
     # 要素の参照

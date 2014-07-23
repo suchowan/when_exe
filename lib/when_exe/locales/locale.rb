@@ -703,7 +703,10 @@ module When
             ref.sub!(/\A.+:/, prefix) if prefix
           end
           ref += '%%<' + name + '>' if ref =~ /[\/#:]\z/
-          @link[locale] = _encode(ref) unless ref == ''
+          unless ref == ''
+            @link[locale] = _encode(ref)
+          # When.logger.info("%s[%s]->%s" % [@names[locale], locale, @link[locale]]) if When.logger
+          end
         else ; raise ArgumentError, "Irregal locale format: " + v
         end
       end

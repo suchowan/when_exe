@@ -424,11 +424,14 @@ module When::CalendarTypes
 
     # オブジェクトの正規化
     def _normalize(args=[], options={})
+      # range extension
+      extend(TableExtend) if @before || @after
+
       super
 
       # rule_table
       # @rule_table = @rule_table.dup
-      @rule_table = {'T' => {'Rule' => @rule_table }} if (@rule_table.kind_of?(Array))
+      @rule_table = {'T' => {'Rule' => @rule_table }} if @rule_table.kind_of?(Array)
       @_m_cash_          = {}
       @_m_cash_["_rule"] = @rule_table
 
@@ -444,9 +447,6 @@ module When::CalendarTypes
         @mean_month = Rational(@rule_table[@entry_key]['Days'], @rule_table[@entry_key]['Months'])
         @mean_year  = Rational(@rule_table[@entry_key]['Days'], @rule_table[@entry_key]['Years' ])
       end
-
-      # range extension
-      extend(TableExtend) if @before || @after
     end
 
     # rule の正規化
