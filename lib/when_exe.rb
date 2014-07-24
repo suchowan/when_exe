@@ -510,6 +510,7 @@ module When
     date = Array.new(options[:frame].indices.length+1) {args.shift}
     if (args.length > 0)
       options[:clock] ||= TM::Clock.local_time
+      options[:clock]   = Clock(options[:clock])
       time = Array.new(options[:clock].indices.length) {args.shift}
       position = TM::DateAndTime.new(date, time.unshift(0), options)
     else

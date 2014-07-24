@@ -1955,10 +1955,7 @@ module When::TM
     # @return [When::Coordinates::Spatial]
     #
     def location
-      return @location if @location
-      timezone = @clk_time.frame.tz_prop
-      return nil unless timezone.kind_of?(When::Parts::Timezone)
-      @location = timezone.location
+      @location ||= @clk_time.frame.location
     end
 
     # 時刻情報のない When::TM::CalDate を返す

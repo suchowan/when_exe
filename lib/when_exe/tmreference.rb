@@ -676,6 +676,13 @@ module When::TM
       name
     end
 
+    # 時間帯を代表する空間位置
+    # @return [When::Coordinates::Spatial]
+    def location
+      @location ||= @tz_prop.kind_of?(When::Parts::Timezone) ? @tz_prop.location :
+                                      When::Coordinates::Spatial.default_location
+    end
+
     # 標準時間帯の時計
     # @return [When::TM::Clock]
     def standard
