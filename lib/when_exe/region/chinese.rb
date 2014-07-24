@@ -33,7 +33,7 @@ module When
       ],
 
       [self,
-        "names:[月=ja:%%<月_(暦)>, *MonthA]",
+        "names:[月=ja:%%<月_(暦)>, *MonthA=en:Month]",
         "[一月,   Month 1= ]",
         "[二月,   Month 2= ]",
         "[三月,   Month 3= ]",
@@ -49,7 +49,7 @@ module When
       ],
 
       [self,
-        "names:[月=ja:%%<月_(暦)>, *MonthB]",
+        "names:[月=ja:%%<月_(暦)>, *MonthB=en:Month]",
         "[建寅月, Month 3= ]",
         "[建卯月, Month 4= ]",
         "[建辰月, Month 5= ]",

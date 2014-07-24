@@ -29,7 +29,7 @@ module When
       ],
 
       [self,
-        "names:[BabylonianMonth, 月=ja:%%<月_(暦)>]",
+        "names:[BabylonianMonth=en:Month, 月=ja:%%<月_(暦)>]",
         "[Nisānu=  ]",
         "[Āru=     ]",
         "[Simanu=  ]",
@@ -45,7 +45,7 @@ module When
       ],
 
       [self,
-        "names:[SeleucidMonth, 月=ja:%%<月_(暦)>]",
+        "names:[SeleucidMonth=en:Month, 月=ja:%%<月_(暦)>]",
         "[Artemisios=    ]",
         "[Daisios=       ]",
         "[Panemos=       ]",

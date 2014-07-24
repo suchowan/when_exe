@@ -431,10 +431,10 @@ module When
       # Modern Japanese Eras after the calendar reform to the Gregorian Calendar
       ModernJapanese = [self, [
         'area:[ModernJapanese]',
-        ['[M=,alias:明=ja:明治]6.01.01', '@CR', '1873-01-01^Gregorian?note=Default'],
-        ['[T=,alias:大=ja:大正]1.07.30', '@A',  '1912-07-30'],
-        ['[S=,alias:昭=ja:昭和]1.12.25', '@A',  '1926-12-25'],
-        ['[H=,alias:平=ja:平成]1.01.08', '@A',  '1989-01-08']
+        ['[M=,alias:明=ja:%%<明治>]6.01.01', '@CR', '1873-01-01^Gregorian?note=Default'],
+        ['[T=,alias:大=ja:%%<大正>]1.07.30', '@A',  '1912-07-30'],
+        ['[S=,alias:昭=ja:%%<昭和>]1.12.25', '@A',  '1926-12-25'],
+        ['[H=,alias:平=ja:%%<平成>]1.01.08', '@A',  '1989-01-08']
       ]]
     end
   end

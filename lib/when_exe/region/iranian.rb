@@ -11,10 +11,10 @@ module When
     Iranian = [self, [
       "locale:[=en:, ja=ja:, ar=ar:, alias=ja:]",
       "names:[Iranian=]",
-      "[SolarHijri=en:Iranian_calendars#Modern_calendar:_Solar_Hijri_.28SH.29, ヘジラ太陽暦=ja:%%<イラン暦>]",
+      "[SolarHijri=en:Solar_Hijri_calendar#Details_of_the_modern_calendar, ヘジラ太陽暦=ja:%%<イラン暦>]",
       "[SolarHijriAlgorithmic=en:Solar_Hijri_calendar#Solar_Hijri_algorithmic_calendar, ヘジラ太陽暦=ja:%%<イラン暦>]",
       "[Jalali=en:Jalali_calendar, ジャラーリー暦]",
-      "[Borji=, ボルジ暦]",
+      "[Borji=, ボルジ暦=]",
 
       [self,
         "names:[Month, 月=ja:%%<月_(暦)>]",

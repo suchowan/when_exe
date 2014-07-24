@@ -17,6 +17,7 @@ module When
     # @return [String] 先頭部分を簡約表現にした IRI
     #
     def inspect
+      return super unless @_pool
       expression = iri(true)
       expression == '' ? super : expression
     end

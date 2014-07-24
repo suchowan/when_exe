@@ -18,15 +18,15 @@ module When
        '典拠 - Chris Bennett "Roman Dates" (2013-05-13 閲覧)=]',
 
       [self, # ..CE-44 / ..BCE45
-        "names:[MonthA, 月=ja:%%<月_(暦)>]",
+        "names:[MonthA=en:Month, 月=ja:%%<月_(暦)>]",
         "[Ianuarius,    1月]",
         "[Februarius,   2月]",
         "[Martius,      3月]",
         "[Aprilis,      4月]",
         "[Maius,        5月]",
         "[Iunius,       6月]",
-        "[Quintilis,  旧7月]",
-        "[Sextilis,   旧8月]",
+        "[Quintilis,  旧7月=]",
+        "[Sextilis,   旧8月=]",
         "[September,    9月]",
         "[October,     10月]",
         "[November,    11月]",
@@ -34,7 +34,7 @@ module When
       ],
 
       [self, # CE-43..CE-8 / BCE44..BCE9
-        "names:[MonthB, 月=ja:%%<月_(暦)>]",
+        "names:[MonthB=en:Month, 月=ja:%%<月_(暦)>]",
         "[Ianuarius,    1月]",
         "[Februarius,   2月]",
         "[Martius,      3月]",
@@ -42,7 +42,7 @@ module When
         "[Maius,        5月]",
         "[Iunius,       6月]",
         "[Iulius,       7月]",
-        "[Sextilis,   旧8月]",
+        "[Sextilis,   旧8月=]",
         "[September,    9月]",
         "[October,     10月]",
         "[November,    11月]",
@@ -66,7 +66,7 @@ module When
       ],
 
       [self, # CE37..CE40
-        "names:[MonthD, 月=ja:%%<月_(暦)>]",
+        "names:[MonthD=en:Month, 月=ja:%%<月_(暦)>]",
         "[Ianuarius,    1月]",
         "[Februarius,   2月]",
         "[Martius,      3月]",
@@ -75,7 +75,7 @@ module When
         "[Iunius,       6月]",
         "[Iulius,       7月]",
         "[Augustus,     8月]",
-        "[Germanicus, 新9月]",
+        "[Germanicus, 新9月=]",
         "[October,     10月]",
         "[November,    11月]",
         "[December,    12月]"

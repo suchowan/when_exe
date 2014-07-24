@@ -1412,7 +1412,7 @@ module When::CalendarTypes
     #
     def _adjust_epoch(date, frame=nil)
       s_date  = date.dup
-      e_date  = border(date[0..0], frame)
+      e_date  = border([+date[0]], frame)
       branch  = behavior * 0
       branch += 1 if ((s_date[1..-1] <=> e_date[1..-1]) < 0)
       s_date[0] = When::Coordinates::Pair.new(+s_date[0]-branch, branch)

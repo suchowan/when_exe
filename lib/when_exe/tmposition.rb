@@ -1863,8 +1863,7 @@ module When::TM
     def universal_time
       return super if [Now, Max, Min].include?(@indeterminated_position)
       raise NameError, "Temporal Reference System is not defined" unless (@frame && clock)
-      @universal_time ||= (to_i - +@clk_time.clk_time[0] - JulianDate::JD19700101) * Duration::DAY +
-                                   @clk_time.universal_time
+      @universal_time ||= (to_i - JulianDate::JD19700101) * Duration::DAY + @clk_time.universal_time
     end
 
     # 要素の参照

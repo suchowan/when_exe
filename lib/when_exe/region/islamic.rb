@@ -11,8 +11,8 @@ module When
     Islamic = [self, [
       "locale:[=en:, ja=ja:, ar=ar:, alias]",
       "names:[Islamic=]",
-      "[TabularIslamic=en:Islamic_calendar, イスラーム暦=ja:ヒジュラ暦]",
-      "[EphemerisBasedIslamic=en:Islamic_calendar, イスラーム暦=ja:ヒジュラ暦]",
+      "[TabularIslamic=en:Islamic_calendar, イスラーム暦=ja:%%<ヒジュラ暦>]",
+      "[EphemerisBasedIslamic=en:Islamic_calendar, イスラーム暦=ja:%%<ヒジュラ暦>]",
 
       [self,
         "names:[Month, 月=ja:%%<月_(暦)>]",
