@@ -58,8 +58,8 @@ class When::CalendarNote
     #
     # @return [When::TM::CalDate] date またはその直後のイベントの日時
     #
-    def event_eval(date, parameter=nil, precision=date.precision)
-      num, den  = parameter.kind_of?(String) ? parameter.split(/\//, 2) : parameter
+    def event_eval(date, parameter=@event, precision=date.precision)
+      num, den  = parameter.kind_of?(String) ? parameter[/\d.*\z/].split(/\//, 2) : parameter
       num = (num || @num).to_f
       den = (den || @den).to_f
       date      = date.floor(precision) if precision < date.precision

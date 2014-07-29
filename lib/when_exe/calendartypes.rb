@@ -1395,11 +1395,10 @@ module When::CalendarTypes
     #
     def border(date=[], frame=nil)
       last = date.length-1
-      return @border if (last<0)
+      return @border if last<0
       bDate  = date[0..last] + @border[(last+1)..-1]
       branch = @border[last] * 0
-      return bDate if (branch==0)
-      bDate[last] = When::Coordinates::Pair.new(+date[last]-branch, branch)
+      bDate[last] = When::Coordinates::Pair.new(date[last] * 1, branch)
       return bDate
     end
 
@@ -1414,9 +1413,15 @@ module When::CalendarTypes
       s_date  = date.dup
       e_date  = border([+date[0]], frame)
       branch  = behavior * 0
-      branch += 1 if ((s_date[1..-1] <=> e_date[1..-1]) < 0)
+      branch += 1 if (s_date[1..-1] <=> e_date[1..-1]) < 0
       s_date[0] = When::Coordinates::Pair.new(+s_date[0]-branch, branch)
       return s_date
+    end
+
+    # 日付の補正
+    # @private
+    def _date_adjust(source)
+      source
     end
 
     private
@@ -1526,13 +1531,23 @@ module When::CalendarTypes
     def border(date=[], clock=When::UTC)
       return @border unless date[0] && clock.formula
 
-      clock._encode(
+      time =
         clock._number_to_coordinates(clock.second *
           clock.time_standard.from_dynamical_time(
             When::TM::JulianDate._d_to_t(
               clock.formula.first.day_event(
-                clock.time_standard.to_dynamical_date(date[0]), @event, When.Resource('_ep:Sun'), @height
-              )))), false)
+                clock.time_standard.to_dynamical_date(date[0] + @border[0]*0), @event, When.Resource('_ep:Sun'), @height
+              ))))
+
+      time[0] += When::TM::JulianDate::JD19700101
+      time[0]  = When::Coordinates::Pair.new(time[0]-@border[0]*0, @border[0]*0) unless @border[0]*0 == 0
+      clock._encode(time, false)
+    end
+
+    # 日付の補正
+    # @private
+    def _date_adjust(source)
+      source * 1 + @border[0] * 0
     end
   end
 

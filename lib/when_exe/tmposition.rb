@@ -313,7 +313,7 @@ module When::TM
         options[:frame] = When.Resource(frame, '_c:') if (frame)
 
         # Prefix - RFC 5545 Options
-        if (rfc5545form =~ /\A([^:]+[^-:\d]):([^:].+)\z/)
+        if (rfc5545form =~ /\A([^:]+[^-:\d]{2}):([^:].+)\z/)
           rfc5545option, iso8601form = $~[1..2]
           rfc5545option.split(/;/).each do |eq|
             key, value = eq.split(/=/, 2)
@@ -1916,9 +1916,12 @@ module When::TM
     # @return [When::TM::DateAndTime]
     #
     def floor(digit=DAY, precision=digit)
-      count = digit - clock.indices.length
-      date  = (digit>=DAY) ? @cal_date.dup : @frame._validate(@cal_date[0..(digit-1)])
-      time  = clock._validate(@clk_time.clk_time[0..((digit<=DAY) ? 0 : ((count>=0) ? -1 : digit))])
+      count    = digit - clock.indices.length
+      date     = (digit>=DAY) ? @cal_date.dup : @frame._validate(@cal_date[0..(digit-1)])
+      time     = @clk_time.clk_time[0..((digit<=DAY) ? 0 : ((count>=0) ? -1 : digit))]
+      time[0] += to_i
+      time     = clock._validate(time)
+      time[0] -= to_i
 
       if (count >= 0)
         factor = 10**count

@@ -634,7 +634,16 @@ module MiniTest:V
 
     if Object.const_defined?(:TZInfo)
       def test__tz_info
-        assert_equal("1997-05-10T06:00-05:00", When.when?("TZID=America/Chicago:19970510T0600").to_s)
+        assert_equal("1997-05-10T06:00-05:00",      When.when?("TZID=America/Chicago:19970510T0600").to_s)
+        assert_equal("1582-10-07T11:00+09:18:59",   When.when?("TZID=Asia/Tokyo:1582-10-07T11:00").to_s)
+        assert_equal("H24(2012).06.06T11:00+09:00", When.when?("TZID=Asia/Tokyo:H24-6-6T11:00").to_s)
+        assert_equal("1997-10-26T01:30:00-04:00",   When.when?("TZID=America/New_York:1997-10-26T01:30:00").to_s)
+        assert_equal("1997-10-26T01:30:00-05:00",   When.when?("TZID=America/New_York:1997-10-26T01=30:00").to_s)
+        assert_equal("1997-10-26T02:30:00-05:00",   When.when?("TZID=America/New_York:1997-10-26T02:30:00").to_s)
+        assert_equal("1997-10-26T03:30:00-05:00",   When.when?("TZID=America/New_York:1997-10-26T03:30:00").to_s)
+
+        location = When.Resource('_co:Spatial?tz=Asia/Tokyo')
+        assert_equal(['Asia/Tokyo', When::BasicTypes::M17n], [location.label.to_s, location.label.class])
       end
     else
       puts "Tests for TZInfo have been skipped at line #{__LINE__} of #{__FILE__.split(/\//)[-1]}."

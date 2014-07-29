@@ -25,8 +25,8 @@ module When
     Byzantine = [self, [
       "locale:[=en:, ja=ja:, alias]",
       "period:[Byzantine=en:Byzantine_calendar, ビザンティン暦=ja:%%<世界創造紀元>]",
-      ["[AM=en:Anno_Mundi, 世界創造紀元, alias:Anno_Mundi]6497.9.1",
-       '@CE', "989-09-01^Julian?border=[-1,9,1]&note=Roman", "1453=5-29"]
+      ["[AM=en:Anno_Mundi, 世界創造紀元, alias:Anno_Mundi]6497*9.1",
+       '@CE', "989*09-01^Julian?border=0*9-1&note=Roman", "1453-5-29"]
     ]]
   end
 

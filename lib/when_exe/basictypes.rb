@@ -328,7 +328,12 @@ module When
           abbr = Array(options[:abbr]).dup
           abbr[0..indices.length] = []
           time.sub!(/,/, '.')
-          tt = [0]
+          if time =~ /\A([:*=])(.+)/
+            time = $2
+            tt = [Coordinates::Pair._en_pair(0, $1)]
+          else
+            tt = [0]
+          end
           while time =~ /\A(\d{2}(?:\.\d+)?|-)([:*=])(.+)/
             time = $3
             tt << Coordinates::Pair._en_pair($1=='-' ? abbr.shift : $1, $2)

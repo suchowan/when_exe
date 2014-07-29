@@ -21,6 +21,11 @@ module MiniTest::CalendarNote
       assert_equal({2026177=>[[{:note=>"月相", :value=>"望(1478.5/3040)", :position=>"中段"}]]}, all)
     end
 
+    def test__solar_terms
+      term = When.CalendarNote('SolarTerms').copy('term315')
+      assert_equal('2014-02-03', term.term(When.when?('2014-1-1')).to_s)
+    end
+
     def test__persistence
       all    = {}
       notes0 = When.when?('平成25.9.22').notes(:persistence=>all)
@@ -63,6 +68,18 @@ module MiniTest::CalendarNote
       assert_equal(true, date1.is?("祝祭日"))
       assert_equal(true, date1.is?("秋分の日"))
       assert_equal(false, date2.is?("秋分の日"))
+
+      note = When.CalendarNote('Japanese')
+      assert_equal(true, note.note?(When.when?('2014-9-15'), '祝祭日'))
+      assert_equal(true, note.note?(When.when?('2014-9-15'), {:notes=>'祝祭日', :value=>'敬老の日'}))
+      assert_equal(false, note.note?(When.when?('2014-9-15'), {:notes=>'祝祭日', :value=>'敬老日'}))
+      assert_equal('敬老の日', note.notes(When.when?('2014-9-15'), '祝祭日')[:value].simplify.to_s)
+
+      assert_equal('五黄土星(4)', note.notes(When.when?('2014-1-1'), {:notes=>[['九星'],[],[]], :indices=>-2})[:value].simplify.to_s)
+      assert_equal('一白水星(8)', note.notes(When.when?('2014-1-1'), {:notes=>[[],['九星'],[]], :indices=>-1})[:value].simplify.to_s)
+      assert_equal('九紫火星(0)', note.notes(When.when?('2014-1-1'), {:notes=>'九星', :indices=> 0})[:value].simplify.to_s)
+
+      assert_equal(true, When.CalendarNote('Christian').copy('christmas').include?(When.when?('2012-12-25')))
     end
   end
 end

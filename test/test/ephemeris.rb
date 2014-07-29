@@ -70,5 +70,14 @@ module MiniTest::Ephemeris
       When::TM::Clock.local_time = '+09:00'
       assert_equal(0, /2014-03-04T06:07/ =~ When.when?(today).sunrise.to_s)
     end
+
+    def test__lunisolar_location
+      formula1 = When.Resource('_ep:Formula?formula=1L')
+      formula2 = When.Resource('_ep:Formula?formula=12S')
+      date = When.when?('2014-08-01', :clock=>'+09:00')
+      assert_equal('2014-07-27T07:41+09:00', formula1.nearest_past(date).floor(When::MINUTE).to_s)
+      assert_equal('2014-07-23T06:41+09:00', formula2.nearest_past(date).floor(When::MINUTE).to_s)
+      assert_equal('2014-07-07T13:15+09:00', formula2.nearest_past(date, 0.5).floor(When::MINUTE).to_s)
+    end
   end
 end

@@ -1460,7 +1460,7 @@ module When::Coordinates
       # 時間帯による指定
       @tz = When::Parts::Timezone.tz_info[@tz] if @tz.kind_of?(String)
       if @tz
-        @label ||= @tz.label
+        @label ||= When.m17n(@tz.identifier)
         @long  ||= @tz.longitude
         @lat   ||= @tz.latitude
       end
@@ -1787,7 +1787,7 @@ module When::Coordinates
 
       # 下の位の既定値
       unless date[1] || !@border
-        date[0...@base.length] = @border.border([date[0]], self)
+        date[0...@base.length] = @border.border([@border._date_adjust(date[0])], self)
       end
 
       # 要素数固定部分の正規化(上 -> 下) - ISO8601 の 小数要素(ex. "T23:20.8")の処理
@@ -1948,7 +1948,7 @@ module When::Coordinates
       @label = When::BasicTypes::M17n.label(@label)
 
       # Origin and Upper Digits
-      @origin_of_MSC  ||= - +@border.behavior if @border
+      @origin_of_MSC  ||= - @border.behavior * 1 if @border
       @origin_of_MSC    = Pair._en_number(@origin_of_MSC)
       @origin_of_LSC    = Pair._en_number(@origin_of_LSC)
       @index_of_MSC     = Pair._en_number(@index_of_MSC)

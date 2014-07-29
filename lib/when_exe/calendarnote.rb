@@ -215,7 +215,7 @@ module When
     #        SolarTermsクラスで 'term180' は、太陽黄経180度のイベントすなわち秋分を意味します。
     #
     attr_accessor :event
-    protected :event=
+    private :event=
 
     # デフォルトイベントの指定
     #
@@ -225,7 +225,7 @@ module When
     #
     def copy(event)
       c = self.clone
-      c.event = event
+      c.send(:event=, event)
       c
     end
 

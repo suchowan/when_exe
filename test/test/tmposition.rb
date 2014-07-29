@@ -280,5 +280,118 @@ LIST
         assert_equal(sample.shift, date5.floor(i).to_s)
       end
     end
+
+    def test__floor_year_bordered_date
+      sample = [
+        %w(AM6497(0989)*09.01 AM6497(0989)*09.01),
+        %w(AM6497(0989)*10.01 AM6497(0989)*09.01),
+        %w(AM6497(0989)*11.01 AM6497(0989)*09.01),
+        %w(AM6497(0989)*12.01 AM6497(0989)*09.01),
+        %w(AM6497(0989).01.01 AM6497(0989)*09.01),
+        %w(AM6497(0989).02.01 AM6497(0989)*09.01),
+        %w(AM6497(0989).03.01 AM6497(0989)*09.01),
+        %w(AM6497(0989).04.01 AM6497(0989)*09.01),
+        %w(AM6497(0989).05.01 AM6497(0989)*09.01),
+        %w(AM6497(0989).06.01 AM6497(0989)*09.01),
+        %w(AM6497(0989).07.01 AM6497(0989)*09.01),
+        %w(AM6497(0989).08.01 AM6497(0989)*09.01),
+        %w(AM6498(0990)*09.01 AM6498(0990)*09.01)
+      ]
+
+      date = When.when?(sample[0][0])
+      13.times do
+        assert_equal(sample.shift, [date.to_s, date.floor(When::YEAR, When::DAY).to_s])
+        date += When::P1M
+      end
+
+      date = When.when?('AM6500(0992).02.29')
+      assert_equal(%w(AM6500(0992).02.29 0992-02-29), [date.to_s, (When::Julian ^ date).to_s])
+
+      date = When.Calendar('Gregorian?border=1959-2-23') ^ When.tm_pos(2014,2,22)
+      assert_equal([When.Pair(54,1), 2, 22], date.cal_date)
+      assert_equal('0054-02-23', date.floor(When::YEAR, When::DAY).to_s)
+
+      date = When.Calendar('Gregorian?border=1959-2-23') ^ When.tm_pos(2014,2,23)
+      assert_equal([55, 2, 23], date.cal_date)
+      assert_equal('0055-02-23', date.floor(When::YEAR, When::DAY).to_s)
+
+      date = When.Calendar('Gregorian?border=1959-2-23') ^ When.tm_pos(2014,2,24)
+      assert_equal([55, 2, 24], date.cal_date)
+      assert_equal('0055-02-23', date.floor(When::YEAR, When::DAY).to_s)
+
+      greg = When.Calendar('Gregorian?border=Easter')
+      assert_equal('2012=03-30', (greg ^ When.tm_pos(2013, 3, 30)).to_s)
+      assert_equal('2013-03-31', (greg ^ When.tm_pos(2013, 3, 31)).to_s)
+      assert_equal('2013=03-31', (greg ^ When.tm_pos(2014, 3, 31)).to_s)
+      assert_equal('2014-04-20', (greg ^ When.tm_pos(2014, 4, 20)).to_s)
+    end
+
+    def test__floor_day_bordered_date
+      sample1 = %w(
+        Nabopolassar21(-604).12.30T=05:54:00+03:00
+        Nabopolassar21(-604).12.30T=05:55:00+03:00
+        NebuchadnezzarII01(-603).01.01T:05:56:00+03:00
+        NebuchadnezzarII01(-603).01.01T:05:57:00+03:00)
+
+      date = When.when?('Nabopolassar21.12.30T=05:54:00', :clock=>'+03:00?border=0-5-55-10')
+      4.times do
+        assert_equal(sample1.shift, date.to_s)
+        date += When::PT1M
+      end
+
+      sample2 = %w(
+        NebuchadnezzarII01(-603).01.01T:18:13:00+03:00
+        NebuchadnezzarII01(-603).01.01T:18:14:00+03:00
+        NebuchadnezzarII01(-603).01.02T*18:15:00+03:00
+        NebuchadnezzarII01(-603).01.02T*18:16:00+03:00)
+
+      date = When.when?('NebuchadnezzarII1.1.1T18:13:00', :clock=>'+03:00?border=0*18-14-18')
+      4.times do
+        assert_equal(sample2.shift, date.to_s)
+        date += When::PT1M
+      end
+
+      sample3 = %w(
+        Nabopolassar21(-604).12.30T=05:54:00+03:00
+        Nabopolassar21(-604).12.30T=05:55:00+03:00
+        NebuchadnezzarII01(-603).01.01T:05:56:00+03:00
+        NebuchadnezzarII01(-603).01.01T:05:57:00+03:00)
+
+      date = When.when?('Nabopolassar21.12.30T=05:54:00', :clock=>'+03:00?long=45&lat=32&border=Sunrise')
+      4.times do
+        assert_equal(sample3.shift, date.to_s)
+        date += When::PT1M
+      end
+
+      sample4 = %w(
+        NebuchadnezzarII01(-603).01.01T:18:13:00+03:00
+        NebuchadnezzarII01(-603).01.01T:18:14:00+03:00
+        NebuchadnezzarII01(-603).01.02T*18:15:00+03:00
+        NebuchadnezzarII01(-603).01.02T*18:16:00+03:00)
+
+      date = When.when?('NebuchadnezzarII1.1.1T18:13:00', :clock=>'+03:00?long=45&lat=32&border=Sunset')
+      4.times do
+        assert_equal(sample4.shift, date.to_s)
+        date += When::PT1M
+      end
+
+      date = When.when?('NebuchadnezzarII1.1.1T:05:50:00', :clock=>'+03:00?border=0-06')
+      assert_equal([1500903, 'Nabopolassar21(-604).12.30T:06:00+03:00'], [date.to_i, date.floor(When::DAY, When::MINUTE).to_s])
+      date = When.when?('NebuchadnezzarII1.1.1T:06:00:00', :clock=>'+03:00?border=0-06')
+      assert_equal([1500904, 'NebuchadnezzarII01(-603).01.01T:06:00+03:00'], [date.to_i, date.floor(When::DAY, When::MINUTE).to_s])
+      date = When.when?('NebuchadnezzarII1.1.1T:05:50:00', :clock=>'+03:00?long=45&lat=32&border=Sunrise')
+      assert_equal([1500903, 'Nabopolassar21(-604).12.30T:05:56+03:00'], [date.to_i, date.floor(When::DAY, When::MINUTE).to_s])
+      date = When.when?('NebuchadnezzarII1.1.1T:06:00:00', :clock=>'+03:00?long=45&lat=32&border=Sunrise')
+      assert_equal([1500904, 'NebuchadnezzarII01(-603).01.01T:05:55+03:00'], [date.to_i, date.floor(When::DAY, When::MINUTE).to_s])
+
+      date = When.when?('NebuchadnezzarII1.1.1T:18:10:00', :clock=>'+03:00?border=0*18-15')
+      assert_equal([1500904, 'NebuchadnezzarII01(-603).01.01T*18:15+03:00'], [date.to_i, date.floor(When::DAY, When::MINUTE).to_s])
+      date = When.when?('NebuchadnezzarII1.1.2T*18:20:00', :clock=>'+03:00?border=0*18-15')
+      assert_equal([1500905, 'NebuchadnezzarII01(-603).01.02T*18:15+03:00'], [date.to_i, date.floor(When::DAY, When::MINUTE).to_s])
+      date = When.when?('NebuchadnezzarII1.1.1T:18:10:00', :clock=>'+03:00?long=45&lat=32&border=Sunset')
+      assert_equal([1500904, 'NebuchadnezzarII01(-603).01.01T*18:13+03:00'], [date.to_i, date.floor(When::DAY, When::MINUTE).to_s])
+      date = When.when?('NebuchadnezzarII1.1.2T*18:20:00', :clock=>'+03:00?long=45&lat=32&border=Sunset')
+      assert_equal([1500905, 'NebuchadnezzarII01(-603).01.02T*18:14+03:00'], [date.to_i, date.floor(When::DAY, When::MINUTE).to_s])
+    end
   end
 end
