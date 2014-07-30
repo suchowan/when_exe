@@ -200,6 +200,23 @@ module MiniTest
         assert_equal([true], month.map {|date| When.when?(date).is?('月相')}.uniq)
       end
     end
+
+    def test_japanese_era
+      assert_raises(RangeError) {When.TemporalPosition("正慶", 2, 11)}
+      assert_equal("延元02(1337).01.08",          When.when?("建武4.1.8").to_s)
+      assert_equal("延元02(1337).01.08",          When.TemporalPosition("建武", 4, 1, 8, {:invalid=>:non}).to_s)
+      assert_equal("神武03(-657).01.30",          When.when?('神武3.1.30').to_s)    # , {'period'=>/清/})
+      assert_equal("日本::皇紀2600(1940).01.30",  When.when?('皇紀2600.1.30').to_s) # , {'period'=>/清/})
+      assert_equal("応永11(1404).12.10",          When.when?('嘉慶18.12.10').to_s)
+      assert_equal("明治01(1868).09.08",          When.when?('明治1(1868).09.08').to_s)
+      assert_equal("天保03(0564).10.01",          When.when?('天保3.10.01', {'period'=>/梁/}).to_s)
+      assert_equal(%w(元暦 文治 建久 正治 建仁 元久 建永 承元 建暦 建保
+                      承久 貞応 元仁 嘉禄 安貞 寛喜 貞永 天福 文暦 嘉禎
+                      暦仁 延応 仁治 寛元 宝治 建長 康元 正嘉 正元 文応
+                      弘長 文永 建治 弘安 正応 永仁 正安 乾元 嘉元 徳治
+                      延慶 応長 正和 文保 元応 元亨 正中 嘉暦 元徳 元弘),
+                   When.era('鎌倉時代')[0].map { |era| era.label.to_s})
+    end
 =begin
     def test_japanese_date
       jc   = When.Resource('_c:Japanese')

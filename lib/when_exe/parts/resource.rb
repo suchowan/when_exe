@@ -852,14 +852,10 @@ module When::Parts
       end
     end
 
-    # オブジェクトを順に取り出す enumerator
+    # 子オブジェクトを順に取り出す enumerator
     #
-    #   @param [Symbol] direction 取り出す方向
-    #     [ :forward - 昇順 ]
-    #     [ :reverse - 降順 ]
-    #
-    def enum_for(direction=:forward)
-      Enumerator.new(self, direction)
+    def enum_for
+      @child.enum_for
     end
     alias :to_enum :enum_for
 
@@ -1068,24 +1064,6 @@ module When::Parts
         end
       } unless When::Parts::MethodCash.escape(name)
       @child.send(name, *args, &block)
-    end
-
-    #
-    # オブジェクトを順に取り出す enumerator
-    #
-    class Enumerator < When::Parts::Enumerator
-
-      #
-      # 次のオブジェクトを取り出す
-      #
-      # @return [When::Parts::Resource]
-      #
-      def succ
-        value = @current
-        @current = (@current==:first) ? @first : ((@direction == :reverse) ? @current.prev : @current.next)
-        @current = nil unless @first.leaf? || @first.include?(@current)
-        return value
-      end
     end
   end
 end

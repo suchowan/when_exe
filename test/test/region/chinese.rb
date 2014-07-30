@@ -202,5 +202,17 @@ module MiniTest
     # assert_equal(["1801-01-01", 2378897, 21610, [15.986637, 30.436862, 2378882.513363]],
     #   [date.to_s, date.to_i, m[0], [m[1], m[2], t].map {|x| (x*1000000).round / 1000000.0}])
     end
+
+    def test_chinese_era
+      assert_equal("慶元03(1197).01.10",          When.when?('慶元3.1.10').to_s)    # , {'period'=>/清/})
+      assert_equal("紹熙03(1192).01.10",          When.when?('紹煕3.1.10').to_s)    # , {'period'=>/清/})
+      assert_equal("康熙03(1664).01.10",          When.when?('康煕3.1.10').to_s)    # , {'period'=>/清/})
+      assert_equal("紹熙03(1192).01.10",          When.when?('紹熙3.1.10').to_s)    # , {'period'=>/清/})
+      assert_equal("崇徳03(1638).01.30",          When.when?('崇徳3.1.30', {'period'=>/清/}).to_s)
+      assert_raises(ArgumentError) {When.when?('崇徳3.1.30', {'period'=>/後金/})}
+      assert_equal("正徳16(1521).03.14",          When.TemporalPosition("正徳", 16, 3, 14, {"period"=>/明/}).to_s)
+      assert_equal("正徳16(1521).03.14",          When.when?('正徳16.3.14', {'period'=>/明/}).to_s)
+      assert_equal("明::崇禎11(1638).01.30",      When.when?('崇禎11.1.30', {'period'=>/明/}).to_s)
+    end
   end
 end

@@ -108,7 +108,7 @@ module When
       "area:[中国,China]",
 
       [ChineseLuniSolar,
-        'name:[黄帝暦]',
+        'name:[黄帝暦=]',
         'formula:MeanLunation?year_length=1461/4&lunation_length=27759/940&day_epoch=1228331',
         'intercalary_month:12'
       ],
@@ -121,7 +121,7 @@ module When
       ],
 
       [ChineseLuniSolar,
-        'name:[顓頊暦後期]',
+        'name:[顓頊暦後期=]',
         'formula:MeanLunation?year_length=1461/4&lunation_length=27759/940&day_epoch=1171396&longitude_shift=-1/8',
         'time_basis:+00,+#{P:12}',
         'base_month:1',
@@ -147,7 +147,7 @@ module When
       ],
 
       [ChineseLuniSolar,
-        'name:[魯暦]',
+        'name:[魯暦=]',
         'formula:MeanLunation?year_length=1461/4&lunation_length=27759/940&day_epoch=1048991',
         'intercalary_month:12'
       ],
@@ -173,7 +173,7 @@ module When
       ],
 
       [ChineseLuniSolar,
-        'name:[三紀暦]',
+        'name:[三紀暦=]',
         'formula:MeanLunation?year_length=895220/2451&lunation_length=179044/6063&day_epoch=-28760989'
       ],
 
@@ -183,7 +183,7 @@ module When
       ],
 
       [ChineseLuniSolar,
-        'name:[元嘉暦]',
+        'name:[元嘉暦=]',
         'formula:MeanLunation?year_length=111035/304&lunation_length=22207/752&day_epoch=-200089&longitude_shift=-1/12' # 春分の1ヶ月前
       ],
 
@@ -193,37 +193,37 @@ module When
       ],
 
       [ChineseLuniSolar,
-        'name:[正光暦]',
+        'name:[正光暦=]',
         'formula:MeanLunation?year_length=2213377/6060&lunation_length=2213377/74952&day_epoch=-59357929'
       ],
 
       [ChineseLuniSolar,
-        'name:[興和暦]',
+        'name:[興和暦=]',
         'formula:MeanLunation?year_length=6158017/16860&lunation_length=6158017/208530&day_epoch=-105462049'
       ],
 
       [ChineseLuniSolar,
-        'name:[天保暦]',
+        'name:[天保暦=]',
         'formula:MeanLunation?year_length=8641687/23660&lunation_length=8641687/292635&day_epoch=-38447089'
       ],
 
       [ChineseLuniSolar,
-        'name:[天和暦]',
+        'name:[天和暦=]',
         'formula:MeanLunation?year_length=8568631/23460&lunation_length=8568631/290160&day_epoch=-317950249'
       ],
 
       [ChineseLuniSolar,
-        'name:[大象暦]',
+        'name:[大象暦=]',
         'formula:MeanLunation?year_length=4745247/12992&lunation_length=1581749/53563&day_epoch=-13244449'
       ],
 
       [ChineseLuniSolar,
-        'name:[開皇暦]',
+        'name:[開皇暦=]',
         'formula:MeanLunation?year_length=37605463/102960&lunation_length=5372209/181920&day_epoch=-1506155749'
       ],
 
       [ChineseLuniSolar,
-        'name:[大業暦]',
+        'name:[大業暦=]',
         'formula:MeanLunation?year_length=15573963/42640&lunation_length=33783/1144&day_epoch=-519493909'
       ],
 
@@ -303,7 +303,7 @@ module When
       ],
 
       [ChineseLuniSolar,
-        'name:[平朔戊寅暦]',
+        'name:[平朔戊寅暦=]',
         'formula:MeanLunation?year_length=3456675/9464&lunation_length=384075/13006&day_epoch=-58077529'
       ],
 
@@ -543,7 +543,7 @@ module When
       ],
 
       [ChineseLuniSolar,
-        'name:[正元暦]',
+        'name:[正元暦=]',
         'time_basis:+00,+#{P:06}',
         {'formula'=>['12S', '1L'].map {|f| [
           Ephemeris::ChineseTrueLunation, {
@@ -699,7 +699,7 @@ module When
       ],
 
       [ChineseLuniSolar,
-        'name:[崇玄暦]',
+        'name:[崇玄暦=]',
         'time_basis:+00,+#{P:06}',
         {'formula'=>['12S', '1L'].map {|f| [
           Ephemeris::ChineseTrueLunation, {
