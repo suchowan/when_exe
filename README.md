@@ -54,6 +54,9 @@ Example Usage
     
     islamic_date = When::TabularIslamic ^ gregorian_date
     p islamic_date                               #=> 1435-10-04
+    p When.tm_pos(1435, 10, 4, :frame=>'TabularIslamic')
+                                                 #=> 1435-10-04, the same date
+    p When.when?('1435-10-4^TabularIslamic')     #=> 1435-10-04, the same date
     p islamic_date.frame.iri                     #=> ""http://hosi.org/When/CalendarTypes/TabularIslamic"
     puts islamic_date.name(When::MONTH) / 'en'   #=> Shawwal
     puts islamic_date.name(When::MONTH) / 'ar'   #=> شوال
