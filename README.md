@@ -100,7 +100,7 @@ Please install when_exe gem from the GitHub's trunk to carry out the following e
     
     babylonian_date   = When.when?('NebuchadnezzarII1.1.1T18:13:00', :clock=>'+03:00?long=45&lat=32&border=Sunset')
     4.times do
-      p [babylonian_date  , babylonian_date  .to_i]                        #=>
+      p [babylonian_date  , babylonian_date  .to_i] #=>
         # [NebuchadnezzarII01(-603).01.01T:18:13:00+03:00, 1500904]
         # [NebuchadnezzarII01(-603).01.01T:18:14:00+03:00, 1500904]
         # [NebuchadnezzarII01(-603).01.02T*18:15:00+03:00, 1500905]
@@ -109,7 +109,8 @@ Please install when_exe gem from the GitHub's trunk to carry out the following e
     end
     
     # TZInfo
-    #  https://rubygems.org/gems/tzinfo is required for this section's operations, please install tzinfo before operation.
+    #  https://rubygems.org/gems/tzinfo is required for this section's operations.
+    #  Please install tzinfo before operation.
     
     gregorian_date = When.tm_pos(2014, 8, 1, 9, 0, 0, :tz=>'Asia/Tokyo')
     p gregorian_date                             #=> 2014-08-01T09:00:00+09:00
@@ -132,7 +133,8 @@ Please install when_exe gem from the GitHub's trunk to carry out the following e
     p When.when?('TZID=America/New_York:1997-10-26T03:30') #=> 1997-10-26T03:30-05:00
     
     # Google Calendar
-    #  https://github.com/suchowan/gcalapi is required for this section's operations, please install gcalapi before operation.
+    #  https://github.com/suchowan/gcalapi is required for this section's operations.
+    #  Please install gcalapi before operation.
     #  Please replace xxxxxxxx and ******** to valid pair of id and password.
     
     service = GoogleCalendar::Service.new('xxxxxxxx@gmail.com', '********')
