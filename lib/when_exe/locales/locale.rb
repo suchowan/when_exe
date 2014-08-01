@@ -257,7 +257,7 @@ module When
         locale = locale.sub(/\..*/, '')
         [locale, locale.sub(/-.*/, '')].each do |loc|
           symbol = ('Locale_' + loc.sub(/-/,'_')).to_sym
-          return {loc=>access_key.inject(const_get(symbol)) {|hash, key| hash = hash[key]}} if const_defined?(symbol)
+          return {locale=>access_key.inject(const_get(symbol)) {|hash, key| hash = hash[key]}} if const_defined?(symbol)
         end
         return nil
       end
