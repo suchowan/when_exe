@@ -39,7 +39,7 @@ module When
       # Analyze notation with crescent
       #
       # @param [String] source Notation with crescents
-      # @param [Array<Integer>] Upper default elements (default - today's Yerm date)
+      # @param [Array<Integer>] abbr Upper default elements (default - today's Yerm date)
       #
       # @return [String] Notation with hyphens
       #

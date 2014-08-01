@@ -322,12 +322,12 @@ module When::Parts
 
       # 整列して、重複した候補を削除
       #
-      # @param list [Array]
+      # @param [Array] list 
       # @param [Symbol] direction
       #   [ :forward - 昇順 ]
       #   [ :reverse - 降順 ]
       #
-      # @param [Array]
+      # @return [Array]
       # @note
       #   eql? はオーバーライドしない
       #

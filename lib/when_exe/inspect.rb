@@ -614,7 +614,7 @@ module When
       # @overload is?(event=nil, options={})
       #   @param [String]  event options={:notes=>String} または {:notes=>String} または {:value=>String} という指定と等価
       #     (指定の event が存在する場合は前者、指定の notes が存在する場合は中央、しない場合は後者)
-      #   @param [Integer] event options={:indices=> Integer} という指定と等価
+      #   @param [Integer] event options={ :indices=> Integer } という指定と等価
       #   @param [Hash] options 下記のとおり
       #   @option options [When::CalendarNote or String] :calendar_note 該当判断に用いる CalendarNoteオブジェクトまたはその IRI
       #   @option options [String] :event 確認するイベント名

@@ -34,8 +34,6 @@ Source code for when_exe is available on [GitHub](https://github.com/suchowan/wh
 Example Usage
 -------------
 
-Please install when_exe gem from the GitHub's trunk to carry out the following exsamples.
-
     require 'when_exe'
     
     # When::TM::CalDate
@@ -72,7 +70,8 @@ Please install when_exe gem from the GitHub's trunk to carry out the following e
     p gregorian_date.clk_time.class              #=> When::TM::ClockTime
     p gregorian_date.clk_time.frame.iri          #=> "http://hosi.org/When/TM/Clock?label=+09:00"
     
-    gregorian_date = When.tm_pos(2014, 8, 1, 9, 0, 0, :clock=>'+09:00', :long=>'139.413012E', :lat=>'35.412222N')
+    gregorian_date = When.tm_pos(2014, 8, 1, 9, 0, 0, :clock=>'+09:00',
+                                                      :long=>'139.413012E', :lat=>'35.412222N')
     p gregorian_date                             #=> 2014-08-01T09:00:00+09:00
     p gregorian_date.location.iri                #=> "http://hosi.org/When/Coordinates/Spatial?long=139.413012E&lat=35.412222N&alt=0"
     p gregorian_date.sunrise.floor(When::MINUTE) #=> 2014-08-01T04:48+09:00
@@ -98,7 +97,8 @@ Please install when_exe gem from the GitHub's trunk to carry out the following e
     p babylonian_date.frame.iri                  #=> "http://hosi.org/When/CalendarTypes/BabylonianPD"
     p babylonian_date.calendar_era.iri           #=> "http://hosi.org/When/TM/CalendarEra/AncientOrient::Neo-Babylonian::NebuchadnezzarII"
     
-    babylonian_date   = When.when?('NebuchadnezzarII1.1.1T18:13:00', :clock=>'+03:00?long=45&lat=32&border=Sunset')
+    babylonian_date   = When.when?('NebuchadnezzarII1.1.1T18:13:00',
+                                   :clock=>'+03:00?long=45&lat=32&border=Sunset')
     4.times do
       p [babylonian_date  , babylonian_date  .to_i] #=>
         # [NebuchadnezzarII01(-603).01.01T:18:13:00+03:00, 1500904]
@@ -138,7 +138,8 @@ Please install when_exe gem from the GitHub's trunk to carry out the following e
     #  Please replace xxxxxxxx and ******** to valid pair of id and password.
     
     service = GoogleCalendar::Service.new('xxxxxxxx@gmail.com', '********')
-    feed = "http://www.google.com/calendar/feeds/%s__%s%%40holiday.calendar.google.com/public/full" % ['japanese', 'ja']
+    feed = "http://www.google.com/calendar/feeds/%s__%s%%40holiday.calendar.google.com/public/full" %
+            ['japanese', 'ja']
     gcal = GoogleCalendar::Calendar::new(service, feed)
     gcal.enum_for({'start-min'=>'2014-01-01', 'start-max'=>'2015-01-01',
                    'orderby'=>'starttime', 'sortorder'=>'a'

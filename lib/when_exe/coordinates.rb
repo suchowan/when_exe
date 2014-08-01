@@ -954,7 +954,7 @@ module When::Coordinates
     #
     # branch の更新
     #
-    # @param [Numeric] branch新しい branch
+    # @param [Numeric] branch 新しい branch
     #
     # @return [When::Coordinates::Pair] 更新結果
     #
@@ -1252,7 +1252,7 @@ module When::Coordinates
 
       # デフォルトの空間位置
       #
-      # @param [When::Coordinates::Spatial, String] default_location デフォルトの空間位置
+      # @param [When::Coordinates::Spatial, String] local デフォルトの空間位置
       #
       # @return [When::Coordinates::Spatial, String]
       #

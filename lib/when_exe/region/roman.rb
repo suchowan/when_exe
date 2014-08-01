@@ -183,6 +183,7 @@ module When
     _Indices  = [When.Index('Roman::Month',  {:branch=>_Branch}), _Index0]
     _IndicesD = [When.Index('Roman::MonthD', {:branch=>_Branch}), _Index0]
     _remarks  = When.M17n('Roman::based on Chris Bennett "Roman Dates" (Retrieved 2013-05-13)')
+    # @private
     Options = {
       'origin_of_LSC'  =>  1625698,
       'origin_of_MSC'  =>  -261,
@@ -205,10 +206,15 @@ module When
       },
       'note' => 'Roman'
     }
+    # @private
     RomanA =  [CyclicTableBased, Options.merge({'remarks'=>_remarks, 'indices' => _IndicesA})]
+    # @private
     RomanB =  [CyclicTableBased, Options.merge({'remarks'=>_remarks, 'indices' => _IndicesB})]
+    # @private
     RomanC =  [CyclicTableBased, Options.merge({'remarks'=>_remarks                        })]
+    # @private
     RomanD =  [CyclicTableBased, Options.merge({'remarks'=>_remarks, 'indices' => _IndicesD})]
+    # @private
     Roman  =  [CyclicTableBased, Options]
   end
 
