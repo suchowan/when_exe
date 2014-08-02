@@ -20,6 +20,10 @@ Web Server
 
 Web server for when_exe demonstration is available on [hosi.org](http://hosi.org).
 
+You can see examples of [When.exe Standard Representation](http://www.asahi-net.or.jp/~dd6t-sg/when_rdoc/when_en.html#label-8) and Reference System IRI at the top-left corner of Date frame.
+
+Preferences are changeable on [hosi.org/cookies](http://hosi.org/cookies).
+
 
 Documentation
 -------------
