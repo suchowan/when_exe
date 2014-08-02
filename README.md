@@ -13,6 +13,12 @@ The when_exe gem can be installed by running:
     gem install when_exe
 
 
+Web server
+----------
+
+Web server for when_exe demonstration is available on [hosi.org](http://hosi.org).
+
+
 Documentation
 -------------
 
