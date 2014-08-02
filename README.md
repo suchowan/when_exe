@@ -26,6 +26,9 @@ Documentation
 
 API documentation for when_exe is available on [RubyDoc.info](http://rubydoc.info/gems/when_exe/frames).
 
+Available calendars and clocks are defined as subclasses of TM_Calendar and TM_Clock or using definition tables in [CalendarTypes namespace]{http://rubydoc.info/gems/when_exe/frames/When/CalendarTypes}.
+
+Available calendar eras are defined using definition tables in [CalendarEra namespace]{http://rubydoc.info/gems/when_exe/frames/When/TM/CalendarEra}.
 
 License
 -------
