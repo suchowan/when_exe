@@ -5,7 +5,7 @@ when_exe - A multicultural and multilingualized calendar library
 
 [when_exe](http://rubygems.org/gems/when_exe) is a multicultural and multilingualized calendar library based on ISO 8601, ISO 19108, RFC 5545 and RFC6350.
 
-[<img alt='Architecture' src='http://www2u.biglobe.ne.jp/~suchowan/u/pic/architecture.png' width='637' height='408'/>](http://www2u.biglobe.ne.jp/~suchowan/u/pic/architecture.png)
+[<img alt='Architecture' title='display this figure at actual size' src='http://www2u.biglobe.ne.jp/~suchowan/u/pic/architecture.png' width='637' height='408'/>](http://www2u.biglobe.ne.jp/~suchowan/u/pic/architecture.png)
 
 Installation
 ------------
