@@ -53,6 +53,8 @@ Example Usage
     p gregorian_date.to_f                        #=> 2456871.0, at noon for UTC
     p gregorian_date.class                       #=> When::TM::CalDate
     p gregorian_date.frame.iri                   #=> "http://hosi.org/When/CalendarTypes/Gregorian"
+    puts gregorian_date.name(When::MONTH).class  #=> When::BasicTypes::M17n
+    puts gregorian_date.name(When::MONTH).iri    #=> http://hosi.org/When/BasicTypes/M17n/Calendar::Month::August
     puts gregorian_date.name(When::MONTH) / 'en' #=> August
     puts gregorian_date.name(When::MONTH) / 'fr' #=> août
     puts gregorian_date.name(When::MONTH) / 'ar' #=> اغسطس
@@ -108,15 +110,15 @@ Example Usage
     p babylonian_date.frame.iri                  #=> "http://hosi.org/When/CalendarTypes/BabylonianPD"
     p babylonian_date.calendar_era.iri           #=> "http://hosi.org/When/TM/CalendarEra/AncientOrient::Neo-Babylonian::NebuchadnezzarII"
     
-    babylonian_date   = When.when?('NebuchadnezzarII1.1.1T18:13:00',
-                                   :clock=>'+03:00?long=45&lat=32&border=Sunset')
+    babylonian_date = When.when?('NebuchadnezzarII1.1.1T18:13:00',
+                                 :clock=>'+03:00?long=45&lat=32&border=Sunset')
     4.times do
-      p [babylonian_date  , babylonian_date  .to_i] #=>
+      p [babylonian_date, babylonian_date.to_i] #=>
         # [NebuchadnezzarII01(-603).01.01T:18:13:00+03:00, 1500904]
         # [NebuchadnezzarII01(-603).01.01T:18:14:00+03:00, 1500904]
         # [NebuchadnezzarII01(-603).01.02T*18:15:00+03:00, 1500905]
         # [NebuchadnezzarII01(-603).01.02T*18:16:00+03:00, 1500905]
-      babylonian_date   += When::PT1M
+      babylonian_date += When::PT1M
     end
     
     # TZInfo
