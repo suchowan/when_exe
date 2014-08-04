@@ -128,6 +128,25 @@ Example Usage
       babylonian_date += When::PT1M
     end
     
+    # Web service - retrieve JSON response from http://hosi.org:3000 (when_exe demonstration web server)
+    
+    require 'open-uri'
+    open('http://hosi.org:3000/Date/2014-04-20.json') do |json|
+      puts json.read #=> newlines and blanks are inserted for readability.
+       # {"frame"    : "http://hosi.org/When/CalendarTypes/Gregorian",
+       #  "precision": 0,
+       #  "location" : "http://hosi.org/When/Coordinates/Spatial?long=139.4441E&lat=35.3916N&alt=0.0",
+       #  "sdn"      : 2456768,
+       #  "calendar" : ["http://hosi.org/When/CalendarTypes/Gregorian"],
+       #  "notes"    : [[{"note":"Month","value":"April"}],
+       #                [{"note":"Week","value":"Sunday(6)"}]],
+       #  "clock"    : "Asia/Tokyo+09:00",
+       #  "clk_time" : [2456768,0,0,0],
+       #  "dynamical": 1397919667.184082,
+       #  "universal": 1397919600.0,
+       #  "cal_date" : [2014,4,20]}
+    end
+    
     # TZInfo
     #  https://rubygems.org/gems/tzinfo is required for this section's operations.
     #  Please install tzinfo before operation.
@@ -155,7 +174,7 @@ Example Usage
     # Google Calendar
     #  https://github.com/suchowan/gcalapi is required for this section's operations.
     #  Please install gcalapi before operation.
-    #  Please replace xxxxxxxx and ******** to valid pair of id and password.
+    #  Please replace xxxxxxxx and ******** to valid id/password pair and access Google Calendar.
     
     service = GoogleCalendar::Service.new('xxxxxxxx@gmail.com', '********')
     feed = "http://www.google.com/calendar/feeds/%s__%s%%40holiday.calendar.google.com/public/full" %
