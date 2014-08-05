@@ -1547,7 +1547,7 @@ module When::Coordinates
 
       # 日時要素の境界オブジェクト
       #
-      # @return [When::CalendarTypes::Border]
+      # @return [When::Coordinates::Border]
       #
       #attr_reader :border
 
@@ -1570,14 +1570,7 @@ module When::Coordinates
         @location   ||= @tz_prop.location if @tz_prop
 
         # Border
-        if @border.kind_of?(String)
-          @border = When.Calendar(
-            case @border
-            when /\([-\d]+?\)/ ; "_c:MultiBorder?borders=#{@border}"
-            when /\A[^A-Z_]/i   ; "_c:Border?border=#{@border}"
-            else               ; @border
-            end)
-        end
+        @border = When.Border(@border) if @border.kind_of?(String)
 
         # Formula
         instance_eval('class << self; attr_reader :formula; end') if @location && @border
@@ -2170,6 +2163,262 @@ module When::Coordinates
         date[@index_of_MSC] = s + u * (+date[0]) - @origin_of_MSC
         return date[@index_of_MSC..-1]
       end
+    end
+  end
+
+  #
+  # 日時要素の境界 - Border
+  #
+  class Border < When::BasicTypes::Object
+    #
+    # 境界の振舞
+    #
+    # @return [Numeric]
+    #
+    #  Pair(-1,+1) - 暦年/暦日が進む(境界が前年/日にあり、境界後が当年/日の扱いになる)
+    #
+    #  Pair( 0, 0) - 暦年/暦日が戻る(境界が当年/日にあり、境界前が前年/日の扱いになる)
+    #
+    def behavior
+      @border[0]
+    end
+
+    # 境界の取得
+    #
+    # @param [Array<Numeric>] date 境界を計算する年/日
+    # @param [When::TM::ReferenceSystem] frame 使用する暦法/時法
+    #
+    # @return [Array<Numeric>] その年/日の境界
+    #
+    def border(date=[], frame=nil)
+      last = date.length-1
+      return @border if last<0
+      b_date = date[0..last] + @border[(last+1)..-1]
+      branch = @border[last] * 0
+      b_date[last] = When::Coordinates::Pair.new(date[last] * 1, branch)
+      return b_date
+    end
+
+    # 境界の正規化
+    #
+    # @param [Array<Numeric>] date 境界を計算する年/日
+    # @param [When::TM::ReferenceSystem] frame 使用する暦法/時法
+    #
+    # @return [Array<Numeric>] その年/日の境界
+    #
+    def _adjust_epoch(date, frame=nil)
+      s_date  = date.dup
+      e_date  = border([+date[0]], frame)
+      branch  = behavior * 0
+      branch += 1 if (s_date[1..-1] <=> e_date[1..-1]) < 0
+      s_date[0] = When::Coordinates::Pair.new(+s_date[0]-branch, branch)
+      return s_date
+    end
+
+    # 日付の補正
+    # @private
+    def _date_adjust(source)
+      source
+    end
+
+    private
+
+    # 要素の正規化
+    def _normalize(args=[], options={})
+      @border = When::Coordinates::Pair._en_pair_date_time(@border) if @border.kind_of?(String)
+    end
+  end
+
+  #
+  # 日時要素の境界 - 年/日によって、異なる境界を使用する場合
+  #
+  class MultiBorder < Border
+
+    #
+    # 境界の配列
+    # @return [Array<When::Coordinates::Border>]
+    attr_reader :borders
+
+    #
+    # 境界の振舞
+    #
+    # @return [Numeric]
+    #
+    #   Pair(-1,+1) - 暦年/暦日が進む(境界が前年/日にあり、境界後が当年/日の扱いになる)
+    #
+    #   Pair( 0, 0) - 暦年/暦日が戻る(境界が当年/日にあり、境界前が前年/日の扱いになる)
+    #
+    def behavior
+      @borders[0][:border].behavior
+    end
+
+    # 境界の取得
+    #
+    # @param [Array<Numeric>] date 境界を計算する年/日
+    # @param [When::TM::ReferenceSystem] frame 使用する暦法/時法
+    #
+    # @return [Array<Numeric>] その年/日の境界
+    #
+    def border(date=[], frame=nil)
+      last = date.length-1
+      return @borders[0][:boder] if (last<0)
+      @borders.each do |border|
+        return border[:border].border(date, frame) if date[0] >= border[:key]
+      end
+      date[0..last]
+    end
+
+    # 境界の正規化
+    #
+    # @param [Array<Numeric>] date 境界を計算する年/日
+    # @param [When::TM::ReferenceSystem] frame 使用する暦法/時法
+    #
+    # @return [Array<Numeric>] その年/日の境界
+    #
+    def _adjust_epoch(date, frame=nil)
+      @borders.each do |border|
+        next unless date[0] >= border[:key]
+        s_date  = date.dup
+        e_date  = border[:border].border(date[0..0], frame)
+        branch  = border[:border].behavior * 0
+        branch += 1 if ((s_date[1..-1] <=> e_date[1..-1]) < 0)
+        s_date[0] = When::Coordinates::Pair.new(+s_date[0]-branch, branch)
+        return s_date
+      end
+      date
+    end
+
+    private
+
+    # 要素の正規化
+    def _normalize(args=[], options={})
+      if @borders.kind_of?(String)
+        list = @borders.split(/(\(.+?\))/)
+        list.shift if list[0]==''
+        list.unshift(-Float::MAX) unless list[0] =~ /\(/
+        list.push('0-1-1') if list[-1] =~ /\(/
+        @borders = []
+        loop do
+          key, border, *list = list
+          break unless key
+          key = $1.to_i if key.kind_of?(String) && /\((.+?)\)/ =~ key
+          @borders << {:key=>key, :border=>When.Border(border)}
+        end
+      end
+      @borders = @borders.sort_by {|border| -border[:key]}
+    end
+  end
+
+  #
+  # 基準暦法の新年による境界
+  #
+  class CalendarBorder < Border
+
+    class << self
+
+      private
+
+      def _behalf_of(iri)
+        base = iri.dup.sub!('/Coordinates/','/CalendarTypes/')
+        return nil unless base
+        self.new({'engine'=>When::Parts::Resource._instance(base)})
+      end
+    end
+
+    # 境界の取得
+    #
+    # @param [Array<Numeric>] date 境界を計算する年
+    # @param [When::TM::ReferenceSystem] frame 使用する暦法/時法
+    #
+    # @return [Array<Numeric>] その年の境界
+    #
+    def border(date=[], frame=nil)
+      last = date.length-1
+      return @border if last<0
+      args     = date.dup << {:frame=>@engine}
+      args[0] += frame.origin_of_MSC + @border[last] * 1 + (
+                 (  frame.respond_to?(:epoch_in_CE) ?   frame.epoch_in_CE : 0) - 
+                 (@engine.respond_to?(:epoch_in_CE) ? @engine.epoch_in_CE : 0))
+      b_date   = frame._encode(frame._number_to_coordinates(When.tm_pos(*args).to_i), nil)
+      branch   = @border[last] * 0
+      b_date[last] = When::Coordinates::Pair.new(date[last] * 1, branch)
+      return b_date
+    end
+
+    private
+
+    # 要素の正規化
+    def _normalize(args=[], options={})
+      @border ||= [When::Coordinates::Pair.new(+1,-1),0,0]
+      @border   = When::Coordinates::Pair._en_pair_date_time(@border) if @border.kind_of?(String)
+      @engine   = When.Calendar(@engine)
+    end
+  end
+
+  #
+  # 日時要素の境界 - 日の出,日の入り
+  #
+  class DayBorder < Border
+
+    # 境界の取得
+    #
+    # @param [Array<Numeric>] date 境界を計算する日
+    # @param [When::TM::ReferenceSystem] clock 使用する時法
+    #
+    # @return [Array<Numeric>] その日の境界
+    #
+    # @note 属性 @event によって境界を計算する (see {When::Ephemeris::Formula#day_event})
+    #
+    def border(date=[], clock=When::UTC)
+      return @border unless date[0] && clock.formula
+
+      time =
+        clock._number_to_coordinates(clock.second *
+          clock.time_standard.from_dynamical_time(
+            When::TM::JulianDate._d_to_t(
+              clock.formula.first.day_event(
+                clock.time_standard.to_dynamical_date(date[0] + @border[0]*0), @event, When.Resource('_ep:Sun'), @height
+              ))))
+
+      time[0] += When::TM::JulianDate::JD19700101
+      time[0]  = When::Coordinates::Pair.new(time[0]-@border[0]*0, @border[0]*0) unless @border[0]*0 == 0
+      clock._encode(time, false)
+    end
+
+    # 日付の補正
+    # @private
+    def _date_adjust(source)
+      source * 1 + @border[0] * 0
+    end
+  end
+
+  #
+  # 日時要素の境界 - 日の出
+  #
+  class Sunrise < DayBorder
+
+    private
+
+    # 要素の正規化
+    def _normalize(args=[], options={})
+      @border   = [0,0,0,0]
+      @event    = -1
+      @height ||= '0'
+    end
+  end
+
+  #
+  # 日時要素の境界 - 日の入り
+  #
+  class Sunset < DayBorder
+
+    private
+
+    # 要素の正規化
+    def _normalize(args=[], options={})
+      @border   = [When::Coordinates::Pair.new(+1,-1),0,0,0]
+      @event    = +1
+      @height ||= '0'
     end
   end
 end

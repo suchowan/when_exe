@@ -106,9 +106,9 @@ module When::Parts
 
     # ユニーク識別名
     # @return [String]
-    def label
-      @timezone.identifier
-    end
+    attr_reader    :identifier
+    alias :label   :identifier
+    alias :inspect :identifier
 
     # 時間帯を代表する都市の経度 / 度
     # @return [Rational]
@@ -141,8 +141,9 @@ module When::Parts
     # @param [String] identifier 識別名 ( "America/New_York" など)
     #
     def initialize(identifier)
-      id, query = identifier.split('?', 2)
-      @timezone = TZInfo::Timezone.get(id)
+      @identifier = identifier
+      id, query   = identifier.split('?', 2)
+      @timezone   = TZInfo::Timezone.get(id)
       unless TZInfo::TimeOrDateTime.method_defined?(:_to_datetime)
         if TZInfo::RubyCoreSupport.respond_to?(:datetime_new)
           TZInfo::TimeOrDateTime.class_eval %Q{

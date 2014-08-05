@@ -33,20 +33,22 @@ end
 # Extensions to Date class
 #
 # @private
-class Date
+if ::Object.const_defined?(:Date) && ::Date.method_defined?(:+)
+  class Date
 
-  alias :_plus_  :+
-  def +(other)
-    other.kind_of?(When::TM::Duration) ? self + other.rational_duration : self._plus_(other)
-  end
+    alias :_plus_  :+
+    def +(other)
+      other.kind_of?(When::TM::Duration) ? self + other.rational_duration : self._plus_(other)
+    end
 
 
-  alias :_minus_ :-
-  def -(other)
-    case other
-    when When::TM::Duration ; self - other.rational_duration
-    when When::TimeValue    ; self._minus_(kind_of?(DateTime) ? other.to_date_time : other.to_date)
-    else                    ; self._minus_(other)
+    alias :_minus_ :-
+    def -(other)
+      case other
+      when When::TM::Duration ; self - other.rational_duration
+      when When::TimeValue    ; self._minus_(other.to_date_or_datetime)
+      else                    ; self._minus_(other)
+      end
     end
   end
 end

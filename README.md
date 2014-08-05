@@ -51,7 +51,7 @@ Example Usage
 
     require 'when_exe'
     
-    # When::TM::CalDate
+    # When::TM::CalDate ---------------------------
     
     gregorian_date = When.tm_pos(2014, 8, 1)
     p gregorian_date                             #=> 2014-08-01
@@ -78,7 +78,7 @@ Example Usage
     puts islamic_date.name(When::MONTH) / 'en'   #=> Shawwal
     puts islamic_date.name(When::MONTH) / 'ar'   #=> شوال
     
-    # When::TM::DateAndTime
+    # When::TM::DateAndTime ------------------------
     
     gregorian_date = When.tm_pos(2014, 8, 1, 9, 0, 0, :clock=>'+09:00')
     p gregorian_date                             #=> 2014-08-01T09:00:00+09:00
@@ -105,7 +105,7 @@ Example Usage
     p darian_date.clk_time.frame.iri             #=> "http://hosi.org/When/CalendarTypes/MTC"
     p darian_date.time_standard.iri              #=> "http://hosi.org/When/TimeStandard/MartianTimeCoordinated?location=(_l:long=0&datum=Mars)"
     
-    # When::TM::CalendarEra
+    # When::TM::CalendarEra ------------------------
     
     babylonian_date = When.tm_pos('NebuchadnezzarII', 1, 1, 1)
     p babylonian_date                            #=> NebuchadnezzarII01(-603).01.01
@@ -120,7 +120,7 @@ Example Usage
     babylonian_date = When.when?('NebuchadnezzarII1.1.1T18:13:00',
                                  :clock=>'+03:00?long=45&lat=32&border=Sunset')
     4.times do
-      p [babylonian_date, babylonian_date.to_i] #=>
+      p [babylonian_date, babylonian_date.to_i]  #=>
         # [NebuchadnezzarII01(-603).01.01T:18:13:00+03:00, 1500904]
         # [NebuchadnezzarII01(-603).01.01T:18:14:00+03:00, 1500904]
         # [NebuchadnezzarII01(-603).01.02T*18:15:00+03:00, 1500905]
@@ -128,8 +128,8 @@ Example Usage
       babylonian_date += When::PT1M
     end
     
-    # Web service - retrieve JSON response from http://hosi.org:3000 (when_exe demonstration web server)
-    
+    # Web service ----------------------------------
+    #  retrieve JSON response from http://hosi.org:3000 (when_exe demonstration web server)
     require 'open-uri'
     open('http://hosi.org:3000/Date/2014-04-20.json') do |json|
       puts json.read #=> newlines and blanks are inserted for readability.
@@ -147,7 +147,7 @@ Example Usage
        #  "cal_date" : [2014,4,20]}
     end
     
-    # TZInfo
+    # TZInfo --------------------------------------
     #  https://rubygems.org/gems/tzinfo is required for this section's operations.
     #  Please install tzinfo before operation.
     
@@ -167,11 +167,11 @@ Example Usage
     p edt                                        #=> 1997-04-06T03:30:00-04:00
     
     p When.when?('TZID=America/New_York:1997-10-26T01:30') #=> 1997-10-26T01:30-04:00
-    p When.when?('TZID=America/New_York:1997-10-26T01=30') #=> 1997-10-26T01:30-05:00
+    p When.when?('TZID=America/New_York:1997-10-26T01=30') #=> 1997-10-26T01:30-05:00, '=' indicates "leep hour"
     p When.when?('TZID=America/New_York:1997-10-26T02:30') #=> 1997-10-26T02:30-05:00
     p When.when?('TZID=America/New_York:1997-10-26T03:30') #=> 1997-10-26T03:30-05:00
     
-    # Google Calendar
+    # Google Calendar ------------------------------
     #  https://github.com/suchowan/gcalapi is required for this section's operations.
     #  Please install gcalapi before operation.
     #  Please replace xxxxxxxx and ******** to valid id/password pair and access Google Calendar.

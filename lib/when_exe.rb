@@ -760,6 +760,24 @@ module When
     Parts::Resource._instance(iri)
   end
 
+  # When::Coordinates::Border の生成/参照
+  #
+  # @param [String] border 年/日境界を表す文字列
+  #
+  # @return [When::Coordinates::Border] border に対応する When::Coordinates::Border オブジェクト
+  #
+  def Border(border)
+    case border
+    when Coordinates::Border ; return border
+    when /\([-\d]+?\)/       ; border = "_co:MultiBorder?borders=#{border}"
+    when /\A[^A-Z_]/i        ; border = "_co:Border?border=#{border}"
+    end
+
+    Parts::Resource._instance(border, '_co:') do |iri|
+      Coordinates::CalendarBorder.send(:_behalf_of, iri)
+    end
+  end
+
   #
   # 曜日(剰余類)
   #

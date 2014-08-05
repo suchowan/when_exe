@@ -207,6 +207,9 @@ module When::TM
     # @private
     HashProperty = Position::HashProperty
 
+    # @private
+    DateTimeInstanceMethods = ::Object.const_defined?(:Date) && ::Date.method_defined?(:+) ? ::DateTime.instance_methods : []
+
     # この時間位置の意味づけ
     #
     # @return [When::TM::IndeterminateValue]
@@ -635,8 +638,8 @@ module When::TM
     #
     # @return [::DateTime]
     #
-    def to_date_time(option={:frame=>When::UTC}, start=_default_start)
-      return JulianDate.dynamical_time(dynamical_time, option).to_date_time unless time_standard.rate_of_clock == 1.0
+    def to_datetime(option={:frame=>When::UTC}, start=_default_start)
+      return JulianDate.dynamical_time(dynamical_time, option).to_datetime unless time_standard.rate_of_clock == 1.0
       raise TypeError, "Clock not assigned" unless clock
       Rational
       offset   = Rational(-(clock.universal_time/Duration::SECOND).to_i, (Duration::DAY/Duration::SECOND).to_i)
@@ -657,6 +660,7 @@ module When::TM
       return JulianDate.dynamical_time(dynamical_time, option).to_date unless time_standard.rate_of_clock == 1.0
       ::Date.jd(to_i, start)
     end
+    alias :to_date_or_datetime :to_date
 
     # 組み込みライブラリの Time オブジェクトへの変換
     #
@@ -1030,17 +1034,27 @@ module When::TM
     #
     # @note
     #   When::TM::TemporalPosition で定義されていないメソッドは
-    #   処理を @frame (type: When::TM::Calendar or When::TM::Clock) に委譲する
+    #   処理を @frame(class: When::TM::Calendar or When::TM::Clock)
+    #   または to_date_or_datetime(class: ::Date or ::DateTime) に委譲する
     #
     def method_missing(name, *args, &block)
       
       return _method_missing(name, *args, &block) if When::Parts::MethodCash::Escape.key?(name)
-      self.class.module_eval %Q{
-        def #{name}(*args, &block)
-          @frame.send("#{name}", self, *args, &block)
-        end
-      } unless When::Parts::MethodCash.escape(name)
-      @frame.send(name, self, *args, &block)
+      if DateTimeInstanceMethods.include?(name) && ! @frame.respond_to?(name)
+        self.class.module_eval %Q{
+          def #{name}(*args, &block)
+            self.to_date_or_datetime.send("#{name}", *args, &block)
+          end
+        } unless When::Parts::MethodCash.escape(name)
+        self.to_date_or_datetime.send(name, *args, &block)
+      else
+        self.class.module_eval %Q{
+          def #{name}(*args, &block)
+            @frame.send("#{name}", self, *args, &block)
+          end
+        } unless When::Parts::MethodCash.escape(name)
+        @frame.send(name, self, *args, &block)
+      end
     end
   end
 
@@ -1095,7 +1109,7 @@ module When::TM
           options[:frame] ||= time.clock
           universal_time    = time.universal_time
         else
-          if ::Object.const_defined?(:Date) && time.respond_to?(:ajd)
+          if ::Object.const_defined?(:Date) && ::Date.method_defined?(:+) && time.respond_to?(:ajd)
             case time
             when ::DateTime
               options[:frame] ||= When.Clock((time.offset * 86400).to_i)
@@ -1971,6 +1985,10 @@ module When::TM
       CalDate.new(@cal_date, options)
     end
     alias :to_CalDate :to_cal_date
+
+    # 標準ライブラリの DateTime オブジェクトへの変換
+    #
+    alias :to_date_or_datetime :to_datetime
 
     #protected
 

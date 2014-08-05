@@ -136,16 +136,12 @@ module When::V
           options[:exdate] = exdate
           When::Parts::Enumerator::Integrated.new(self, enumerators, *args)
         end
-      if ::Object.const_defined?(:Date) && (args[0].kind_of?(Range) ? args[0].first : args[0]).kind_of?(::Date)
+      if ::Object.const_defined?(:Date) && ::Date.method_defined?(:+) && (args[0].kind_of?(Range) ? args[0].first : args[0]).kind_of?(::Date)
         enumerator.instance_eval %Q{
           alias :_succ_of_super :succ
           def succ
             result = _succ_of_super
-            case result
-            when When::TM::DateAndTime ; result.to_date_time
-            when When::TM::CalDate     ; result.to_date
-            else                       ; result
-            end
+            result.kind_of?(When::TimeValue) ? result.to_date_or_datetime : result
           end
         }
       end

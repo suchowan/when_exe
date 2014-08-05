@@ -5,7 +5,6 @@
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
 
-require 'date'
 require 'when_exe/core/duration'
 
 #
@@ -53,55 +52,49 @@ end
 #
 # Extensions to Date class
 #
-class Date
+if ::Object.const_defined?(:Date) && ::Date.method_defined?(:+)
+  class Date
 
-  if When::TM.const_defined?(:TemporalPosition)
+    if When::TM.const_defined?(:TemporalPosition)
 
-    include When::TM::TemporalPosition::Conversion
+      include When::TM::TemporalPosition::Conversion
 
-    #
-    # 対応する When::TM::CalDate or DateAndTime を生成
-    #
-    # @param [Hash] options 暦法や時法などの指定
-    #   see {When::TM::TemporalPosition._instance}
-    #
-    # @return [When::TM::CalDate, When::TM::DateAndTime]
-    #
-    # @note 暦法の指定がない場合、start メソッドの値によって
-    #       Julian / Gregorian / Civil 暦法を選択する
-    #
-    def tm_pos(options={})
-      options[:frame] ||= When::CalendarTypes::Christian._default_start(self)
-      super(options)
-    end
-    alias :to_tm_pos :tm_pos
-  end
-
-  alias :__method_missing :method_missing
-
-  # その他のメソッド
-  #
-  # @note
-  #   self で定義されていないメソッドは
-  #   tm_pos で変換して処理する
-  #
-  def method_missing(name, *args, &block)
-    return __method_missing(name, *args, &block) if When::Parts::MethodCash::Escape.key?(name)
-    self.class.module_eval %Q{
-      def #{name}(*args, &block)
-        result = tm_pos.send("#{name}", *args, &block)
-        case result
-        when When::TM::DateAndTime ; result.to_date_time
-        when When::TM::CalDate     ; result.to_date
-        else                       ; result
-        end
+      #
+      # 対応する When::TM::CalDate or DateAndTime を生成
+      #
+      # @param [Hash] options 暦法や時法などの指定
+      #   see {When::TM::TemporalPosition._instance}
+      #
+      # @return [When::TM::CalDate, When::TM::DateAndTime]
+      #
+      # @note 暦法の指定がない場合、start メソッドの値によって
+      #       Julian / Gregorian / Civil 暦法を選択する
+      #
+      def tm_pos(options={})
+        options[:frame] ||= When::CalendarTypes::Christian._default_start(self)
+        super(options)
       end
-    } unless When::Parts::MethodCash.escape(name)
-    result = tm_pos.send(name, *args, &block)
-    case result
-    when When::TM::DateAndTime ; result.to_date_time
-    when When::TM::CalDate     ; result.to_date
-    else                       ; result
+      alias :to_tm_pos :tm_pos
+    end
+
+    alias :__method_missing :method_missing
+
+    # その他のメソッド
+    #
+    # @note
+    #   self で定義されていないメソッドは
+    #   tm_pos で変換して処理する
+    #
+    def method_missing(name, *args, &block)
+      return __method_missing(name, *args, &block) if When::Parts::MethodCash::Escape.key?(name)
+      self.class.module_eval %Q{
+        def #{name}(*args, &block)
+          result = tm_pos.send("#{name}", *args, &block)
+          result.kind_of?(When::TimeValue) ? result.to_date_or_datetime : result
+        end
+      } unless When::Parts::MethodCash.escape(name)
+      result = tm_pos.send(name, *args, &block)
+      result.kind_of?(When::TimeValue) ? result.to_date_or_datetime : result
     end
   end
 end

@@ -122,6 +122,14 @@ module When
     end
   end
 
+  class Parts::Timezone
+      # When::Parts::Timezone オブジェクトを分かりやすい文字列にして返します
+      #
+      # @return [String] identifier と同様
+      #
+    alias :inspect :identifier
+  end
+
   module Coordinates
 
     class Pair

@@ -364,7 +364,7 @@ module When
       # @return nil
       #
       def first_year_of_border
-        return nil unless @border.kind_of?(When::CalendarTypes::MultiBorder)
+        return nil unless @border.kind_of?(When::Coordinates::MultiBorder)
         year = @border.borders[-1][:key]
         year.kind_of?(Integer) ? year : nil
       end
@@ -503,6 +503,9 @@ module When
         (skip && digit >= limit ? digit+skip : digit)+@base[date.length-1]
       end
     end
+  end
+
+  module Coordinates
 
     #
     # 日時要素の境界 - 復活祭
@@ -783,7 +786,8 @@ module When
     # 任意の暦をグレゴリオorユリウス暦日に変換
     #
     def _to_date_for_note(date)
-      return When.Calendar(When::CalendarTypes::Christian._default_start(date)) ^ date if ::Object.const_defined?(:Date) && date.kind_of?(::Date)
+      return When.Calendar(When::CalendarTypes::Christian._default_start(date)) ^ date if ::Object.const_defined?(:Date) &&
+                                                                                          ::Date.method_defined?(:+) && date.kind_of?(::Date)
       return When::Gregorian ^ date if date.kind_of?(::Time)
       return date if date.frame.kind_of?(When::CalendarTypes::Christian)
       When.Calendar(date.frame.iri =~ /Coptic/ || date.to_i < 2299161 ? 'Julian' : 'Gregorian') ^ date

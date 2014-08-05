@@ -79,7 +79,7 @@ end
 #
 # 例外クラス
 #
-unless Object.const_defined?(:StopIteration)
+unless ::Object.const_defined?(:StopIteration)
   # @private
   class StopIteration < IndexError
   end
