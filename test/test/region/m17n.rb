@@ -179,6 +179,15 @@ module MiniTest
           end
         end
       end
+
+      assert_equal({:Frame=>"http://hosi.org/When/CalendarTypes/Gregorian",
+                    :Precision=>0,
+                    :Sdn=>2456388,
+                    :Calendar=>["http://hosi.org/When/CalendarTypes/Gregorian"],
+                    :Notes=>[[{:Note=>"Month", :Value=>"April"}],
+                             [{:Note=>"Week", :Value=>"Friday(4)"}]],
+                    :CalDate=>[2013, 4, 5]},
+                    When.when?('2013-4-5').to_h(:method=>:to_m17n, :locale=>'en', :camel=>true))
     end
   end
 end

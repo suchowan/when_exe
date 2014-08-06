@@ -96,9 +96,18 @@ module When::Parts
     #
     # ブロックを評価する
     #
+    #   @param [Hash] options 以下の通り
+    #   @option options [Symbol]     :direction   方向(:forward/:reverse)
+    #   @option options [Comparable] :until       終了閾値
+    #   @option options [Integer]    :count_limit 繰り返し回数
+    #
     # @return [rewind された self]
     #
-    def each
+    def each(options={})
+      @direction   = options[:direction] if options.key?(:direction)
+      @last        = @direction == :reverse ? [options[:until], @last].compact.max :
+                                              [options[:until], @last].compact.min
+      @count_limit = [options[:count_limit], @count_limit].compact.min
       return self unless block_given?
       while (has_next?) do
         if @index
@@ -179,7 +188,7 @@ module When::Parts
     #   [ false - ない ]
     #
     def has_next?
-      return (@current != nil)
+      return (@count_limit != 0) && (@current != nil)
     end
 
     #
@@ -206,28 +215,28 @@ module When::Parts
     #
     def succ
       value = @current
-      if (@count_limit.kind_of?(Numeric) && @count >= @count_limit)
+      if @count_limit.kind_of?(Numeric) && @count >= @count_limit
         @current = nil
       else
         loop do
           @current = _succ
-          break unless (@current)
+          break unless @current
           next if (@current == :next)
           @current = GeometricComplex.new(@current, @duration) if @duration
           next if _exclude(@current)
           case @direction
           when :reverse
-            next if (@current > @first)
-            @current = nil if (@last && @current < @last)
+            next if @current > @first
+            @current = nil if @last && @current < @last
             break
           else
-            next if (@current < @first)
-            @current = nil if (@last && @current > @last)
+            next if @current < @first
+            @current = nil if @last && @current > @last
             break
           end
         end
         @count += 1
-        _exclude(@current) if (@current)
+        _exclude(@current) if @current
       end
       return value
     end
@@ -261,7 +270,7 @@ module When::Parts
     private
 
     def _range(rest)
-      if (rest[0].instance_of?(Range))
+      if rest[0].instance_of?(Range)
         range, @count_limit, others = rest
         raise ArgumentError, "Too many arguments" if others
         @first   = When.when?(range.first)

@@ -802,6 +802,18 @@ module MiniTest:V
       assert_equal([], sample)
     end
 
+    def test__each_5
+      event5 = When::V::Event.new({
+          'rrule'   => 'FREQ=MONTHLY;BYMONTHDAY=31',
+          'dtstart' => 'VALUE=DATE:20070131'
+        })
+      sample =%w(2007-01-31 2007-03-31 2007-05-31 2007-07-31 2007-08-31
+                 2007-10-31 2007-12-31 2008-01-31 2008-03-31 2008-05-31)
+      event5.enum_for(When.when?('20070101'), :forward, 10).each do |date|
+        assert_equal(sample.shift, date.to_s)
+      end
+    end
+
     class Enumerator < MiniTest::TestCase
 
       def test_nothing

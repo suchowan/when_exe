@@ -310,6 +310,40 @@ module MiniTest::TM
          assert_equal(sample[1], period[sample[0]])
       end
     end
+
+    Sample10 = %w(2013-01-31 2013-02-28 2013-03-31 2013-04-30 2013-05-31
+                  2013-06-30 2013-07-31 2013-08-31 2013-09-30 2013-10-31)
+
+    Sample12 = %w(2013-01-31 2013-02-28 2013-03-31 2013-04-30 2013-05-31 2013-06-30
+                  2013-07-31 2013-08-31 2013-09-30 2013-10-31 2013-11-30 2013-12-31)
+
+    def test__duration_each
+      sample = Sample10.dup
+      When::P1M.enum_for(When.when?('2013-01-31'), :forward, 10).each do |date|
+        assert_equal(sample.shift, date.to_s)
+      end
+
+      count = 0
+      (When.when?('2013-01-31') ^ When::P1M).each({:count_limit=>0}) do |date|
+        count += 1
+      end
+      assert_equal(0, count)
+
+      sample = Sample10.dup
+      (When.when?('2013-01-31') ^ When::P1M).each({:count_limit=>10}) do |date|
+        assert_equal(sample.shift, date.to_s)
+      end
+
+      sample = Sample12.dup
+      (When.when?('2013-01-31') ^ When::P1M).each({:until=>When.when?('2013-12-31')}) do |date|
+        assert_equal(sample.shift, date.to_s)
+      end
+
+      sample = Sample12.reverse
+      (When.when?('2013-12-31') ^ -When::P1M).each({:until=>When.when?('2013-01-31')}) do |date|
+        assert_equal(sample.shift, date.to_s)
+      end
+    end
   end
 
   class IntervalLength < MiniTest::TestCase

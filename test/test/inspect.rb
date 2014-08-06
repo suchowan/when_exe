@@ -112,6 +112,25 @@ module MiniTest
           end
         end
       end
-   end
+    end
+
+    def test__month_included
+      assert_equal([['December 2013',
+                    ['*', '-', '-', '-', '-', '-', 1, 2],
+                    ['*', 3, 4, 5, 6, 7, 8, 9],
+                    ['*', 10, 11, 12, 13, 14, 15, 16],
+                    ['*', 17, 18, 19, 20, 21, 22, 23],
+                    ['*', 24, 25, 26, 27, 28, 29, 30, 31]]],
+
+        When.when?('2013-12-30').month_included('WorldWeek') {|date, type|
+          case type
+          when When::YEAR  ; date.strftime('%Y')
+          when When::MONTH ; date.strftime('%B %Y')
+          when When::WEEK  ; '*'
+          when When::DAY   ; date[When::DAY]
+          else             ; '-'
+          end
+        })
+    end
   end
 end

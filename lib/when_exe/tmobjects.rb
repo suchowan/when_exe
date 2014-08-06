@@ -569,7 +569,12 @@ module When::TM
         value    = @current
         @current = (@count_limit.kind_of?(Numeric) && @count >= @count_limit) ? nil :
                    (@current==:first) ? @first :
-                   (@direction==:forward) ? @first + @parent * @count : @first - @parent * @count
+                   (@direction==:reverse) ? @first - @parent * @count : @first + @parent * @count
+        if @last
+          sign     = @parent.sign
+          sign     = -sign if @direction==:reverse
+          @current = nil if (sign * (@current <=> @last)) > 0
+        end
         @count  += 1
         return value
       end
@@ -1097,11 +1102,16 @@ module When::TM
     # @return [Integer] 0 との比較により、負,0,正の値を返す
     #
     def sign
+      @sign ||= _sign
+    end
+
+    def _sign
      ((@week || @date || []) + (@time || [])).each do |v|
        return -1 if +v < 0
      end
      return +1
     end
+    private :_sign
 
     # 比較
     #
@@ -1293,7 +1303,7 @@ module When::TM
     # 属性 @duration の計算
     #
     def _duration
-      @duration = nil
+      @duration = @sign = nil
 
       if @time
         @duration  = +@time[HOUR  ] * Duration::HOUR

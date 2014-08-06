@@ -103,6 +103,11 @@ LIST
       end
     end
 
+    def test__length
+      assert_equal(445, When.when?('AUC708.8.1').length(When::YEAR))
+      assert_equal(442, When.when?('太初1.6.1').length(When::YEAR))
+    end
+
     def test__week
       date = When.when?('20110517')
       assert_equal("2011-05-16...2011-05-23", date.week_included.to_s)
@@ -123,6 +128,51 @@ LIST
         [+1, "2011-05-23...2011-05-30"],
       ].each do |sample|
         assert_equal(sample[1], date.week_included(sample[0]).to_s)
+      end
+    end
+
+    def test__calendar_reform_in_japan
+      date0  = When.when?('明治5.12.1')
+      date1  = date0 + When::P1M
+      sample = [%w(明治06(1873).01.01 1873-01-01),
+                        %w(1872-12-31 1872-12-31),
+                        %w(1872-12-30 1872-12-30)]
+      [date1, date1.prev, date1.prev.prev].each do |date|
+        assert_equal(sample.shift, [date.to_s, (When::Gregorian^date).to_s])
+      end
+
+      sample = %w(1872-12-30 1872-12-31)
+      date = When.when?('明治5.12.1')
+      date.month_included('Sun') do |d,b|
+        assert_equal(sample.shift, d.to_s) if b==When::DAY
+      end
+    end
+
+    def test__calendar_reform_in_england
+      frame = When.Calendar('Civil?reform=1752-9-14&border=0-3-25(1753)0-1-1')
+
+      assert_equal('1641=03-24', (frame ^ When.when?('1642-4-3')).to_s)
+      assert_equal('1642-03-25', (frame ^ When.when?('1642-4-4')).to_s)
+      assert_equal('1752-12-31', (frame ^ When.when?('1752-12-31')).to_s)
+      assert_equal('1753-01-01', (frame ^ When.when?('1753-1-1')).to_s)
+      assert_equal('1753-03-24', (frame ^ When.when?('1753-3-24')).to_s)
+      assert_equal('1753-03-25', (frame ^ When.when?('1753-3-25')).to_s)
+
+    # frame = When.Calendar('Civil?reform=1752-9-14&old=(Julian?border=0-3-25)')
+      sample = %w(1752-08-31 1752-09-01 1752-09-02 1752-09-14 1752-09-15 1752-09-16 1752-09-17 1752-09-18
+                  1752-09-19 1752-09-20 1752-09-21 1752-09-22 1752-09-23 1752-09-24 1752-09-25 1752-09-26)
+      date = When.when?('1752-8-31', :frame=>frame)
+      16.times do
+        assert_equal(sample.shift, date.to_s)
+        date = date + When::P1D
+      end
+
+      sample = %w(1751-12-01 1751=01-01 1751=02-01 1751=03-01 1752-04-01 1752-05-01 1752-06-01 1752-07-01
+                  1752-08-01 1752-09-01 1752-10-01 1752-11-01 1752-12-01 1753-01-01 1753-02-01 1753-03-01)
+      date = When.when?('1751-12-1', :frame=>frame)
+      16.times do
+        assert_equal(sample.shift, date.to_s)
+        date = date + When::P1M
       end
     end
   end
