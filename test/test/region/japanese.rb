@@ -167,6 +167,10 @@ module MiniTest
         When::CalendarNote::Japanese::SolarTerms.send(:patch=, {})
       end
       When::CalendarNote::Japanese::SolarTerms.send(:patch=, nil)
+
+      assert_equal('白露(135.375/560)',
+        When.when?('康和1.8.14').notes(:notes=>'廿四節気', :shoyo=>true)[:value].simplify.to_s)
+
     end
 
     def test__lunar_phases
@@ -201,6 +205,11 @@ module MiniTest
       end
     end
 
+    def test_japanese_lunisolar
+      assert_equal({1850=>{"hI"=>"Hi"}, 1866=>{"cD"=>"Cd"}, 1884=>{"cD"=>"Cd"}, 1947=>{"b"=>"c"}},
+                    When.Calendar('Japanese').verify(When.Calendar('JapaneseTwin::旧暦'), 1844..2033))
+    end
+
     def test_japanese_era
       assert_raises(RangeError) {When.TemporalPosition("正慶", 2, 11)}
       assert_equal("延元02(1337).01.08",          When.when?("建武4.1.8").to_s)
@@ -216,6 +225,11 @@ module MiniTest
                       弘長 文永 建治 弘安 正応 永仁 正安 乾元 嘉元 徳治
                       延慶 応長 正和 文保 元応 元亨 正中 嘉暦 元徳 元弘),
                    When.era('鎌倉時代')[0].map { |era| era.label.to_s})
+
+      date = When.when?('768-10-20^^Gregorian')
+      assert_equal('神護景雲02(0768).09.02',                        (date ^ When.CalendarEra('Japanese'))[0].to_s)
+      assert_equal('日本?V=0764::奈良時代::神護景雲02(0768).09.01', (date ^ When.CalendarEra('Japanese?V=0764'))[0].to_s)
+      assert_equal('日本::奈良時代::神護景雲02(0768).09.02',        (date ^ When.CalendarEra('Japanese'))[0].to_s)
     end
 =begin
     def test_japanese_date

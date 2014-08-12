@@ -326,6 +326,28 @@ module MiniTest
           end
         end
       end
+
+      def test__abbr_and_extra_year_digits
+
+        assert_equal('-00500',     When.when?('-005').to_s)
+        assert_equal('2013-01-05', When.when?('-005', {:abbr=>2013}).to_s)
+        assert_equal('-000005',    When.when?('-005', {:extra_year_digits=>2}).to_s)
+
+        assert_equal('1900',       When.when?('19').to_s)
+        assert_equal('1900',       When.when?('19', {:extra_year_digits=>0 }).to_s)
+        assert_equal('0019',       When.when?('19', {:extra_year_digits=>-1}).to_s)
+
+        [['019',        ["0019",    -2, "0019-01-01"  ]],
+         ['0019',       ["0019",    -2, "0019-01-01"  ]],
+         ['+019',       ["1900",    -4, "1900-01-01"  ]],
+         ['-119',       ["-11900",  -4, "-11900-01-01"]],
+         ['-0119',      ["-00119",  -2, "-00119-01-01"]],
+         ['+01985-04',  ["1985-04", -1, "1985-04-01"  ]],
+         ['+001985-04', ["1985-04", -1, "1985-04-01"  ]]].each do |sample|
+          date = When.when?(sample[0])
+          assert_equal(sample[1], [date.to_s, date.precision, date.floor.to_s])
+        end
+      end
     end
 
     #

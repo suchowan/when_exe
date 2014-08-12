@@ -56,6 +56,8 @@ module MiniTest
       assert_equal("BCE3761(-3760).10.07",
                    (When.era('BCE')[0] ^ When.Calendar('Jewish').domain[''].first).to_s)
 
+      date = When.when?('4861-06-21^^Jewish')
+      assert_equal('4862-06*21', (date + When::P1Y).to_s)
     end
   end
 end

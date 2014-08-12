@@ -1764,11 +1764,11 @@ module When::Coordinates
     def _decode(source, other=nil)
 
       # other の正規化
-      period = (other) ? other.dup : Array.new(@indices.length+1,0)
+      period = other ? other.dup : Array.new(@indices.length+1,0)
 
       # 上の位の集約
       date = _decode_upper_structure(source.dup)
-      if ((@index_of_MSC > 0) && other)
+      if (@index_of_MSC > 0) && other
         u = 1
         s = period[@index_of_MSC]
         (@index_of_MSC-1).downto(0) do |i|
@@ -1784,22 +1784,26 @@ module When::Coordinates
       end
 
       # 要素数固定部分の正規化(上 -> 下) - ISO8601 の 小数要素(ex. "T23:20.8")の処理
-      carry = 0
-      @unit.length.times do |i|
-        if carry == 0
-          break unless date[i]
-        else
-          date[i] ||= 0
-          date[i]  += carry * unit[i]
-        end
-        if (date[i].kind_of?(Integer))
-          carry = 0
-        else
-          if i < @unit.length-1
-            carry    = (date[i].kind_of?(Pair) ? date[i].trunk : date[i]) % 1
-            date[i] -= carry
+      coordinates = [date]
+      coordinates << period if other
+      coordinates.each do |coord|
+        carry = 0
+        @unit.length.times do |i|
+          if carry == 0
+            break unless coord[i]
+          else
+            coord[i] ||= 0
+            coord[i]  += carry * unit[i]
           end
-          date[i] = date[i].to_i if date[i].kind_of?(Float) && date[i] == date[i].to_i
+          if coord[i].kind_of?(Integer)
+            carry = 0
+          else
+            if i < @unit.length-1
+              carry    = (coord[i].kind_of?(Pair) ? coord[i].trunk : coord[i]) % 1
+              coord[i] -= carry
+            end
+            coord[i] = coord[i].to_i if coord[i].kind_of?(Float) && coord[i] == coord[i].to_i
+          end
         end
       end
 
@@ -1819,7 +1823,7 @@ module When::Coordinates
       limit = @base.length-1
       count = nil
       date[0] = +year
-      if (@base.length > @unit.length)
+      if @base.length > @unit.length
         @unit.length.upto(limit) do |i|
           len    = _length(date[0...i])
           if date[i]
@@ -1830,9 +1834,9 @@ module When::Coordinates
             digit  = period[i]
           end
 
-          if (i==limit) then 
+          if i==limit then 
             # 最下位
-            if ((0...len) === digit)
+            if (0...len) === digit
               # 要素が範囲内
               date[i] = digit
             elsif other && period[i] == 0
@@ -1849,11 +1853,11 @@ module When::Coordinates
           else
             # 最下位以外
             #   要素が大きすぎる場合
-            while (digit >= len) do
+            while digit >= len do
               digit -= len
               carry  = 1
               (i-1).downto(1) do |k|
-                if (date[k] >= _length(date[0...k])-1)
+                if date[k] >= _length(date[0...k])-1
                   date[k]  = 0
                   carry    = 1
                 else
@@ -1867,7 +1871,7 @@ module When::Coordinates
             end
 
             #   要素が小さすぎる場合
-            while (digit < 0) do
+            while digit < 0 do
               date[i-1] -= 1
               digit     += _length(date[0...i])
               (i-1).downto(1) do |k|
@@ -1885,10 +1889,10 @@ module When::Coordinates
       date[0] = year + (date[0] - +year)
 
       # 時刻部分による補正が入る場合
-      if (block_given? && !count)
+      if block_given? && !count
         count    = _coordinates_to_number(*date)
         modified = yield(count)
-        date     = _number_to_coordinates(modified) unless (count == modified)
+        date     = _number_to_coordinates(modified) unless count == modified
       end
 
       # 結果を返す

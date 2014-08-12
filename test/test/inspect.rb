@@ -132,5 +132,22 @@ module MiniTest
           end
         })
     end
+
+    def test__round
+      date = When.when?("2010-09-29T14:45:12.33+09:00")
+      assert_equal(%w(2010-09-29T14:45:12.33+09:00 2010-09-29T14:45:12+09:00), [date.to_s, date.to_s(3, true)])
+
+      date = When.when?('2013-10-28T23:59:59.999', :clock=>'+09:00', :precision=>3)
+      assert_equal(%w(2013-10-28T23:59:59+09:00    2013-10-28T24:00:00+09:00), [date.to_s, date.to_s(3, true)])
+
+      date = When.when?('2013-10-28T23:59:59.999', :clock=>'+09:00')
+      assert_equal(%w(2013-10-28T23:59:59.99+09:00 2013-10-28T24:00:00+09:00), [date.to_s, date.to_s(3, true)])
+
+      date = When.when?('2013-10-28T23:59:29.999', :clock=>'+09:00')
+      assert_equal(%w(2013-10-28T23:59:29.99+09:00 2013-10-28T23:59+09:00),    [date.to_s, date.to_s(2, true)])
+
+      date = When.when?('2013-10-28T23:59:30.001', :clock=>'+09:00')
+      assert_equal(%w(2013-10-28T23:59:30.00+09:00 2013-10-28T24:00+09:00),    [date.to_s, date.to_s(2, true)])
+    end
   end
 end

@@ -311,6 +311,26 @@ module MiniTest::TM
       end
     end
 
+    def test__period_duration_diff
+      date1 = When.when?('2012-07-01')
+      date2 = When.when?('2012-07-02')
+      duration = date2 - date1
+      assert_equal('P1D', duration.to_s)
+      assert_equal(When::TM::PeriodDuration, duration.class)
+
+      if Object.const_defined?(:TZInfo)
+        time = When.when?('2013-03-10T01:00:00', :tz=>'America/New_York')
+        assert_equal('2013-03-10T02:30:00-04:00', (time + When.Duration('PT1.5H')).to_s) # —ï–Ê‚Å1.5ŠÔ
+      else
+        puts
+        puts "Tests for TZInfo have been skipped at line #{__LINE__} of #{__FILE__.split(/\//)[-1]}."
+      end
+
+      vcal = When.Resource("examples/USA-DST.ics?C=New_York&Z=E&D=04&DZ=06&S=05&SZ=07")
+      time = When.when?('2013-03-10T01:00:00', :clock=>vcal['America/New_York'])
+      assert_equal('2013-03-10T02:30:00-04:00', (time + When.Duration('PT1.5H')).to_s) # —ï–Ê‚Å1.5ŠÔ
+    end
+
     Sample10 = %w(2013-01-31 2013-02-28 2013-03-31 2013-04-30 2013-05-31
                   2013-06-30 2013-07-31 2013-08-31 2013-09-30 2013-10-31)
 
@@ -357,6 +377,26 @@ module MiniTest::TM
         interval = When.Duration(sample[0])
         assert_equal(sample[1..5], [interval.value, interval.factor, interval.radix, interval.unit, interval.to_s])
       end
+    end
+
+    def test__interval_length_diff
+      time1 = When.when?('2012-07-01T01:23:45+09:00')
+      time2 = When.when?('2012-07-02T01:23:45+09:00')
+      duration = time2 - time1
+      assert_equal('86401.0s', duration.to_s)
+      assert_equal(When::TM::IntervalLength, duration.class)
+
+      if Object.const_defined?(:TZInfo)
+        time = When.when?('2013-03-10T01:00:00', :tz=>'America/New_York')
+        assert_equal('2013-03-10T03:30:00-04:00', (time + When.Duration('1.5h')).to_s)   # •¨—“I‚É1.5ŠÔ
+      else
+        puts
+        puts "Tests for TZInfo have been skipped at line #{__LINE__} of #{__FILE__.split(/\//)[-1]}."
+      end
+
+      vcal = When.Resource("examples/USA-DST.ics?C=New_York&Z=E&D=04&DZ=06&S=05&SZ=07")
+      time = When.when?('2013-03-10T01:00:00', :clock=>vcal['America/New_York'])
+      assert_equal('2013-03-10T03:30:00-04:00', (time + When.Duration('1.5h')).to_s)   # •¨—“I‚É1.5ŠÔ
     end
   end
 end

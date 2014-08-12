@@ -57,9 +57,21 @@ module MiniTest::Ephemeris
   class Formula < MiniTest::TestCase
     def test__sunrise
 
-      today = '2014-3-4'
+      assert_raises(NoMethodError) { When.when?('2012-11-15').sunrise }
 
-      assert_raises(NoMethodError) { When.when?(today).sunrise }
+      assert_equal(nil, When.when?('2013-06-21T+09:00', :long=>135, :lat=>70).sunrise)
+
+      if Object.const_defined?(:TZInfo)
+        assert_equal(0, /2012-11-15T06:16/ =~ When.when?('2012-11-15', :tz=>'Asia/Tokyo').sunrise.to_s)
+        assert_equal(0, /2012-11-15T06:16/ =~ When.when?('2012-11-15', :tz=>'Asia/Tokyo', :location=>'_l:long=139.7414&lat=35.6581').sunrise.to_s)
+      else
+        puts
+        puts "Tests for TZInfo have been skipped at line #{__LINE__} of #{__FILE__.split(/\//)[-1]}."
+      end
+      assert_equal(0, /2012-11-15T06:16/ =~ When.when?('2012-11-15T+09:00', :long=>139.7414, :lat=>35.6581).sunrise.to_s)
+      assert_equal(0, /2012-11-14T21:16/ =~ When.when?('2012-11-15', :long=>139.7414, :lat=>35.6581).sunrise.to_s)
+
+      today = '2014-3-4'
 
       location = When.Location('long=139.413012E&lat=35.412222N')
       assert_equal(0, /2014-03-03T21:07/ =~ When.when?(today, {:location=>location}).sunrise.to_s)
@@ -79,5 +91,25 @@ module MiniTest::Ephemeris
       assert_equal('2014-07-23T06:41+09:00', formula2.nearest_past(date).floor(When::MINUTE).to_s)
       assert_equal('2014-07-07T13:15+09:00', formula2.nearest_past(date, 0.5).floor(When::MINUTE).to_s)
     end
+  end
+
+  if Object.const_defined?(:TZInfo)
+    class Note < MiniTest::TestCase
+      def test__tide
+
+        sample = [%w(2013-10-02T02:58+09:00 _n:Ephemeris/Notes::day::Tide::Low_Tide),
+                  %w(2013-10-02T09:09+09:00 _n:Ephemeris/Notes::day::Tide::High_Tide),
+                  %w(2013-10-02T15:20+09:00 _n:Ephemeris/Notes::day::Tide::Low_Tide),
+                  %w(2013-10-02T21:32+09:00 _n:Ephemeris/Notes::day::Tide::High_Tide)]
+
+        note = When.CalendarNote('Ephemeris?interval=0.0')
+        date = When.when?('2013-10-02', :tz=>'Asia/Tokyo')
+        note.tide(date).each do |d|
+          assert_equal(sample.shift, [d.floor(When::MINUTE).to_s, d.events[0].iri(true)])
+        end
+      end
+    end
+  else
+    puts "Tests for TZInfo have been skipped at line #{__LINE__} of #{__FILE__.split(/\//)[-1]}."
   end
 end

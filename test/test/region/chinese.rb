@@ -9,6 +9,17 @@
 module MiniTest
 
   class Chinese < MiniTest::TestCase
+    def test_chinese_table
+      assert_equal({1677=>{"iJ"=>"Ij"},
+                    1698=>{"jK"=>"Jk"},
+                    1709=>{"aB"=>"Ab", "jK"=>"Jk"},
+                    1727=>{"cC"=>"Cc"},
+                    1730=>{"Cd"=>"cD"},
+                    1751=>{"Jk"=>"jK"},
+                    1778=>{"Cd"=>"cD"},
+                    1841=>{"kL"=>"Kl"}}, When.Calendar('Korean').verify(When.Calendar('Chinese1645'), 1654..1911))
+    end
+
     def test_chinese_date
 
       emd = When.Resource('_c:EphemerisBasedSolar?time_basis=+09:00')

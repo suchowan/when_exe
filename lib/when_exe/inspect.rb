@@ -19,7 +19,7 @@ module When
     def inspect
       return super unless @_pool
       expression = iri(true)
-      expression == '' ? super : expression
+      expression == '' ? super : When::EncodingConversion.to_external_encoding(expression)
     end
 
     #
@@ -151,7 +151,7 @@ module When
       # @return [String] to_s と同様
       #
       def inspect
-        to_s
+        When::EncodingConversion.to_external_encoding(to_s)
       end
     end
 
@@ -320,7 +320,7 @@ module When
       # @return [String] to_s と同様
       #
       def inspect
-        to_s
+        When::EncodingConversion.to_external_encoding(to_s)
       end
 
       #

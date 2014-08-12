@@ -53,6 +53,7 @@ module MiniTest::TM
 19800209
 LIST
       assert_equal("2001-08-02..2001-09-10", When.when?("2001-08-02/09-10").to_s)
+      assert_equal(364, When.when?('20130101/1230').count)
       assert_equal("1980-02-01", When.when?("800201", {:abbr=>1970}).to_s)
       # assert_equal(nil, When.TemporalPosition(2011,2,29))
       assert_equal('2011-03-01', When.TemporalPosition(2011,2,29).to_s)

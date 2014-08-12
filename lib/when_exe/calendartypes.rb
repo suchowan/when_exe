@@ -177,13 +177,13 @@ module When::CalendarTypes
         'rule_table'    => table
       }
       list  = ''
-      while range.include?(date[YEAR])
-        month = date[MONTH] * 1
+      while range.include?(date[When::YEAR])
+        month = date[When::MONTH] * 1
         char  = Pattern[month..month]
-        char  = char.downcase unless date.length(MONTH) == length
+        char  = char.downcase unless date.length(When::MONTH) == length
         list += char
         succ  = date + duration
-        unless date[YEAR] == succ[YEAR]
+        unless date[When::YEAR] == succ[When::YEAR]
           table << list
           list = ''
         end
