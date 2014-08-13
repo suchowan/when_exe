@@ -267,7 +267,7 @@ class When::CalendarNote
         [Note, 0x3800, "label:[金性=]",      'position:仮名暦'],                             #101: 支 節月 支 節年
         [Note, 0x3FFF, "label:[三寶吉=ja:%%<三宝吉>]",
                                              'position:上段 上段 上段 上段'],                #102: 干支 節月
-        [Note, 0x3FFF, "label:[神吉=ja:%%<暦注下段>#%.<神日>]",
+        [Note, 0x3FFF, "label:[神吉=ja:%%<暦注下段>#%.<神吉日>]",
                                              'position:上段 上段 中段 中段上', 'suffix:日'], #103: 干支 節月
         [Note, 0x3FFF, "label:[雑事吉=]",    'position:雑事吉'],                             #104: 干支 節月
         [Note, 0x3FFF, "label:[小字注=]",    'position:下段小字 下段小字 下段小字 下段小字'],#105: 干支 節月

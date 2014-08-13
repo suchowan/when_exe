@@ -284,7 +284,7 @@ module When
       # @return [String] to_s と同様
       #
       def inspect
-        When::EncodingConversion.to_external_encoding(to_s)
+        to_s
       end
 
       # 文字列化

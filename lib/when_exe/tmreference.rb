@@ -1417,33 +1417,35 @@ module When::TM
 
       # dating_system
       @dating_system = (@epoch.map {|e| e.frame}).compact.uniq
-      ancestors     = hierarchy.inject(['']) {|list,era|
-        list << list[-1] + '::' + era.label.to_s
-        list
-      }
 
-      if @epoch.length == 1
-        epoch[0].frame.synchronize {
-          range = When::Parts::GeometricComplex.new([[epoch[0],true]])
-          ancestors.each do |ancestor|
-            epoch[0].frame.domain[ancestor]   |= range
-          end
-        } if epoch[0].frame
-      elsif reverse?
-        epoch[1].frame.synchronize {
-          range = When::Parts::GeometricComplex.new([[epoch[1],true]], true)
-          ancestors.each do |ancestor|
-            epoch[1].frame.domain[ancestor]   |= range
-          end
-        } if epoch[1].frame
-      else
-        (epoch.length-1).times do |i|
-          epoch[i].frame.synchronize {
-            range = When::Parts::GeometricComplex.new([[epoch[i],true], [epoch[i+1],false]])
+      unless @child && @child.length>0
+        ancestors     = hierarchy.inject(['']) {|list,era|
+          list << list[-1] + '::' + era.label.to_s
+          list
+        }
+        if @epoch.length == 1
+          epoch[0].frame.synchronize {
+            range = When::Parts::GeometricComplex.new([[epoch[0],true]])
             ancestors.each do |ancestor|
-              epoch[i].frame.domain[ancestor] |= range
+              epoch[0].frame.domain[ancestor]   |= range
             end
-          } if epoch[i].frame
+          } if epoch[0].frame
+        elsif reverse?
+          epoch[1].frame.synchronize {
+            range = When::Parts::GeometricComplex.new([[epoch[1],true]], true)
+            ancestors.each do |ancestor|
+              epoch[1].frame.domain[ancestor]   |= range
+            end
+          } if epoch[1].frame
+        else
+          (epoch.length-1).times do |i|
+            epoch[i].frame.synchronize {
+              range = When::Parts::GeometricComplex.new([[epoch[i],true], [epoch[i+1],false]])
+              ancestors.each do |ancestor|
+                epoch[i].frame.domain[ancestor] |= range
+              end
+            } if epoch[i].frame
+          end
         end
       end
 

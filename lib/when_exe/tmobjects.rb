@@ -740,7 +740,7 @@ module When::TM
       end
       interval = self.dup
       interval.duration = @duration + diff
-      internal.value    = interval.duration / (@radix ** (-@factor) * @unit_quantity)
+      interval.value    = interval.duration / (@radix ** (-@factor) * @unit_quantity)
       return interval
     end
 
@@ -755,7 +755,7 @@ module When::TM
     def -(other)
       interval = self.dup
       interval.duration = @duration - (other.kind_of?(Duration) ? other.duration : other * SECOND)
-      internal.value    = interval.duration / (@radix ** (-@factor) * @unit_quantity)
+      interval.value    = interval.duration / (@radix ** (-@factor) * @unit_quantity)
       return interval
     end
 

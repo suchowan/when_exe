@@ -7,6 +7,7 @@
 =end
 
 Dir.glob('scripts/*.rb') do |script|
+  next if script =~ /6/ # iCalendar
   log = script.sub(/\.rb$/, '.txt')
   if FileTest.exist?(log)
     File.open(log, 'r') do |io|
