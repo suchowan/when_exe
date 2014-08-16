@@ -69,6 +69,38 @@ module When::Parts
         @marked    = marked
         @attribute = {}
       end
+
+      #
+      # 行から RFC5545 の Property を取り出す
+      #
+      # @private
+      def self.extract_rfc5545_Property(specification, options)
+        return specification unless specification =~ /\A[-A-Z_]+=.+?:/i
+        caret = 0
+        specification.length.times do |i|
+          caret = specification[i..i] == '^' ? caret + 1 : 0
+          if caret[0] == 0 && specification[i..i] == ':'
+            specification[0...i].gsub(/\^./) {|escape| RFC6868[escape] || escape}.
+              scan(/((?:[^\\;]|\\.)+)(?:;(?!\z))?|;/).flatten.each do |pr|
+              pr ||= ''
+              pr.gsub!(/\\./) {|escape| RFC6350[escape] || escape}
+              key, value = pr.split(/=/, 2)
+              case key
+              when 'VALUE' ; options[:precision] = value
+              when 'TZID'  ; options[:clock] = 
+                case When::V::Timezone[value]
+                when Array ; When::V::Timezone[value][-1]
+                when nil   ; When::Parts::Timezone.new(value)
+                else       ; When::V::Timezone[value]
+                end
+              else         ; options[key]    = value
+              end
+            end
+            return specification[(i+1)..-1]
+          end
+        end
+        return specification
+      end
     end
 
     # @private

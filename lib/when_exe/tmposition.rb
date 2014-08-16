@@ -309,34 +309,17 @@ module When::TM
       #
       def _instance(specification, options={})
 
-        # Suffix - Frame specification
-        rfc5545form, frame, *rest = specification.split(/\^{1,2}/)
-        return rest.inject(_instance(rfc5545form + '^' + frame, options)) {|p,c| When.Resource(c, '_c:').jul_trans(p)} if rest.size > 0
+        # prefix - RFC 5545 Options
+        iso8601form = When::Parts::Resource::ContentLine.extract_rfc5545_Property(specification, options)
 
-        options[:frame] = When.Resource(frame, '_c:') if (frame)
+        # suffix - Frame specification
+        iso8601form, frame, *rest = iso8601form.split(/\^{1,2}/)
+        return rest.inject(_instance(iso8601form + '^' + frame, options)) {|p,c| When.Resource(c, '_c:').jul_trans(p)} unless rest.empty?
 
-        # Prefix - RFC 5545 Options
-        if (rfc5545form =~ /\A([^:]+[^-:\d]{2}):([^:].+)\z/)
-          rfc5545option, iso8601form = $~[1..2]
-          rfc5545option.split(/;/).each do |eq|
-            key, value = eq.split(/=/, 2)
-            case key
-            when 'VALUE' ; options[:precision] = value
-            when 'TZID'  ; options[:clock] = 
-              case When::V::Timezone[value]
-              when Array ; When::V::Timezone[value][-1]
-              when nil   ; When::Parts::Timezone.new(value)
-              else       ; When::V::Timezone[value]
-              end
-            else         ; options[key]    = value
-            end
-          end
-        else
-          iso8601form = rfc5545form
-        end
-        options = options.dup
+        # add frame to options
+        options = options.merge({:frame=>When.Resource(frame, '_c:')}) if frame
 
-        # IndeterminateValue
+        # indeterminateValue
         if (iso8601form.sub!(/\/After$|^Before\/|^Now$|^Unknown$|^[-+]Infinity\z/i, ''))
           options[:indeterminated_position] = When::TimeValue::S[$&.sub(/\//,'')]
           case options[:indeterminated_position]
@@ -487,13 +470,13 @@ module When::TM
         # TemporalPosition
         specification =~ /(.+?)(?:\[([-+]?\d+)\])?\z/
         options[:sdn] = $2.to_i if $2
-        f, d, t, z, e = When::BasicTypes::DateTime._to_array($1, options)
+        f, d, t, z, e, r = When::BasicTypes::DateTime._to_array($1, options)
         raise ArgumentError, "Timezone conflict: #{z} - #{options[:clock]}" if (z && options[:clock])
         options.delete(:abbr)
         z ||= options[:clock]
         z = When.Clock(z) if (z =~ /\A[A-Z]+\z/)
 
-        unless (d)
+        unless d
           # ClockTime
           raise ArgumentError, "Timezone conflict: #{z} - #{options[:clock]}" if (z && options[:frame])
           options[:frame] ||= z
@@ -514,6 +497,17 @@ module When::TM
           position = ((position  + PeriodDuration.new(4, DAY)) & (Residue.day_of_week(options[:wkst]) << 1)) +
                      PeriodDuration.new((w[0]-1)*7 + (w[1]||1)-1, DAY)
           position = When::Parts::GeometricComplex.new(position...(position+P1W)) unless w[1]
+        end
+        if r
+          r.keys.sort.each do |count|
+            residue = When.Residue(r[count])
+            if count == 0
+              residue = residue.to('year')
+            else
+              position = position.succ if residue.carry < 0
+            end
+            position &= residue
+          end
         end
         return position
       end
@@ -1605,7 +1599,9 @@ module When::TM
         sdn      = other & to_i
         date     = @frame.to_cal_date(sdn)
         date[0] -= @calendar_era_name[1] if @calendar_era_name
-        result   = self.dup._copy({:events=>nil, :query=>@query, :validate=>:done, :date=>date})
+        options  = {:events=>nil, :query=>@query, :validate=>:done, :date=>date}
+        options[:precision] = When::DAY if precision < When::DAY
+        result   = self.dup._copy(options)
         result.send(:_force_euqal_day, sdn-result.to_i)
 
       when 'year'

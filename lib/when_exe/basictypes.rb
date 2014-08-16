@@ -94,8 +94,9 @@ module When
 
           case date_time
           # extended date & time format (ISO 8601)
-          when /\A([-+*&%@!>=<?\dW.\(\)]+)(?:(T([:*=.,\d]+)?)([A-Z]+(\?.+)?|[-+][:\d]+)?)?\z/
-            d, t, time, clock = $~[1..4]
+          when /\A(([-+*&%@!>=<?\dW.\(\)]|{.+?})+)(?:(T([:*=.,\d]+)?)([A-Z]+(\?.+)?|[-+][:\d]+)?)?\z/
+            d, v, t, time, clock = $~[1..5]
+            d, r = _split_residue(d, options[:abbr]) if d =~ /\{/
             if d =~ /[\(\)]/
               d = When::CalendarTypes::Yerm.parse(d, options[:abbr])
               options[:frame] ||= 'Yerm'
@@ -103,10 +104,11 @@ module When
             format, date  = Date._to_array_extended_ISO8601(d, options)
 
           # extended date & time format (JIS X0301)
-          when  /\A((.+::)?(\[[^\]]+\]|[^-+\d]+))([-+*&%@!>=<?\dW.\(\)]+)?(?:(T([:*=.,\d]+)?)([A-Z]+(\?.+)?|[-+][:\d]+)?)?\z/
-            era, parent, child, d, t, time, clock = $~[1..7]
+          when  /\A((.+::)?(\[[^\]]+\]|[^-+\d{]+))(([-+*&%@!>=<?\dW.\(\)]|{.+?})+)?(?:(T([:*=.,\d]+)?)([A-Z]+(\?.+)?|[-+][:\d]+)?)?\z/
+            era, parent, child, d, v, t, time, clock = $~[1..8]
+            d, r = _split_residue(d, options[:abbr]) if d =~ /\{/
             format, date, era = Date._to_array_extended_X0301(d, era, options)
-            era ||= options[:era_name] if (d =~ /\./)
+            era ||= options[:era_name] if d =~ /\./
 
           # extended time format (ISO 8601)
           when /\A(T(-{0,2}[:*=.,\d]+)?)([A-Z]+(\?.+)?|[-+][:\d]+)?\z/
@@ -118,7 +120,24 @@ module When
           end
 
           return [format, date, Time._to_array_extended(time, t, options),
-                                Time._to_string_clock(clock), era]
+                                Time._to_string_clock(clock), era, r]
+        end
+
+        # 剰余類の指定を置き換える
+        def _split_residue(d, abbr)
+          abbr,    = abbr
+          residue = {}
+          count   = 0
+          sign, d = d =~ /^-/ ? ['-', d[1..-1]] : ['', d]
+          [sign + d.gsub(/[-+*&%@!>=<?.]|\{.+?\}/) {|s|
+            if s =~ /\{/
+              residue[count] = s[1..-2]
+              count == 0 ? (abbr || 1) : ''
+            else
+              count += 1
+              s
+            end
+          }, residue]
         end
       end
     end

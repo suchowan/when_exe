@@ -507,8 +507,25 @@ module When
     end
 
     # 時間位置の生成
-    date = Array.new(options[:frame].indices.length+1) {args.shift}
-    if (args.length > 0)
+    res   = []
+    abbrs = Array(options[:abbr])
+    date  = Array.new(options[:frame].indices.length-1) {
+      element = args.shift
+      abbr    = abbrs.shift
+      res    << element.to('year') if element.kind_of?(Coordinates::Residue)
+      element.kind_of?(Numeric) ? element : (abbr || 1)
+    }
+    date += Array.new(2) {
+      element = args.shift
+      abbr    = abbrs.shift
+      res    << element.to('day') if element.kind_of?(Coordinates::Residue)
+      case element
+      when Numeric ; element
+      when nil     ; abbr
+      else         ; nil
+      end
+    }
+    if args.length > 0
       options[:clock] ||= TM::Clock.local_time
       options[:clock]   = Clock(options[:clock])
       time = Array.new(options[:clock].indices.length) {args.shift}
@@ -516,6 +533,11 @@ module When
     else
       position = TM::CalDate.new(date, options)
     end
+    res.each do |residue|
+      position = position.succ if residue.carry < 0
+      position &= residue
+    end
+
     return position unless [:raise, :check].include?(validate)
 
     # 時間位置の存在確認

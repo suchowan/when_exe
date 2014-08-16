@@ -132,6 +132,26 @@ LIST
       end
     end
 
+    def test__residue
+      assert_equal('2014-08-02', When.when?('2014-8-{SA}').to_s)
+      assert_equal('2014-08-30', When.when?('2014-8-{SA:-1}').to_s)
+      assert_equal('2014-08-21', When.when?('2014-{甲子&TH}').to_s)
+      assert_equal('2014-08-21', When.when?('2014.8.{甲子}').to_s)
+      assert_equal('2014-08-21', When.when?('{甲午}.8.{甲子}', :abbr=>2000).to_s)
+      assert_equal('平成26(2014).08.21', When.when?('平成{甲午}.8.{甲子}').to_s)
+
+      assert_equal('2014-08-02', When.tm_pos(2014, 8, When.Residue('SA')).to_s)
+      assert_equal('2014-08-30', When.tm_pos(2014, 8, When.Residue('SA:-1')).to_s)
+      assert_equal('2014-08-21', When.tm_pos(2014, When.Residue('甲子&TH')).to_s)
+      assert_equal('2014-08-21', When.tm_pos(2014, 8, When.Residue('甲子')).to_s)
+      assert_equal('2014-08-21', When.tm_pos(When.Residue('甲午'), 8, When.Residue('甲子'), :abbr=>2000).to_s)
+      assert_equal('平成26(2014).08.21', When.tm_pos('平成', When.Residue('甲午'), 8, When.Residue('甲子')).to_s)
+
+      assert_equal('2014-09-06', When.tm_pos(2014, 8, When.Residue('SA:6')).to_s)
+      assert_equal(nil, When.tm_pos(2014, 8, When.Residue('SA:6'), :invalid=>:check))
+      assert_raises(ArgumentError) {When.tm_pos(2014, 8, When.Residue('SA:6'), :invalid=>:raise)}
+    end
+
     def test__calendar_reform_in_japan
       date0  = When.when?('明治5.12.1')
       date1  = date0 + When::P1M

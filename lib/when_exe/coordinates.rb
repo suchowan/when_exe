@@ -119,6 +119,20 @@ module When::Coordinates
         else         ; return nil
         end
 
+        day, shift = day.split(':', 2)
+        residue = day.split('&').inject(nil) {|res,d|
+          r = _day_of_week(d.strip, week)
+          return nil unless r
+          res ? res & r : r
+        }
+        return residue unless shift
+        shift  = shift.to_i
+        shift -= 1 if shift > 0
+        residue >> shift
+      end
+      alias :to_residue :day_of_week
+
+      def _day_of_week(day, week)
         match = day[/\A...|^.{1,2}\z/]
         if match
           week.size.times do |i|
@@ -132,7 +146,7 @@ module When::Coordinates
 
         return nil
       end
-      alias :to_residue :day_of_week
+      private :_day_of_week
 
       # 汎用の mod
       #
