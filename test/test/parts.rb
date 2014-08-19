@@ -119,10 +119,11 @@ LOCALE
 
     def test__prefix
       date = When.when?('0594-09=12^Japanese')
-      assert_equal(["閏長月", String], [date.name('Month').label.to_s, date.name('Month').label.class])
-      assert_equal(["閏長月", String], [date.name('Month').to_s,  date.name('Month').to_s.class])
+      assert_equal(["閏九月", String], [date.name('Month').label.to_s, date.name('Month').label.class])
+      assert_equal(["閏九月", String], [date.name('Month').to_s,  date.name('Month').to_s.class])
       assert_equal("http://ja.wikipedia.org/wiki/%E9%96%8F", date.name('Month').reference('ja'))
-      assert_equal("閏長月", date.name('Month').translate('日本語'))
+      assert_equal("閏九月", date.name('Month').translate('日本語'))
+      assert_equal("閏長月", date.name('Month').translate('alias'))
       assert_equal("Intercalary Month 9", date.name('Month').translate('en_US'))
     end
 

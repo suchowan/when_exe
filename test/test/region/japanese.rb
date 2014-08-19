@@ -205,6 +205,16 @@ module MiniTest
       end
     end
 
+    def test__eclipse
+      date = When.when?('貞観4.2.1')
+      assert_equal('夜日蝕七分', date.notes({:notes=>'日食'})[:value].simplify)
+      assert_equal(nil, date.notes({:notes=>'日食', :solar_eclipse=>1})[:value].simplify)
+
+      date = When.when?('貞観4.2.15')
+      assert_equal('(月蝕ニ分)', date.notes({:notes=>'月食'})[:value].simplify)
+      assert_equal(nil, date.notes({:notes=>'月食', :lunar_eclipse=>2})[:value].simplify)
+    end
+
     def test_japanese_lunisolar
       assert_equal({1850=>{"hI"=>"Hi"}, 1866=>{"cD"=>"Cd"}, 1884=>{"cD"=>"Cd"}, 1947=>{"b"=>"c"}},
                     When.Calendar('Japanese').verify(When.Calendar('JapaneseTwin::旧暦'), 1844..2033))

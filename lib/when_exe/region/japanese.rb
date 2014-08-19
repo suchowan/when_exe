@@ -9,7 +9,7 @@ module When
   class BasicTypes::M17n
 
     Japanese = [self, [
-      "locale:[=en:, ja=ja:, alias]",
+      "locale:[=en:, ja=ja:, alias=ja:]",
       "names:[Japanese=]",
 
       # Remarks
@@ -18,18 +18,18 @@ module When
 
       [self,
         "names:[Month, 月=ja:%%<月_(暦)>]",
-        "[Month 1=,  *睦月   ]",
-        "[Month 2=,  *如月   ]",
-        "[Month 3=,  *弥生   ]",
-        "[Month 4=,  *卯月   ]",
-        "[Month 5=,  *皐月   ]",
-        "[Month 6=,  *水無月 ]",
-        "[Month 7=,  *文月   ]",
-        "[Month 8=,  *葉月   ]",
-        "[Month 9=,  *長月   ]",
-        "[Month 10=, *神無月 ]",
-        "[Month 11=, *霜月   ]",
-        "[Month 12=, *師走   ]"
+        "[Month 1=,  *正月,   睦月  ]",
+        "[Month 2=,  *二月,   如月  ]",
+        "[Month 3=,  *三月,   弥生  ]",
+        "[Month 4=,  *四月,   卯月  ]",
+        "[Month 5=,  *五月,   皐月  ]",
+        "[Month 6=,  *六月,   水無月]",
+        "[Month 7=,  *七月,   文月  ]",
+        "[Month 8=,  *八月,   葉月  ]",
+        "[Month 9=,  *九月,   長月  ]",
+        "[Month 10=, *十月,   神無月]",
+        "[Month 11=, *十一月, 霜月  ]",
+        "[Month 12=, *十二月, 師走  ]"
       ],
 
       [self,

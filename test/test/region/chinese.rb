@@ -121,7 +121,7 @@ module MiniTest
     def test_chinese_epoch
       date = When.when?('天保2.10.01')
       assert_equal([2390126, "天保02(1831).10.01", "神無月"],
-                   [date.to_i, date.to_s, date.name('Month')])
+                   [date.to_i, date.to_s, date.name('Month')/'alias'])
       assert_equal("1831-11-04", (When.Calendar('Gregorian') ^ When.when?('天保02.10.01')).to_s)
 
 #=begin

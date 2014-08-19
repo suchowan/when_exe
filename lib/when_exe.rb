@@ -492,70 +492,7 @@ module When
   #   options[ :invalid ] が :raise で、日時が存在しない場合
   #
   def TemporalPosition(*args)
-    # 引数の解釈
-    options  = args[-1].kind_of?(Hash) ? args.pop.dup : {}
-    validate = options.delete(:invalid)
-    options  = TM::TemporalPosition._options(options)
-    options[:frame]  ||= 'Gregorian'
-    options[:frame]    = Resource(options[:frame], '_c:') if options[:frame].kind_of?(String)
-    case args[0]
-    when String
-      options[:era_name]    = EncodingConversion.to_internal_encoding(args.shift)
-    when Array
-      options[:era_name]    = args.shift
-      options[:era_name][0] = EncodingConversion.to_internal_encoding(options[:era_name][0])
-    end
-
-    # 時間位置の生成
-    res   = []
-    abbrs = Array(options[:abbr])
-    date  = Array.new(options[:frame].indices.length-1) {
-      element = args.shift
-      abbr    = abbrs.shift
-      res    << element.to('year') if element.kind_of?(Coordinates::Residue)
-      element.kind_of?(Numeric) ? element : (abbr || 1)
-    }
-    date += Array.new(2) {
-      element = args.shift
-      abbr    = abbrs.shift
-      res    << element.to('day') if element.kind_of?(Coordinates::Residue)
-      case element
-      when Numeric ; element
-      when nil     ; abbr
-      else         ; nil
-      end
-    }
-    if args.length > 0
-      options[:clock] ||= TM::Clock.local_time
-      options[:clock]   = Clock(options[:clock])
-      time = Array.new(options[:clock].indices.length) {args.shift}
-      position = TM::DateAndTime.new(date, time.unshift(0), options)
-    else
-      position = TM::CalDate.new(date, options)
-    end
-    res.each do |residue|
-      position = position.succ if residue.carry < 0
-      position &= residue
-    end
-
-    return position unless [:raise, :check].include?(validate)
-
-    # 時間位置の存在確認
-    date[0] = -date[0] if position.calendar_era_name && position.calendar_era_name[2] # 紀元前
-    date.each_index do |i|
-      break unless date[i]
-      next if Coordinates::Pair._force_pair(date[i]) == Coordinates::Pair._force_pair(position.cal_date[i])
-      return nil if validate == :check
-      raise ArgumentError, "Specified date not found: #{date}"
-    end
-    return position unless time
-    time.each_index do |i|
-      break unless time[i]
-      next if Coordinates::Pair._force_pair(time[i]) == Coordinates::Pair._force_pair(position.clk_time.clk_time[i])
-      return nil if validate == :check
-      raise ArgumentError, "Specified time not found: #{time}"
-    end
-    return position
+    TM::TemporalPosition._temporal_position(*args)
   end
 
   alias :tm_pos :TemporalPosition

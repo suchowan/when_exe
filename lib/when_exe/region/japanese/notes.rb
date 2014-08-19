@@ -15,6 +15,8 @@ class When::CalendarNote
   #
   class Japanese < self
 
+    autoload :Eclipses, 'when_exe/region/japanese/eclipses'
+
     #
     # 日本暦注が使用する暦法
     #
@@ -911,10 +913,13 @@ class When::CalendarNote
         notes[c] = c if d == WeekDepended[c][w]
       end
 
-      # 三寶吉・神吉・雑事吉
-      notes['神吉']   = notes['雑事吉'] = notes['三寶吉'] = nil if notes['没'  ] || notes['滅'  ]
-      notes['神吉']   = notes['雑事吉']                   = nil if notes['日食'] || notes['月食'] || notes['往亡']
-      notes['三寶吉'] = nil if !notes['甘露'] && (notes['羅刹'] || notes['日食'] || notes['月食'])
+      # 三寶吉・神吉・雑事吉・小字注 (凶会日は表引きの時点で抑制済み)
+      notes['神吉']   = notes['雑事吉'] = notes['三寶吉'] = notes['小字注'] = nil if notes['没'] || notes['滅']
+      notes['神吉']   = notes['雑事吉'] = nil if notes['往亡']
+      notes['神吉']   = notes['三寶吉'] = nil if notes['月食']
+      notes['小字注'] = nil  if notes['日食'] || notes['月食']
+      notes['小字注'] = nil  if notes['九坎'] && dates.range==5 # 11世紀後半
+      notes['三寶吉'] = nil  if notes['羅刹']
       notes['三寶吉'] = notes['甘露'] ? '三寶吉' : nil if /\+/ =~ notes['三寶吉'].to_s
       notes['三寶吉'] = '三吉' if notes['三寶吉'] && dates.range >= 8 # 鎌倉以降
 
@@ -995,7 +1000,15 @@ class When::CalendarNote
       end
 
       # 月食
-      notes['月食']        = nil # 計算できないので、偽としておく
+      unless notes['月食'] && notes['神吉'] && notes['三寶吉'] && notes['小字注']
+        note, = Japanese::Eclipses[dates.m_date.to_s[/\(.+$/].gsub(/[\(\)]/,'')]
+        note  = nil unless /月/ =~ note
+        level = (conditions[:lunar_eclipse]||0).to_i
+        note  = nil if level >= 1 && /昼/  =~ note
+        note  = nil if level >= 2 && /^\(/ =~ note
+        notes['月食'] = note
+      end
+
       notes
     end
   end
@@ -1307,7 +1320,14 @@ class When::CalendarNote
         end
 
         # 日食
-        notes['日食']       = nil # 計算できないので、偽としておく
+        unless notes['日食'] && notes['小字注']
+          note, = Japanese::Eclipses[dates.m_date.to_s[/\(.+$/].gsub(/[\(\)]/,'')]
+          note  = nil unless /日/ =~ note
+          level = (conditions[:solar_eclipse]||0).to_i
+          note  = nil if level >= 1 && /夜/  =~ note
+          note  = nil if level >= 2 && /^\(/ =~ note
+          notes['日食'] = note
+        end
 
         # 没
         if motsu == 0
@@ -1339,7 +1359,7 @@ class When::CalendarNote
         notes['七十二候'] ||= mod == 0  ? Notes72[(div - 63) % 72][dates.index_s]  : nil
 
         # 往亡
-        unless notes['往亡'] && notes['神吉']
+        unless notes['往亡'] && notes['神吉'] && notes['雑事吉']
           month    = dates.s_date.cal_date[-2] - 1
           day      = dates.s_date.cal_date[-1] - 1
           div, mod = month.divmod(3)

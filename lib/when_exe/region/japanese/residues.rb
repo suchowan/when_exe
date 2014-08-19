@@ -211,7 +211,9 @@ module When::Coordinates
       notes['十二直']   ||= Rules['十二直'][(@remainder-month-1) % 12]
       notes['歸忌'  ]   ||= @remainder == (month % 3) ? '歸忌' : nil
       notes['血忌'  ]   ||= @remainder == [1,7,2,8,3,9,4,10,5,11,6,0][month-1] ? '血忌' : nil
-      notes['九坎'  ]   ||= @remainder == [4,1,10,7,3,0,9,6,2,11,8,5][month-1] ? '九坎' : nil
+      unless notes['九坎'] && notes['小字注']
+        notes['九坎'  ]   = @remainder == [4,1,10,7,3,0,9,6,2,11,8,5][month-1] ? '九坎' : nil
+      end
       notes['厭'    ]   ||= @remainder == (17-month) % 12 ? '厭對' : nil
       notes['厭'    ]   ||= @remainder == (11-month) % 12 ? '厭'   : nil
       notes['天倉'  ]   ||= @remainder == (3-month) % 12  ? '天倉' : nil
