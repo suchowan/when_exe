@@ -1117,7 +1117,7 @@ module When::Ephemeris
     #
     # @return [Numeric]
     #
-    def eclipse(t, target, base=Earth)
+    def phase_of_eclipse(t, target, base=Earth)
       t = +t
       distance      = acos(self.coords(t, base).spherical_law_of_cosines(target.coords(t, base))) / CIRCLE
       self_radius   = self.apparent_radius(t, base)
@@ -1475,6 +1475,31 @@ module When::Ephemeris
     #
     def meridian_passage_of_moon(t)
       day_event_in_the_day(t, 0, When.Resource('_ep:Moon'))
+    end
+
+    # 日食の情報
+    #
+    # @param [When::TM::TemporalPosition] date
+    # @param [Boolean] just_the_date 日付の一致確認 (true - 日付が違えば nil, false - 近傍でも返す)
+    #
+    # @return [Array<String, Numeric, Array<Array<Numeric or When::TM::TemporalPosition, String>>>] 食の情報
+    #   @see When::Coordinates::Spatial#eclipse_info
+    #
+    def solar_eclipse(date, just_the_date=false)
+      location.solar_eclipse(date, just_the_date)
+    end
+
+    # 月食の情報
+    #
+    # @param [When::TM::TemporalPosition] date
+    # @param [Boolean] just_the_date 日付の一致確認 (true - 日付が違えば nil, false - 近傍でも返す)
+    #   @note 午前6時より前は前日扱い
+    #
+    # @return [Array<String, Numeric, Array<Array<Numeric or When::TM::TemporalPosition, String>>>] 食の情報
+    #   @see When::Coordinates::Spatial#eclipse_info
+    #
+    def lunar_eclipse(date, just_the_date=false)
+      location.lunar_eclipse(date, just_the_date)
     end
 
     # 恒星の出没と太陽の位置関係に関するイベントの日時

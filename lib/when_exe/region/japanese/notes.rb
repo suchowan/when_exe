@@ -1001,11 +1001,19 @@ class When::CalendarNote
 
       # 月食
       unless notes['月食'] && notes['神吉'] && notes['三寶吉'] && notes['小字注']
-        note, = Japanese::Eclipses[dates.m_date.to_s[/\(.+$/].gsub(/[\(\)]/,'')]
-        note  = nil unless /月/ =~ note
         level = (conditions[:lunar_eclipse]||0).to_i
-        note  = nil if level >= 1 && /昼/  =~ note
-        note  = nil if level >= 2 && /^\(/ =~ note
+        if level == -1
+          note = nil
+        else
+          key   = dates.m_date.to_s[/\(.+\z/]
+          note, = key ? Japanese::Eclipses[key.gsub(/[()]/,'')] : nil
+          if note
+            note.sub!(/\*.*\z/, '')
+            note  = nil unless /月/ =~ note
+            note  = nil if level[0] == 1 && /昼/  =~ note
+            note  = nil if level[1] == 1 && /^\(/ =~ note
+          end
+        end
         notes['月食'] = note
       end
 
@@ -1321,11 +1329,19 @@ class When::CalendarNote
 
         # 日食
         unless notes['日食'] && notes['小字注']
-          note, = Japanese::Eclipses[dates.m_date.to_s[/\(.+$/].gsub(/[\(\)]/,'')]
-          note  = nil unless /日/ =~ note
           level = (conditions[:solar_eclipse]||0).to_i
-          note  = nil if level >= 1 && /夜/  =~ note
-          note  = nil if level >= 2 && /^\(/ =~ note
+          if level == -1
+            note = nil
+          else
+            key   = dates.m_date.to_s[/\(.+\z/]
+            note, = key ? Japanese::Eclipses[key.gsub(/[()]/,'')] : nil
+            if note
+              note.sub!(/\*.*\z/, '')
+              note  = nil unless /日/ =~ note
+              note  = nil if level[0] == 1 && /夜/  =~ note
+              note  = nil if level[1] == 1 && /^\(/ =~ note
+            end
+          end
           notes['日食'] = note
         end
 

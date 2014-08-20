@@ -1247,6 +1247,8 @@ module When::Coordinates
 
     include When::Ephemeris
 
+    require 'when_exe/ephemeris/eclipse'
+
     class << self
       # When::Coordinates::Spatial のグローバルな設定を行う
       #
@@ -1411,6 +1413,7 @@ module When::Coordinates
     # @return [:Center] 天体の中心の場合
     #
     attr_reader :alt
+
     # 観測地の地心距離 / kmを返します。
     #
     # @return [Numeric]
@@ -1490,8 +1493,13 @@ module When::Coordinates
         case @alt
         when String  ; @alt.gsub(/@/, '.').to_f
         when Numeric ; @alt.to_f
+        when Symbol  ; @alt
         else         ; 0.0
         end
+
+      # 日月食用作業変数
+      @mean = When.Resource(@mean || '_ep:Formula?formula=1l')
+      @ecls = {}
     end
 
     #

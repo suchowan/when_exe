@@ -212,7 +212,7 @@ module MiniTest
 
       date = When.when?('貞観4.2.15')
       assert_equal('(月蝕ニ分)', date.notes({:notes=>'月食'})[:value].simplify)
-      assert_equal(nil, date.notes({:notes=>'月食', :lunar_eclipse=>2})[:value].simplify)
+      assert_equal(nil, date.notes({:notes=>'月食', :lunar_eclipse=>3})[:value].simplify)
     end
 
     def test_japanese_lunisolar
