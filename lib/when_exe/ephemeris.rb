@@ -289,12 +289,10 @@ module When::Ephemeris
   def root(t0, y0=nil, delta=0, count=10, error=1E-6, &func)
 
     # 近似値0,1
-    # printf("y0=%20.7f\n",y0)
-    d     = [0.01, error * 10].max
-    t     = [t0-d,            t0+d           ]
+    diff  = [0.01, error*1000].min
+    t     = [t0-diff,         t0+diff        ]
     y     = [func.call(t[0]), func.call(t[1])]
     y.map! {|y1| _adjust(y1, y0, delta)} unless delta==0
-    # printf("t=%20.7f,L=%20.7f\n",t[1],y[1])
 
     # 近似値2(1次関数による近似)
     t << (y0 ? (t[1]-t[0])/(y[1]-y[0])*(y0-y[0])+t[0] : t0)
@@ -319,15 +317,19 @@ module When::Ephemeris
 
       if y0
         # 判別式
-        if (d = b*b-4*a*(c-y0)) < 0
-          i = -1
-          break
+        if (discriminant = b*b-4*a*(c-y0)) < 0
+          # 近似値(1次関数による近似)
+          if y12 == 0
+            i = -1
+            break
+          end
+          t << t12/y12*(y0-y[1]) + t[1]
+        else
+          # 近似値(2次関数による近似)
+          sqrtd = Math.sqrt(discriminant)
+          sqrtd = -sqrtd if b < 0
+          t << (t[2] + 2*(y0-c)/(b+sqrtd)) # <-桁落ち回避
         end
-
-        # 近似値(2次関数による近似)
-        sqrtd = Math.sqrt(d)
-        sqrtd = -sqrtd if b < 0
-        t << (t[2] + 2*(y0-c)/(b+sqrtd)) # <-桁落ち回避
       else
         t << (t[2] - b / (2*a))
       end

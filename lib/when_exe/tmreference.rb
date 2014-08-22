@@ -1665,8 +1665,11 @@ module When::TM
       end
       frame     = epoch.frame
       cal_date  = frame.to_cal_date(sdn)
-      return epoch, CalDate.new(cal_date, {:frame=>frame}) unless clock
-      return epoch, DateAndTime.new(cal_date, time+frac, {:frame=>frame, :clock=>clock})
+      options   = {:frame=>frame}
+      return epoch, CalDate.new(cal_date, options) unless clock
+      options[:clock]    = clock
+      options[:location] = date.location if date.location
+      return epoch, DateAndTime.new(cal_date, time+frac, options)
     end
 
     # 代表的な元期

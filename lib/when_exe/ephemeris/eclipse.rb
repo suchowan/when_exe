@@ -18,13 +18,12 @@ class When::Coordinates::Spatial
   def solar_eclipse(date, just_the_date=false)
     clock = date.clock && (date.clock.tz_prop || date.clock.label)
     cn    = @mean.time_to_cn(date).round
-    key, info = (@ecls[[cn,clock.to_s]] ||=
-      begin
-        data = eclipse_info(@mean._to_seed_type(@mean.cn_to_time(cn), date), self, When.Resource('_ep:Sun'), When.Resource('_ep:Moon'))
-        [data[2][data[2].size / 2][0].to_i, data]
-      end)
-    return info unless just_the_date
-    key == date.to_i ? info : nil
+    unless @ecls.key?([cn,clock.to_s])
+      data = eclipse_info(@mean._to_seed_type(@mean.cn_to_time(cn), date), self, When.Resource('_ep:Sun'), When.Resource('_ep:Moon'))
+      @ecls[[cn,clock.to_s]] = data ? [data[2][data[2].size / 2][0].to_i, data] : nil
+    end
+    key, info = @ecls[[cn,clock.to_s]]
+    just_the_date && key != date.to_i ? nil : info
   end
 
   # 月食の情報
@@ -39,14 +38,13 @@ class When::Coordinates::Spatial
   def lunar_eclipse(date, just_the_date=false)
     clock = date.clock && (date.clock.tz_prop || date.clock.label)
     cn    = (@mean.time_to_cn(date)+0.25).floor+0.5
-    key, info = (@ecls[[cn,clock.to_s]] ||=
-      begin
-        data = eclipse_info(@mean._to_seed_type(@mean.cn_to_time(cn), date),
-          When.Resource('_ep:Earth'), When.Resource('_ep:Moon'), When.Resource('_ep:Shadow'), [self, When.Resource('_ep:Moon')])
-        [(data[2][data[2].size / 2][0]-When::PT6H).to_i, data]
-      end)
-    return info unless just_the_date
-    key == date.to_i ? info : nil
+    unless @ecls.key?([cn,clock.to_s])
+      data = eclipse_info(@mean._to_seed_type(@mean.cn_to_time(cn), date),
+        When.Resource('_ep:Earth'), When.Resource('_ep:Moon'), When.Resource('_ep:Shadow'), [self, When.Resource('_ep:Moon')])
+      @ecls[[cn,clock.to_s]] = data ? [(data[2][data[2].size / 2][0]-When::PT6H).to_i, data] : nil
+    end
+    key, info = @ecls[[cn,clock.to_s]]
+    just_the_date && key != date.to_i ? nil : info
   end
 
   # 食の情報
@@ -70,7 +68,7 @@ class When::Coordinates::Spatial
             base.elongation(t, target, location)**2
           }
     mag = base.phase_of_eclipse(tc, target, location) # 食分
-    return nil unless tc >= 0                         # 食なし
+    return nil unless mag >= 0                        # 食なし
 
     t1, t4 = [-0.1, +0.1].map {|dt|                   # 第1, 第4接触
       When::Ephemeris.root(tc+dt, 0) {|t|
@@ -79,21 +77,21 @@ class When::Coordinates::Spatial
     }
 
     if mag >= 1
-      type = 'T'
+      category = 'T'
       t2, t3 = [-0.01, +0.01].map {|dt|               # 第2, 第3接触
         When::Ephemeris.root(tc+dt, 1.0) {|t|
           base.phase_of_eclipse(t, target, location)
         }
       }
     elsif target.phase_of_eclipse(tc, base, location) >= 1
-      type = 'A'
+      category = 'A'
       t2, t3 = [-0.01, +0.01].map {|dt|               # 第2, 第3接触
         When::Ephemeris.root(tc+dt, 1.0) {|t|
           target.phase_of_eclipse(t, base, location)
         }
       }
     else
-      type = 'P'
+      category = 'P'
     end
     ts = [t1,t2,tc,t3,t4].compact
 
@@ -102,9 +100,12 @@ class When::Coordinates::Spatial
        coord = form._coords(t, HORIZONTAL, l_for_h[1])
       [coord.theta * 360, ((0.5-coord.phi)-(0.5-coord.phi).floor) * 360]
     }.transpose
-    return nil unless height.max >= 0                 # 見えない食
-    type += 'B'    if height.min <  0                 # 地平線下で食が始まる/終わる
+    return nil  unless height.max >= 0                # 見えない食
+    category += 'B' if height.min <  0                # 地平線下で食が始まる/終わる
 
-    [type, mag, [ts.map {|t| form._to_seed_type(t, date)}, height, azimuth].transpose]
+    [category, mag, [ts.map {|t| form._to_seed_type(t, date)}, height, azimuth].transpose]
+
+  rescue RangeError
+    nil
   end
 end

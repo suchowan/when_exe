@@ -15,7 +15,7 @@ class When::CalendarNote
   #
   class Japanese < self
 
-    autoload :Eclipses, 'when_exe/region/japanese/eclipses'
+    autoload :Eclipse, 'when_exe/region/japanese/eclipses'
 
     #
     # 日本暦注が使用する暦法
@@ -947,9 +947,10 @@ class When::CalendarNote
     # 日の暦注
     # @private
     def self._day_notes(notes, dates, conditions={})
-      date = When.when?(dates.o_date.to_cal_date.to_s,
-               {:frame=>dates.o_date.frame,
-                :clock=>dates.l_date.frame.time_basis})
+      options = {:frame=>dates.o_date.frame,
+                 :clock=>dates.l_date.frame.time_basis}
+      options[:location] = dates.o_date.location if dates.o_date.location
+      date = When.when?(dates.o_date.to_cal_date.to_s, options)
       phase, metsu = dates.cal4note.l_phases.position(date)
 
       # 滅
@@ -1005,8 +1006,14 @@ class When::CalendarNote
         if level == -1
           note = nil
         else
-          key   = dates.m_date.to_s[/\(.+\z/]
-          note, = key ? Japanese::Eclipses[key.gsub(/[()]/,'')] : nil
+          key  = dates.m_date.to_s[/\(.+\z/]
+          if key
+            note, = Japanese::Eclipse::Eclipses[key.gsub(/[()]/,'')]
+          elsif date.location &&
+                date.frame.kind_of?(When::CalendarTypes::Christian)
+            info  = date.lunar_eclipse(true)
+            note  = '月' + Japanese::Eclipse.eclipse_summary(info) if info
+          end
           if note
             note.sub!(/\*.*\z/, '')
             note  = nil unless /月/ =~ note
@@ -1219,9 +1226,10 @@ class When::CalendarNote
       # 日の暦注
       # @private
       def _day_notes(notes, dates, conditions={})
-        date  = When.when?(dates.o_date.to_cal_date.to_s,
-                  {:frame=>dates.o_date.frame,
-                   :clock=>dates.s_date.frame._time_basis[0]})
+        options = {:frame=>dates.o_date.frame,
+                   :clock=>dates.s_date.frame._time_basis[0]}
+        options[:location] = dates.o_date.location if dates.o_date.location
+        date  = When.when?(dates.o_date.to_cal_date.to_s, options)
         patch = (@patch || Patch)[date.to_i] unless dates.o_date.frame.respond_to?(:twin) &&
                                                     dates.o_date.frame.twin
         longitude, motsu = patch ? patch : dates.cal4note.s_terms.position(date)
@@ -1333,8 +1341,14 @@ class When::CalendarNote
           if level == -1
             note = nil
           else
-            key   = dates.m_date.to_s[/\(.+\z/]
-            note, = key ? Japanese::Eclipses[key.gsub(/[()]/,'')] : nil
+            key  = dates.m_date.to_s[/\(.+\z/]
+            if key
+              note, = Japanese::Eclipse::Eclipses[key.gsub(/[()]/,'')]
+            elsif date.location &&
+                  date.frame.kind_of?(When::CalendarTypes::Christian)
+              info  = date.solar_eclipse(true)
+              note  = '日' + Japanese::Eclipse.eclipse_summary(info) if info
+            end
             if note
               note.sub!(/\*.*\z/, '')
               note  = nil unless /日/ =~ note

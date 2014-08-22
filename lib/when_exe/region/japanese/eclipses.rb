@@ -6,7 +6,7 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-class When::CalendarNote::Japanese
+module When::CalendarNote::Japanese::Eclipse
 
   #
   # 日月食情報
@@ -1169,4 +1169,26 @@ class When::CalendarNote::Japanese
     "1867.02.15"=>["月帯そく"],			"1869.06.15"=>["月そく六分*"],		"1869.12.16"=>["月そく皆既*"],
     "1870.11.16"=>["月帯そく七分*"],		"1871.05.15"=>["月そく三分*"],
   }
+
+  # @private
+  Mag = %w(一分にミたす 一分 ニ分 三分 四分 五分 六分 七分 八分 九分 九分半余)
+
+  # @private
+  Category = {'T'=>'皆既', 'A'=>'金環'}
+
+  # 日月食の概要を文字列化する
+  #
+  # @param [Array<String, Numeric, Array>] 食の情報
+  #
+  #   [ String  - 食の種類 'T' 皆既食, 'A' 金環食, 'P' 部分食, 'B' 帯食]
+  #   [ Numeric - 最大食分                                             ]
+  #   [ Array   - 食の詳細                                             ]
+  #
+  # @return String 食の概要
+  #
+  def self.eclipse_summary(info)
+    category, mag = info
+    (category =~ /B/i ? '帯蝕' : '蝕') +
+    (Category[category[0..0]] || Mag[(mag * 10).round])
+  end
 end

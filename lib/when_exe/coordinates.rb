@@ -1498,7 +1498,7 @@ module When::Coordinates
         end
 
       # 日月食用作業変数
-      @mean = When.Resource(@mean || '_ep:Formula?formula=1l')
+      @mean = When.Resource(@mean || '_ep:Formula?formula=1L')
       @ecls = {}
     end
 
