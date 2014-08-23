@@ -7,44 +7,82 @@
 
 class When::Coordinates::Spatial
 
+  # @private
+  EclipseHalfYear = (346 + (14*3600+52*60+54.965) / 86400) / 2
+
+  # @private
+  EclipseRange    = (75.0..120.0) # 82.05003457775217..114.62097737290446
+
   # 日食の情報
   #
   # @param [When::TM::TemporalPosition] date
-  # @param [Boolean] just_the_date 日付の一致確認 (true - 日付が違えば nil, false - 近傍でも返す)
+  # @param [Range<When::TM::TemporalPosition>] date
+  # @param [Block] block
   #
-  # @return [Array<String, Numeric, Array<Array<Numeric or When::TM::TemporalPosition, String>>>] 食の情報
+  # @return [Array<String, Numeric, Array<Array<Numeric or When::TM::TemporalPosition, String>>>] 食の情報(のArray(dateがRangeの場合))
   #   @see When::Coordinates::Spatial#eclipse_info
   #
-  def solar_eclipse(date, just_the_date=false)
+  def solar_eclipse(date, &block)
+    if date.kind_of?(Range)
+      last  = date.last.to_i
+      last -= 1 if date.exclude_end?
+      first = date.first.to_i
+      date  = date.first
+    end
     clock = date.clock && (date.clock.tz_prop || date.clock.label)
     cn    = @mean.time_to_cn(date).round
-    unless @ecls.key?([cn,clock.to_s])
-      data = eclipse_info(@mean._to_seed_type(@mean.cn_to_time(cn), date), self, When.Resource('_ep:Sun'), When.Resource('_ep:Moon'))
-      @ecls[[cn,clock.to_s]] = data ? [data[2][data[2].size / 2][0].to_i, data] : nil
+    list  = []
+    loop do
+      unless @ecls.key?([cn,clock.to_s])
+        time = @mean.cn_to_time(cn)
+        data = EclipseRange.include?(time % EclipseHalfYear) ?
+                eclipse_info(@mean._to_seed_type(time, date), self, When.Resource('_ep:Sun'), When.Resource('_ep:Moon')) : nil
+        @ecls[[cn,clock.to_s]] = data ? [data[2][data[2].size / 2][0].to_i, data] : nil
+      end
+      key, info = @ecls[[cn,clock.to_s]]
+      return info unless first
+      list << (block_given? ? yield(info) : info) if key && first <= key && key <= last
+      break if (key || first) >= last
+      cn += 1
     end
-    key, info = @ecls[[cn,clock.to_s]]
-    just_the_date && key != date.to_i ? nil : info
+    return list
   end
 
   # 月食の情報
   #
   # @param [When::TM::TemporalPosition] date
-  # @param [Boolean] just_the_date 日付の一致確認 (true - 日付が違えば nil, false - 近傍でも返す)
-  #   @note 午前6時より前は前日扱い
+  # @param [Range<When::TM::TemporalPosition>] date
+  #   @note Rangeの場合午前6時より前は前日扱い
+  # @param [Block] block
   #
-  # @return [Array<String, Numeric, Array<Array<Numeric or When::TM::TemporalPosition, String>>>] 食の情報
+  # @return [Array<String, Numeric, Array<Array<Numeric or When::TM::TemporalPosition, String>>>] 食の情報(のArray(dateがRangeの場合))
   #   @see When::Coordinates::Spatial#eclipse_info
   #
-  def lunar_eclipse(date, just_the_date=false)
+  def lunar_eclipse(date, &block)
+    if date.kind_of?(Range)
+      last  = date.last.to_i
+      last -= 1 if date.exclude_end?
+      first = date.first.to_i
+      date  = date.first
+    end
     clock = date.clock && (date.clock.tz_prop || date.clock.label)
     cn    = (@mean.time_to_cn(date)+0.25).floor+0.5
-    unless @ecls.key?([cn,clock.to_s])
-      data = eclipse_info(@mean._to_seed_type(@mean.cn_to_time(cn), date),
-        When.Resource('_ep:Earth'), When.Resource('_ep:Moon'), When.Resource('_ep:Shadow'), [self, When.Resource('_ep:Moon')])
-      @ecls[[cn,clock.to_s]] = data ? [(data[2][data[2].size / 2][0]-When::PT6H).to_i, data] : nil
+    list  = []
+    loop do
+      unless @ecls.key?([cn,clock.to_s])
+        time = @mean.cn_to_time(cn)
+        data = EclipseRange.include?(time % EclipseHalfYear) ?
+                 eclipse_info(@mean._to_seed_type(time, date), When.Resource('_ep:Earth'), When.Resource('_ep:Moon'),
+                   When.Resource('_ep:Shadow'), [self, When.Resource('_ep:Moon')]) : nil
+        @ecls[[cn,clock.to_s]] = data ? [(data[2][data[2].size / 2][0]-When::PT6H).to_i, data] : nil
+      end
+      key, info = @ecls[[cn,clock.to_s]]
+      return info unless first
+      list << (block_given? ? yield(info) : info) if key && first <= key && key <= last
+      break if (key || first) >= last
+      cn += 1
     end
-    key, info = @ecls[[cn,clock.to_s]]
-    just_the_date && key != date.to_i ? nil : info
+    return list
   end
 
   # 食の情報

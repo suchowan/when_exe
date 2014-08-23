@@ -947,10 +947,9 @@ class When::CalendarNote
     # 日の暦注
     # @private
     def self._day_notes(notes, dates, conditions={})
-      options = {:frame=>dates.o_date.frame,
-                 :clock=>dates.l_date.frame.time_basis}
-      options[:location] = dates.o_date.location if dates.o_date.location
-      date = When.when?(dates.o_date.to_cal_date.to_s, options)
+      date = When.when?(dates.o_date.to_cal_date.to_s,
+               {:frame=>dates.o_date.frame,
+                :clock=>dates.l_date.frame.time_basis})
       phase, metsu = dates.cal4note.l_phases.position(date)
 
       # 滅
@@ -1009,10 +1008,10 @@ class When::CalendarNote
           key  = dates.m_date.to_s[/\(.+\z/]
           if key
             note, = Japanese::Eclipse::Eclipses[key.gsub(/[()]/,'')]
-          elsif date.location &&
-                date.frame.kind_of?(When::CalendarTypes::Christian)
-            info  = date.lunar_eclipse(true)
-            note  = '月' + Japanese::Eclipse.eclipse_summary(info) if info
+          elsif dates.o_date.location &&
+                dates.o_date.frame.kind_of?(When::CalendarTypes::Christian)
+            info  = dates.o_date.location.lunar_eclipse(date..date)
+            note  = '月' + Japanese::Eclipse.eclipse_summary(info[0]) unless info.empty?
           end
           if note
             note.sub!(/\*.*\z/, '')
@@ -1226,10 +1225,9 @@ class When::CalendarNote
       # 日の暦注
       # @private
       def _day_notes(notes, dates, conditions={})
-        options = {:frame=>dates.o_date.frame,
-                   :clock=>dates.s_date.frame._time_basis[0]}
-        options[:location] = dates.o_date.location if dates.o_date.location
-        date  = When.when?(dates.o_date.to_cal_date.to_s, options)
+        date  = When.when?(dates.o_date.to_cal_date.to_s,
+                  {:frame=>dates.o_date.frame,
+                   :clock=>dates.s_date.frame._time_basis[0]})
         patch = (@patch || Patch)[date.to_i] unless dates.o_date.frame.respond_to?(:twin) &&
                                                     dates.o_date.frame.twin
         longitude, motsu = patch ? patch : dates.cal4note.s_terms.position(date)
@@ -1344,10 +1342,10 @@ class When::CalendarNote
             key  = dates.m_date.to_s[/\(.+\z/]
             if key
               note, = Japanese::Eclipse::Eclipses[key.gsub(/[()]/,'')]
-            elsif date.location &&
-                  date.frame.kind_of?(When::CalendarTypes::Christian)
-              info  = date.solar_eclipse(true)
-              note  = '日' + Japanese::Eclipse.eclipse_summary(info) if info
+            elsif dates.o_date.location &&
+                  dates.o_date.frame.kind_of?(When::CalendarTypes::Christian)
+              info  = dates.o_date.location.solar_eclipse(date..date)
+              note  = '日' + Japanese::Eclipse.eclipse_summary(info[0]) unless info.empty?
             end
             if note
               note.sub!(/\*.*\z/, '')

@@ -1482,26 +1482,28 @@ module When::Ephemeris
     # 日食の情報
     #
     # @param [When::TM::TemporalPosition] date
-    # @param [Boolean] just_the_date 日付の一致確認 (true - 日付が違えば nil, false - 近傍でも返す)
+    # @param [Range<When::TM::TemporalPosition>] date
+    # @param [Block] block
     #
-    # @return [Array<String, Numeric, Array<Array<Numeric or When::TM::TemporalPosition, String>>>] 食の情報
+    # @return [Array<String, Numeric, Array<Array<Numeric or When::TM::TemporalPosition, String>>>] 食の情報(のArray(dateがRangeの場合))
     #   @see When::Coordinates::Spatial#eclipse_info
     #
-    def solar_eclipse(date, just_the_date=false)
-      location.solar_eclipse(date, just_the_date)
+    def solar_eclipse(date, &block)
+      location.solar_eclipse(date, &block)
     end
 
     # 月食の情報
     #
     # @param [When::TM::TemporalPosition] date
-    # @param [Boolean] just_the_date 日付の一致確認 (true - 日付が違えば nil, false - 近傍でも返す)
-    #   @note 午前6時より前は前日扱い
+    # @param [Range<When::TM::TemporalPosition>] date
+    #   @note Rangeの場合午前6時より前は前日扱い
+    # @param [Block] block
     #
-    # @return [Array<String, Numeric, Array<Array<Numeric or When::TM::TemporalPosition, String>>>] 食の情報
+    # @return [Array<String, Numeric, Array<Array<Numeric or When::TM::TemporalPosition, String>>>] 食の情報(のArray(dateがRangeの場合))
     #   @see When::Coordinates::Spatial#eclipse_info
     #
-    def lunar_eclipse(date, just_the_date=false)
-      location.lunar_eclipse(date, just_the_date)
+    def lunar_eclipse(date, &block)
+      location.lunar_eclipse(date, &block)
     end
 
     # 恒星の出没と太陽の位置関係に関するイベントの日時
