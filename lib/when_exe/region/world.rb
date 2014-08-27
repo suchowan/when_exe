@@ -159,13 +159,9 @@ module When
     #
     # World calendar based on Gregorian calendar
     #
-    World =  [CyclicTableBased, {
+    World =  [YearLengthTableBased, {
       'label'   => 'World::World',
-      'origin_of_LSC'    => 1721060,
       'rule_table'       => {
-        'T'  => {'Rule'  =>['LC', 'SC', 'SC', 'SC']},
-        'SC' => {'Rule'  =>[365]*4 + [366, 365, 365, 365]*24},
-        'LC' => {'Rule'  =>[366, 365, 365, 365]*25},
         365  => {'Length'=>[31,30,30]*3 + [31,30,31]},
         366  => {'Length'=>[31,30,30,31,30,31] *2}
       },

@@ -50,8 +50,18 @@ module MiniTest
       cc     = When.Calendar('HinduSolar?type=SBS')
       date   = When.when?('1913-01-01', {:frame=>cc})
       assert_equal([2448361, "1913-01-01", "1991-04-14"], [date.to_i, date.to_s, date.to_date.to_s])
-      date   = When::CalendarNote::HinduNote::Dates.new(date)
-      assert_equal(2448361, date.to_i)
+      dates   = When::CalendarNote::HinduNote::Dates.new(date)
+      assert_equal(2448361, dates.to_i)
+      assert_equal('Prajāpati', When.CalendarNote('HinduNote').samvatsara(dates)/'en')
+    end
+
+    def test_indian_date_4
+      date = When.when? '2001.2.28'
+      assert_equal('1922-12-09', (When::IndianNationalSolar ^ date).to_s)
+      399.times do
+        date += When::P1Y
+        assert_equal([12,9], (When::IndianNationalSolar ^ date).cal_date[-2..-1])
+      end
     end
   end
 end

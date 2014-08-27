@@ -845,7 +845,7 @@ module When::CalendarTypes
 
     # オブジェクトの正規化
     #
-    #   YearLengthTableBased+オブジェクトの性質定義を初期設定します。
+    #   PatternTableBasedLuniSolarWithEphemeris オブジェクトの性質定義を初期設定します。
     #
     def _normalize(args=[], options={})
       @engine   = When.Calendar(@engine)
@@ -1050,9 +1050,30 @@ module When::CalendarTypes
   end
 
   #
-  # 年初を太陽黄経で決定する暦
+  # 年初を太陽黄経または別の暦で決定する暦
   #
   class YearLengthTableBased < TableBased
+
+    module CalendarBased
+
+      # 年初の通日(別の暦使用)
+      #
+      # @param [Numeric] year 年
+      #
+      # @return [Integer] 年初の通日
+      #
+      def _new_year_sdn(year)
+        @engine._coordinates_to_number(year + @diff_to_CE - @engine.diff_to_CE, @engine_month, @engine_day)
+      end
+
+      # オブジェクトの正規化
+      def _normalize_engine
+        Rational
+        @engine_month = (@engine_month || 0).to_i
+        @engine_day   = (@engine_day   || 0).to_i
+        @engine       = When.Calendar(@engine || When::Gregorian)
+      end
+    end
 
     # 天体暦アルゴリズム
     #
@@ -1060,9 +1081,24 @@ module When::CalendarTypes
     #
     attr_reader :formula
 
-    #protected
-
     private
+
+    # 年初の通日(天体暦使用)
+    #
+    # @param [Numeric] year 年
+    #
+    # @return [Integer] 年初の通日
+    #
+    def _new_year_sdn(year)
+      solar_sdn(@formula[0].cn_to_time(year.to_f + @cycle_offset) + @day_offset)
+    end
+
+    # オブジェクトの正規化
+    def _normalize_engine
+      Rational
+      @cycle_offset = (@cycle_offset||0).to_r
+      @day_offset   = (@day_offset||0).to_r
+    end
 
     # 年初の通日
     #
@@ -1073,23 +1109,58 @@ module When::CalendarTypes
     # @return [Integer] 年初の通日
     #
     def _sdn_(date)
-      y = +date[0]
-      t = @formula[0].cn_to_time(y.to_f + @cycle_offset)
-      return solar_sdn(t + @day_offset)
+      _new_year_sdn(+date[0])
     end
 
     # オブジェクトの正規化
     #
-    #   YearLengthTableBased+オブジェクトの性質定義を初期設定します。
+    #   YearLengthTableBased オブジェクトの性質定義を初期設定します。
     #
     def _normalize(args=[], options={})
 
-      Rational
-      @cycle_offset = (@cycle_offset||0).to_r
-      @day_offset   = (@day_offset||0).to_r
-      @formula      = 'Formula?formula=1S'
-
+      extend CalendarBased unless @formula || @location || @long || @lat || @alt || @time_basis
+      _normalize_engine
       super
+    end
+  end
+
+  #
+  # 年初を特定の日の日の出で決定する暦
+  #
+  class TableBasedWithSunrise < YearLengthTableBased
+
+    # 年初の通日(天体暦使用)
+    #
+    # @param [Numeric] year 年
+    #
+    # @return [Integer] 年初の通日
+    #
+    def _new_year_sdn(year)
+      event_time  = @formula[0].cn_to_time(year.to_f + @cycle_offset)
+      event_date  = (event_time + 0.5 + @formula[0].long/360.0).floor
+      sunset_time = @formula[0].sunrise(event_date)
+      event_date -= 1 if sunrise_time > event_time
+      event_date + @day_offset
+    end
+  end
+
+  #
+  # 年初を特定の日の日の入りで決定する暦
+  #
+  class TableBasedWithSunset < YearLengthTableBased
+
+    # 年初の通日(天体暦使用)
+    #
+    # @param [Numeric] year 年
+    #
+    # @return [Integer] 年初の通日
+    #
+    def _new_year_sdn(year)
+      event_time  = @formula[0].cn_to_time(year.to_f + @cycle_offset)
+      event_date  = (event_time + 0.5 + @formula[0].long/360.0).floor
+      sunset_time = @formula[0].sunset(event_date)
+      event_date += 1 if sunset_time <= event_time
+      event_date + @day_offset
     end
   end
 

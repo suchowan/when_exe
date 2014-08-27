@@ -11,7 +11,7 @@ require 'when_exe'
 include When
 
 #require 'date'
-#pp now({:clock=>'+0900'}).to_date_time.strftime('%+')
+#pp now({:clock=>'+0900'}).to_datetime.strftime('%+')
 
 #=begin
 date = today

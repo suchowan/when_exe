@@ -44,7 +44,7 @@ module When
          When::Coordinates::DefaultDayIndex
        ],
        'origin_of_MSC' => -1791,
-       'epoch_in_CE'   => +1,
+       'epoch_in_CE'   => +1792,
        'cycle_offset'  => Rational(1,2),
        'time_basis'    => '+00:09:20',
        'rule_table'    => {

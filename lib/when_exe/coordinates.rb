@@ -1598,7 +1598,7 @@ module When::Coordinates
         instance_eval('class << self; attr_reader :formula; end') if @location && @border
         if respond_to?(:formula)
           extend When::Ephemeris::Formula::ForwardedFormula
-          @formula ||= When::Ephemeris::Formula.new({:location=>@location})
+          @formula ||= When::Ephemeris::Formula.new(@location ? {:location=>@location} : {})
           @formula   = When.Resource(Array(@formula), '_ep:')
         end
       end
@@ -1619,7 +1619,7 @@ module When::Coordinates
 
     # @private
     HashProperty =
-      [[:origin_of_MSC, 0], [:origin_of_LSC, 0], [:index_of_MSC, 0], [:_diff_to_CE, 0], 
+      [[:origin_of_MSC, 0], [:origin_of_LSC, 0], [:index_of_MSC, 0], [:epoch_in_CE, 0], 
        :unit, :base, :pair, :note,
        :location, :time_basis, :border, :formula]
 
@@ -1732,14 +1732,6 @@ module When::Coordinates
       diff = @indices.length - period.length + 1
       return period if (diff == 0)
       return (diff > 0) ? Array.new(diff, 0) + period : period[(-diff)..-1]
-    end
-
-    # 西暦との差
-    #
-    # @return [Integer] 暦法の年の桁と西暦とのずれ
-    #
-    def _diff_to_CE
-      @_diff_to_CE ||= @epoch_in_CE ? @epoch_in_CE - @origin_of_MSC : 0
     end
 
     # @private
@@ -2362,9 +2354,7 @@ module When::Coordinates
       last = date.length-1
       return @border if last<0
       args     = date.dup << {:frame=>@engine}
-      args[0] += frame.origin_of_MSC + @border[last] * 1 + (
-                 (  frame.respond_to?(:epoch_in_CE) ?   frame.epoch_in_CE : 0) - 
-                 (@engine.respond_to?(:epoch_in_CE) ? @engine.epoch_in_CE : 0))
+      args[0] += frame.origin_of_MSC + @border[last] * 1 + (frame.epoch_in_CE - @engine.epoch_in_CE)
       b_date   = frame._encode(frame._number_to_coordinates(When.tm_pos(*args).to_i), nil)
       branch   = @border[last] * 0
       b_date[last] = When::Coordinates::Pair.new(date[last] * 1, branch)

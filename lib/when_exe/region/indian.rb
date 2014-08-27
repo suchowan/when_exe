@@ -562,19 +562,17 @@ module When
     #
     # Indian national solar calendar
     #
-    IndianNationalSolar =  [CyclicTableBased, {
+    IndianNationalSolar =  [TableBasedWithSunrise, {
       'label'   => 'Indian::IndianNationalSolar',
-      'origin_of_LSC' => 1721140,
       'origin_of_MSC' => -78,
-      'epoch_in_CE'   =>   0,
+      'diff_to_CE'    =>   0,
+      'engine_month'  =>   1,   # February
+      'engine_day'    => 28+21, # 22nd of next month
       'indices' => [
          When.Index('Indian::LunarMonth', {:unit =>12, :shift=>4}),
          When::Coordinates::DefaultDayIndex
        ],
       'rule_table'      => {
-        'T'  => {'Rule'  =>['LC', 'SC', 'SC', 'SC']},
-        'SC' => {'Rule'  =>[365]*4 + [366, 365, 365, 365]*24},
-        'LC' => {'Rule'  =>[366, 365, 365, 365]*25},
         365  => {'Length'=>[30] + [31]*5 + [30]*6},
         366  => {'Length'=>       [31]*6 + [30]*6}
       },
@@ -679,12 +677,12 @@ module When
       def _normalize(args=[], options={})
         @label ||= 'Indian::HinduSolar'
         @type  ||= 'SBS'
-        raise ArgumentError, "Irregal formula: #{@formula}" unless @type.upcase =~ /\A(M|SS|SB)(V|S||B|H|VZ|SZ|BZ|HZ)\z/
+        raise ArgumentError, "Irregal formula: #{@formula}" unless @type.upcase =~ /\A(M|SS|SB)(V|S|B|H|VZ|SZ|BZ|HZ)\z/
 
         @location      ||=  HinduLuniSolar::Location_E[$2] || HinduLuniSolar::Location_F[$1]
         @cycle_offset  ||=  HinduLuniSolar::CycleOffset[$1]
         @origin_of_MSC ||= -HinduLuniSolar::YearEpoch[$2]
-        @epoch_in_CE   ||=  0
+        @diff_to_CE    ||=  0
         @start_month   ||=  1 # Maysha
         @start_month     = @start_month.to_i
         @cycle_offset    = @cycle_offset.to_f + (@start_month - 1)
@@ -822,13 +820,13 @@ module When
       def _normalize(args=[], options={})
         @label ||= 'Indian::HinduLuniSolar'
         @type  ||= 'SBSA'
-        raise ArgumentError, "Irregal formula: #{@formula}" unless @type.upcase =~ /\A(M|SS|SB)(V|S||B|H|VZ|SZ|BZ|HZ)(A|P|PX)\z/
+        raise ArgumentError, "Irregal formula: #{@formula}" unless @type.upcase =~ /\A(M|SS|SB)(V|S|B|H|VZ|SZ|BZ|HZ)(A|P|PX)\z/
 
         @location      ||=  Location_E[$2] || Location_F[$1]
         @cycle_offset  ||=  CycleOffset[$1]
         @origin_of_MSC ||= -YearEpoch[$2]
         @hindu_style   ||=  HinduStyle[$3]
-        @epoch_in_CE   ||=  0
+        @diff_to_CE    ||=  0
         @start_month   ||=  5 # Chaitra
         @start_month     = @start_month.to_i
         @cycle_offset    = @cycle_offset.to_f + (@start_month - 5)
@@ -1133,7 +1131,7 @@ module When
       # see {http://en.wikipedia.org/wiki/Samvatsara Samvatsara}
       #
       def samvatsara(dates)
-        year_kali = dates.l_date.most_significant_coordinate + dates.l_date.frame._diff_to_CE + 3101
+        year_kali = dates.l_date.most_significant_coordinate + dates.l_date.frame.epoch_in_CE + 3101
         year_mod  = year_kali >= jovian ? (year_kali + 12) % 60 :
                                          ((year_kali * 211 - 108).div(18000) + year_kali + 26) % 60
         When.CalendarNote('HinduNote/Notes')['year']['samvatsara'][year_mod]

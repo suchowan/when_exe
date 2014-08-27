@@ -170,9 +170,9 @@ module When
             When.Index('Tibetan::Month', {:branch=>{0=>intercalary_month[0], 1=>intercalary_month[1]}, :shift=>2}),
             When.Index({:branch=>{-2=>intercalary_day[0], +1=>intercalary_day[1]}})
           ]
-        @label       ||= 'Tibetan::Tibetan'
-        @epoch_in_CE ||= 0
-        @type        ||= 1
+        @label      ||= 'Tibetan::Tibetan'
+        @diff_to_CE ||= 0
+        @type       ||= 1
         @parameter = case @type.to_i
           when 1
             {'M0'=>(60+15),

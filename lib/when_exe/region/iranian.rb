@@ -70,7 +70,7 @@ module When
       ["[Anno_Persico=en:Iranian_calendars,*alias:AP]1.1.1",  '@CE', "0001-01-01^TableBasedJalali",
 								     "1230-01-01^Borji",
 								     "1304-01-01^SolarHijri", ""],
-      ["[Anno_Cyrus=,*alias:AC]2535.1.1",		     "",    "1355-01-01^SolarHijri"],
+      ["[Anno_Cyrus=,*alias:AC]2535.1.1",		      "",    "1355-01-01^SolarHijri"],
       ["[Anno_Hijra=en:Iranian_calendars,*alias:AH]1357.6.5", "@CR", "1357-06-05^SolarHijri"]
     ]]
   end
@@ -99,7 +99,7 @@ module When
       'label'         => 'Iranian::SolarHijri',
       'indices'       => _indicesM,
       'origin_of_MSC' => -621,
-      'epoch_in_CE'   => 0,
+      'epoch_in_CE'   =>  621,
       'cycle_offset'  => 0,
       'time_basis'    => '+15:30',
       'rule_table'    => {
@@ -116,7 +116,7 @@ module When
       'indices'       => _indicesM,
       'origin_of_LSC' => 1948321 + 173125,
       'origin_of_MSC' => 475,
-      'epoch_in_CE'   => 622+474,
+      'epoch_in_CE'   => 621,
       'rule_table'    => {
         'T'    => {'Rule' =>['C128'] * 21 + ['C132']},
         'C128' => {'Rule' =>['C29'] + ['C33'] * 3},
@@ -146,7 +146,7 @@ module When
       'indices'       => _indicesJ,
       'origin_of_LSC' => 1948321 + 173125,
       'origin_of_MSC' => 475,
-      'epoch_in_CE'   => 622+474,
+      'epoch_in_CE'   => 621,
       'rule_table'    => {
         'T'    => {'Rule' =>['C128'] * 21 + ['C132']},
         'C128' => {'Rule' =>['C29'] + ['C33'] * 3},
@@ -166,7 +166,7 @@ module When
       'label'         => 'Iranian::Borji',
       'indices'       => _indicesS,
       'origin_of_MSC' => -621,
-      'epoch_in_CE'   => 0,
+      'epoch_in_CE'   =>  621,
       'cycle_offset'  => 0,
       'time_basis'    => '+15:30'
     }]
@@ -179,7 +179,7 @@ module When
       'indices'       => _indicesM,
       'origin_of_MSC' => 1230,
       'origin_of_LSC' => 2397203,
-      'epoch_in_CE'   => 621+1230,
+      'epoch_in_CE'   =>  621,
       'before'        => 'Borji',
       'after'         => 'SolarHijriAlgorithmic',
       'rule_table'=> %w(

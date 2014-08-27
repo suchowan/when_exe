@@ -180,7 +180,7 @@ module When
     #
     # @private
     def _to_date_for_note(date)
-      date = When::ShireG ^ date unless date.frame.label.to_s == 'Shire'
+      date = When::Shire ^ date unless date.frame.label.to_s == 'Shire'
       date
     end
 
@@ -209,28 +209,11 @@ module When
       'label'   => 'Shire::Shire',
       'indices' => _shire_indices,
       'border'       => '00-00-02',
+      'engine_day'   => -10,            # Jun 1st is 01-09
       'day_offset'   => -183,           # the day 183 days before summer solstice
       'cycle_offset' => Rational(1,4),  # summer solstice
-      'time_basis'   => '+09:00',       # JST
+    # 'time_basis'   => '+09:00',       # JST
       'rule_table'   => {
-        365 => {'Length'=>[2]+[30]*6+[3]+[30]*6, 'IDs'=>_IDs},
-        366 => {'Length'=>[2]+[30]*6+[4]+[30]*6, 'IDs'=>_IDs}
-      },
-      'note'   => 'ShireWeek'
-    }]
-
-    #
-    # Shire Calendar based on Gregorian Date
-    #
-    ShireG =  [CyclicTableBased, {
-      'label'   => 'Shire::Shire',
-      'origin_of_LSC' => 1721060-10,
-      'indices' => _shire_indices,
-      'border'     => '00-00-02',
-      'rule_table' => {
-        'T'  => {'Rule'  =>['LC', 'SC', 'SC', 'SC']},
-        'SC' => {'Rule'  =>[365]*4 + [366, 365, 365, 365]*24},
-        'LC' => {'Rule'  =>[366, 365, 365, 365]*25},
         365 => {'Length'=>[2]+[30]*6+[3]+[30]*6, 'IDs'=>_IDs},
         366 => {'Length'=>[2]+[30]*6+[4]+[30]*6, 'IDs'=>_IDs}
       },

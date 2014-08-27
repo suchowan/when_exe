@@ -1668,19 +1668,18 @@ module When::TM
       when 'day'
       # 指定の剰余となる日
         sdn      = other & to_i
-        date     = @frame.to_cal_date(sdn)
-        date[0] -= @calendar_era_name[1] if @calendar_era_name
-        options  = {:events=>nil, :query=>@query, :validate=>:done, :date=>date}
+        options  = {:date=>_date_with_era(@frame.to_cal_date(sdn)), :events=>nil, :query=>@query, :validate=>:done}
         options[:precision] = When::DAY if precision < When::DAY
         result   = self.dup._copy(options)
         result.send(:_force_euqal_day, sdn-result.to_i)
 
       when 'year'
       # 指定の剰余となる年
-        date = @cal_date.dup
-        date[0]  = (other & (most_significant_coordinate + @frame._diff_to_CE)) - @frame._diff_to_CE
-        date[0] -= @calendar_era_name[1] if @calendar_era_name
-        return self.dup._copy({:date=>date, :events=>nil, :query=>@query})
+        date     = @frame.send(:_decode, _date_without_era)
+        date[0]  = (other & (date[0] + @frame.diff_to_CE)) - @frame.diff_to_CE
+        options  = {:date=>_date_with_era(@frame.send(:_encode, date)), :events=>nil, :query=>@query}
+        options[:precision] = When::YEAR if precision < When::YEAR
+        return self.dup._copy(options)
 
       else
         raise ArgumentError,"The right operand should have a unit 'day' or 'year'"
@@ -1696,11 +1695,11 @@ module When::TM
     def %(other)
       raise TypeError,"The right operand should be When::Coordinates::Residue" unless other.kind_of?(Residue)
       if precision <= When::YEAR && other.units['year'] && other.event != 'year'
-        other.to('year') % (most_significant_coordinate + @frame._diff_to_CE)
+        other.to('year') % (most_significant_coordinate + @frame.epoch_in_CE)
       else
         case other.event
         when 'day'  ; other % least_significant_coordinate
-        when 'year' ; other % (most_significant_coordinate + @frame._diff_to_CE)
+        when 'year' ; other % (most_significant_coordinate + @frame.epoch_in_CE)
         else        ; raise ArgumentError,"The right operand should have a unit 'day' or 'year'"
         end
       end
@@ -1969,19 +1968,21 @@ module When::TM
       case other.event
       when 'day'
         # 指定の剰余となる日
-        sdn    = other & to_i
-        result = self.dup._copy({:events=>nil, :query=>@query, :validate=>:done,
-                                 :date=>_date_with_era(@frame.to_cal_date(sdn)),
-                                 :time=>@clk_time.clk_time.dup})
+        sdn     = other & to_i
+        options = {:date=>_date_with_era(@frame.to_cal_date(sdn)), :time=>@clk_time.clk_time.dup,
+                   :events=>nil, :query=>@query, :validate=>:done}
+        options[:precision] = When::DAY if precision < When::DAY
+        result  = self.dup._copy(options)
         result.send(:_force_euqal_day, sdn-result.to_i)
 
       when 'year'
         # 指定の剰余となる年
-        date = @cal_date.dup
-        date[0] = (other & (most_significant_coordinate + @frame._diff_to_CE)) - @frame._diff_to_CE
-        return self.dup._copy({:events=>nil, :query=>@query,
-                               :date=>_date_with_era(date),
-                               :time=>@clk_time.clk_time.dup})
+        date     = @frame.send(:_decode, _date_without_era)
+        date[0]  = (other & (date[0] + @frame.diff_to_CE)) - @frame.diff_to_CE
+        options  = {:date=>_date_with_era(@frame.send(:_encode, date)), :time=>@clk_time.clk_time.dup,
+                    :events=>nil, :query=>@query}
+        options[:precision] = When::YEAR if precision < When::YEAR
+        return self.dup._copy(options)
 
       else
         raise ArgumentError,"The right operand should have a unit 'day' or 'year'"

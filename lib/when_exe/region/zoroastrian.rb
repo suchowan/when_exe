@@ -185,14 +185,16 @@ module When
     Fasli =  [{'Epoch'=>{
                  'ZRE'=>{'origin_of_MSC'=>1737},
                  'YZ' =>{'origin_of_MSC'=>-630}
-              }}, Bahai, {
+              }}, TableBasedWithSunset, {
       'label'   => 'Zoroastrian::Fasli',
       'indices' => [
          When.Index('ZoroastrianNotes::month::Month', {:unit =>13}),
          When::Coordinates::DefaultDayIndex
       ],
       'origin_of_MSC' => -630,
-      'epoch_in_CE'   =>  0,
+      'diff_to_CE'    =>    0,
+      'engine_month'  =>    2, # March
+      'engine_day'    =>   20, # 21st
       'rule_table'    => {
         365 => {'Length'=>[30] * 12 + [5]},
         366 => {'Length'=>[30] * 12 + [6]}

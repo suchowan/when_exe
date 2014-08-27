@@ -154,6 +154,19 @@ module When::TM
       @time_basis ? @time_basis.time_standard.rate_of_clock : 1.0
     end
 
+    # 西暦との年次の相違(外部表現の0年に対応する西暦年) - additional attribute
+    #
+    # @return [Numeric]
+    #
+    attr_reader :epoch_in_CE
+
+    # 西暦との年次の相違(内部表現の0年に対応する西暦年) - additional attribute
+    #
+    # @return [Numeric]
+    #
+    # @private
+    attr_reader :diff_to_CE
+
     # 日付と時刻をユリウス日(When::TM::JulianDate)に変換する
     #
     # @param [When::TM::CalDate] cal_date
@@ -293,6 +306,15 @@ module When::TM
       _default_index_of_MSC
       _normalize_temporal
       @reference_frame ||= []
+      @epoch_in_CE ||=
+        if @diff_to_CE
+          @diff_to_CE = @diff_to_CE.to_i
+          @diff_to_CE - @origin_of_MSC
+        else
+          0
+        end
+      @epoch_in_CE = @epoch_in_CE.to_i
+      @diff_to_CE  = @epoch_in_CE + @origin_of_MSC
     end
   end
 

@@ -79,7 +79,7 @@ module When
       'label'         => 'Coptic::Coptic',
       'origin_of_LSC' => 1825030,
       'origin_of_MSC' =>       1,
-      'epoch_in_CE'   =>     285,
+      'diff_to_CE'    =>     285,
       'indices'       => _egyptian_month_indices,
       'rule_table' => {
         'T' => {'Rule'  =>[365,365,366,365]},

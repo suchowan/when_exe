@@ -66,8 +66,8 @@ module When
 
         # Default Parameters
         Rational
-        @epoch_in_CE   ||=    1
-        @origin_of_MSC ||= 3761
+        @epoch_in_CE   ||= -3760
+        @origin_of_MSC ||=  3761
         @origin_of_LSC ||= 1721300 + Rational(  9415,  98496)
         @mean_month    ||=      29 + Rational(261307, 492480)
         @leap_period   ||=   19

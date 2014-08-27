@@ -78,69 +78,29 @@ module When
 
   module CalendarTypes
 
+    _ID      = '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,18=,19'
+    _Indices = [
+      When.Index({:unit =>19}),
+      When.Index({:unit =>19}),
+      When.Index('Bahai::Month', {:branch=>{+1=>When.Resource('_m:Bahai::Month::*')[19]}}),
+      When::Coordinates::DefaultDayIndex
+    ]
+
     #
     # Bahá'í Calendar
     #
-    class Bahai < TableBased
-
-      # 年初の通日 - グレゴリオ暦の３月21日を春分とする
-      #
-      # @param [Array<Numeric>] date ( 年 )
-      #
-      # @return [Numeric] 年初の通日
-      #
-      def gregorian_equinox(date)
-        @engine._coordinates_to_number(+date[0], 2, 20)
-      end
-
-      # 年初の通日 - 太陽の天文学的な位置による春分に基づく
-      #
-      # @param [Array<Numeric>] date ( 年 )
-      #
-      # @return [Numeric] 年初の通日
-      #
-      def ephemeris_equinox(date)
-        equinox_time = @engine.cn_to_time(+date[0])
-        equinox_date = (equinox_time + 0.5 + @engine.long/360.0).floor
-        sunset_time = @engine.sunset(equinox_date)
-        (sunset_time <= equinox_time) ? equinox_date+1 : equinox_date
-      end
-
-      private
-
-      ID = '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,18=,19'
-
-      #
-      # オブジェクトの正規化
-      #
-      def _normalize(args=[], options={})
-        @label   ||= 'Bahai::Bahai'
-
-        @indices ||= [
-          When.Index({:unit =>19}),
-          When.Index({:unit =>19}),
-          When.Index('Bahai::Month', {:branch=>{+1=>When.Resource('_m:Bahai::Month::*')[19]}}),
-          When::Coordinates::DefaultDayIndex
-        ]
-        @origin_of_MSC ||= -1844 + 19*19
-        @rule_table    ||= {
-          365 => {'Length'=>[19] * 18 + [4, 19], 'IDs'=>ID},
-          366 => {'Length'=>[19] * 18 + [5, 19], 'IDs'=>ID}
-        }
-        @note ||= 'Bahai'
-
-        super
-
-        @engine ||= @location ?
-          When::Ephemeris::Formula.new({:formula=>'1S', :location=>@location}) :
-          When::Gregorian
-
-        case @engine
-        when When::Ephemeris::Formula; instance_eval('class << self; alias :_sdn_ :ephemeris_equinox; end')
-        when When::TM::Calendar      ; instance_eval('class << self; alias :_sdn_ :gregorian_equinox; end')
-        else                         ; raise ArgumentError, 'Engine not specified'
-        end
-      end
-    end
+    Bahai = [TableBasedWithSunset, {
+      'label'           => 'Bahai::Bahai',
+      'indices'         => _Indices,
+      'origin_of_MSC'   => -1844 + 19*19,
+      'diff_to_CE'      =>  0,
+      'engine_month'    =>  2, # March
+      'engine_day'      => 20, # 21st
+      'rule_table'      => {
+        365 => {'Length'=>[19] * 18 + [4, 19], 'IDs'=>_ID},
+        366 => {'Length'=>[19] * 18 + [5, 19], 'IDs'=>_ID}
+      },
+      'note' => 'Bahai'
+    }]
   end
 end

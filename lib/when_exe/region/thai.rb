@@ -226,13 +226,13 @@ module When
       def _normalize(args=[], options={})
         @origin_of_LSC ||=  2392666
         @origin_of_MSC ||=     1201
-        @epoch_in_CE   ||=     1839
+        @epoch_in_CE   ||=      638
         @before = @after =  'ThaiC'
         @indices       ||= ThaiP::Indices
         pattern        ||= Pattern.dup
         if @patch
           @patch.scan(/(\d+)([ABC])/i) do |year,type|
-            pattern[year.to_i-@epoch_in_CE] = type.upcase
+            pattern[year.to_i-(@origin_of_MSC+@epoch_in_CE)] = type.upcase
           end
         end
         @rule_table    = {

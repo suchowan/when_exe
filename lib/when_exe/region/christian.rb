@@ -105,6 +105,7 @@ module When
       def _normalize(args=[], options={})
         raise TypeError, "#{self.class} is abstract class" unless @label
         @note = When.CalendarNote(@note || 'Christian')
+        @diff_to_CE ||= 0
         super
       end
     end

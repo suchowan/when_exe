@@ -92,6 +92,7 @@ module MiniTest
     def test__epoch_in_CE
       cals  = [
         'Gregorian',
+        'Gregorian?border=1959-2-23',
         'Dee',
         'DeeCecil',
         'Coptic?Epoch=284Y',
@@ -104,6 +105,7 @@ module MiniTest
        ['Ptolemaic', +2],
         'IndianNationalSolar',
         'Nanakshahi',
+        'Fasli',
         'RevisedBengali',
         'HinduSolar?type=SBV',
         'HinduSolar?type=SBVZ',
@@ -113,14 +115,14 @@ module MiniTest
         'HinduSolar?type=SBBZ',
         'HinduSolar?type=SBH',
         'HinduSolar?type=SBHZ',
-     #  'HinduLuniSolar?type=SBVA',
-     #  'HinduLuniSolar?type=SBVZA',
-     #  'HinduLuniSolar?type=SBSA',
-     #  'HinduLuniSolar?type=SBSZA',
-     #  'HinduLuniSolar?type=SBB',
-     #  'HinduLuniSolar?type=SBBZ',
-     #  'HinduLuniSolar?type=SBH',
-     #  'HinduLuniSolar?type=SBHZ',
+        'HinduLuniSolar?type=SBVA',
+      # 'HinduLuniSolar?type=SBVZA',
+      # 'HinduLuniSolar?type=SBSA',
+      # 'HinduLuniSolar?type=SBSZA',
+      # 'HinduLuniSolar?type=SBBA',
+      # 'HinduLuniSolar?type=SBBZA',
+      # 'HinduLuniSolar?type=SBHA',
+      # 'HinduLuniSolar?type=SBHZA',
         'FrenchRepublican',
         'Jalali',
         'SolarHijri',
@@ -128,17 +130,19 @@ module MiniTest
         'Borji',
         'Jewish',
         'Thai',
-      # 'ThaiC',
+        'ThaiT',
         'Tibetan',
+        'Positivist',
+        'InternationalFixed',
       ]
       eto   = When.Resource('_co:Common::干支').to('year')
-      today = When.when?('2012-06-16')
+      today = When.when?('2012-06-15')
       assert_equal([[28, 246778, 246778]],
         cals.map { |list|
           cal, shift = list
           shift    ||= 0
           date = When.Calendar(cal) ^ today
-          [date % eto - shift, ((eto & date).to_i/10).to_i + 37*shift, ((date & eto).to_i/10).to_i + 37*shift]
+          [+(date % eto - shift), ((eto & date).to_i/10).to_i + 37*shift, ((date & eto).to_i/10).to_i + 37*shift]
         }.uniq
       )
     end

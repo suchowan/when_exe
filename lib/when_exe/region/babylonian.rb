@@ -309,7 +309,7 @@ module When
       'remarks'      => _remarksCB,
       'origin_of_LSC'=> 1492871,
       'origin_of_MSC'=> -314,
-      'epoch_in_CE'  => -625,
+      'epoch_in_CE'  => -311,
       'rule_table'   => _table_CB,
       'indices'      => _seleucid
       }
@@ -362,7 +362,7 @@ module When
       'remarks'      => _remarksPD,
       'origin_of_LSC'=> 1492871,
       'origin_of_MSC'=> -314,
-      'epoch_in_CE'  => -625,
+      'epoch_in_CE'  => -311,
       'rule_table'   => _table_PD,
       'indices'      => _seleucid
       }
