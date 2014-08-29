@@ -9,24 +9,24 @@ module When
 
   class BasicTypes::M17n
 
-    InternationalFixed = [self, [
+    WorldSeason = [self, [
       "locale:[=en:, ja=ja:, alias]",
-      "names:[InternationalFixed=]",
-      "[InternationalFixed=en:International_Fixed_Calendar, 国際固定暦]"
+      "names:[WorldSeason=]",
+      "[WorldSeason=http://calendars.wikia.com/wiki/World_Season_Calendar, アシモフの季節暦=]"
     ]]
   end
 
   #
-  # InternationalFixed Week
+  # WorldSeason Week
   #
-  class CalendarNote::InternationalFixedWeek < CalendarNote::Week
+  class CalendarNote::WorldSeasonWeek < CalendarNote::Week
 
     #
-    # InternationalFixed Note
+    # WorldSeason Note
     #
     Notes = [When::BasicTypes::M17n, [
       "locale:[=en:, ja=ja:, alias]",
-      "names:[InternationalFixed]",
+      "names:[WorldSeason]",
 
       # Notes for year ----------------------------
       [When::BasicTypes::M17n,
@@ -38,19 +38,10 @@ module When
         "names:[month]",
         [When::BasicTypes::M17n,
           "names:[Month]",
-          "[January,   1月, /date/month_names/1] ",
-          "[February,  2月, /date/month_names/2] ",
-          "[March,     3月, /date/month_names/3] ",
-          "[April,     4月, /date/month_names/4] ",
-          "[May,       5月, /date/month_names/5] ",
-          "[June,      6月, /date/month_names/6] ",
-          "[Sol,       7月                     ] ",
-          "[July,      8月, /date/month_names/7] ",
-          "[August,    9月, /date/month_names/8] ",
-          "[September,10月, /date/month_names/9] ",
-          "[October,  11月, /date/month_names/10]",
-          "[November, 12月, /date/month_names/11]",
-          "[December, 13月, /date/month_names/12]"
+          "[A=] ",
+          "[B=] ",
+          "[C=] ",
+          "[D=] "
         ]
       ],
 
@@ -82,13 +73,13 @@ module When
 
     # @private
     7.times do |k|
-      name = When.CalendarNote('InternationalFixedWeek/Notes::day::Week')[k].to_s.downcase
+      name = When.CalendarNote('WorldSeasonWeek/Notes::day::Week')[k].to_s.downcase
       module_eval %Q{
         def #{name}(date, parameter=nil)
           event_name = 'from_#{name}'
-          date  = When::InternationalFixed.jul_trans(date, {:events=>[event_name], :precision=>When::DAY})
+          date  = When::WorldSeason.jul_trans(date, {:events=>[event_name], :precision=>When::DAY})
           y,m,d = date.cal_date
-          dow   = d <= 28 ? (d-1) % 7 : d - 22
+          dow   = d <= 91 ? (d-1) % 7 : d - 85
           return date if dow == 0
           date -= When::TM::PeriodDuration.new([0,0,dow])
           date.events = [event_name]
@@ -108,17 +99,17 @@ module When
     def week(date, base=nil)
       date    = _to_date_for_note(date)
       y, m, d = date.cal_date
-      index   = d <= 28 ? (d-1) % 7 : d - 22
-      length  = (base||date).length(When::MONTH) - 21
+      index   = d <= 91 ? (d-1) % 7 : d - 85
+      length  = (base||date).length(When::MONTH) - 84
       {:value=>@days_of_week[index], :position=>[index, length]}
     end
 
     #
-    # convert any date to InternationalFixed calendar date
+    # convert any date to WorldSeason calendar date
     #
     # @private
     def _to_date_for_note(date)
-      date = When::InternationalFixed ^ date unless date.frame.equal?(When::InternationalFixed)
+      date = When::WorldSeason ^ date unless date.frame.equal?(When::WorldSeason)
       date
     end
 
@@ -134,19 +125,20 @@ module When
 
   module CalendarTypes
     #
-    # InternationalFixed calendar based on Gregorian calendar
+    # WorldSeason calendar based on Gregorian calendar
     #
-    InternationalFixed =  [YearLengthTableBased, {
-      'label'   => 'InternationalFixed::InternationalFixed',
+    WorldSeason =  [YearLengthTableBased, {
+      'label'   => 'WorldSeason::WorldSeason',
       'indices' => [
-          When.Index('InternationalFixedWeekNotes::month::Month', {:unit =>13}),
+          When.Index('WorldSeasonWeekNotes::month::Month', {:unit =>4}),
          When::Coordinates::DefaultDayIndex
         ],
+      'engine_day'       => -11, # 11th day before new year
       'rule_table'       => {
-        365  => {'Length'=>[28]*12 + [29]},
-        366  => {'Length'=>[28]* 5 + [29] + [28] *6 + [29]}
+        365  => {'Length'=>[91] * 3 + [92]},
+        366  => {'Length'=>[91, 92] * 2}
       },
-      'note'   => 'InternationalFixedWeek'
+      'note'   => 'WorldSeasonWeek'
     }]
   end
 end

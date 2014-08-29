@@ -12,7 +12,7 @@ module When
     Positivist = [self, [
       "locale:[=en:, ja=ja:, alias]",
       "names:[Positivist=]",
-      "[Positivist=en:Positivist_calendar, オーギュスト・コントの暦]"
+      "[Positivist=en:Positivist_calendar, オーギュスト・コントの暦=ja:%%<13の月の暦>#%.<実証暦>]"
     ]]
   end
 
@@ -67,7 +67,7 @@ module When
           [DayOfWeek, "label:[Saturday,                 土曜日   ]", {'delta'=>  7}],
           [DayOfWeek, "label:[Sunday,                   日曜日   ]", {'delta'=>  7}],
           [DayOfWeek, "label:[Festival_of_the_Dead ,    祖先の祭=]", {'delta'=>365}],
-          [DayOfWeek, "label:[Festival_of_Holy_Women= , 聖女の祭=]", {'delta'=>365}]
+          [DayOfWeek, "label:[Festival_of_Holy_Women= , 聖女の祭=]", {'delta'=>1461}]
         ],
 
         "[Common_Week]"
