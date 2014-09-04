@@ -679,6 +679,49 @@ module When
     #
     class Week < CalendarNote
 
+      class << self
+
+        private
+
+        #
+        # Fixed Week definitions
+        #
+        def fixed_week_definitions(month_length=7*4)
+          calendar = to_s.split('::').last.sub(/Week$/,'')
+          name     = When.CalendarNote(calendar + 'Week/Notes::day::Week')[0].to_s.downcase
+          module_eval %Q{
+            def #{name}(date, parameter=nil)
+              event_name = 'from_#{name}'
+              date  = When::#{calendar}.jul_trans(date, {:events=>[event_name], :precision=>When::DAY})
+              y,m,d = date.cal_date
+              dow   = d <= #{month_length} ? (d-1) % 7 : d - #{month_length-6}
+              return date if dow == 0
+              date -= When::TM::PeriodDuration.new([0,0,dow])
+              date.events = [event_name]
+              date
+            end
+
+            def week(date, base=nil)
+              date    = _to_date_for_note(date)
+              y, m, d = date.cal_date
+              index   = d <= #{month_length} ? (d-1) % 7 : d - #{month_length-6}
+              length  = (base||date).length(When::MONTH) - #{month_length-7}
+              {:value=>@days_of_week[index], :position=>[index, length]}
+            end
+
+            def _to_date_for_note(date)
+              date = When::#{calendar}.jul_trans(date) unless date.frame.equal?(When::#{calendar})
+              date
+            end
+
+            def _normalize(args=[], options={})
+              @event ||= '#{name}'
+              super
+            end
+          }
+        end
+      end
+
       #
       # 暦週要素
       #

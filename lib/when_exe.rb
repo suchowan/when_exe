@@ -476,15 +476,15 @@ module When
     # フォーマットごとの処理
     case specification
     when TM::TemporalPosition, Parts::GeometricComplex ; specification
-    when TM::Position    ; specification.any_other
-    when Array           ; begin options = TM::TemporalPosition._options(options) ; specification.map {|e| when?(e, options)} end
-    when /\Atoday\z/i    ; today(options)
-    when /\Anow\z/i      ; now(options)
-    when /[JS]DN(\z|\^)/i; TM::JulianDate.parse(specification, options)
-    when /[\n\r]+/       ; when?(specification.split(/[\n\r]+/), options)
-    when String          ; TM::TemporalPosition._instance(EncodingConversion.to_internal_encoding(specification), options)
-    when Numeric         ; TM::JulianDate.new(+specification, TM::TemporalPosition._options(options))
-    else                 ; Calendar(options[:frame] || 'Gregorian').jul_trans(specification, options)
+    when TM::Position ; specification.any_other
+    when Array        ; begin options = TM::TemporalPosition._options(options) ; specification.map {|e| when?(e, options)} end
+    when /\Atoday\z/i ; today(options)
+    when /\Anow\z/i   ; now(options)
+    when /(JDN|SDN|CEP)(\z|\^)/i; TM::JulianDate.parse(specification, options)
+    when /[\n\r]+/    ; when?(specification.split(/[\n\r]+/), options)
+    when String       ; TM::TemporalPosition._instance(EncodingConversion.to_internal_encoding(specification), options)
+    when Numeric      ; TM::JulianDate.new(+specification, TM::TemporalPosition._options(options))
+    else              ; Calendar(options[:frame] || 'Gregorian').jul_trans(specification, options)
     end
   end
 
