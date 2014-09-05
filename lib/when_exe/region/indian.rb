@@ -566,85 +566,55 @@ module When
       'label'   => 'Indian::IndianNationalSolar',
       'origin_of_MSC' => -78,
       'diff_to_CE'    =>   0,
-      'engine_month'  =>   1,   # February
-      'engine_day'    => 28+21, # 22nd of next month
+      'engine_month'  =>   2,   # February
+      'engine_day'    => 28+22, # 22nd of next month
       'indices' => [
          When.Index('Indian::LunarMonth', {:unit =>12, :shift=>4}),
          When::Coordinates::DefaultDayIndex
        ],
-      'rule_table'      => {
+      'rule_table'    => {
         365  => {'Length'=>[30] + [31]*5 + [30]*6},
         366  => {'Length'=>       [31]*6 + [30]*6}
-      },
+      }
     }]
 
     #
     # Nanakshahi Calendar
     #
-    class Nanakshahi < TableBased
-
-      private
-
-      #
-      # Object Normalization
-      #
-      def _normalize(args=[], options={})
-        @label         ||= 'Indian::Nanakshahi'
-        @epoch_in_CE   ||= 1468
-        @engine        ||= 'Gregorian'
-        @engine          = When.Calendar(@engine)
-        @indices       ||= [
-          When.Index('Indian::NanakshahiMonth', {:unit=>12, :shift=>4}),
-          When::Coordinates::DefaultDayIndex
-        ]
-        @rule_table    ||= {
-          365 => {'Length'=> [31]*5 + [30]*7},
-          366 => {'Length'=> [31]*5 + [30]*6 + [31]}
-        }
-        super
-      end
-
-      # first day of year
-      #
-      def _sdn_(date)
-        year = +date[0] + @epoch_in_CE
-        @engine._coordinates_to_number(year, 2, 13)
-      end
-    end
+    Nanakshahi = [YearLengthTableBased, {
+      'label'   =>  'Indian::Nanakshahi',
+      'origin_of_MSC' => -1468,
+      'diff_to_CE'    =>     0,
+      'engine_month'  =>     3,
+      'engine_day'    =>    14,
+      'indices' => [
+        When.Index('Indian::NanakshahiMonth', {:unit=>12, :shift=>4}),
+        When::Coordinates::DefaultDayIndex
+      ],
+      'rule_table'    => {
+        365 => {'Length'=> [31]*5 + [30]*7},
+        366 => {'Length'=> [31]*5 + [30]*6 + [31]}
+      }
+    }]
 
     #
     # Revised Bengali Calendar
     #
-    class RevisedBengali < TableBased
-
-      private
-
-      #
-      # Object Normalization
-      #
-      def _normalize(args=[], options={})
-        @label         ||= 'Indian::RevisedBengali'
-        @epoch_in_CE   ||=  593
-        @engine        ||= 'Gregorian'
-        @engine          = When.Calendar(@engine)
-        @indices       ||= [
-          When.Index('Indian::BengaliMonth', {:unit=>12, :shift=>5}),
-          When::Coordinates::DefaultDayIndex
-        ]
-        @rule_table    ||= {
-          365 => {'Length'=> [31]*5 + [30]*7},
-          366 => {'Length'=> [31]*5 + [30]*5 + [31, 30]}
-        }
-        super
-      end
-
-      # first day of year
-      #
-      def _sdn_(date)
-        year = +date[0] + @epoch_in_CE
-        @engine._coordinates_to_number(year, 3, 13)
-      end
-    end
+    RevisedBengali = [YearLengthTableBased, {
+      'label'   =>   'Indian::RevisedBengali',
+      'origin_of_MSC' => -593,
+      'diff_to_CE'    =>    0,
+      'engine_month'  =>    4,
+      'engine_day'    =>   14,
+      'indices' => [
+        When.Index('Indian::BengaliMonth', {:unit=>12, :shift=>5}),
+        When::Coordinates::DefaultDayIndex
+      ],
+      'rule_table'    => {
+        365 => {'Length'=> [31]*5 + [30]*7},
+        366 => {'Length'=> [31]*5 + [30]*5 + [31, 30]}
+      }
+    }]
 
     #
     # Hindu Solar Calendar

@@ -187,20 +187,49 @@ module When
   # Module Constants
   #
 
+  # 1 second period duration
   PT1S = TM::PeriodDuration.new(nil,[0,0,0,1])
+
+  # 1 minute period duration
   PT1M = TM::PeriodDuration.new(nil,[0,0,1,0])
+
+  # 1 hour period duration
   PT1H = TM::PeriodDuration.new(nil,[0,1,0,0])
+
+  # 1 day period duration
   P1D  = TM::PeriodDuration.new([0,0,1])
+
+  # 1 week period duration
   P1W  = TM::PeriodDuration.new([0,0,7])
+
+  # 1 month period duration
   P1M  = TM::PeriodDuration.new([0,1,0])
+
+  # 1 year period duration
   P1Y  = TM::PeriodDuration.new([1,0,0])
+
+  # kind of When::TM::Position or When::TM::TemporalPosition
   TimeValue = TM::IndeterminateValue
 
+  # 7 days week residue
+  Week  = When::Parts::Resource._instance('_co:Common::Week')
+
+  # Gregorian months
+  Month = When::Parts::Resource._instance('_m:Calendar::Month')
+
+  # + ∞
   PlusInfinity  = TM::TemporalPosition.new({:indeterminated_position=>TimeValue::Max})
+
+  # - ∞
   MinusInfinity = TM::TemporalPosition.new({:indeterminated_position=>TimeValue::Min})
 
+  # UTF-8 encoding
   UTF8  = '.UTF-8'
+
+  # Windows-31J encoding
   W31J  = '.Windows-31J'
+
+  # eucJP encoding
   EUCJP = '.eucJP'
 
   class BasicTypes::M17n
@@ -480,7 +509,7 @@ module When
     when Array        ; begin options = TM::TemporalPosition._options(options) ; specification.map {|e| when?(e, options)} end
     when /\Atoday\z/i ; today(options)
     when /\Anow\z/i   ; now(options)
-    when /(JDN|SDN|CEP)(\z|\^)/i; TM::JulianDate.parse(specification, options)
+    when /(JDN|MJD|SDN|CEP)(\z|\^)/i; TM::JulianDate.parse(specification, options)
     when /[\n\r]+/    ; when?(specification.split(/[\n\r]+/), options)
     when String       ; TM::TemporalPosition._instance(EncodingConversion.to_internal_encoding(specification), options)
     when Numeric      ; TM::JulianDate.new(+specification, TM::TemporalPosition._options(options))

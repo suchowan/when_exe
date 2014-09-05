@@ -1264,9 +1264,14 @@ module When::TM
     #   19700101T120000Z
     JD19700101 = 2440588
 
+    # Modified Julian Date
+    # 
+    # see {http://en.wikipedia.org/wiki/Julian_day#Variants MJD}
+    JDN_of_MJD = 2400000.5
+
     # Countdown to Equinoctial Planetconjunction 
     # 
-    # see {http://www.calendersign.com/en/cs_cep-pec.php gml schema}
+    # see {http://www.calendersign.com/en/cs_cep-pec.php CEP}
     JDN_of_CEP = 2698162
 
     class << self
@@ -1305,7 +1310,10 @@ module When::TM
       def parse(specification, options={})
         num, *calendars = specification.split(/\^{1,2}/)
         jdn   = num.sub!(/[.@]/, '.') ? num.to_f : num.to_i
-        jdn  += JDN_of_CEP if num =~ /CEP/i
+        case num
+        when/MJD/i ; jdn += JDN_of_MJD
+        when/CEP/i ; jdn += JDN_of_CEP
+        end
         frame = calendars.shift || options[:frame]
         return self.new(jdn, options) unless frame
         calendars.unshift(frame).inject(jdn) {|date, calendar| When.Calendar(calendar).jul_trans(date, options)}

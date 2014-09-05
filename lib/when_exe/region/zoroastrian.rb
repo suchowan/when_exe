@@ -193,8 +193,8 @@ module When
       ],
       'origin_of_MSC' => -630,
       'diff_to_CE'    =>    0,
-      'engine_month'  =>    2, # March
-      'engine_day'    =>   20, # 21st
+      'engine_month'  =>    3,
+      'engine_day'    =>   21,
       'rule_table'    => {
         365 => {'Length'=>[30] * 12 + [5]},
         366 => {'Length'=>[30] * 12 + [6]}

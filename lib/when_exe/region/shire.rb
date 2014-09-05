@@ -209,7 +209,7 @@ module When
       'label'   => 'Shire::Shire',
       'indices' => _shire_indices,
       'border'       => '00-00-02',
-      'engine_day'   => -10,            # Jun 1st is 01-09
+      'engine_day'   =>   -9,           # Jun 1st is 01-09
       'day_offset'   => -183,           # the day 183 days before summer solstice
       'cycle_offset' => Rational(1,4),  # summer solstice
     # 'time_basis'   => '+09:00',       # JST

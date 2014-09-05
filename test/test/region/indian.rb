@@ -63,5 +63,23 @@ module MiniTest
         assert_equal([12,9], (When::IndianNationalSolar ^ date).cal_date[-2..-1])
       end
     end
+
+    def test_indian_date_5
+      date = When.when? '2014.3.14'
+      assert_equal('0546-01-01', (When::Nanakshahi ^ date).to_s)
+      399.times do
+        date += When::P1Y
+        assert_equal([1,1], (When::Nanakshahi ^ date).cal_date[-2..-1])
+      end
+    end
+
+    def test_indian_date_6
+      date = When.when? '2014.4.14'
+      assert_equal('1421-01-01', (When::RevisedBengali ^ date).to_s)
+      399.times do
+        date += When::P1Y
+        assert_equal([1,1], (When::RevisedBengali ^ date).cal_date[-2..-1])
+      end
+    end
   end
 end

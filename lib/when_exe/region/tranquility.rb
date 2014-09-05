@@ -64,14 +64,14 @@ module When
         "names:[day]",
         [When::BasicTypes::M17n,
           "names:[Week]",
-          [DayOfWeek, "label:[Friday,    金曜日]", {'delta'=>  7}],
-          [DayOfWeek, "label:[Saturday,  土曜日]", {'delta'=>  7}],
-          [DayOfWeek, "label:[Sunday,    日曜日]", {'delta'=>  7}],
-          [DayOfWeek, "label:[Monday,    月曜日]", {'delta'=>  7}],
-          [DayOfWeek, "label:[Tuesday,   火曜日]", {'delta'=>  7}],
-          [DayOfWeek, "label:[Wednesday, 水曜日]", {'delta'=>  7}],
-          [DayOfWeek, "label:[Thursday,  木曜日]", {'delta'=>  7}],
-          [DayOfWeek, "label:[Armstrong Day=en:Neil_Armstrong, アームストロングの日=ja:%%<ニール・アームストロング>]", {'delta'=> 365}],
+          [DayOfWeek, "label:[Friday,    金曜日, /date/day_names/5]", {'delta'=>  7}],
+          [DayOfWeek, "label:[Saturday,  土曜日, /date/day_names/6]", {'delta'=>  7}],
+          [DayOfWeek, "label:[Sunday,    日曜日, /date/day_names/0]", {'delta'=>  7}],
+          [DayOfWeek, "label:[Monday,    月曜日, /date/day_names/1]", {'delta'=>  7}],
+          [DayOfWeek, "label:[Tuesday,   火曜日, /date/day_names/2]", {'delta'=>  7}],
+          [DayOfWeek, "label:[Wednesday, 水曜日, /date/day_names/3]", {'delta'=>  7}],
+          [DayOfWeek, "label:[Thursday,  木曜日, /date/day_names/4]", {'delta'=>  7}],
+          [DayOfWeek, "label:[Armstrong Day=en:Neil_Armstrong, アームストロングの日=ja:%%<ニール・アームストロング>]", {'delta'=> 366}],
           [DayOfWeek, "label:[Aldrin Day=en:Buzz_Aldrin,       オルドリンの日=ja:%%<バズ・オルドリン>]",               {'delta'=>1461}]
         ],
 
@@ -181,13 +181,13 @@ module When
         ]
         @origin_of_MSC ||= -1968
         @diff_to_CE    ||=     0
-        @engine_month  ||=     6 # July
-        @engine_day    ||=    20 # 21st
+        @engine_month  ||=     7
+        @engine_day    ||=    21
+        @note          ||= 'TranquilityWeek'
         @rule_table    ||= {
           365 => {'Length'=>[28]*12 + [29]},
-          366 => {'Length'=>[28]*7  + [29] + [28]*4 + [29]}
+          366 => {'Length'=>[28]* 7 + [29] + [28]*4 + [29]}
         }
-        @note          ||= 'TranquilityWeek'
         super
       end
 
@@ -199,7 +199,7 @@ module When
         case m
         when nil ; super
         when 12  ; Long_IDS
-        when  7  ; @engine._length([+y-@origin_of_MSC+1,1]) == 28 ?  Normal_IDS : Leap_IDS
+        when  7  ; @engine._length([+y + 1, 1]) == 28 ?  Normal_IDS : Leap_IDS
         else     ; Normal_IDS
         end
       end

@@ -105,8 +105,8 @@ module MiniTest
        ['Ptolemaic', +2],
         'IndianNationalSolar',
         'Nanakshahi',
-        'Fasli',
         'RevisedBengali',
+        'Fasli',
         'HinduSolar?type=SBV',
         'HinduSolar?type=SBVZ',
         'HinduSolar?type=SBS',
@@ -132,6 +132,7 @@ module MiniTest
         'Thai',
         'ThaiT',
         'Tibetan',
+        'Discordian',
         'Positivist',
         'InternationalFixed',
       ]

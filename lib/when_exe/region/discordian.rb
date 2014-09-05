@@ -173,7 +173,7 @@ module When
     #
     # Discordian Calendar
     #
-    class Discordian < TableBased
+    class Discordian < YearLengthTableBased
 
       # @private
       Normal_IDS = (1..73).to_a
@@ -188,14 +188,13 @@ module When
       #
       def _normalize(args=[], options={})
         @label         ||= 'Discordian'
-        @epoch_in_CE   ||= -1166
-        @note          ||= 'DiscordianWeek'
-        @engine        ||= 'Gregorian'
-        @engine          = When.Calendar(@engine)
         @indices       ||= [
           When.Index('DiscordianWeekNotes::month::Month', {:unit =>5}),
           When.Index({:branch=>{1=>When.M17n('Discordian::IntercalaryDay')[0]}})
         ]
+        @origin_of_MSC ||= +1166
+        @diff_to_CE    ||=     0
+        @note          ||= 'DiscordianWeek'
         @rule_table ||= {
           365 => {'Length'=>        [73]*5},
           366 => {'Length'=> [74] + [73]*4}
@@ -203,22 +202,16 @@ module When
         super
       end
 
-      # first day of year
-      #
-      def _sdn_(date)
-        year = +date[0] + @epoch_in_CE
-        @engine._coordinates_to_number(year, 0, 0)
-      end
-
       #
       # day arrangement pattern
       #
       def _ids_(date)
         y, m = date
-        return super unless m
-        return Normal_IDS unless m == 0
-        year = +y + @epoch_in_CE
-        @engine._length([year,1]) == 28 ?  Normal_IDS : Long_IDS
+        case m
+        when nil ; super
+        when 0   ; @engine._length([+y, 1]) == 28 ?  Normal_IDS : Long_IDS
+        else     ; Normal_IDS
+        end
       end
     end
   end

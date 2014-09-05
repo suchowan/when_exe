@@ -1069,8 +1069,8 @@ module When::CalendarTypes
       # オブジェクトの正規化
       def _normalize_engine
         Rational
-        @engine_month = (@engine_month || 0).to_i
-        @engine_day   = (@engine_day   || 0).to_i
+        @engine_month = @engine_month ? @engine_month.to_i - @indices[-2].base : 0
+        @engine_day   = @engine_day   ? @engine_day.to_i   - @indices[-1].base : 0
         @engine       = When.Calendar(@engine || When::Gregorian)
       end
     end

@@ -131,6 +131,22 @@ module MiniTest
       end
     end
 
+    def test_civil_epoch
+      epoch = 1001
+      diff  = 1 - epoch
+      civil = When.Calendar("Civil?origin_of_MSC=#{diff}&old=(Julian?origin_of_MSC=#{diff})")
+      assert_equal('0582-10-04', (civil ^ When.when?('1582-10-14')).to_s)
+      assert_equal('0582-10-15', (civil ^ When.when?('1582-10-15')).to_s)
+      date  = When.when?("1000-1-1", :frame=>civil)
+      assert_equal('1014-01-01', (date & When.Residue('甲午').to('year')).to_s)
+      assert_equal(%w(1000-01-01 2000-01-01), [date.to_s, (When::Gregorian^date).to_s])
+      399.times do
+        date += When::P1Y
+        cal_date = date.cal_date
+        assert_equal((When::Gregorian^date).cal_date, [cal_date[0]-diff] + cal_date[1..2])
+      end
+    end
+
     def test__reform_year
       date = When.when?('1752^^Civil?reform=1752-9-14&border=(1000)0-3-25(1753)0-1-1')
       assert_equal(
