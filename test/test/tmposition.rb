@@ -156,13 +156,13 @@ LIST
       date0  = When.when?('明治5.12.1')
       date1  = date0 + When::P1M
       sample = [%w(明治06(1873).01.01 1873-01-01),
-                        %w(1872-12-31 1872-12-31),
-                        %w(1872-12-30 1872-12-30)]
+                %w(明治05(1872).12.02 1872-12-31),
+                %w(明治05(1872).12.01 1872-12-30)]
       [date1, date1.prev, date1.prev.prev].each do |date|
         assert_equal(sample.shift, [date.to_s, (When::Gregorian^date).to_s])
       end
 
-      sample = %w(1872-12-30 1872-12-31)
+      sample = %w(明治05(1872).12.01 明治05(1872).12.02)
       date = When.when?('明治5.12.1')
       date.month_included('Sun') do |d,b|
         assert_equal(sample.shift, d.to_s) if b==When::DAY

@@ -1068,22 +1068,37 @@ module When::TM
 
     # 指定の日を探す
     def _force_euqal_day(diff)
-      jdn  = self.to_i + diff
-      date = self
-      done = {}
-      loop do
-        case
-        when date.to_i == jdn
-          return date
-        when date.to_i > jdn
-          next_date = date - When::P1D
-          date = (date.to_i == next_date.to_i) ? date - When::P2D : next_date
-        when date.to_i < jdn
-          next_date = date + When::P1D
-          date = (date.to_i == next_date.to_i) ? date + When::P2D : next_date
+      return self if diff == 0
+      date = self + When::P1D * diff
+      return date if date.to_i - to_i == diff
+      if @calendar_era
+        options = _attr
+        options.delete(:era_name)
+        era = @calendar_era
+        jdn = (clock ? to_f : to_i)+diff
+        while era
+          date = era.^(jdn, options)
+          return date if date
+          era = diff > 0 ? era.succ : era.prev
         end
-        raise RangeError, "can't find target date: #{self} -> #{jdn}" if done.key?(date.to_i)
-        done[date.to_i] = true
+        raise RangeError, "can't find target date: #{self} -> #{jdn}"
+      else
+        done = {}
+        jdn  = to_i + diff
+        loop do
+          case
+          when date.to_i == jdn
+            return date
+          when date.to_i > jdn
+            next_date = date - When::P1D
+            date = (date.to_i == next_date.to_i) ? date - When::P2D : next_date
+          when date.to_i < jdn
+            next_date = date + When::P1D
+            date = (date.to_i == next_date.to_i) ? date + When::P2D : next_date
+          end
+          raise RangeError, "can't find target date: #{self} -> #{jdn}" if done.key?(date.to_i)
+          done[date.to_i] = true
+        end
       end
     end
 
