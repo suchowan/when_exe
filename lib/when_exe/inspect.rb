@@ -489,6 +489,7 @@ module When
             ended   = _force_euqal_year(i+1)
             current = begun
             result  = [yield(begun, YEAR)]
+            ended  += P1M if ended.floor(MONTH).most_significant_coordinate * 1 == begun.most_significant_coordinate * 1
             while current < ended do
               result << current.month_included(wkst, &block)
               current += P1M

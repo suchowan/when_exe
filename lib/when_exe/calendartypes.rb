@@ -86,7 +86,18 @@ module When::CalendarTypes
     def universal_time(sdn=nil)
       return super - @time_standard.localtime_difference unless sdn
       time = When::TM::JulianDate._d_to_t(sdn-0.5)
-      @time_standard.to_dynamical_time(time) - When::TimeStandard.to_dynamical_time(time) - @time_standard.localtime_difference
+      @time_standard.to_dynamical_time(time) - When::TimeStandard.to_dynamical_time(time)
+    end
+
+    # この時法の時刻を128秒単位の実数に変換する
+    #
+    # @param [Array<Numeric>] clk_time
+    # @param [Integer] sdn 参照事象の通し番号(ダミー)
+    #
+    # @return [Numeric]
+    #
+    def to_local_time(clk_time, sdn=nil)
+      super - universal_time(sdn)
     end
 
     #
@@ -1225,13 +1236,13 @@ module When::CalendarTypes
     #
     def _length(date)
       y, m = date
-      if (m)
+      if m
         #  指定した月に含まれる日の数を返します。
         m += @months_in_year * +y
-        return _new_month(m+1) - _new_month(m)
+        _new_month(m+1) - _new_month(m)
       else
         #  指定した年に含まれる月の数を返します。
-        return @months_in_year
+        @months_in_year
       end
     end
 
@@ -1246,7 +1257,7 @@ module When::CalendarTypes
     def _sum_(date)
       y, = date
       m = @months_in_year * +y
-      return _new_month(m+@months_in_year) - _new_month(m)
+      _new_month(m+@months_in_year) - _new_month(m)
     end
 
     private
@@ -1277,7 +1288,7 @@ module When::CalendarTypes
     # @return [Integer] 月初の通日
     #
     def _new_month_(m)
-      return solar_sdn(@formula[0].cn_to_time(m + @cycle_offset))
+      solar_sdn(@formula[0].cn_to_time(m + @cycle_offset))
     end
 
     private
@@ -1310,7 +1321,7 @@ module When::CalendarTypes
     # @return [Integer] 月初の通日
     #
     def _new_month_(m)
-      return lunar_sdn(@formula[-1].cn_to_time(m + @cycle_offset))
+      lunar_sdn(@formula[-1].cn_to_time(m + @cycle_offset))
     end
 
     private
@@ -1378,13 +1389,13 @@ module When::CalendarTypes
     #
     def _length(date)
       y, m = date
-      if (m)
+      if m
         #  指定した月に含まれる日の数を返します。
         m += _new_year_month(+y)
-        return _new_month(m+1) - _new_month(m)
+        _new_month(m+1) - _new_month(m)
       else
         #  指定した年に含まれる月の数を返します。
-        return _ids([y]).length
+        _ids([y]).length
       end
     end
 
@@ -1400,7 +1411,7 @@ module When::CalendarTypes
     #
     def _sum_(date)
       y = +date[0]
-      return _new_month(_new_year_month(y+1)) - _new_month(_new_year_month(y))
+      _new_month(_new_year_month(y+1)) - _new_month(_new_year_month(y))
     end
 
     # 太陽月初の通日

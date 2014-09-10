@@ -69,14 +69,24 @@ class When::CalendarNote
       is_date_and_time = options.key?(:clock) || precision > When::DAY
       options[:precision] = precision
       options[:clock]   ||= date.frame.time_basis || When::TM::Clock.local_time
-      quot, mod = (@formula.time_to_cn(date)*30.0).divmod(den)
-      cycle     = quot * den + num
-      cycle    += den if mod > (num % den)
-      time      = When::TM::JulianDate._d_to_t(@formula.cn_to_time(cycle/30.0))
-      time      = date.time_standard.from_dynamical_time(time) if @formula.is_dynamical
+      sdn       = _the_date(date, num, den)
+      time      = When::TM::JulianDate._d_to_t(sdn)
+      if @formula.is_dynamical
+        time    = date.time_standard.from_dynamical_time(time)
+        time   += options[:clock].universal_time(sdn.round) if options[:clock].kind_of?(When::CalendarTypes::LocalTime)
+      end
       event = date.frame.jul_trans(When::TM::JulianDate.universal_time(time), options)
       is_date_and_time ? event : event.to_cal_date
     end
+
+    # the event date
+    def _the_date(date, num, den)
+      quot, mod = (@formula.time_to_cn(date)*30.0).divmod(den)
+      cycle     = quot * den + num
+      cycle    += den if mod > (num % den)
+      @formula.cn_to_time(cycle/30.0)
+    end
+    private :_the_date
 
     # 日付に対応する座標
     #
@@ -116,7 +126,7 @@ class When::CalendarNote
     def event_time(date, event_name, event)
       etime = term(date - When.Duration('P3D'), event, When::SYSTEM)
       if formula.respond_to?(:year_length) && formula.denominator && formula.denominator < 100000
-        fraction  =  etime.clk_time.universal_time
+        fraction  =  etime.clk_time.local_time
         fraction +=  When::TM::Duration::DAY * (etime.to_i - date.to_i)
         fraction  = (fraction  / When::TM::Duration::DAY * formula.denominator * 1000 + 0.5).floor / 1000.0
         fraction  =  fraction.to_i if fraction == fraction.to_i
@@ -158,6 +168,26 @@ class When::CalendarNote
       @delta   = When.Duration(delta   || @delta   || When::TM::IntervalLength.new(@den/360, 'year'))
       @margin  = (margin || @margin    || 1E-8).to_f
       super
+    end
+  end
+
+  #
+  # 冬至を定気で計算し、その他の二十四節気を前後の冬至の日時を時間で等分して求める
+  #
+  class SolarTermsRevised < SolarTerms
+
+    # the event date
+    def _the_date(date, num, den)
+      quot, mod = @formula.time_to_cn(date).divmod(12)
+      quot     +=  1 if mod >= 9
+      range     = [12*quot-3, 12*quot+9].map {|cn| [cn*30, @formula.cn_to_time(cn)]}
+      time      = @formula.is_dynamical ? +date : date.to_f
+      now       = [range[0][0] + (range[1][0] - range[0][0]) / (range[1][1] - range[0][1]) * (time - range[0][1]), time]
+
+      quot, mod = now[0].divmod(den)
+      cycle     = quot * den + num
+      cycle    += den if mod > (num % den)
+      range[0][1] + (range[1][1] - range[0][1]) / (range[1][0] - range[0][0]) * (cycle - range[0][0])
     end
   end
 

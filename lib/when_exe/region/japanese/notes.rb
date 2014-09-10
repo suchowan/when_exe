@@ -280,10 +280,10 @@ class When::CalendarNote
     # 日本暦注の時代変遷
     #
     # @private
-    NoteTypes = (2...When::TM::CalendarEra::JapaneseSolar[1].size).to_a.map {|i|
+    NoteTypes = (2...When::TM::CalendarEra::JapaneseSolar[2].size).to_a.map {|i|
       calendars =
-        [When::TM::CalendarEra::JapaneseLuniSolar[1][i][2],
-         When::TM::CalendarEra::JapaneseSolar[1][i][2]].map {|epoch|
+        [When::TM::CalendarEra::JapaneseLuniSolar[2][i][2],
+         When::TM::CalendarEra::JapaneseSolar[2][i][2]].map {|epoch|
           epoch =~ /\A(-?\d+)-(\d+)-(\d+)\^(.+)\z/
           $4
         }
@@ -361,11 +361,11 @@ class When::CalendarNote
       attr_reader :calendar, :solar
 
       def l_calendar
-        @l_calendar ||= When.Calendar(@calendar)
+        @l_calendar ||= When.Calendar(@calendar.kind_of?(String) ? @calendar.sub(/#\{\?.+?\}/, '') : @calendar)
       end
 
       def s_calendar
-        @s_calendar ||= When.Calendar(@solar)
+        @s_calendar ||= When.Calendar(@solar.kind_of?(String) ? @solar.sub(/#\{\?.+?\}/, '?Clock=THS') : @solar)
       end
 
       def l_phases
@@ -376,8 +376,13 @@ class When::CalendarNote
         @s_terms    ||= Japanese::SolarTerms.new('formula'=>s_calendar.formula[0])
       end
 
+      def s_terms2
+        @s_terms2   ||= @l_calendar.iri =~ /JapaneseTwin(.*?)::天保暦/ ?
+          Japanese::SolarTermsRevised.new('formula'=>s_calendar.formula[0]) : s_terms
+      end
+
       def doyo
-        s_calendar.doyo
+        @doyo       ||= (s_calendar.doyo ? s_calendar.doyo * 360.0 / s_calendar.year_length : 0)
       end
     end
 
@@ -1277,8 +1282,8 @@ class When::CalendarNote
 
         # 土用事
         unless notes['土用事']
-          _longitude, _motsu = dates.cal4note.doyo ? dates.cal4note.s_terms.position(date, -dates.cal4note.doyo) :
-                                                     [longitude, motsu]
+          _longitude, _motsu = dates.cal4note.s_terms2.kind_of?(self) && dates.cal4note.doyo == 0 ? [longitude, motsu] :
+                               dates.cal4note.s_terms2.position(date, -dates.cal4note.doyo)
           if _motsu != 0 && _longitude % 90 == 27
             notes['土用事'] =
               begin
@@ -1290,7 +1295,7 @@ class When::CalendarNote
                   else       ; '土用入' # 貞享暦以降
                   end
                 if conditions[:shoyo]
-                  dates.cal4note.s_terms.event_time(date, event_name, [27-(dates.cal4note.doyo||0), 90])
+                  dates.cal4note.s_terms2.event_time(date, event_name, [27-dates.cal4note.doyo, 90])
                 else
                   event_name
                 end
@@ -1425,6 +1430,50 @@ class When::CalendarNote
         end
 
         notes
+      end
+    end
+  end
+
+  #
+  # 太陽黄経による暦注
+  #
+  class Japanese::SolarTermsRevised < Japanese::SolarTerms
+
+    # 土用策
+    DoyoShift = When::TM::PeriodDuration.new([0,0,12.1747411317])
+
+    # 日付に対応する座標
+    #
+    # @param [When::TM::TemporalPosition] date 日付
+    # @param [Numeric] delta 周期の補正(土用の時刻の補正に使用,デフォルト 0)
+    #
+    # @return [Array<Integer>] Array< Integer, 0 or 1 or 2 >
+    #
+    #   [Integer]     対応する座標
+    #
+    #   [0 or 1 or 2] 座標の進み(0 なら 没, 2 なら滅)
+    #
+    def position(date, delta=0)
+      date   = date.floor
+      p0, p1 = [date, date.succ].map {|d| (30.0 * @formula.time_to_cn(d-DoyoShift) - @margin + 12).floor}
+      [p1 % @den, p1 - p0]
+    end
+
+    #
+    # イベント日付(時刻付)
+    #
+    # @private
+    def event_time(date, event_name, event)
+      etime = term(date + When.Duration('P3D'), [-15,30], When::SYSTEM) + DoyoShift
+      if formula.respond_to?(:year_length) && formula.denominator && formula.denominator < 100000
+        fraction  =  etime.clk_time.local_time
+        fraction +=  When::TM::Duration::DAY * (etime.to_i - date.to_i)
+        fraction  = (fraction  / When::TM::Duration::DAY * formula.denominator * 1000 + 0.5).floor / 1000.0
+        fraction  =  fraction.to_i if fraction == fraction.to_i
+        event_name + "(#{fraction}/#{formula.denominator})"
+      else
+        etime.events = [event_name]
+        etime
       end
     end
   end

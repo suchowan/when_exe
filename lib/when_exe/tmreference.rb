@@ -212,7 +212,7 @@ module When::TM
       if clock
         clock = When.Clock(clock) if clock.kind_of?(String)
         clock = clock._daylight(jdt.universal_time) if clock._need_validate
-        frac  = clock.universal_time
+        frac  = clock.universal_time(jdt.to_i)
         sdn, time = (jdt.universal_time - frac).divmod(Duration::DAY)
         cal_options[:clock] = clock
         cal_date = to_cal_date(sdn.to_i + JulianDate::JD19700101)
@@ -571,12 +571,14 @@ module When::TM
     # この時法の時刻を128秒単位の実数に変換する
     #
     # @param [Array<Numeric>] clk_time
+    # @param [Integer] sdn 参照事象の通し番号(ダミー)
     #
     # @return [Numeric]
     #
-    def to_universal_time(clk_time)
+    def to_universal_time(clk_time, sdn=nil)
       return _coordinates_to_number(_decode(clk_time)) / @second
     end
+    alias :to_local_time :to_universal_time
 
     # 128秒単位の実数をこの時法の時刻に変換する
     #

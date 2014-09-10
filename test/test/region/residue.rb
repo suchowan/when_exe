@@ -135,6 +135,7 @@ module MiniTest
         'Discordian',
         'Positivist',
         'InternationalFixed',
+        'VanishingLeprechaun'
       ]
       eto   = When.Resource('_co:Common::干支').to('year')
       today = When.when?('2012-06-15')

@@ -620,6 +620,7 @@ module When::TM
       else     ; raise NameError, "Temporal Reference System is not defined"
       end
     end
+    alias :local_time :universal_time
 
     # 外部時間
     #
@@ -633,7 +634,7 @@ module When::TM
         case @indeterminated_position
         when Max ; +Float::MAX/4
         when Min ; -Float::MAX/4
-        else     ; time_standard.to_dynamical_time(universal_time)
+        else     ; time_standard.to_dynamical_time(local_time)
         end
     end
 
@@ -1030,7 +1031,7 @@ module When::TM
       @query         = options[:query]         if (options.key?(:query))
       @location      = options[:location]      if (options.key?(:location))
       @time_standard = options[:time_standard] if (options.key?(:time_standard))
-      @sdn = @universal_time = @dynamical_time = @period = nil
+      @sdn = @universal_time = @local_time = @dynamical_time = @period = nil
       _normalize(options)
       return self
     end
@@ -1223,6 +1224,16 @@ module When::TM
     attr_accessor :universal_time
     alias :coordinateValue :universal_time
     protected :universal_time=
+
+    # 内部時間(ローカル)
+    #
+    # @return [Numeric]
+    #
+    #   1970-01-01T00:00:00(ローカル) からの Universal Coordinated Time の経過時間 / 128秒
+    #
+    def local_time
+      @universal_time
+    end
 
     # CoordinateSystem による時間座標値
     #
@@ -1448,15 +1459,32 @@ module When::TM
 
     # 内部時間
     #
+    # @param [Integer] sdn 参照事象の通し番号
+    #
     # @return [Numeric]
     #
     #   T00:00:00Z からの Universal Coordinated Time の経過時間 / 128秒
     #
     #   時法によっては、異なる意味を持つことがある
     #
-    def universal_time
+    def universal_time(sdn=nil)
       raise NameError, "Temporal Reference System is not defined" unless @frame
-      @universal_time ||= @frame.to_universal_time(@clk_time)
+      @universal_time ||= @frame.to_universal_time(@clk_time, sdn)
+    end
+
+    # 内部時間(ローカル)
+    #
+    # @param [Integer] sdn 参照事象の通し番号
+    #
+    # @return [Numeric]
+    #
+    #   T00:00:00(ローカル) からの Universal Coordinated Time の経過時間 / 128秒
+    #
+    #   時法によっては、異なる意味を持つことがある
+    #
+    def local_time(sdn=nil)
+      raise NameError, "Temporal Reference System is not defined" unless @frame
+      @local_time ||= @frame.to_local_time(@clk_time, sdn)
     end
 
     # 繰り上がり
@@ -1614,6 +1642,7 @@ module When::TM
       return super if [Now, Max, Min].include?(@indeterminated_position)
       @universal_time ||= JulianDate._d_to_t(to_i)
     end
+    alias :local_time :universal_time
 
     # ユリウス日
     #
@@ -1972,7 +2001,21 @@ module When::TM
     def universal_time
       return super if [Now, Max, Min].include?(@indeterminated_position)
       raise NameError, "Temporal Reference System is not defined" unless (@frame && clock)
-      @universal_time ||= (to_i - JulianDate::JD19700101) * Duration::DAY + @clk_time.universal_time
+      @universal_time ||= (to_i - JulianDate::JD19700101) * Duration::DAY + @clk_time.universal_time(to_i)
+    end
+
+    # 内部時間(ローカル)
+    #
+    # @return [Numeric]
+    #
+    #   1970-01-01T00:00:00(ローカル) からの Universal Coordinated Time の経過時間 / 128秒
+    #
+    #   暦法によっては、異なる意味を持つことがある
+    #
+    def local_time
+      return super if [Now, Max, Min].include?(@indeterminated_position)
+      raise NameError, "Temporal Reference System is not defined" unless (@frame && clock)
+      @local_time ||= (to_i - JulianDate::JD19700101) * Duration::DAY + @clk_time.local_time(to_i)
     end
 
     # 要素の参照
@@ -2199,7 +2242,7 @@ module When::TM
             @clk_time = zero.clk_time
             @clk_time.clk_time[-1] += second
             leap                   /= clock.second
-            @universal_time  = When::Coordinates::LeapSeconds.new(@universal_time-leap, leap, 1/clock.second)
+            @universal_time = @local_time = When::Coordinates::LeapSeconds.new(@local_time-leap, leap, 1/clock.second)
             @dynamical_time -= leap
           end
         end
