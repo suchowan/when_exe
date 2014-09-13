@@ -1282,7 +1282,7 @@ class When::CalendarNote
 
         # 土用事
         unless notes['土用事']
-          _longitude, _motsu = dates.cal4note.s_terms2.kind_of?(self) && dates.cal4note.doyo == 0 ? [longitude, motsu] :
+          _longitude, _motsu = dates.cal4note.s_terms2.instance_of?(self) && dates.cal4note.doyo == 0 ? [longitude, motsu] :
                                dates.cal4note.s_terms2.position(date, -dates.cal4note.doyo)
           if _motsu != 0 && _longitude % 90 == 27
             notes['土用事'] =
@@ -1454,6 +1454,7 @@ class When::CalendarNote
     #   [0 or 1 or 2] 座標の進み(0 なら 没, 2 なら滅)
     #
     def position(date, delta=0)
+      return super if date.most_significant_coordinate >= 1869
       date   = date.floor
       p0, p1 = [date, date.succ].map {|d| (30.0 * @formula.time_to_cn(d-DoyoShift) - @margin + 12).floor}
       [p1 % @den, p1 - p0]
@@ -1464,6 +1465,7 @@ class When::CalendarNote
     #
     # @private
     def event_time(date, event_name, event)
+      return super if date.most_significant_coordinate >= 1869
       etime = term(date + When.Duration('P3D'), [-15,30], When::SYSTEM) + DoyoShift
       if formula.respond_to?(:year_length) && formula.denominator && formula.denominator < 100000
         fraction  =  etime.clk_time.local_time
