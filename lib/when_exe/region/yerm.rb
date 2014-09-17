@@ -54,17 +54,19 @@ module When
         when /\A(\d+)\((\d+)\z/                   ;       m, d = [        $1, $2]
         when /\A(\d+)\z/                          ;          d =              $1
 
+        when /\A(-?\d+)-(\d+)\)(\d+)\)(\d+)\z/    ; c, y, m, d = [$1, $4, $3, $2]
+
         when /\A(\d+)\)(\d+)\)(\d+)[-\)](-?\d+)\z/; c, y, m, d = [$4, $3, $2, $1]
         when /\A(\d+)\)(\d+)-(-?\d+)\z/           ; c, y, m, d = [$3, $2, $1    ]
         when /\A(\d+)-(-\d+)\z/                   ; c, y, m, d = [$2, $1        ]
         when /\A(-\d+)\z/                         ; c, y, m, d = [$1            ]
         when /\A(\d+)\)(\d+)\)(\d+)\z/            ;    y, m, d = [    $3, $2, $1]
         when /\A(\d+)\)(\d+)\z/                   ;       m, d = [        $2, $1]
-        else                                    ; c, y, m, d = [              ]
+        else                                      ; c, y, m, d = [              ]
         end
 
         ordered = [c, y, m, d]
-        ordered.pop until ordered.last
+        ordered.pop until ordered.last || ordered.empty?
         raise ArgumentError, "can't parse #{source}" if ordered.empty? || ordered.include?(nil)
         ordered.map {|n| n.to_s}.join('-')
       end
