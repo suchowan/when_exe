@@ -70,7 +70,7 @@ module When
           [DayOfWeek, "label:[Festival_of_Holy_Women=, 聖女の祭=]", {'delta'=>1461}]
         ],
 
-        "[Common_Week]"
+        "[Common_Week=]"
       ]
     ]]
 

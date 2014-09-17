@@ -38,11 +38,11 @@ module When
       [When::BasicTypes::M17n,
         "names:[month]",
         [When::BasicTypes::M17n,
-          "names:[Month]",
+          "names:[Month=en:month]",
           "[Chaos=en:chaos            ]",
           "[Discord=en:discord        ]",
           "[Confusion=en:confusion    ]",
-          "[Bureaucracy               ]",
+          "[Bureaucracy=en:bureaucracy]",
           "[The Aftermath=en:aftermath]"
         ]
       ],
@@ -51,7 +51,7 @@ module When
       [When::BasicTypes::M17n,
         "names:[day]",
         [When::BasicTypes::M17n,
-          "names:[Week]",
+          "names:[Week=en:week]",
           [DayOfWeek, "label:[Sweetmorn=      ]", {'delta'=>5}],
           [DayOfWeek, "label:[Boomtime=       ]", {'delta'=>5}],
           [DayOfWeek, "label:[Pungenday=      ]", {'delta'=>5}],
@@ -75,7 +75,7 @@ module When
           "[Afflux=       ]"  # 12-08 The Aftermath 50
         ],
 
-        "[Common_Week]"
+        "[Common_Week=]"
       ]
     ]]
 

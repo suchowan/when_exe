@@ -69,7 +69,7 @@ module When
           [DayOfWeek, "label:[OutOfWeek=, 週外日=]", {'delta'=>366}]
         ],
 
-        "[Common_Week]"
+        "[Common_Week=]"
       ]
     ]]
 

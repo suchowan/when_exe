@@ -53,10 +53,10 @@ module When
           [DayOfWeek, "label:[Thursday,   木曜日, /date/day_names/4]", {'delta'=>7}],
           [DayOfWeek, "label:[Friday,     金曜日, /date/day_names/5]", {'delta'=>7}],
           [DayOfWeek, "label:[Saturday,   土曜日, /date/day_names/6]", {'delta'=>7}],
-          [DayOfWeek, "label:[Worldsday=, 週外日=]", {'delta'=>366}],
+          [DayOfWeek, "label:[Worldsday=en:The_World_Calendar#Features, 週外日=]", {'delta'=>366}],
         ],
 
-        "[Common_Week]"
+        "[Common_Week=]"
       ]
     ]]
 

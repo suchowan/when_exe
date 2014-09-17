@@ -75,7 +75,7 @@ module When
           [DayOfWeek, "label:[Aldrin Day=en:Buzz_Aldrin,       オルドリンの日=ja:%%<バズ・オルドリン>]",               {'delta'=>1461}]
         ],
 
-        "[Common_Week]"
+        "[Common_Week=]"
       ]
     ]]
 
