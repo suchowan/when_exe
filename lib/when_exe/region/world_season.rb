@@ -72,7 +72,7 @@ module When
     #
     # WorldSeason calendar based on Gregorian calendar
     #
-    WorldSeason =  [YearLengthTableBased, {
+    WorldSeason =  [SolarYearTableBased, {
       'label'   => 'WorldSeason::WorldSeason',
       'indices' => [
           When.Index('WorldSeasonWeekNotes::month::Month', {:unit =>4}),

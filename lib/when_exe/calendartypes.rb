@@ -1063,7 +1063,7 @@ module When::CalendarTypes
   #
   # 年初を太陽黄経または別の暦で決定する暦
   #
-  class YearLengthTableBased < TableBased
+  class SolarYearTableBased < TableBased
 
     module CalendarBased
 
@@ -1125,7 +1125,7 @@ module When::CalendarTypes
 
     # オブジェクトの正規化
     #
-    #   YearLengthTableBased オブジェクトの性質定義を初期設定します。
+    #   SolarYearTableBased オブジェクトの性質定義を初期設定します。
     #
     def _normalize(args=[], options={})
 
@@ -1138,7 +1138,7 @@ module When::CalendarTypes
   #
   # 年初を特定の日の日の出で決定する暦
   #
-  class TableBasedWithSunrise < YearLengthTableBased
+  class SolarYearTableBasedWithSunrise < SolarYearTableBased
 
     # 年初の通日(天体暦使用)
     #
@@ -1158,7 +1158,7 @@ module When::CalendarTypes
   #
   # 年初を特定の日の日の入りで決定する暦
   #
-  class TableBasedWithSunset < YearLengthTableBased
+  class SolarYearTableBasedWithSunset < SolarYearTableBased
 
     # 年初の通日(天体暦使用)
     #

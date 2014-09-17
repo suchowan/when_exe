@@ -40,7 +40,7 @@ class When::CalendarNote
     #
     Notes = [When::BasicTypes::M17n, [
       "locale:[=ja:, en=en:]",
-      "names:[日本暦注]",
+      "names:[日本暦注=]",
 
       # 年の暦注 ----------------------------
       [When::BasicTypes::M17n,
@@ -67,7 +67,7 @@ class When::CalendarNote
                                              'position:暦序',   'suffix:在'],                #  9: 支
         [Note, 0xFFFF, "label:[歳破=ja:%%<歳破神>]",
                                              'position:暦序',   'suffix:在'],                # 10: 支
-        [Note, 0xFFFF, "label:[歳煞=ja:%%<歳煞神>]",
+        [Note, 0xFFFF, "label:[歳煞=ja:%%<歳殺神>]",
                                              'position:暦序',   'suffix:在'],                # 11: 支
         [Note, 0xFFFF, "label:[黄幡=ja:%%<黄幡神>]",
                                              'position:暦序',   'suffix:在'],                # 12: 支
@@ -140,7 +140,7 @@ class When::CalendarNote
         [Note, 0xF800, "label:[入梅]",       'position:雑節'],                               # 16: 干 太陽黄経
         [Note, 0xF800, "label:[半夏生]",     'position:雑節'],                               # 17: 干 太陽黄経
         [Note, 0xF800, "label:[二百十日]",   'position:雑節'],                               # 18: 立春からの日数
-        [Note, 0xF800, "label:[二百廿日]",   'position:雑節'],                               # 19: 立春からの日数
+        [Note, 0xF800, "label:[二百廿日=ja:%%<二百二十日>]", 'position:雑節'],               # 19: 立春からの日数
 
         [Note, 0x3FFC, "label:[大禍=ja:%%<暦注下段>#%.<大禍日>]",
                                              'position:上段 上段 欄外 欄外', 'suffix:日'],   # 20: 支 節月
@@ -187,7 +187,7 @@ class When::CalendarNote
         [Note, 0x07FF, "label:[没=ja:%%<没日>]",
                                              'position:中段 中段 中段 中段', 'suffix:日'],   # 49: 太陽黄経
         [Note, 0xFFF8, "label:[日食]",       'position:中段 中段 中段 中段'],                # 50: 日食表
-        [Note, 0x07FC, "label:[滅=ja:%%<滅日]",
+        [Note, 0x07FC, "label:[滅=ja:%%<滅日>]",
                                              'position:中段 中段 中段 中段', 'suffix:日'],   # 51: 月の位相
         [Note, 0xFFF8, "label:[月食]",       'position:中段 中段 中段 中段'],                # 52: 月食表
         [Note, 0xC7FD, "label:[月相]",       'position:中段 中段 中段 中段'],                # 53: 月の位相
@@ -267,7 +267,7 @@ class When::CalendarNote
                                              'position:仮名暦', 'suffix:日'],                # 99: 暦月 暦日/晦日
         [Note, 0x3800, "label:[鬼宿]",       'position:仮名暦'],                             #100: 廿八宿
         [Note, 0x3800, "label:[金性=]",      'position:仮名暦'],                             #101: 支 節月 支 節年
-        [Note, 0x3FFF, "label:[三寶吉=ja:%%<三宝吉>]",
+        [Note, 0x3FFF, "label:[三寶吉=http://kotobank.jp/word/%%<三宝吉日>]",
                                              'position:上段 上段 上段 上段'],                #102: 干支 節月
         [Note, 0x3FFF, "label:[神吉=ja:%%<暦注下段>#%.<神吉日>]",
                                              'position:上段 上段 中段 中段上', 'suffix:日'], #103: 干支 節月

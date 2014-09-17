@@ -157,7 +157,7 @@ module When
     #
     # Tranquility calendar based on Gregorian calendar
     #
-    class Tranquility < YearLengthTableBased
+    class Tranquility < SolarYearTableBased
 
       # @private
       Normal_IDS = (1..28).to_a

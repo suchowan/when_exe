@@ -205,7 +205,7 @@ module When
     #
     # Shire Calendar based on summer solstice date
     #
-    Shire =  [YearLengthTableBased, {
+    Shire =  [SolarYearTableBased, {
       'label'   => 'Shire::Shire',
       'indices' => _shire_indices,
       'border'       => '00-00-02',

@@ -159,7 +159,7 @@ module When
     #
     # World calendar based on Gregorian calendar
     #
-    World =  [YearLengthTableBased, {
+    World =  [SolarYearTableBased, {
       'label'   => 'World::World',
       'rule_table'       => {
         365  => {'Length'=>[31,30,30]*3 + [31,30,31]},

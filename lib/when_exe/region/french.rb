@@ -37,7 +37,7 @@ module When
     #
     # French Calendar
     #
-    FrenchRepublican =  [YearLengthTableBased, {
+    FrenchRepublican =  [SolarYearTableBased, {
       'label'   => 'French::FrenchRepublican',
       'indices' => [
          When.Index('French::Month', {:unit =>13}),

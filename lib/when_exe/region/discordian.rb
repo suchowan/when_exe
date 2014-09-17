@@ -173,7 +173,7 @@ module When
     #
     # Discordian Calendar
     #
-    class Discordian < YearLengthTableBased
+    class Discordian < SolarYearTableBased
 
       # @private
       Normal_IDS = (1..73).to_a

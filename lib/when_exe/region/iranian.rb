@@ -95,7 +95,7 @@ module When
     #
     # Solar Hijri Calendar
     #
-    SolarHijri = [YearLengthTableBased, {
+    SolarHijri = [SolarYearTableBased, {
       'label'         => 'Iranian::SolarHijri',
       'indices'       => _indicesM,
       'origin_of_MSC' => -621,

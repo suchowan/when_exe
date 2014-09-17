@@ -185,7 +185,7 @@ module When
     Fasli =  [{'Epoch'=>{
                  'ZRE'=>{'origin_of_MSC'=>1737},
                  'YZ' =>{'origin_of_MSC'=>-630}
-              }}, TableBasedWithSunset, {
+              }}, SolarYearTableBasedWithSunset, {
       'label'   => 'Zoroastrian::Fasli',
       'indices' => [
          When.Index('ZoroastrianNotes::month::Month', {:unit =>13}),

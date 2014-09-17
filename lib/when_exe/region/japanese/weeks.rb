@@ -22,13 +22,13 @@ class When::CalendarNote
     #
     Notes = [When::BasicTypes::M17n, [
       "locale:[=en:, ja=ja:, alias]",
-      "names:[Rokuyo]",
+      "names:[Rokuyo=]",
 
       # 日の暦注 ----------------------------
       [When::BasicTypes::M17n,
         "names:[day]",
         [When::BasicTypes::M17n,
-          "names:[Rokuyo, 六曜]",
+          "names:[Rokuyo=, 六曜]",
           [DayOfWeek, "label:[Taian=,      *大安]", {'delta'=>6}],
           [DayOfWeek, "label:[Shakko=,     *赤口]", {'delta'=>6}],
           [DayOfWeek, "label:[Sensho=,     *先勝]", {'delta'=>6}],

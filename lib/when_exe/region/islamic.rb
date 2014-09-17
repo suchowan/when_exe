@@ -66,7 +66,7 @@ module When
     #
     #   Calendar based on the first visibilty of new moon
     #
-    class EphemerisBasedIslamic < EphemerisBased
+    class EphemerisBasedIslamic < EphemerisBasedLunar
 
       #protected
 
@@ -91,7 +91,6 @@ module When
       #
       def _normalize(args=[], options={})
         @label        ||= 'Islamic::EphemerisBasedIslamic'
-        @cycle_offset ||= 1671 * 12 + 4
         @indices      ||= [
           When.Index('Islamic::Month', {:unit =>12}),
           When::Coordinates::DefaultDayIndex

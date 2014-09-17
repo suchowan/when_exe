@@ -1597,7 +1597,7 @@ module When::Ephemeris
       @long, @lat, @alt = [@location.long / When::Coordinates::Spatial::DEGREE,
                            @location.lat  / When::Coordinates::Spatial::DEGREE,
                            @location.alt] if @location
-      @formula        ||= '1S'
+      @formula        ||= '1L'
       @time_standard  ||= 'dynamical'
       @is_dynamical     = (@time_standard[0..0].downcase == 'd')
 

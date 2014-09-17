@@ -1598,7 +1598,11 @@ module When::Coordinates
         instance_eval('class << self; attr_reader :formula; end') if @location && @border
         if respond_to?(:formula)
           extend When::Ephemeris::Formula::ForwardedFormula
-          @formula ||= When::Ephemeris::Formula.new(@location ? {:location=>@location} : {})
+          unless @formula
+            options  = {:formula => kind_of?(When::CalendarTypes::SolarYearTableBased) ? '1S' : '1L'}
+            options[:location] = @location if @location
+            @formula = When::Ephemeris::Formula.new(options)
+          end
           @formula   = When.Resource(Array(@formula), '_ep:')
         end
       end

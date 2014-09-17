@@ -94,7 +94,7 @@ module When
       "names:[Yi]",
 
       [Residue,
-        "label:[YearName]", "divisor:8", "year:0",
+        "label:[YearName=]", "divisor:8", "year:0",
         [Residue, "label:[東北之年=, NorthEastYear=]", "remainder:  0"],
         [Residue, "label:[東方之年=, EastYear=     ]", "remainder:  1"],
         [Residue, "label:[東南之年=, SouthEastYear=]", "remainder:  2"],

@@ -9,13 +9,13 @@ BEGIN:B:M17N
   NAMES:[Locations]
 
   BEGIN:CO:SPATIAL
-    LABEL:[CentralIndia, インド中部]
+    LABEL:[CentralIndia=, インド中部=]
     LONG: +82.5
     LAT:  N23.11
   END:CO:SPATIAL
 
   BEGIN:CO:SPATIAL
-    LABEL:[NorthIndia, インド北部]
+    LABEL:[NorthIndia=, インド北部]
     LONG: +82.5
     LAT:  +29.0
   END:CO:SPATIAL
@@ -171,7 +171,7 @@ BEGIN:B:M17N
   END:CO:SPATIAL
 
   BEGIN:CO:SPATIAL
-    LABEL:[Ujjain, ウッジャイン]
+    LABEL:[Ujjain, ウッジャイン=]
     LONG: +75.8
     LAT:  +23.2
   END:CO:SPATIAL

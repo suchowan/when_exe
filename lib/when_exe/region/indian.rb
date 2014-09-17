@@ -105,8 +105,8 @@ module When
     Indian = [When::BasicTypes::M17n, [
       "locale:[=en:, ja=ja:, alias]",
       "names:[Indian]",
-      [Spatial, "long:+82.5", "lat:N23.11", "label:[CentralIndia,       インド中部]"          ],
-      [Spatial, "long:+82.5", "lat:+29.0",  "label:[NorthIndia,         インド北部]"          ],
+      [Spatial, "long:+82.5", "lat:N23.11", "label:[CentralIndia=,      インド中部=]"         ],
+      [Spatial, "long:+82.5", "lat:+29.0",  "label:[NorthIndia=,        インド北部]"          ],
       [Spatial, "long:+78.0", "lat:+27.2",  "label:[Agra,               アーグラ]"            ],
       [Spatial, "long:+72.6", "lat:+23.0",  "label:[Ahmedabad,          アフマダーバード]"    ],
       [Spatial, "long:+74.6", "lat:+26.5",  "label:[Ajmer,              アジメール]"          ],
@@ -132,7 +132,7 @@ module When
       [Spatial, "long:+74.8", "lat:+34.1",  "label:[Srinagar,           シュリーナガル]"      ],
       [Spatial, "long:+77.0", "lat: +8.5",  "label:[Thiruvananthapuram, ティルヴァナンタプラム, Trivandrum]"],
       [Spatial, "long:+83.0", "lat:+25.3",  "label:[Varanasi,           ワーラーナシー]"      ],
-      [Spatial, "long:+75.8", "lat:+23.2",  "label:[Ujjain,             ウッジャイン]"        ]
+      [Spatial, "long:+75.8", "lat:+23.2",  "label:[Ujjain,             ウッジャイン=]"       ]
     ]]
   end
 
@@ -562,7 +562,7 @@ module When
     #
     # Indian national solar calendar
     #
-    IndianNationalSolar =  [TableBasedWithSunrise, {
+    IndianNationalSolar =  [SolarYearTableBasedWithSunrise, {
       'label'   => 'Indian::IndianNationalSolar',
       'origin_of_MSC' => -78,
       'diff_to_CE'    =>   0,
@@ -581,7 +581,7 @@ module When
     #
     # Nanakshahi Calendar
     #
-    Nanakshahi = [YearLengthTableBased, {
+    Nanakshahi = [SolarYearTableBased, {
       'label'   =>  'Indian::Nanakshahi',
       'origin_of_MSC' => -1468,
       'diff_to_CE'    =>     0,
@@ -600,7 +600,7 @@ module When
     #
     # Revised Bengali Calendar
     #
-    RevisedBengali = [YearLengthTableBased, {
+    RevisedBengali = [SolarYearTableBased, {
       'label'   =>   'Indian::RevisedBengali',
       'origin_of_MSC' => -593,
       'diff_to_CE'    =>    0,
@@ -989,7 +989,7 @@ module When
             "[Śobhana=,   ショーバナ=,       _IAST_=]", #  5
             "[Atigaṇḍa=,  アティガンダ=,     _IAST_=]", #  6
             "[Sukarma=,   スカルマ=,         _IAST_=]", #  7
-            "[Dhṛti,      ドゥリティ=,       _IAST_=]", #  8
+            "[Dhṛti=,     ドゥリティ=,       _IAST_=]", #  8
             "[Śūla=,      シューラ=,         _IAST_=]", #  9
             "[Gaṇḍa=,     ガンダ=,           _IAST_=]", # 10
             "[Vṛddhi=,    ヴリッディ=,       _IAST_=]", # 11

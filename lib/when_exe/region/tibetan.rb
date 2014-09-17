@@ -27,7 +27,7 @@ module When
 
       [self,
         "names:[Month, 月=ja:%%<月_(暦)>]",
-        "[Margasirsa, 觜=]",
+        "[Margasirsa=en:Agrahayana, 觜=]",
         "[Pausha,     鬼=]",
         "[Magha,      星=]",
         "[Phalguna,   翼=]",

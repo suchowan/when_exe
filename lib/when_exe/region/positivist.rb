@@ -82,7 +82,7 @@ module When
     #
     # Positivist calendar based on Gregorian calendar
     #
-    Positivist =  [YearLengthTableBased, {
+    Positivist =  [SolarYearTableBased, {
       'label'   => 'Positivist::Positivist',
       'indices' => [
           When.Index('PositivistWeekNotes::month::Month', {:unit =>13}),

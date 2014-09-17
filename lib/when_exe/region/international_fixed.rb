@@ -81,7 +81,7 @@ module When
     #
     # InternationalFixed calendar based on Gregorian calendar
     #
-    InternationalFixed =  [YearLengthTableBased, {
+    InternationalFixed =  [SolarYearTableBased, {
       'label'   => 'InternationalFixed::InternationalFixed',
       'indices' => [
           When.Index('InternationalFixedWeekNotes::month::Month', {:unit =>13}),
