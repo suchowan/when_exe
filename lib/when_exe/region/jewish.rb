@@ -122,5 +122,10 @@ module When
         return sdn
       end
     end
+
+    #
+    # Hebrew Calendar (alias of Jewish Calendar)
+    #
+    Hebrew = Jewish
   end
 end

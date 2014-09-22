@@ -382,7 +382,7 @@ class When::CalendarNote
       end
 
       def doyo
-        @doyo       ||= (s_calendar.doyo ? s_calendar.doyo * 360.0 / s_calendar.year_length : 0)
+        @doyo       ||= (s_calendar.doyo ? s_calendar.doyo * 360.0 / s_calendar.formula[0].year_length : 0)
       end
     end
 

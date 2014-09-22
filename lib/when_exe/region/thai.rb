@@ -9,7 +9,7 @@ module When
   class BasicTypes::M17n
 
     Thai = [self, [
-      "locale:[=en:, ja=ja:, alias]",
+      "locale:[=en:, ja=ja:, hi=hi:, alias]",
       "names:[Thai=]",
       "[ThaiLuniSolar=en:Thai_lunar_calendar, タイ太陰太陽暦=ja:%%<チャントラカティ>]",
 

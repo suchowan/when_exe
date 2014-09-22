@@ -9,14 +9,14 @@ module When
   class BasicTypes::M17n
 
     Tibetan = [self, [
-      "locale:[=en:, ja=ja:, alias]",
+      "locale:[=en:, ja=ja:, hi=hi:, alias]",
       "names:[Tibetan=]",
       "[Tibetan=en:Tibetan_calendar, 時輪暦=ja:%%<チベット暦>]",
 
       [self,
         "names:[IntercalaryMonth=en:Intercalation, 閏月]",
-        "[%s=,       %s宿月=  ]",
-        "[Adika %s=, 閏%s宿月=]"
+        "[%s=,        %s宿月=,   _IAST_=]",
+        "[adhika %s=, 閏%s宿月=, _IAST_=]"
       ],
 
       [self,
@@ -27,18 +27,18 @@ module When
 
       [self,
         "names:[Month, 月=ja:%%<月_(暦)>]",
-        "[Margasirsa=en:Agrahayana, 觜=]",
-        "[Pausha,     鬼=]",
-        "[Magha,      星=]",
-        "[Phalguna,   翼=]",
-        "[Chaitra,    角=]",
-        "[Vaisakha,   氐=]",
-        "[Jyeshta,    心=]",
-        "[Ashada,     箕=]",
-        "[Sravana,    牛=]",
-        "[Bhadrapada, 室=]",
-        "[Asvina,     婁=]",
-        "[Kartika,    昴=]"
+        "[Mārgaśīra=en:Margashirsha,   觜=, _IAST_=]",
+        "[Pauṣa=en:Pausha,             鬼=, _IAST_=]",
+        "[Māgha=en:Maagha,             星=, _IAST_=]",
+        "[Phālguna=en:Phalguna,        翼=, _IAST_=]",
+        "[Caitra=en:Chaitra,           角=, _IAST_=]",
+        "[Vaiśākha=en:Vaisakha,        氐=, _IAST_=]",
+        "[Jyaiṣṭha=en:Jyeshta,         心=, _IAST_=]",
+        "[Āṣāḍha=en:Aashaadha,         箕=, _IAST_=]",
+        "[Śrāvaṇa=en:Shraavana,        牛=, _IAST_=]",
+        "[Bhādrapada=en:Bhadrapada,    室=, _IAST_=]",
+        "[Āśvina=en:Ashwin,            婁=, _IAST_=]",
+        "[Kārttika=en:Kartika_(month), 昴=, _IAST_=]"
       ]
     ]]
   end

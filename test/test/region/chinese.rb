@@ -223,7 +223,7 @@ module MiniTest
       assert_raises(ArgumentError) {When.when?('崇徳3.1.30', {'period'=>/後金/})}
       assert_equal("正徳16(1521).03.14",          When.TemporalPosition("正徳", 16, 3, 14, {"period"=>/明/}).to_s)
       assert_equal("正徳16(1521).03.14",          When.when?('正徳16.3.14', {'period'=>/明/}).to_s)
-      assert_equal("明::崇禎11(1638).01.30",      When.when?('崇禎11.1.30', {'period'=>/明/}).to_s)
+      assert_equal("中国::明::崇禎11(1638).01.30",When.when?('崇禎11.1.30', {'period'=>/明/}).to_s)
     end
   end
 end

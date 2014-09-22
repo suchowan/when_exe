@@ -71,17 +71,17 @@ module When
 
       [self,
         "names:[月=ja:%%<月_(暦)>, *Month]",
-        "[木公月, Month 1= ]",
-        "[木母月, Month 2= ]",
-        "[火公月, Month 3= ]",
-        "[火母月, Month 4= ]",
-        "[土公月, Month 5= ]",
-        "[土母月, Month 6= ]",
-        "[銅公月, Month 7= ]",
-        "[銅母月, Month 8= ]",
-        "[水公月, Month 9= ]",
-        "[水母月, Month 10=]",
-        "[過年日, end of year days=]"
+        "[木公月=, Month 1= ]",
+        "[木母月=, Month 2= ]",
+        "[火公月=, Month 3= ]",
+        "[火母月=, Month 4= ]",
+        "[土公月=, Month 5= ]",
+        "[土母月=, Month 6= ]",
+        "[銅公月=, Month 7= ]",
+        "[銅母月=, Month 8= ]",
+        "[水公月=, Month 9= ]",
+        "[水母月=, Month 10=]",
+        "[過年日=, end of year days=]"
       ]
     ]]
   end
