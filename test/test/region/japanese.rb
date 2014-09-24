@@ -23,7 +23,7 @@ module MiniTest
          ["天平感宝01(0749).04.14"],
          ["天平勝宝01(0749).07.02"],
          ["天平勝宝01(0749).07.02"]]
-      ['天平勝宝01.04.13', '天平勝宝01.04.14', '天平勝宝01.07.02'].each do |string|
+         ['天平勝宝01.04.13', '天平勝宝01.04.14', '天平勝宝01.07.02'].each do |string|
         assert_equal(sample.shift, ((When.when?(string) ^ eras).
                                      delete_if {|d| !d.leaf?}).map {|d| d.to_s})
         assert_equal(sample.shift, ((When.when?(string, {:lower=>true}) ^ eras).
@@ -224,7 +224,7 @@ module MiniTest
       assert_raises(RangeError) {When.TemporalPosition("正慶", 2, 11)}
       assert_equal("延元02(1337).01.08",          When.when?("建武4.1.8").to_s)
       assert_equal("延元02(1337).01.08",          When.TemporalPosition("建武", 4, 1, 8, {:invalid=>:non}).to_s)
-      assert_equal("神武03(-657).01.30",          When.when?('神武3.1.30').to_s)    # , {'period'=>/清/})
+      assert_equal("<神武>03(-657).01.30",        When.when?('神武3.1.30').to_s)    # , {'period'=>/清/})
       assert_equal("日本::皇紀2600(1940).01.30",  When.when?('皇紀2600.1.30').to_s) # , {'period'=>/清/})
       assert_equal("応永11(1404).12.10",          When.when?('嘉慶18.12.10').to_s)
       assert_equal("明治01(1868).09.08",          When.when?('明治1(1868).09.08').to_s)

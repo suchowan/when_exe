@@ -703,7 +703,7 @@ module When
             prefix = namespace[$1] || Locale.send(:_namespaces)[$1]
             ref.sub!(/\A.+:/, prefix) if prefix
           end
-          ref += '%%<' + name + '>' if ref =~ /[\/#:]\z/
+          ref += name =~ /\A<.+>\z/ ? '%%' + name : '%%<' + name + '>' if ref =~ /[\/#:]\z/
           unless ref == ''
             @link[locale] = _encode(ref)
           # When.logger.info("%s[%s]->%s" % [@names[locale], locale, @link[locale]]) if When.logger

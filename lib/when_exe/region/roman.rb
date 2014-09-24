@@ -239,7 +239,7 @@ module When
         ],
 
         [When::Coordinates::Residue,
-          "label:[Indiction, インディクション]", "divisor:15", "year:-2", "format:[%s=]",
+          "label:[Indiction, インディクティオ]", "divisor:15", "year:-2", "format:[%s=en:Indiction, %s=ja:インディクティオ]",
           [When::Coordinates::Residue, "label:[I=   ]", "remainder:  0"],
           [When::Coordinates::Residue, "label:[II=  ]", "remainder:  1"],
           [When::Coordinates::Residue, "label:[III= ]", "remainder:  2"],

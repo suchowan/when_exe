@@ -1355,154 +1355,6 @@ module When::TM
         end
     end
 
-    protected
-
-    # @private
-    def _normalize_leaf_era
-      # r_date and others
-      case @reference_date
-      when String  ; format, r_date, r_era = When::BasicTypes::DateTime._to_array(@reference_date)
-      when Array   ; r_era, *r_date        = @reference_date
-      when CalDate ; r_era,  r_date        = @reference_date.calendar_era_name, @reference_date.cal_date
-      when nil     ;
-      else         ; raise TypeError, "ReferenceDate is invalid type"
-      end
-      r_era, r_year = r_era
-
-      epochs = @epoch.dup
-      epochs.shift if (epochs[0].indeterminated_position == When::TimeValue::Min)
-      # j_date and calculated reference_date !((julian_reference == nil) && (reference_date != nil))
-      if @julian_reference
-        jdn = @julian_reference.to_i
-        epoch = epochs[0]
-        epochs.each do |e|
-          if (e.indeterminated_position == When::TimeValue::Max)
-            epoch = e
-            break
-          elsif (jdn < e.to_i)
-            break
-          else
-            epoch = e
-          end
-        end
-        @reference_date = epoch.frame.jul_trans(When.when?(jdn), {:frame=>epoch.frame})
-        j_date = @reference_date.cal_date
-      elsif (@reference_date == nil)
-        @reference_date = epochs[0].dup
-        j_date = @reference_date.cal_date
-      end
-
-      # epoch_year
-      @epoch_year ||= r_year
-      @epoch_year = @epoch_year.to_i if (@epoch_year)
-      raise ArgumentError, "EpochYear mismatch" unless (@epoch_year == r_year)
-      unless @epoch_year
-        raise ArgumentError, "ReferenceDate is absent" unless r_date
-        @epoch_year = epochs[0].cal_date[0] * 1 - r_date[0] * 1
-      end
-
-      # j_date and calculated reference_date ((julian_reference == nil) && (reference_date != nil))
-      unless j_date
-        j_date = [+r_date[0]+@epoch_year, *r_date[1..-1]]
-        epochs.each_index do |i|
-          e = epochs[i]
-          d = CalDate.new(j_date,{:frame=>e.frame})
-          if (e.indeterminated_position == When::TimeValue::Max)
-            @reference_date = d
-            break
-          elsif (d.to_i < e.to_i)
-            @reference_date = d if (i==0)
-            break
-          else
-            @reference_date = d
-          end
-        end
-      end
-
-      # julian_reference and reference_date
-      @julian_reference = JulianDate.universal_time(@reference_date.universal_time)
-      @reference_date.cal_date[0] -= @epoch_year
-      @reference_date.send(:calendar_era_name=, [(r_era ? r_era : @label), @epoch_year])
-      if (r_date)
-        raise ArgumentError, "JulianReference and ReferenceDate are mismatch" unless (@epoch_year == +j_date[0]-(+r_date[0]))
-        raise ArgumentError, "JulianReference and ReferenceDate are mismatch" unless (j_date[1..-1] == r_date[1..-1])
-        #raise ArgumentError, "JulianReference and ReferenceDate are mismatch" unless (j_date == r_date)
-        if    (r_date[1] == nil)
-          @reference_date.precision = When::YEAR
-        elsif (r_date[2] == nil)
-          @reference_date.precision = When::MONTH
-        end
-      end
-    end
-
-    # @private
-    def _register_calendar_era
-      return unless @label.kind_of?(When::BasicTypes::M17n)
-
-      # dating_system
-      @dating_system = (@epoch.map {|e| e.frame}).compact.uniq
-
-      unless @child && @child.length>0
-        ancestors     = hierarchy.inject(['']) {|list,era|
-          list << list[-1] + '::' + era.label.to_s
-          list
-        }
-        if @epoch.length == 1
-          epoch[0].frame.synchronize {
-            range = When::Parts::GeometricComplex.new([[epoch[0],true]])
-            ancestors.each do |ancestor|
-              epoch[0].frame.domain[ancestor]   |= range
-            end
-          } if epoch[0].frame
-        elsif reverse?
-          epoch[1].frame.synchronize {
-            range = When::Parts::GeometricComplex.new([[epoch[1],true]], true)
-            ancestors.each do |ancestor|
-              epoch[1].frame.domain[ancestor]   |= range
-            end
-          } if epoch[1].frame
-        else
-          (epoch.length-1).times do |i|
-            epoch[i].frame.synchronize {
-              range = When::Parts::GeometricComplex.new([[epoch[i],true], [epoch[i+1],false]])
-              ancestors.each do |ancestor|
-                epoch[i].frame.domain[ancestor] |= range
-              end
-            } if epoch[i].frame
-          end
-        end
-      end
-
-      @dating_system.each do |f|
-        f.synchronize do
-          f.reference_frame << self
-          f.reference_frame.uniq!
-          f.reference_frame.sort!
-          first = f.domain[''].first(When::MinusInfinity)
-          last  = f.domain[''].last(When::PlusInfinity)
-          f.domain_of_validity = When::EX::Extent.new(
-                                   When::TM::Period.new(
-                                     When::TM::Instant.new(first),
-                                     When::TM::Instant.new(last))) if first && first <= last
-        end
-      end
-
-      # インデクス登録
-      ((@area||{}).values + [nil]).each do |a|
-        self.class[a] ||= {}
-        ((@period||{}).values + [nil]).each do |p|
-          self.class[a][p] ||= {}
-          (@label.values + [nil]).each do |k|
-            self.class[a][p][k] ||= {}
-            [@epoch_year, nil].each do |e|
-              self.class[a][p][k][e] ||= []
-              self.class[a][p][k][e] << self
-            end
-          end
-        end
-      end
-    end
-
     private
 
     # オブジェクトの正規化
@@ -1521,7 +1373,7 @@ module When::TM
         _non_leaf_era(args, term_options)
         _register_calendar_era unless _pool['..'].kind_of?(CalendarEra)
         @child.each do |era|
-          era._register_calendar_era
+          era.send(:_register_calendar_era)
         end
       else
         _set_leaf_era(args, term_options)
@@ -1622,11 +1474,171 @@ module When::TM
         if last_era.epoch[0].indeterminated_position == When::TimeValue::Min
           last_era.epoch[0].frame = @epoch[0].frame
           last_era.epoch[1]       = @epoch[0]
-          last_era._normalize_leaf_era
+          last_era.send(:_normalize_leaf_era)
         elsif last_era.epoch[-1].indeterminated_position == When::TimeValue::Max
           last_era.epoch[-1] = @epoch[0]
         end
       end
+    end
+
+    # 先端の暦年代の正規化
+    def _normalize_leaf_era
+      # r_date and others
+      case @reference_date
+      when String  ; format, r_date, r_era = When::BasicTypes::DateTime._to_array(@reference_date)
+      when Array   ; r_era, *r_date        = @reference_date
+      when CalDate ; r_era,  r_date        = @reference_date.calendar_era_name, @reference_date.cal_date
+      when nil     ;
+      else         ; raise TypeError, "ReferenceDate is invalid type"
+      end
+      r_era, r_year = r_era
+
+      epochs = @epoch.dup
+      epochs.shift if (epochs[0].indeterminated_position == When::TimeValue::Min)
+      # j_date and calculated reference_date !((julian_reference == nil) && (reference_date != nil))
+      if @julian_reference
+        jdn = @julian_reference.to_i
+        epoch = epochs[0]
+        epochs.each do |e|
+          if (e.indeterminated_position == When::TimeValue::Max)
+            epoch = e
+            break
+          elsif (jdn < e.to_i)
+            break
+          else
+            epoch = e
+          end
+        end
+        @reference_date = epoch.frame.jul_trans(When.when?(jdn), {:frame=>epoch.frame})
+        j_date = @reference_date.cal_date
+      elsif (@reference_date == nil)
+        @reference_date = epochs[0].dup
+        j_date = @reference_date.cal_date
+      end
+
+      # epoch_year
+      @epoch_year ||= r_year
+      @epoch_year = @epoch_year.to_i if (@epoch_year)
+      raise ArgumentError, "EpochYear mismatch" unless (@epoch_year == r_year)
+      unless @epoch_year
+        raise ArgumentError, "ReferenceDate is absent" unless r_date
+        @epoch_year = epochs[0].cal_date[0] * 1 - r_date[0] * 1
+      end
+
+      # j_date and calculated reference_date ((julian_reference == nil) && (reference_date != nil))
+      unless j_date
+        j_date = [+r_date[0]+@epoch_year, *r_date[1..-1]]
+        epochs.each_index do |i|
+          e = epochs[i]
+          d = CalDate.new(j_date,{:frame=>e.frame})
+          if (e.indeterminated_position == When::TimeValue::Max)
+            @reference_date = d
+            break
+          elsif (d.to_i < e.to_i)
+            @reference_date = d if (i==0)
+            break
+          else
+            @reference_date = d
+          end
+        end
+      end
+
+      # julian_reference and reference_date
+      @julian_reference = JulianDate.universal_time(@reference_date.universal_time)
+      @reference_date.cal_date[0] -= @epoch_year
+      @reference_date.send(:calendar_era_name=, [(r_era ? r_era : @label), @epoch_year])
+      if (r_date)
+        raise ArgumentError, "JulianReference and ReferenceDate are mismatch" unless (@epoch_year == +j_date[0]-(+r_date[0]))
+        raise ArgumentError, "JulianReference and ReferenceDate are mismatch" unless (j_date[1..-1] == r_date[1..-1])
+        #raise ArgumentError, "JulianReference and ReferenceDate are mismatch" unless (j_date == r_date)
+        if    (r_date[1] == nil)
+          @reference_date.precision = When::YEAR
+        elsif (r_date[2] == nil)
+          @reference_date.precision = When::MONTH
+        end
+      end
+    end
+
+    # 暦年代の検索表への登録
+    def _register_calendar_era
+      return unless @label.kind_of?(When::BasicTypes::M17n)
+
+      # dating_system
+      @dating_system = (@epoch.map {|e| e.frame}).compact.uniq
+
+      unless @child && @child.length>0
+        ancestors     = hierarchy.inject(['']) {|list,era|
+          list << list[-1] + '::' + era.label.to_s
+          list
+        }
+        if @epoch.length == 1
+          epoch[0].frame.synchronize {
+            range = When::Parts::GeometricComplex.new([[epoch[0],true]])
+            ancestors.each do |ancestor|
+              epoch[0].frame.domain[ancestor]   |= range
+            end
+          } if epoch[0].frame
+        elsif reverse?
+          epoch[1].frame.synchronize {
+            range = When::Parts::GeometricComplex.new([[epoch[1],true]], true)
+            ancestors.each do |ancestor|
+              epoch[1].frame.domain[ancestor]   |= range
+            end
+          } if epoch[1].frame
+        else
+          (epoch.length-1).times do |i|
+            epoch[i].frame.synchronize {
+              range = When::Parts::GeometricComplex.new([[epoch[i],true], [epoch[i+1],false]])
+              ancestors.each do |ancestor|
+                epoch[i].frame.domain[ancestor] |= range
+              end
+            } if epoch[i].frame
+          end
+        end
+      end
+
+      @dating_system.each do |f|
+        f.synchronize do
+          f.reference_frame << self
+          f.reference_frame.uniq!
+          f.reference_frame.sort!
+          first = f.domain[''].first(When::MinusInfinity)
+          last  = f.domain[''].last(When::PlusInfinity)
+          f.domain_of_validity = When::EX::Extent.new(
+                                   When::TM::Period.new(
+                                     When::TM::Instant.new(first),
+                                     When::TM::Instant.new(last))) if first && first <= last
+        end
+      end
+
+      # インデクス登録
+      (_expand_sharp((@area||{}).values) + [nil]).each do |a|
+        self.class[a] ||= {}
+        (_expand_sharp((@period||{}).values) + [nil]).each do |p|
+          self.class[a][p] ||= {}
+          (_expand_sharp(@label.values) + [nil]).each do |k|
+            self.class[a][p][k] ||= {}
+            [@epoch_year, nil].each do |e|
+              self.class[a][p][k][e] ||= []
+              self.class[a][p][k][e] << self
+            end
+          end
+        end
+      end
+    end
+
+    # '#' つきの年号を '#'つきと'#'なしに展開する
+    # また <...> や (..) の '<','(' と '>',')' を取り去ったものも登録する
+    def _expand_sharp(list)
+      list.map {|name|
+        case name
+        when /\A[\(<](.+)[\)>]\z/, /\A(.+)\?\z/
+          [name, $1]
+        else
+          parts = name.split('#', 2)
+          parts.size < 2 ? name : [name, parts.last]
+        end
+      }.flatten
     end
 
     # 配下のオブジェクトの前後関係の設定

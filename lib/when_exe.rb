@@ -433,6 +433,8 @@ module When
       autoload :Rouran,                'when_exe/region/east_asian'
       autoload :Gaochang,              'when_exe/region/east_asian'
       autoload :Yunnan,                'when_exe/region/east_asian'
+      autoload :WesternXia,            'when_exe/region/east_asian'
+      autoload :KaraKhitan,            'when_exe/region/east_asian'
     # autoload :Tibetan,               'when_exe/region/tibetan'
       autoload :BalineseLuniSolar,     'when_exe/region/balinese'
       autoload :JavaneseLunar,         'when_exe/region/javanese'
@@ -455,7 +457,8 @@ module When
                        'Chinese',    'Ryukyu',  'Vietnamese', 'Korean',
                        'JapaneseSolar', 'JapaneseLuniSolar',
                        'ChineseSolar',  'ChineseLuniSolar',
-                       'Manchurian', 'Rouran',  'Gaochang',   'Yunnan', # 'Tibetan',
+                       'Manchurian', 'Rouran', 'Gaochang',
+                       'Yunnan', 'WesternXia', 'KaraKhitan', # 'Tibetan',
                        'Pope' ]
 
       # Defualt events for Epochs and Eras

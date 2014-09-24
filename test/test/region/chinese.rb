@@ -143,7 +143,7 @@ module MiniTest
       assert_raises(ArgumentError) { When.when?('天保3(0563).10.01') }
 
       date = When.when?('始皇帝26*10.01')
-      assert_equal([1640641, 1640641, "始皇帝26(-220)*10.01", "十月"],
+      assert_equal([1640641, 1640641, "<始皇帝>26(-220)*10.01", "十月"],
                    [date.to_i, date.floor(When::YEAR).to_i, date.to_s, date.name('Month')])
 
       cc_221 = When.Resource('_c:Chinese_221')
