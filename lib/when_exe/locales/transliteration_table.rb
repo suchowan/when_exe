@@ -36,7 +36,7 @@ module When
       alias :_method_missing :method_missing
 
       #
-      # •ÏŠ·ƒƒ\ƒbƒh‚Ì“o˜^
+      # Registlation of conversion method
       #
       def method_missing(name, *args, &block)
         table_name = name.to_s.upcase
