@@ -50,7 +50,7 @@ module When
 
   class CalendarNote
     Javanese = [['Javanese::Windu'], ['_m:Calendar::Month'],
-                     ['Javanese::Pasaran', 'Javanese::Paringkelan', 'Javanese::Week', 'Javanese::Wuku']]
+                ['Javanese::Pasaran', 'Javanese::Paringkelan', 'Javanese::Week', 'Javanese::Wuku']]
   end
 
   module Coordinates

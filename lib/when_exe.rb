@@ -279,6 +279,8 @@ module When
     autoload :ChineseSolar,            'when_exe/region/chinese'
     autoload :ChineseLuniSolar,        'when_exe/region/chinese'
     autoload :Yi,                      'when_exe/region/chinese'
+    autoload :TenrekiA,                'when_exe/region/chinese'
+    autoload :TenrekiB,                'when_exe/region/chinese'
     autoload :Korean,                  'when_exe/region/korean'
     autoload :Tibetan,                 'when_exe/region/tibetan'
     autoload :Thai,                    'when_exe/region/thai'

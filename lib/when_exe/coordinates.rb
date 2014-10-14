@@ -112,16 +112,18 @@ module When::Coordinates
         return day if day.kind_of?(self)
 
         day ||= 0
-        week  = When.Resource('_co:Common::Week').child
+        week  = When.Resource('_co:Common::Week')
+        dow   = week.child
         case day
-        when Numeric ; return week[day]
-        when String  ; day = When::EncodingConversion.to_internal_encoding(day)
-        else         ; return nil
+        when Numeric    ; return dow[day]
+        when /\AWeek\z/ ; return week
+        when String     ; day = When::EncodingConversion.to_internal_encoding(day)
+        else            ; return nil
         end
 
         day, shift = day.split(':', 2)
         residue = day.split('&').inject(nil) {|res,d|
-          r = _day_of_week(d.strip, week)
+          r = _day_of_week(d.strip, dow)
           return nil unless r
           res ? res & r : r
         }
@@ -132,11 +134,11 @@ module When::Coordinates
       end
       alias :to_residue :day_of_week
 
-      def _day_of_week(day, week)
+      def _day_of_week(day, dow)
         match = day[/\A...|^.{1,2}\z/]
         if match
-          week.size.times do |i|
-            return week[i] if week[i].label.=~(/\A#{match}/i)
+          dow.size.times do |i|
+            return dow[i] if dow[i].label.=~(/\A#{match}/i)
           end
         end
 
