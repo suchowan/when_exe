@@ -140,7 +140,7 @@ module When
 
   class TM::CalendarEra
 
-    # シャカ紀元
+    # サカ紀元
      JavaneseLunar = [self, [
       "locale:[=en:, ja=ja:, alias]",
       "period:[JavaneseLunar=, ジャワ・イスラーム暦=]",

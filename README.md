@@ -34,6 +34,8 @@ Available calendars and clocks are defined as subclasses of TM_Calendar and TM_C
 
 Available calendar eras are defined using definition tables in [CalendarEra namespace](http://rubydoc.info/gems/when_exe/When/TM/CalendarEra).
 
+Whole TemporalReferenceSystem resources are listed in the [Resource Dictionary](http://www2u.biglobe.ne.jp/~suchowan/ResourceDictionary.html).
+
 License
 -------
 
