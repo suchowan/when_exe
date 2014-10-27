@@ -1940,6 +1940,11 @@ module When::Ephemeris
         @solar_degree    = @year_length / 360
         extend SolarMethod
       end
+
+      # 通法
+      @denominator = @year_length.denominator if @year_length.kind_of?(Rational)
+      @denominator = [@denominator||0, @lunation_length.denominator].max if @lunation_length.kind_of?(Rational)
+
       super
     end
   end

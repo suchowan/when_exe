@@ -720,10 +720,6 @@ module When
       def _normalize(args=[], options={})
         super
 
-        # 通法
-        @denominator = @year_length.denominator if @year_length.kind_of?(Rational)
-        @denominator = [@denominator||0, @lunation_length.denominator].max if @lunation_length.kind_of?(Rational)
-
         if @formula == '1L'
 
           # 月の位相の計算
