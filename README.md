@@ -169,7 +169,7 @@ Example Usage
     p edt                                        #=> 1997-04-06T03:30:00-04:00
     
     p When.when?('TZID=America/New_York:1997-10-26T01:30') #=> 1997-10-26T01:30-04:00
-    p When.when?('TZID=America/New_York:1997-10-26T01=30') #=> 1997-10-26T01:30-05:00, '=' indicates "leep hour"
+    p When.when?('TZID=America/New_York:1997-10-26T01=30') #=> 1997-10-26T01:30-05:00, '=' indicates "leap hour"
     p When.when?('TZID=America/New_York:1997-10-26T02:30') #=> 1997-10-26T02:30-05:00
     p When.when?('TZID=America/New_York:1997-10-26T03:30') #=> 1997-10-26T03:30-05:00
     
