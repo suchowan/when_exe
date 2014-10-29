@@ -451,17 +451,17 @@ module When
       autoload :LongCount,             'when_exe/region/mayan'
 
       # Defualt search path for Epochs and Eras
-      DefaultEpochs = ['Common',     'ModernJapanese',
-                       'Hijra',      'Jewish',    'Iranian',
-                       'Roman',      'Byzantine', 'AncientOrient', 'LongCount',
+      DefaultEpochs = ['Common',   'ModernJapanese',
+                       'Hijra',    'Jewish',    'Iranian',
+                       'Roman',    'Byzantine', 'AncientOrient', 'LongCount',
                        'BalineseLuniSolar',  'JavaneseLunar',
-                       'Japanese',   'JapanesePrimeMinister', 'NihonKoki', 'NihonShoki',
-                       'Chinese',    'Ryukyu',  'Vietnamese', 'Korean',
-                       'JapaneseSolar', 'JapaneseLuniSolar',
-                       'ChineseSolar',  'ChineseLuniSolar',
+                       'Japanese', 'NihonKoki', 'NihonShoki',
+                       'Chinese',  'Ryukyu',  'Vietnamese', 'Korean',
+                       'JapaneseLuniSolar', 'JapaneseSolar',
+                       'ChineseLuniSolar',  'ChineseSolar',
                        'Manchurian', 'Rouran', 'Gaochang',
-                       'Yunnan', 'WesternXia', 'KaraKhitan', # 'Tibetan',
-                       'Pope' ]
+                       'Yunnan',   'WesternXia', 'KaraKhitan', # 'Tibetan',
+                       'Pope',     'JapanesePrimeMinister']
 
       # Defualt events for Epochs and Eras
       DefaultEvents = Hash[*([['@A',  'Accession'       ],

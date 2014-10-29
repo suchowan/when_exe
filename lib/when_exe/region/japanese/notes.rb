@@ -473,14 +473,27 @@ class When::CalendarNote
     # @param [When::TM::TemporalPosition] date 暦注を計算する日時
     #   (date が When::TM::TemporalPosition でない場合、When::TM::TemporalPosition に変換して使用する)
     # @param [Hash] options
-    #   :indices, :notes およびその他のキー => {When::CalendarNote#notes} を参照
+    # @option options [Hash] :conditions 日本暦注固有の計算条件
+    #   :n27 通常月の廿七宿配当 *0:本月本説, 1:本月異説, 2:閏月本説, 3:閏月異説, 4:閏月本説(元)
+    #   :i27 閏月の廿七宿配当   同上
+    #   :sai *false,'0':日本暦日総覧説 , true:wagoyomi.net説
+    #   :shoyo *false:出力せず, true:暦定数が有理数の場合に出力
+    #   :solar_eclipse -1:計算を行わない, *0:すべて出力, 1:夜日食は出力しない, 3:夜日食に加え南半球で主に見える日食も出力しない
+    #   :lunar_eclipse -1:計算を行わない, *0:すべて出力, 1:昼月食は出力しない, 3:昼月食に加え半影月食も出力しない
+    #   :kana *false:具注暦用の計算, true:江戸仮名暦用の計算
+    #   (* がデフォルト)
+    #
+    # @note :indices, :notes およびその他のキー => {When::CalendarNote#notes} を参照
     #
     # @return [Hash]               :notes が String の場合
     # @return [Array<Hash>]        上記に該当せず、:indices が Integer の場合
     # @return [Array<Array<Hash>>] 上記のいずれにも該当しない場合
     # @note return 値の [Hash] の要素は下記の通り
+    #
     #   :note     => 暦注要素 (When::CalendarTypes::Japanese::Note)
+    #
     #   :value    => 暦注の値 (String or When::BasicTypes::M17n または、その Array)
+    #
     #   :position => 具注暦でのその暦注の配置場所(String)
     #
     def notes(date, options={})

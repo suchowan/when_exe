@@ -1627,7 +1627,7 @@ module When::Coordinates
     HashProperty =
       [[:origin_of_MSC, 0], [:origin_of_LSC, 0], [:index_of_MSC, 0], [:epoch_in_CE, 0], 
        :unit, :base, :pair, :note,
-       :location, :time_basis, :border, :formula]
+       :location, :time_basis, :border, :formula, :domain]
 
     # 年/日の原点(origin of most significant coordinate)
     #

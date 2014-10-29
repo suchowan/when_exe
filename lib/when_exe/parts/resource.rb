@@ -1017,6 +1017,12 @@ module When::Parts
         end
       end
 
+      # 代表ラベルの設定
+      unless @label
+        raise ArgumentError, "label attribute not found: #{options['.']}" unless label_candidates
+        @label = label_candidates
+      end
+
       # Array の処理(子オブジェクトの生成)
       leaves.each do |content|
         next unless content.kind_of?(Array)
@@ -1037,12 +1043,8 @@ module When::Parts
         end
       end
 
-      # 代表ラベルの設定
+      # options の更新
       options.update(query)
-      unless @label
-        raise ArgumentError, "label attribute not found: #{options['.']}" unless label_candidates
-        @label = label_candidates
-      end
     end
 
     # ALTIDを持つ ContentLine の解析
