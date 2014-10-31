@@ -28,7 +28,7 @@ Preferences are changeable on [hosi.org/cookies](http://hosi.org/cookies).
 Documentation
 -------------
 
-API documentation for when_exe is available on [RubyDoc.info](http://rubydoc.info/gems/when_exe).
+API documentation for when_exe is available on [RubyDoc.info](http://rubydoc.info/gems/when_exe) or [here](http://www2u.biglobe.ne.jp/~suchowan/when_exe/frames.html).
 
 Available calendars and clocks are defined as subclasses of TM_Calendar and TM_Clock or using definition tables in [CalendarTypes namespace](http://rubydoc.info/gems/when_exe/When/CalendarTypes).
 
