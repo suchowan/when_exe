@@ -154,12 +154,12 @@ module When
   #
   # when_exe 用 International Resource Identifier
   #
-  SourceURI = "http://hosi.org/When/"
+  SourceURI = ENV["WHEN_EXE_BASE_URI"] || "http://hosi.org/When/"
 
   #
-  # ライブラリのあるディレクトリ
+  # ルートディレクトリ(デフォルトでは lib の親ディレクトリ
   #
-  RootDir   = File.dirname(__FILE__).sub(/\/[^\/]*\z/,'')
+  RootDir   = ENV["WHEN_EXE_ROOT_DIR"] || File.dirname(__FILE__).sub(/\/[^\/]*\z/,'')
 
   require 'when_exe/version'
   require 'when_exe/locales/locale'
