@@ -31,9 +31,6 @@ autoload :FileUtils, 'fileutils'
 autoload :REXML,     'rexml/document'
 autoload :Mutex,     'thread' unless Object.const_defined?(:Mutex)
 
-$:.unshift(File.dirname(__FILE__)) unless
-  $:.include?(File.dirname(__FILE__)) || $:.include?(File.expand_path(File.dirname(__FILE__)))
-
 #
 # A multicultural and multilingualized calendar library based on ISO 8601, ISO 19108 and RFC 5545
 #
