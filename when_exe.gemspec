@@ -11,12 +11,13 @@ Gem::Specification.new do |s|
   s.summary     = %q{A multicultural and multilingualized calendar library based on ISO 8601, ISO 19108, RFC 5545(iCalendar) and RFC6350}
   s.description = %q{A multicultural and multilingualized calendar library based on ISO 8601, ISO 19108, RFC 5545(iCalendar) and RFC6350. This version is a beta version and in the evaluation stage. So, its APIs may be changed in future. Please refer to http://suchowan.at.webry.info/theme/a543700674.html for the recent history (Sorry only in Japanese).}
 
-  s.rubyforge_project = "when_exe"
+# s.rubyforge_project = "when_exe"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
+  s.required_ruby_version = '>= 1.8.4'
 
   # specify any dependencies here; for example:
   # s.add_development_dependency "rspec"
