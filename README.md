@@ -18,7 +18,7 @@ The when_exe gem can be installed by running:
 Web Server
 ----------
 
-Web server for when_exe demonstration is available on [hosi.org](http://hosi.org).
+Web server for when_exe demonstration is available on [hosi.org](http://hosi.org) ( or mirror site [hosi-org.herokuapp.com](http://hosi-org.herokuapp.com) ).
 
 You can see examples of [When.exe Standard Representation](http://www.asahi-net.or.jp/~dd6t-sg/when_rdoc/when_en.html#label-8) and Reference System IRI at the top-left corner of Date frame.
 
@@ -52,6 +52,7 @@ Example Usage
 -------------
 
     require 'when_exe'
+    # include When
     
     # When::TM::CalDate ---------------------------
     
