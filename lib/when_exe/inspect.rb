@@ -678,6 +678,20 @@ module When
         hash
       end
 
+      # 指定の書式による多言語対応文字列化 - pattern で指定した書式で多言語対応文字列化する
+      #
+      # @param [When::BasicTypes::M17n] pattern 書式
+      # @param [String, Array<String>] locale 文字列化を行う locale の指定(デフォルト : オブジェクト生成時に保持している locale すべて)
+      #
+      # @return [When::BasicTypes::M17n]
+      #
+      def strftime(pattern=@frame.strftime, locale=nil)
+        pattern = m17n([pattern]*self.keys.length, nil, nil, {:locale=>self.keys}) if pattern.instance_of?(String)
+        pattern._printf([], locale) do |k, *t|
+          _strftime(k, pattern, [''])
+        end
+      end
+
       # 多言語対応文字列化 - When.exe Standard Representation により多言語対応文字列化する
       #
       # @overload to_m17n()
@@ -701,6 +715,28 @@ module When
         to_m17n(*args).to_s
       end
 
+      # URI要素化 - URI表現の要素として用いる形式に変換
+      #
+      # @overload to_uri()
+      #
+      # @return [String]
+      #
+      def to_uri(*args)
+        _to_uri(to_s(*args))
+      end
+
+      private
+
+      # URI要素化 - URI表現用のEscapeと frame の追加
+      #
+      # @param [String] date 日付の表現
+      #
+      # @return [String]
+      #
+      def _to_uri(date)
+        date.gsub(/\./, '-').gsub(/%/, '@').gsub(/#/, '%23') + caret_frame
+      end
+
       # caret 付きの frame 名
       #
       # @return [String]
@@ -713,20 +749,6 @@ module When
         return '' if @calendar_era_name || path == prefix + 'Gregorian'
         path   = path[prefix.length..-1] if path.index(prefix) == 0
         '^^' + path
-      end
-
-      # 指定の書式による多言語対応文字列化 - pattern で指定した書式で多言語対応文字列化する
-      #
-      # @param [When::BasicTypes::M17n] pattern 書式
-      # @param [String, Array<String>] locale 文字列化を行う locale の指定(デフォルト : オブジェクト生成時に保持している locale すべて)
-      #
-      # @return [When::BasicTypes::M17n]
-      #
-      def strftime(pattern=@frame.strftime, locale=nil)
-        pattern = m17n([pattern]*self.keys.length, nil, nil, {:locale=>self.keys}) if pattern.instance_of?(String)
-        pattern._printf([], locale) do |k, *t|
-          _strftime(k, pattern, [''])
-        end
       end
 
       # strftime で扱う項の値を取得する
@@ -776,8 +798,6 @@ module When
         else     ; designator
         end
       end
-
-      private
 
       # 指定の書式による多言語対応文字列化
       #
