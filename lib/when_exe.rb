@@ -514,8 +514,8 @@ module When
     when TM::TemporalPosition, Parts::GeometricComplex ; specification
     when TM::Position ; specification.any_other
     when Array        ; begin options = TM::TemporalPosition._options(options) ; specification.map {|e| when?(e, options)} end
-    when /\Atoday\z/i ; today(options)
-    when /\Anow\z/i   ; now(options)
+    when /\Atoday(\^{1,2}(.+))?\z/i ; today($2 ? {:frame=>$2}.update(options) : options)
+    when /\Anow(\^{1,2}(.+))?\z/i   ; now(  $2 ? {:frame=>$2}.update(options) : options)
     when /(JDN|MJD|SDN|CEP)(\z|\^)/i; TM::JulianDate.parse(specification, options)
     when /[\n\r]+/    ; when?(specification.split(/[\n\r]+/), options)
     when String       ; TM::TemporalPosition._instance(EncodingConversion.to_internal_encoding(specification), options)
