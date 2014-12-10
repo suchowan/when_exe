@@ -313,8 +313,12 @@ module When::TM
         iso8601form = When::Parts::Resource::ContentLine.extract_rfc5545_Property(specification, options)
 
         # suffix - Frame specification
-        iso8601form, frame, *rest = iso8601form.split(/\^{1,2}/)
-        return rest.inject(_instance(iso8601form + '^' + frame, options)) {|p,c| When.Resource(c, '_c:').jul_trans(p)} unless rest.empty?
+        if iso8601form =~ /\A(.*[^=\d])\(([-+*&%@!>=<?\d]+?)\)\z/
+          frame, iso8601form = $~[1..2]
+        else
+          iso8601form, frame, *rest = iso8601form.split(/\^{1,2}/)
+          return rest.inject(_instance(iso8601form + '^' + frame, options)) {|p,c| When.Resource(c, '_c:').jul_trans(p)} unless rest.empty?
+        end
 
         # add frame to options
         options = options.merge({:frame=>When.Resource(frame, '_c:')}) if frame

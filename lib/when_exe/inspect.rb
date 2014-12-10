@@ -1037,6 +1037,34 @@ module When
       end
 
       #
+      # 時間座標値
+      #
+      # @return [Numeric] オブジェクトの precision に対応する時間座標の値
+      #
+      def coordinate
+        raise ArgumentError, "Presicion not defined" unless When::Coordinates::PERIOD_NAME[@precision]
+        self[@precision]
+      end
+
+      #
+      # 自身に所属する When::TM::CalDate オブジェクト
+      #
+      # @return [Array<When::TM::CalDate>] 自身に所属する precision+1 の分解能のオブジェクトの Array
+      #
+      # @note precision が 0(When::DAY) の場合、空 Array を返す
+      #
+      def member
+        raise ArgumentError, "Presicion not defined" unless When::Coordinates::PERIOD_NAME[@precision]
+        child = floor(@precision+1)
+        list  = []
+        while self == child
+          list << child
+          child = child.succ
+        end
+        list
+      end
+
+      #
       # Hash 化
       #
       # @param [String]  options { :notes   => String  } という Hash の指定と等価
