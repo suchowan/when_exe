@@ -313,7 +313,7 @@ module When::TM
         iso8601form = When::Parts::Resource::ContentLine.extract_rfc5545_Property(specification, options)
 
         # suffix - Frame specification
-        if iso8601form =~ /\A(.*[^=\d])\(([-+*&%@!>=<?\d]+?)\)\z/
+        if iso8601form =~ /\A(.*[^=\d])\((([-+*&%@!>=<?\dW.]|\{.+?\})+)\)\z/
           frame, iso8601form = $~[1..2]
         else
           iso8601form, frame, *rest = iso8601form.split(/\^{1,2}/)

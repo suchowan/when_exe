@@ -435,14 +435,15 @@ module When
 
       # return Array of Hash
       focused_notes.map {|note|
+        nobj = note_objects[note]
         case notes[note]
         when nil, false ; {}
-        when Hash       ; {:note=>note_objects[note].label}.merge(notes[note])
+        when Hash       ; {:note=>nobj.label}.merge(notes[note])
         else
-          if note_objects[note].respond_to?(:to_note_hash)
-            note_objects[note].to_note_hash(notes[note], dates)
+          if nobj.respond_to?(:to_note_hash)
+            nobj.to_note_hash(notes[note], dates)
           else
-            {:note=>note_objects[note].label, :value=>notes[note]}
+            {:note=>nobj.kind_of?(String) ? nobj : nobj.label, :value=>notes[note]}
           end
         end
       }

@@ -179,6 +179,7 @@ module When
   require 'when_exe/region/m17n'
   require 'when_exe/region/residue'
   require 'when_exe/inspect'
+  require 'when_exe/linkeddata'
 
   #
   # Module Constants

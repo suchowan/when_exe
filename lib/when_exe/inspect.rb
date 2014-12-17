@@ -725,6 +725,16 @@ module When
         _to_uri(to_s(*args))
       end
 
+      # URI要素化 - URI表現の要素として用いる形式に変換(“^”はエスケープ)
+      #
+      # @overload to_uri_escape()
+      #
+      # @return [String]
+      #
+      def to_uri_escape(*args)
+        _to_uri(to_s(*args)).gsub('^', '%5E')
+      end
+
       private
 
       # URI要素化 - URI表現用のEscapeと frame の追加

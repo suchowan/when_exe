@@ -129,47 +129,47 @@ module MiniTest
           :notes=>[[{:note=>"Trecena", :value=>"Trecena(4/13)"},
                     {:note=>"Tzolk'in", :value=>"Ajaw(19/20)"},
                     {:note=>"Lords_of_the_Night", :value=>"G9(0/9)"},
-                    {:note=>"Haab'", :value=>"8Kumk'u/365"}]]}],
+                    {:note=>"Haab'", :value=>"8Kumk'u/365"}]], :locale=>'en'}],
 
        ['1985-1-1',
          {:calendar=>["_c:Gregorian"], :sdn=>2446067, :cal_date=>[1985, 1, 1],
-          :notes=>[[{:note=>"Month", :value=>"January"}],[{:note=>"Week", :value=>"Tuesday(1)"}]]}],
+          :notes=>[[{:note=>"Month", :value=>"January"}],[{:note=>"Week", :value=>"Tuesday(1)"}]], :locale=>'en'}],
 
        ['明治7.5.7',
          {:calendar=>["_e:Japanese::明治",1867], :sdn=>2405651, :cal_date=>[7, 5, 7],
           :notes=>[[{:note=>"干支",  :value=>"甲戌(10)", :position=>"共通"}],
-                   [{:note=>"月名",  :value=>"May",      :position=>"月建"}],
-                   [{:note=>"七曜",  :value=>"Thursday(3)", :position=>"共通"},
+                   [{:note=>"月名",  :value=>"5月",      :position=>"月建"}],
+                   [{:note=>"七曜",  :value=>"木曜日(3)", :position=>"共通"},
                     {:note=>"干支",  :value=>"甲子(00)", :position=>"共通"},
-                    {:note=>"六曜",  :value=>"赤口",     :position=>"民間"}]]}],
+                    {:note=>"六曜",  :value=>"赤口",     :position=>"民間"}]], :locale=>'ja'}],
 
        ['明治17.5.7',
          {:calendar=>["_e:Japanese::明治",1867], :sdn=>2409304, :cal_date=>[17, 5, 7],
           :notes=>[[{:note=>"干支",  :value=>"甲申(20)", :position=>"共通"}],
-                   [{:note=>"月名",  :value=>"May",      :position=>"月建"}],
-                   [{:note=>"七曜",  :value=>"Wednesday(2)", :position=>"共通"},
+                   [{:note=>"月名",  :value=>"5月",      :position=>"月建"}],
+                   [{:note=>"七曜",  :value=>"水曜日(2)", :position=>"共通"},
                     {:note=>"干支",  :value=>"丁巳(53)", :position=>"共通"},
-                    {:note=>"六曜",  :value=>"先負",     :position=>"民間"}]]}],
+                    {:note=>"六曜",  :value=>"先負",     :position=>"民間"}]], :locale=>'ja'}],
 
        ['CE-2010.06.08T12:00:00+09:00',
          {:calendar=>["_e:Common::BCE", 1, true], :sdn=>987064, :cal_date=>[-2011, 6, 8],
-          :notes=>[[{:note=>"Month", :value=>"June"}],[]],
+          :notes=>[[{:note=>"Month", :value=>"June"}],[]], :locale=>'en',
           :clk_time=>[987064, 12, 0, 0]}],
 
        [11,
          {:calendar=>["_tm:JulianDate"], :sdn=>11,
-          :notes=>[[{:note=>"Week",  :value=>"Friday(4)"},
-                    {:note=>"干支",  :value=>"甲子(00)"}]]}],
+          :notes=>[[{:note=>"週",  :value=>"金曜日(4)"},
+                    {:note=>"干支",  :value=>"甲子(00)"}]], :locale=>'ja'}],
 
        [11.0,
          {:calendar=>["_tm:JulianDate"], :sdn=>11,
-          :notes=>[[{:note=>"Week",  :value=>"Friday(4)"},
-                    {:note=>"干支",  :value=>"甲子(00)"}]],
+          :notes=>[[{:note=>"週",  :value=>"金曜日(4)"},
+                    {:note=>"干支",  :value=>"甲子(00)"}]], :locale=>'ja',
           :clk_time=>[11, 12, 0, 0]}]
 
       ].each do |sample|
         date, verify = sample
-        list = When.when?(date).to_h({:method=>:to_m17n, :prefix=>true})
+        list = When.when?(date).to_h({:method=>:to_m17n, :locale=>verify[:locale], :prefix=>true})
         [:calendar, :cal_date, :sdn, :clk_time].each do |key|
           assert_equal(verify[key], list[key])
         end
