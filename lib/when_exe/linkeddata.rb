@@ -91,11 +91,12 @@ module When
       # @return [Hash] jsonld ‚ð•\Œ»‚·‚é Hash
       #
       def rdf_graph(dates, options={})
-        jsonld_hash = {'@graph'=>[]}
+        jsonld_hash = {}
         sub_options = {}
         options.each_pair do |key, value|
           (/^@/ =~ key ? jsonld_hash : sub_options)[key] = value
         end
+        jsonld_hash['@graph'] = []
         sub_options[:prefixes] ||= When::Parts::Resource.namespace_prefixes if options[:context]
         dates.each do |date|
           register_graph(jsonld_hash['@graph'], date, sub_options)
