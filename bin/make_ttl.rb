@@ -17,8 +17,8 @@ include When
 
 config = JSON.parse(File.read(ARGV[0] || 'make_ttl.rb.config'))
 
-PREFIXES = When::Parts::Resource.namespace_prefixes(*config['resource'])
-CONTEXT  = When::Parts::Resource.prefixs_to_context(PREFIXES)
+PREFIXES = Parts::Resource.namespace_prefixes(*config['resource'])
+CONTEXT  = Parts::Resource.prefixs_to_context(PREFIXES)
 
 File.open(config['file'], 'w') do |file|
   CONTEXT.each_pair do |key, value|

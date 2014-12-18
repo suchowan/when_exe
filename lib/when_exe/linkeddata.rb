@@ -156,27 +156,40 @@ module When
     # @return [Hash] jsonld ‚ð•\Œ»‚·‚é Hash
     #
     def to_jsonld_hash(options={})
-      base = When::Parts::Resource.base_uri.sub(/When\/$/, '') +'tp/'
+      base = When::Parts::Resource.base_uri.sub(/When\/$/, '')
+      tp   = base + 'tp/'
+      ts   = base + 'ts#'
       hash = {}
       options.each_pair do |key, value|
         hash[key] = value if /^@/ =~ key
       end
-      hash['@id'] ||= base + to_uri_escape
-      hash['ts:coordinate'] = self[precision].to_s
-      hash['ts:succ'] = options[:succ].kind_of?(String) ?
-        options[:succ] : base + succ.to_uri_escape if options[:succ]
-      hash['ts:prev'] = options[:prev].kind_of?(String) ?
-        options[:prev] : base + prev.to_uri_escape if options[:prev]
+      hash['@id'] ||= tp + to_uri_escape
+      hash[ts + 'coordinate'] = self[precision].to_s
+      hash[ts + 'succ'] = options[:succ].kind_of?(String) ?
+        options[:succ] : tp + succ.to_uri_escape if options[:succ]
+      hash[ts + 'prev'] = options[:prev].kind_of?(String) ?
+        options[:prev] : tp + prev.to_uri_escape if options[:prev]
       hash['@reverse'] = (hash['@reverse'] || {}).merge(
-        {'rdfs:member'=>
+        {'http://www.w3.org/2000/01/rdf-schema#member'=>
           {'@id'=>options[:included].kind_of?(String) ?
                     options[:included] :
-                    base + floor(precision-1).to_uri_escape
+                    tp + floor(precision-1).to_uri_escape
           }
         }) if options[:included] && precision + frame.indices.size > 0
       if options[:context]
         options[:prefixes] ||= When::Parts::Resource.namespace_prefixes
         context = hash['@context'] || {}
+      end
+      [hash, hash['@reverse']].each do |h|
+        next unless h
+        h.keys.each do |key|
+          id = compact(key, options[:prefixes], context)
+          if context && id != key
+            prefix = id.split(':').first
+            context[prefix] = options[:prefixes][prefix].last
+          end
+          h[id] = h.delete(key)
+        end
       end
       note_options = {:indices=>precision, :notes=>:all, :method=>:to_iri}
       note_options.update(options[:note]) if options[:note]
