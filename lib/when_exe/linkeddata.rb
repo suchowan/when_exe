@@ -80,10 +80,11 @@ module When
   class CalendarNote
      class << self
 
-      # 指定の範囲のCalDateオブジェクトの jsonld を表現する Hash を生成する
+      # 指定の範囲のCalDateオブジェクトのグラフの jsonld を表現する Hash を生成する
       #
       # @param [Range or Array] dates jsonld を表現する Hash を生成するCalDateオブジェクトの範囲
       # @param [Hash] options 以下の通り
+      # @option options [Boolean] :include 自身が含む分解能が高いCalDateオブジェクトをグラフに含める
       # @option options [Object] @... そのまま戻り値のHashに追加
       # @option options [Symbol] その他 {When::TM::CalDate#to_jsonld} を参照
       #
@@ -95,8 +96,14 @@ module When
         options.each_pair do |key, value|
           (/^@/ =~ key ? jsonld_hash : sub_options)[key] = value
         end
+        sub_options[:prefixes] ||= When::Parts::Resource.namespace_prefixes if options[:context]
         dates.each do |date|
           register_graph(jsonld_hash['@graph'], date, sub_options)
+        end
+        if options['@context'] && options[:context]
+          sub_options[:prefixes].each_pair do |key, value|
+            options['@context'][key] ||= value.last
+          end
         end
         jsonld_hash
       end
@@ -122,10 +129,21 @@ module When
 
   class TM::CalDate
 
+    # 自身を root とするグラフの jsonld を表現する Hash を生成する
+    #
+    # @param [Hash] options {When::CalendarNote.rdf_graph} を参照
+    #
+    # @return [Hash] jsonld を表現する Hash
+    #
+    def rdf_graph(options={})
+      When::CalendarNote.rdf_graph([self], options)
+    end
+
     # CalDateオブジェクトの jsonld を表現する Hash を生成する
     #
     # @param [Hash] options 以下の通り
     # @option options [Hash] :prefixes Linked Data 用 namespace URI の Array の Hash ('@context'互換でも可)
+    # @option options [Boolean] :context true なら 可能な限り namespace を prefix に変換する
     # @option options [String or Boolean] :prev ひとつ前のCalDateオブジェクトのIRI
     # @option options [String or Boolean] :succ ひとつ後のCalDateオブジェクトのIRI
     # @option options [String or Boolean] :included 自身を含む分解能が1低いCalDateオブジェクトのIRI
@@ -156,6 +174,10 @@ module When
                     base + floor(precision-1).to_uri_escape
           }
         }) if options[:included] && precision + frame.indices.size > 0
+      if options[:context]
+        options[:prefixes] ||= When::Parts::Resource.namespace_prefixes
+        context = hash['@context'] || {}
+      end
       note_options = {:indices=>precision, :notes=>:all, :method=>:to_iri}
       note_options.update(options[:note]) if options[:note]
       notes(note_options).first.each do |note|
@@ -163,8 +185,8 @@ module When
         value = note[:value]
         value = value.last if value.kind_of?(Array)
         value = value.iri  if value.kind_of?(When::Parts::Resource)
-        id    = compact(value, options[:prefixes])
-        hash[compact(note[:note], options[:prefixes])] = (id == value) ? id : {'@id'=>id}
+        id    = compact(value, options[:prefixes], context)
+        hash[compact(note[:note], options[:prefixes], context)] = (id == value) ? id : {'@id'=>id}
       end
       hash
     end
@@ -174,7 +196,7 @@ module When
     #
     # namespace を prefix にコンパクト化する
     #
-    def compact(source, prefixes)
+    def compact(source, prefixes, context=nil)
       return source unless prefixes
       prefixes.each_pair do |key, value|
         Array(value).each do |prefix|
@@ -182,7 +204,22 @@ module When
           return key + ':' + source[prefix.length..-1] if start == 0
         end
       end
-      source
+      return source unless context
+      source =~ /\A((.+)([:#\/]))([^:#\/]+)\z/
+      namespace, item = $1, $4
+      if namespace =~ /^Ahttp:\/\/([^.]+)\.wikipedia\.org/
+        prefix = "wiki_#{$1}"
+      elsif namespace && namespace.index(When::Parts::Resource.base_uri) == 0
+        parent = begin When.Resource(namespace.sub(/::\z/, '')) rescue return source end
+        prefix = (parent.kind_of?(When::BasicTypes::M17n) ? parent : parent.label) / 'en'
+      else
+        return source
+      end
+      prefixes[prefix] ||= []
+      prefixes[prefix] << namespace
+      prefixes[prefix].sort_by! {|value| -value.length}
+      context[prefix] = prefixes[prefix].last
+      prefix + ':' + item
     end
   end
 end
