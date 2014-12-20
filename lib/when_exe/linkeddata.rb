@@ -165,7 +165,10 @@ module When
         hash[key] = value if /^@/ =~ key
       end
       hash['@id'] ||= tp + to_uri_escape
+      hash[ts + 'sdn'] = precision <= When::DAY ? to_i : to_f
       hash[ts + 'coordinate'] = self[precision].to_s
+      hash[ts + 'calendar_era'] = calendar_era.iri(false) if calendar_era
+      hash[ts + 'ruler'] = query['name'].iri(false) if query && query['name']
       hash[ts + 'succ'] = options[:succ].kind_of?(String) ?
         options[:succ] : tp + succ.to_uri_escape if options[:succ]
       hash[ts + 'prev'] = options[:prev].kind_of?(String) ?
@@ -226,6 +229,7 @@ module When
       elsif namespace && namespace.index(When::Parts::Resource.base_uri) == 0
         parent = begin When.Resource(namespace.sub(/::\z/, '')) rescue return source end
         prefix = (parent.kind_of?(When::BasicTypes::M17n) ? parent : parent.label) / 'en'
+        return source unless prefix =~ /\A[-A-Z\d_]+\z/i
       else
         return source
       end
