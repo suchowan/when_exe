@@ -166,8 +166,9 @@ module When
       end
       hash['@id'] ||= tp + to_uri_escape
       hash[ts + 'sdn'] = precision <= When::DAY ? to_i : to_f
+      hash[ts + 'frame'] = {'@id'=>frame.iri(false)}
+      hash[ts + 'calendar_era'] = {'id'=>calendar_era.iri(false)} if calendar_era
       hash[ts + 'coordinate'] = self[precision].to_s
-      hash[ts + 'calendar_era'] = calendar_era.iri(false) if calendar_era
       hash[ts + 'ruler'] = query['name'].iri(false) if query && query['name']
       hash[ts + 'succ'] = options[:succ].kind_of?(String) ?
         options[:succ] : tp + succ.to_uri_escape if options[:succ]
@@ -203,7 +204,7 @@ module When
         value = value.last if value.kind_of?(Array)
         value = value.iri  if value.kind_of?(When::Parts::Resource)
         id    = compact(value, options[:prefixes], context)
-        hash[compact(note[:note], options[:prefixes], context)] = (id == value) ? id : {'@id'=>id}
+        hash[compact(note[:note], options[:prefixes], context)] = (id == value && id !~ /:\/\//) ? id : {'@id'=>id}
       end
       hash
     end
