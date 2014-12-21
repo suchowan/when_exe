@@ -167,9 +167,9 @@ module When
       hash['@id'] ||= tp + to_uri_escape
       hash[ts + 'sdn'] = precision <= When::DAY ? to_i : to_f
       hash[ts + 'frame'] = {'@id'=>frame.iri(false)}
-      hash[ts + 'calendar_era'] = {'id'=>calendar_era.iri(false)} if calendar_era
+      hash[ts + 'calendarEra'] = {'@id'=>calendar_era.iri(false)} if calendar_era
       hash[ts + 'coordinate'] = self[precision].to_s
-      hash[ts + 'ruler'] = query['name'].iri(false) if query && query['name']
+      hash[ts + 'ruler'] = {'@id'=>query['name'].reference} if query && query['name'].kind_of?(When::BasicTypes::M17n)
       hash[ts + 'succ'] = options[:succ].kind_of?(String) ?
         options[:succ] : tp + succ.to_uri_escape if options[:succ]
       hash[ts + 'prev'] = options[:prev].kind_of?(String) ?
