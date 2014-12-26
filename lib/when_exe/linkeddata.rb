@@ -7,7 +7,45 @@
 
 module When
   module Parts::Resource
+
+    DocRoot = "http://www.rubydoc.info/gems/when_exe/#{When::VERSION}/When/"
+
+    Schema = {
+      'ts:reference'   => {'ts:reference' => "#{DocRoot}Locale#reference-instance_method"         },
+      'ts:label'       => {'ts:reference' => "#{DocRoot}BasicTypes/M17n#label-instance_method"    },
+      'ts:coordinate'  => {'ts:reference' => "#{DocRoot}TM/CalDate#cal_date-instance_method"      },
+      'ts:sdn'         => {'ts:reference' => "#{DocRoot}TM/CalDate#to_i-instance_method"          },
+      'ts:prev'        => {'ts:reference' => "#{DocRoot}TM/TemporalPosition#prev-instance_method" },
+      'ts:succ'        => {'ts:reference' => "#{DocRoot}TM/TemporalPosition#succ-instance_method" },
+      'ts:frame'       => {'ts:reference' => "#{DocRoot}TM/TemporalPosition#frame-instance_method"},
+      'ts:calendarEra' => {'ts:reference' => "#{DocRoot}TM/CalDate#calendar_era-instance_method"  },
+      'ts:ruler'       => {'ts:reference' => "#{DocRoot}TM/TemporalPosition#query-instance_method"}
+    }
+
     class << self
+
+      # Schema オブジェクトを生成する
+      #
+      # @return [Hash] #to_linked_data メソッドを追加した Hash
+      #
+      def schema
+        hash = {'@context'=>{'ts'=>base_uri.sub(/When\/$/, '') + 'ts#'},
+                '@graph'  => Schema.keys.map {|id|
+          next nil unless id =~ /\Ats:/
+          item = {}
+          item['@id'] = id
+          Schema[id].each_pair do |key, ref|
+            item[key] = {'@id'=>ref}
+          end
+          item
+        }.compact}
+        class << hash
+          def to_linked_data(writer=:jsonld, options={})
+            When::Parts::Resource.to_linked_data(self, writer, self['@context'])
+          end
+        end
+        hash
+      end
 
       # Linked Data 用 namespace URI の Array の Hash を生成する
       #
@@ -25,7 +63,7 @@ module When
           'dc'   => ['http://purl.org/dc/elements/1.1/'],
           'dcq'  => ['http://purl.org/dc/terms/'],
           'dct'  => ['http://purl.org/dc/dcmitype/'],
-        # 'date' => [base + 'tp/'],
+        # 'tp'   => [base + 'tp/'],
           'ts'   => [base + 'ts#']
         }) {|namespace, resource|
           resource = When.Resource(resource) if resource.kind_of?(String)
@@ -60,6 +98,26 @@ module When
          end
          hash
       end
+
+      # jsonld を表現する Hash を各種のRDF表現形式に変換する
+      #
+      # @param [Hash] jsonld_hash jsonld を表現する Hash
+      # @param [Symbol] writer RDF表現形式 (デフォルト :jsonld - 単に Hash を JSON化)
+      # @param [Hash] prefixes prefix から namespace を引く Hash
+      #
+      # @return [String] writer で指定されたRDF表現形式の文字列
+      #
+      def to_linked_data(jsonld_hash, writer=:jsonld, prefixes=nil)
+        if writer == :jsonld
+          JSON.generate(jsonld_hash)
+        else
+          array = JSON::LD::API.toRdf(jsonld_hash)
+          graph = RDF::Graph.new << array
+          args  = [writer]
+          args << {:prefixes=>prefixes} if prefixes
+          graph.dump(*args)
+        end
+      end
     end
 
     # Linked Data 用 namespace URI の Array の Hash を生成する
@@ -75,6 +133,60 @@ module When
       end
       prefixes
     end
+
+    # 自身を root とするグラフの jsonld を表現する Hash を各種のRDF表現形式に変換する
+    #
+    # @param [Symbol] writer RDF表現形式 (デフォルト :jsonld - 単に Hash を JSON化)
+    # @param [Hash] options 内部で呼び出す #to_jsonld_hash にそのまま渡す
+    #
+    # @return [String] writer で指定されたRDF表現形式の文字列
+    #
+    def to_linked_data(writer=:jsonld, options={})
+      hash = to_jsonld_hash(options)
+      When::Parts::Resource.to_linked_data(hash, writer, hash['@context'])
+    end
+
+    # 自身を root とするグラフの jsonld を表現する Hash を生成する
+    #
+    # @param [Hash] options {When::CalendarNote.rdf_graph} を参照
+    #
+    # @return [Hash] jsonld を表現する Hash
+    #
+    def to_jsonld_hash(options={})
+      to_h({:method=>:to_iri}.update(options))
+    end
+
+    private
+
+    #
+    # namespace を prefix にコンパクト化する
+    #
+    def compact_namespace_to_prefix(source, prefixes, context=nil)
+      return source unless prefixes
+      prefixes.each_pair do |key, value|
+        Array(value).each do |prefix|
+          start = source.index(prefix)
+          return key + ':' + source[prefix.length..-1] if start == 0
+        end
+      end
+      return source unless context
+      source =~ /\A((.+)([:#\/]))([^:#\/]+)\z/
+      namespace, item = $1, $4
+      if namespace =~ /^Ahttp:\/\/([^.]+)\.wikipedia\.org/
+        prefix = "wiki_#{$1}"
+      elsif namespace && namespace.index(When::Parts::Resource.base_uri) == 0
+        parent = begin When.Resource(namespace.sub(/::\z/, '')) rescue return source end
+        prefix = (parent.kind_of?(When::BasicTypes::M17n) ? parent : parent.label) / 'en'
+        return source unless prefix =~ /\A[-A-Z\d_]+\z/i
+      else
+        return source
+      end
+      prefixes[prefix] ||= []
+      prefixes[prefix] << namespace
+      prefixes[prefix].sort_by! {|value| -value.length}
+      context[prefix] = prefixes[prefix].last
+      prefix + ':' + item
+    end
   end
 
   class CalendarNote
@@ -84,9 +196,9 @@ module When
       #
       # @param [Range or Array] dates jsonld を表現する Hash を生成するCalDateオブジェクトの範囲
       # @param [Hash] options 以下の通り
-      # @option options [Boolean] :include 自身が含む分解能が高いCalDateオブジェクトをグラフに含める
+      # @option options [Boolean] :include 自身が含む分解能が高いCalDateオブジェクトをグラフに含める(デフォルト nil)
       # @option options [Object] @... そのまま戻り値のHashに追加
-      # @option options [Symbol] その他 {When::TM::CalDate#to_jsonld} を参照
+      # @option options [Symbol] その他 {When::TM::CalDate#to_jsonld_hash} を参照
       #
       # @return [Hash] jsonld を表現する Hash
       #
@@ -130,6 +242,19 @@ module When
 
   class TM::CalDate
 
+    # 自身を root とするグラフの jsonld を表現する Hash を各種のRDF表現形式に変換する
+    #
+    # @param [Symbol] writer RDF表現形式 (デフォルト :jsonld - 単に Hash を JSON化)
+    # @param [Hash] options 内部で呼び出す #to_jsonld_hash にそのまま渡す。ただし、
+    # @option options [Boolean] :include 自身が含む分解能が高いCalDateオブジェクトをグラフに含める(デフォルト true)
+    #
+    # @return [String] writer で指定されたRDF表現形式の文字列
+    #
+    def to_linked_data(writer=:jsonld, options={})
+      hash = rdf_graph({:include=>true}.update(options))
+      When::Parts::Resource.to_linked_data(hash, writer, hash['@context'])
+    end
+
     # 自身を root とするグラフの jsonld を表現する Hash を生成する
     #
     # @param [Hash] options {When::CalendarNote.rdf_graph} を参照
@@ -137,7 +262,8 @@ module When
     # @return [Hash] jsonld を表現する Hash
     #
     def rdf_graph(options={})
-      When::CalendarNote.rdf_graph([self], options)
+      root = options[:include] && precision < When::YEAR ? floor(When::YEAR) : self
+      When::CalendarNote.rdf_graph([root], options)
     end
 
     # CalDateオブジェクトの jsonld を表現する Hash を生成する
@@ -188,7 +314,7 @@ module When
       [hash, hash['@reverse']].each do |h|
         next unless h
         h.keys.each do |key|
-          id = compact(key, options[:prefixes], context)
+          id = compact_namespace_to_prefix(key, options[:prefixes], context)
           if context && id != key
             prefix = id.split(':').first
             context[prefix] = options[:prefixes][prefix].last
@@ -203,42 +329,10 @@ module When
         value = note[:value]
         value = value.last if value.kind_of?(Array)
         value = value.iri  if value.kind_of?(When::Parts::Resource)
-        id    = compact(value, options[:prefixes], context)
-        hash[compact(note[:note], options[:prefixes], context)] = (id == value && id !~ /:\/\//) ? id : {'@id'=>id}
+        id    = compact_namespace_to_prefix(value, options[:prefixes], context)
+        hash[compact_namespace_to_prefix(note[:note], options[:prefixes], context)] = (id == value && id !~ /:\/\//) ? id : {'@id'=>id}
       end
       hash
-    end
-
-    private
-
-    #
-    # namespace を prefix にコンパクト化する
-    #
-    def compact(source, prefixes, context=nil)
-      return source unless prefixes
-      prefixes.each_pair do |key, value|
-        Array(value).each do |prefix|
-          start = source.index(prefix)
-          return key + ':' + source[prefix.length..-1] if start == 0
-        end
-      end
-      return source unless context
-      source =~ /\A((.+)([:#\/]))([^:#\/]+)\z/
-      namespace, item = $1, $4
-      if namespace =~ /^Ahttp:\/\/([^.]+)\.wikipedia\.org/
-        prefix = "wiki_#{$1}"
-      elsif namespace && namespace.index(When::Parts::Resource.base_uri) == 0
-        parent = begin When.Resource(namespace.sub(/::\z/, '')) rescue return source end
-        prefix = (parent.kind_of?(When::BasicTypes::M17n) ? parent : parent.label) / 'en'
-        return source unless prefix =~ /\A[-A-Z\d_]+\z/i
-      else
-        return source
-      end
-      prefixes[prefix] ||= []
-      prefixes[prefix] << namespace
-      prefixes[prefix].sort_by! {|value| -value.length}
-      context[prefix] = prefixes[prefix].last
-      prefix + ':' + item
     end
   end
 end

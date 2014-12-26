@@ -854,7 +854,7 @@ module When::Parts
     #
     def registered?
       leaf = self
-      while leaf._pool['..'].respond_to?(:_pool)
+      while leaf._pool && leaf._pool['..'].respond_to?(:_pool)
         root = leaf._pool['..']
         return false unless leaf.equal?(root._pool[leaf.label])
         leaf = root
