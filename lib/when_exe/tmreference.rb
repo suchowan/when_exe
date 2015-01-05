@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -1456,6 +1456,7 @@ module When::TM
             if (c.kind_of?(String))
               code = m17n(c.gsub(/%2C/,','), nil, nil, term_options)
               @_pool[code.to_s] ||= code
+              code._pool['..']    = self
               @options[k] = term_options[:options][:query][k] = @_pool[code.to_s]
             else
               @options.delete(k)

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2014 Takashi SUGA
+  Copyright (C) 2014-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -11,15 +11,17 @@ module When
     DocRoot = "http://www.rubydoc.info/gems/when_exe/#{When::VERSION}/When/"
 
     Schema = {
-      'ts:reference'   => {'ts:reference' => "#{DocRoot}Locale#reference-instance_method"         },
-      'ts:label'       => {'ts:reference' => "#{DocRoot}BasicTypes/M17n#label-instance_method"    },
-      'ts:coordinate'  => {'ts:reference' => "#{DocRoot}TM/CalDate#cal_date-instance_method"      },
-      'ts:sdn'         => {'ts:reference' => "#{DocRoot}TM/CalDate#to_i-instance_method"          },
-      'ts:prev'        => {'ts:reference' => "#{DocRoot}TM/TemporalPosition#prev-instance_method" },
-      'ts:succ'        => {'ts:reference' => "#{DocRoot}TM/TemporalPosition#succ-instance_method" },
-      'ts:frame'       => {'ts:reference' => "#{DocRoot}TM/TemporalPosition#frame-instance_method"},
-      'ts:calendarEra' => {'ts:reference' => "#{DocRoot}TM/CalDate#calendar_era-instance_method"  },
-      'ts:ruler'       => {'ts:reference' => "#{DocRoot}TM/TemporalPosition#query-instance_method"}
+      'ts:reference'   => {'ts:reference' => "#{DocRoot}Locale#reference-instance_method"             },
+      'ts:label'       => {'ts:reference' => "#{DocRoot}BasicTypes/M17n#label-instance_method"        },
+      'ts:coordinate'  => {'ts:reference' => "#{DocRoot}TM/CalDate#cal_date-instance_method"          },
+      'ts:sdn'         => {'ts:reference' => "#{DocRoot}TM/CalDate#to_i-instance_method"              },
+      'ts:prev'        => {'ts:reference' => "#{DocRoot}TM/TemporalPosition#prev-instance_method"     },
+      'ts:succ'        => {'ts:reference' => "#{DocRoot}TM/TemporalPosition#succ-instance_method"     },
+      'ts:frame'       => {'ts:reference' => "#{DocRoot}TM/TemporalPosition#frame-instance_method"    },
+      'ts:calendarEra' => {'ts:reference' => "#{DocRoot}TM/CalDate#calendar_era-instance_method"      },
+      'ts:ruler'       => {'ts:reference' => "#{DocRoot}TM/TemporalPosition#query-instance_method"    },
+      'ts:remainder'   => {'ts:reference' => "#{DocRoot}Coordinates/Residue#remainder-instance_method"},
+      'ts:divisor'     => {'ts:reference' => "#{DocRoot}Coordinates/Residue#divisor-instance_method"  }
     }
 
     class << self
@@ -153,10 +155,46 @@ module When
     # @return [Hash] jsonld を表現する Hash
     #
     def to_jsonld_hash(options={})
-      to_h({:method=>:to_iri}.update(options))
+      ts   = When::Parts::Resource.base_uri.sub(/When\/$/, '') + 'ts#'
+      hash, context = hash_and_context(options)
+      hash['@id'] = iri
+      to_h({:method=>:to_iri}.update(options)).each_pair do |key, value|
+        hash[ts + key.to_s] = value =~ /:\/\// ? {'@id'=>value} : value
+      end
+      compact_predicate(hash, context, options[:prefixes])
+      hash
     end
 
     private
+
+    #
+    # jsonld_hash と context を準備する
+    #
+    def hash_and_context(options)
+      hash = {}
+      options.each_pair do |key, value|
+        hash[key] = value if /^@/ =~ key
+      end
+      if options[:context]
+        options[:prefixes] ||= When::Parts::Resource.namespace_prefixes
+        context = hash['@context'] || {}
+      end
+      [hash, context]
+    end
+
+    #
+    # 述語をコンパクト化する
+    #
+    def compact_predicate(hash, context, prefixes)
+      hash.keys.each do |key|
+        id = compact_namespace_to_prefix(key, prefixes, context)
+        if context && id != key
+          prefix = id.split(':').first
+          context[prefix] = prefixes[prefix].last
+        end
+        hash[id] = hash.delete(key)
+      end
+    end
 
     #
     # namespace を prefix にコンパクト化する
@@ -186,6 +224,21 @@ module When
       prefixes[prefix].sort_by! {|value| -value.length}
       context[prefix] = prefixes[prefix].last
       prefix + ':' + item
+    end
+  end
+
+  class BasicTypes::M17n
+
+    def to_jsonld_hash(options={})
+      ts   = When::Parts::Resource.base_uri.sub(/When\/$/, '') + 'ts#'
+      rdfs = 'http://www.w3.org/2000/01/rdf-schema#'
+      hash, context = hash_and_context(options)
+      hash['@id'] = iri # compact_namespace_to_prefix(iri, options[:prefixes], context)
+      hash[rdfs + 'label'] = names.keys.map {|key| key=='' ? names[key] : {'@language'=>key, '@value'=>names[key]}}
+      hash[ts   + 'label'] = label
+      hash[ts   + 'reference'] = link.values.map {|ref| {'@id'=>ref}}
+      compact_predicate(hash, context, options[:prefixes])
+      hash
     end
   end
 
@@ -286,16 +339,13 @@ module When
       base = When::Parts::Resource.base_uri.sub(/When\/$/, '')
       tp   = base + 'tp/'
       ts   = base + 'ts#'
-      hash = {}
-      options.each_pair do |key, value|
-        hash[key] = value if /^@/ =~ key
-      end
+      hash, context = hash_and_context(options)
       hash['@id'] ||= tp + to_uri_escape
       hash[ts + 'sdn'] = precision <= When::DAY ? to_i : to_f
       hash[ts + 'frame'] = {'@id'=>frame.iri(false)}
       hash[ts + 'calendarEra'] = {'@id'=>calendar_era.iri(false)} if calendar_era
       hash[ts + 'coordinate'] = self[precision].to_s
-      hash[ts + 'ruler'] = {'@id'=>query['name'].reference} if query && query['name'].kind_of?(When::BasicTypes::M17n)
+      hash[ts + 'ruler'] = {'@id'=>query['name'].iri} if query && query['name'].kind_of?(When::BasicTypes::M17n)
       hash[ts + 'succ'] = options[:succ].kind_of?(String) ?
         options[:succ] : tp + succ.to_uri_escape if options[:succ]
       hash[ts + 'prev'] = options[:prev].kind_of?(String) ?
@@ -307,20 +357,8 @@ module When
                     tp + floor(precision-1).to_uri_escape
           }
         }) if options[:included] && precision + frame.indices.size > 0
-      if options[:context]
-        options[:prefixes] ||= When::Parts::Resource.namespace_prefixes
-        context = hash['@context'] || {}
-      end
       [hash, hash['@reverse']].each do |h|
-        next unless h
-        h.keys.each do |key|
-          id = compact_namespace_to_prefix(key, options[:prefixes], context)
-          if context && id != key
-            prefix = id.split(':').first
-            context[prefix] = options[:prefixes][prefix].last
-          end
-          h[id] = h.delete(key)
-        end
+        compact_predicate(h, context, options[:prefixes]) if h
       end
       note_options = {:indices=>precision, :notes=>:all, :method=>:to_iri}
       note_options.update(options[:note]) if options[:note]
