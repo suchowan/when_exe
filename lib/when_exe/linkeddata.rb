@@ -155,8 +155,8 @@ module When
     # @return [Hash] jsonld ‚ð•\Œ»‚·‚é Hash
     #
     def to_jsonld_hash(options={})
-      ts   = When::Parts::Resource.base_uri.sub(/When\/$/, '') + 'ts#'
-      hash, context = hash_and_context(options)
+      hash, context, base = hash_and_variables(options)
+      ts   = base + 'ts#'
       hash['@id'] = iri
       to_h({:method=>:to_iri}.update(options)).each_pair do |key, value|
         hash[ts + key.to_s] = value =~ /:\/\// ? {'@id'=>value} : value
@@ -168,18 +168,20 @@ module When
     private
 
     #
-    # jsonld_hash ‚Æ context ‚ð€”õ‚·‚é
+    # jsonld_hash ‚Æ context, base ‚ð€”õ‚·‚é
     #
-    def hash_and_context(options)
+    def hash_and_variables(options)
+      base = When::Parts::Resource.base_uri.sub(/When\/$/, '')
       hash = {}
       options.each_pair do |key, value|
         hash[key] = value if /^@/ =~ key
       end
+      hash['http://www.w3.org/1999/02/22-rdf-syntax-ns#type'] = {'@id'=>base + 'ts/' + self.class.to_s.gsub(/::/, '/')}
       if options[:context]
         options[:prefixes] ||= When::Parts::Resource.namespace_prefixes
         context = hash['@context'] || {}
       end
-      [hash, context]
+      [hash, context, base]
     end
 
     #
@@ -230,9 +232,9 @@ module When
   class BasicTypes::M17n
 
     def to_jsonld_hash(options={})
-      ts   = When::Parts::Resource.base_uri.sub(/When\/$/, '') + 'ts#'
+      hash, context, base = hash_and_variables(options)
+      ts   = base + 'ts#'
       rdfs = 'http://www.w3.org/2000/01/rdf-schema#'
-      hash, context = hash_and_context(options)
       hash['@id'] = iri # compact_namespace_to_prefix(iri, options[:prefixes], context)
       hash[rdfs + 'label'] = names.keys.map {|key| key=='' ? names[key] : {'@language'=>key, '@value'=>names[key]}}
       hash[ts   + 'label'] = label
@@ -336,10 +338,9 @@ module When
     # @return [Hash] jsonld ‚ð•\Œ»‚·‚é Hash
     #
     def to_jsonld_hash(options={})
-      base = When::Parts::Resource.base_uri.sub(/When\/$/, '')
+      hash, context, base = hash_and_variables(options)
       tp   = base + 'tp/'
       ts   = base + 'ts#'
-      hash, context = hash_and_context(options)
       hash['@id'] ||= tp + to_uri_escape
       hash[ts + 'sdn'] = precision <= When::DAY ? to_i : to_f
       hash[ts + 'frame'] = {'@id'=>frame.iri(false)}
