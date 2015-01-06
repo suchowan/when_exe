@@ -86,6 +86,8 @@ module When
         hash[method] = value unless value == skip || value.class == skip
       end
       hash
+    rescue
+      {}
     end
 
     #

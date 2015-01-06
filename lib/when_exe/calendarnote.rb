@@ -207,6 +207,9 @@ module When
     #
     CalendarDepend = false
 
+    # @private
+    HashProperty = [:event]
+
     # デフォルトイベント名
     #
     # @return [String]
