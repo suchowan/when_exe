@@ -106,9 +106,9 @@ module When
     # @note element.events のある日付は _event_form で変換する
     #
     def _m17n_form(element, options={})
-      result = element.respond_to?(:_event_form)    ? element._event_form(self, options[:precision]) :
-               element.respond_to?(:_to_hash_value) ? element._to_hash_value(options)                :
-               element.respond_to?(:label)         && element.label ?   element.label                :
+      result = element.respond_to?(:_event_form)    ? element._event_form(self, options) :
+               element.respond_to?(:_to_hash_value) ? element._to_hash_value(options)    :
+               element.respond_to?(:label)         && element.label ?   element.label    :
         case element
         when Hash   ; Hash[*(element.keys.inject([]) { |s, k|
                         s + [_m17n_form(k, options), _m17n_form(element[k], options)]
@@ -1299,7 +1299,9 @@ module When
       # event を 文字列化 - 日時で与えられた event を文字列化する
       #
       # @param [When::TM::TemporalPosition] other 時系の歩度を比較する基準(nilは比較しない)
-      # @param [Numeric] round_precision イベント名(イベント)出力の場合の時刻の丸め位置(nilなら丸めない)
+      # @param [Hash] options 下記の通り
+      # @option options [Numeric] :precision イベント名(イベント)出力の場合の時刻の丸め位置(nilなら丸めない)
+      # @option options [Symbol]  :method  変換に用いるメソッド(:to_m17n のとき多言語文字列化)
       #
       # @return [String]
       #
@@ -1308,9 +1310,10 @@ module When
       #   日時の精度が日より細かい - イベント名(イベント時刻)
       #   日時の精度が日           - イベント名(当日までの経過日数)
       #
-      def _event_form(other=nil, round_precision=nil)
-        return to_m17n unless events
-        return events[0] + '(' + _clk_time_for_inspect(round_precision).to_s(round_precision || precision)[/[:*=0-9]+/] + ')' if precision > When::DAY
+      def _event_form(other=nil, options={})
+        return options[:method]==:to_m17n ? to_m17n : self unless events
+        return events[0] + '(' + _clk_time_for_inspect(options[:precision]).
+          to_s(options[:precision] || precision)[/[:*=0-9]+/] + ')' if precision > When::DAY
         return events[0] unless other
         other = JulianDate.dynamical_time(other.dynamical_time,
                   {:time_standard=>time_standard}) unless time_standard.rate_of_clock == other.time_standard.rate_of_clock

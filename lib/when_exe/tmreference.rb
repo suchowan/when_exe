@@ -115,6 +115,9 @@ module When::TM
       @_pool  = {}
     end
 
+    # @private
+    HashProperty = [:label, :referenceFrame, :timeBasis]
+
     # この暦と関連付けられた暦年代 (relation - Basis)
     #
     # The calendar eras associated with the calendar being described
@@ -447,6 +450,9 @@ module When::TM
         sgn + hh + d1 + mm + d2 + ss + ff
       end
     end
+
+    # @private
+    HashProperty = [:label, :referenceEvent, :referenceTime, :utcReference, :dateBasis]
 
     # この時法の基点となる事象
     #
@@ -1112,8 +1118,8 @@ module When::TM
 
     # @private
     HashProperty =
-      [:reference_event, :reference_date, :julian_reference, :dating_system, # :epoch_of_use
-       :epoch, :epoch_year, :options]
+      [:label, :referenceEvent, :referenceDate, :julianReference, :datingSystem, # :epoch_of_use
+       :epoch, :options]
 
     # この暦年代を識別する名称
     #

@@ -1331,7 +1331,7 @@ module When::Coordinates
     end
 
     # @private
-    HashProperty = [:label, [:alt, 0.0], [:datum, When::Ephemeris::Earth], :ref]
+    HashProperty = [:label, :longitude, :latitude, [:altitude, 0.0], [:datum, When::Ephemeris::Earth], :ref]
 
     # Degree / Internal Location Unit(16")
     #
@@ -1371,6 +1371,7 @@ module When::Coordinates
     # @return [:Center] 天体の中心の場合
     #
     attr_reader :alt
+    alias :altitude :alt
 
     # 座標系
     #
@@ -1401,6 +1402,7 @@ module When::Coordinates
     def lat_s
       When::Coordinates.to_dms(lat / When::Coordinates::Spatial::DEGREE, 'NS', round=6)
     end
+    alias :latitude :lat_s
 
     # 経度文字列
     #
@@ -1411,6 +1413,7 @@ module When::Coordinates
     def long_s
       When::Coordinates.to_dms(long / When::Coordinates::Spatial::DEGREE, 'EW', round=6)
     end
+    alias :longitude :long_s
 
     # 高度 / m
     #
