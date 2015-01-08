@@ -1510,21 +1510,6 @@ module When::Coordinates
       @ecls = {}
     end
 
-    #
-    # 空間位置オブジェクトの内容を Hash 化
-    #
-    # @param [Object] options When::Parts::Resource#to_h を参照
-    # @option options [Symbol] :method :to_h を label の内容の Hash 書き出しのために追加
-    #
-    # @return [Hash] Hash 化した空間位置オブジェクト
-    #
-    def _to_h(options={})
-      hash = super
-      hash[:long] = long_s
-      hash[:lat]  = lat_s
-      hash
-    end
-
     # 観測地の惑星中心を原点とする三次元座標
     #
     # @param [Numeric] t ユリウス日(Terrestrial Time)

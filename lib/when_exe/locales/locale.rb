@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -330,8 +330,8 @@ module When
           :link  => {''=>path,   locale=>path  }
         }
         contents.scan(Link) do |link|
-          word[:names][$1] = $4
-          word[:link ][$1] = "http://#{$1}.wikipedia.org/wiki/#{$3}"
+          word[:names][$2] = $4
+          word[:link ][$2] = "http://#{$2}.wikipedia.org/wiki/#{$3}"
         end
         object = When::BasicTypes::M17n.new(word)
 
