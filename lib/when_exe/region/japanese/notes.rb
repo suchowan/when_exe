@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2012-2014 Takashi SUGA
+  Copyright (C) 2012-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -719,12 +719,27 @@ class When::CalendarNote
     #
     # 任意の暦を日本年号付暦日に変換
     #
+    # @param When::TM::CalDate] date 変換元日付
+    #
+    # @return [When::TM::CalDate] 変換結果
+    #
     def self._to_japanese_date(date)
-      return date if date._attr[:query] && date._attr[:query]['area'].to_s =~ /日本/
+      return date if is_japanese_date?(date)
       (date^ When.era(:area=>'日本')).each do |list|
         return list[0] if list[0]
       end
       nil
+    end
+
+    #
+    # 日本年号付暦日か?
+    #
+    # @param When::TM::CalDate] date 確認する日付
+    #
+    # @return [Boolean] true YES / false NO
+    #
+    def self.is_japanese_date?(date)
+      date._attr[:query] && date._attr[:query]['area'].to_s =~ /日本/
     end
 
     #

@@ -290,17 +290,21 @@ module When
       tp   = ts.sub('ts#', 'tp/')
       hash = {}
       to_h({:method=>:iri}.update(options)).each_pair do |key, value|
+        tskey = ts + key.to_s
         case value
-        when Array   ; hash[ts + key.to_s] = value.map {|v|
+        when Array                   ; hash[tskey] = value.map {|v|
           case v
-          when When::TM::CalDate ; {'@id'=>tp + v.to_uri_escape}
-          when /:\/\//           ; {'@id'=>v}
-          else                   ; nil
+          when When::TM::CalDate     ; {'@id'=>tp + v.to_uri_escape}
+          when /:\/\//               ; {'@id'=>v}
+          else                       ; nil
           end
         }.compact unless value.empty?
-        when Hash    ;
-        when /:\/\// ; hash[ts + key.to_s] = {'@id'=>value}
-        else         ; hash[ts + key.to_s] = value
+        when Hash                    ;
+        when /:\/\//                 ; hash[tskey] = {'@id'=>value}
+        when When::TM::JulianDate    ; hash[tskey] = value.precision <= When::DAY ? value.to_i : value.to_f
+        when When::Coordinates::Pair ; hash[tskey] = value.to_s
+        when Numeric                 ; hash[tskey] = value
+        else                         ; hash[tskey] = value.to_s
         end
       end
       hash
@@ -395,6 +399,18 @@ module When
   # When::TM::CalDate への追加
   # 
   class TM::CalDate
+
+    # URI - linked data 用
+    #
+    # @overload to_uri_linkeddata()
+    #
+    # @return [String]
+    #
+    def to_uri_linkeddata(*args)
+      date, frame = _to_uri(to_s(*args)).split('^^', 2)
+      date = "#{frame}(#{date})" if frame
+      When::Parts::Resource.base_uri.sub(/When\/$/, 'tp/') + date
+    end
 
     # 自身を root とするグラフの jsonld を表現する Hash を各種のRDF表現形式に変換する
     #
