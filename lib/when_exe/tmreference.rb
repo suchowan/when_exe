@@ -853,6 +853,8 @@ module When::TM
 
     include Separation
 
+    HashProperty = [:label, :begin, :end]
+
     # この順序年代を識別する名称
     #
     # Name that identifies a specific ordinal era
