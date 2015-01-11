@@ -502,7 +502,7 @@ module When
         value =
           case note[:value]
           when When::Parts::Resource ; note[:value].iri
-          when Array                 ; note[:value].flatten.reject {|v| v.kind_of?(Hash)}.last
+          when Array                 ; note[:value].flatten.reject {|v| v.kind_of?(Hash)}.last.to_s
           else                       ; note[:value]
           end
         id    = compact_namespace_to_prefix(value, options[:prefixes], context)
