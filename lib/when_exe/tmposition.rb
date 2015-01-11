@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -313,8 +313,9 @@ module When::TM
         iso8601form = When::Parts::Resource::ContentLine.extract_rfc5545_Property(specification, options)
 
         # suffix - Frame specification
-        if iso8601form =~ /\A(.*[^=\d])\((([-+*&%@!>=<?\dW.]|\{.+?\})+)\)\z/
+        if iso8601form =~ /\A(.*[^\d])\((([-+*&%@!>=<?\dW.]|\{.+?\})+)\)\z/
           frame, iso8601form = $~[1..2]
+          frame.sub!(/_+\z/, '')
         else
           iso8601form, frame, *rest = iso8601form.split(/\^{1,2}/)
           return rest.inject(_instance(iso8601form + '^' + frame, options)) {|p,c| When.Resource(c, '_c:').jul_trans(p)} unless rest.empty?
