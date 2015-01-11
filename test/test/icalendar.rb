@@ -472,7 +472,7 @@ module MiniTest:V
         "2015-01-12",
         "2016-01-11"
       ]
-      this_time = When.now.to_s
+      this_time = When.when?('2015-1-11').to_s
       sample.shift while (sample[0] && sample[0] < this_time)
       event.enum_for(When.when?('20070101'), :forward, 5).each do |date|
         assert_equal(sample.shift, date.to_s)

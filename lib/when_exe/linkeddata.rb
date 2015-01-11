@@ -339,7 +339,7 @@ module When
       end
       return source unless context
       source =~ /\A((.+)([:#\/]))([^:#\/]+)\z/
-      namespace, item = $1, $4
+      namespace, item = $1.to_s, $4
       if namespace =~ /^Ahttp:\/\/([^.]+)\.wikipedia\.org/
         prefix = "wiki_#{$1}"
       elsif namespace && namespace.index(When::Parts::Resource.base_uri) == 0
@@ -499,9 +499,12 @@ module When
       note_options.update(options[:note]) if options[:note]
       notes(note_options).first.each do |note|
         next unless note[:note]
-        value = note[:value]
-        value = value.last if value.kind_of?(Array)
-        value = value.iri  if value.kind_of?(When::Parts::Resource)
+        value =
+          case note[:value]
+          when When::Parts::Resource ; note[:value].iri
+          when Array                 ; note[:value].flatten.reject {|v| v.kind_of?(Hash)}.last
+          else                       ; note[:value]
+          end
         id    = compact_namespace_to_prefix(value, options[:prefixes], context)
         hash[compact_namespace_to_prefix(note[:note], options[:prefixes], context)] = (id == value && id !~ /:\/\//) ? id : {'@id'=>id}
       end
