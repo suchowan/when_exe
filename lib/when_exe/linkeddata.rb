@@ -64,8 +64,11 @@ module When
           item
         }.compact}
         class << hash
-          def to_linked_data(writer=:jsonld, options={})
-            When::Parts::Resource.to_linked_data(self, writer, self['@context'])
+          def rdf_graph(options={})
+            self
+          end
+          def iri
+            self['@context']['ts'][0..-2]
           end
         end
         hash
