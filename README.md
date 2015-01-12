@@ -150,6 +150,92 @@ Example Usage
        #  "cal_date" : [2014,4,20]}
     end
     
+    open('http://hosi.org/tp/2014-04-20.json') do |json| # redirected from http://hosi.org to http://hosi.org:3000
+      puts json.read #=> newlines and blanks are inserted for readability.
+       # {"frame"    : "http://hosi.org/When/CalendarTypes/Gregorian",
+       #  "precision": 0,
+       #  "sdn"      : 2456768,
+       #  "calendar" : ["http://hosi.org/When/CalendarTypes/Gregorian"],
+       #  "notes"    : [[{"note":"Month","value":"April"}],
+       #               [{"note":"Week","value":"Sunday(6)"}]],
+       #  "cal_date" : [2014,4,20]}
+    end
+    
+    open('http://hosi.org/tp/2014-04-20.jsonld') do |jsonld| # redirected from http://hosi.org to http://hosi.org:3000
+      puts jsonld.read #=> newlines and blanks are inserted for readability.
+       # {"@context":
+       #    {"xsd" :"http://www.w3.org/2001/XMLSchema",
+       #     "rdf" :"http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+       #     "rdfs":"http://www.w3.org/2000/01/rdf-schema#",
+       #     "owl" :"http://www.w3.org/2002/07/owl#",
+       #     "dc"  :"http://purl.org/dc/elements/1.1/",
+       #     "dcq" :"http://purl.org/dc/terms/",
+       #     "dct" :"http://purl.org/dc/dcmitype/",
+       #     "ts"  :"http://hosi.org/ts#",
+       #     "Week":"http://hosi.org/When/Coordinates/Common::Week::",
+       #     "day" :"http://hosi.org/When/CalendarNote/Christian/Notes::day::"},
+       #  "@graph":[{
+       #    "rdf:type"     : {"@id":"http://hosi.org/ts/When/TM/CalDate"},
+       #    "@id"          : "http://hosi.org/tp/2014-04-20",
+       #    "ts:sdn"       : 2456768,
+       #    "ts:frame"     : {"@id":"http://hosi.org/When/CalendarTypes/Gregorian"},
+       #    "ts:coordinate": "20",
+       #    "@reverse"     : {"rdfs:member":{"@id":"http://hosi.org/tp/2014-04"}},
+       #    "day:Week"     : {"@id":"Week:Sunday"},
+       #    "day:Easter"   : "easter(0)",
+       #    "day:Christmas": "christmas(-249)"
+       #   }]
+       # }
+    end
+    
+    open('http://hosi.org/tp/2014-04-20.ttl') do |ttl| # redirected from http://hosi.org to http://hosi.org:3000
+      puts ttl.read
+       # @prefix Week: <http://hosi.org/When/Coordinates/Common::Week::> .
+       # @prefix day: <http://hosi.org/When/CalendarNote/Christian/Notes::day::> .
+       # @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+       # @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+       # @prefix ts: <http://hosi.org/ts#> .
+       # @prefix xsd: <http://www.w3.org/2001/XMLSchema> .
+       # 
+       # <http://hosi.org/tp/2014-04> rdfs:member <http://hosi.org/tp/2014-04-20> .
+       # 
+       # <http://hosi.org/tp/2014-04-20> a <http://hosi.org/ts/When/TM/CalDate>;
+       #    day:Christmas "christmas(-249)";
+       #    day:Easter "easter(0)";
+       #    day:Week Week:Sunday;
+       #    ts:coordinate "20";
+       #    ts:frame <http://hosi.org/When/CalendarTypes/Gregorian>;
+       #    ts:sdn 2456768 .
+    end
+    
+    open('http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge.ttl') do |ttl| # redirected from http://hosi.org to http://hosi.org:3000
+      puts ttl.read
+       # @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+       # @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+       # @prefix ts: <http://hosi.org/ts#> .
+       # @prefix xsd: <http://www.w3.org/2001/XMLSchema> .
+       # 
+       # <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge> a <http://hosi.org/ts/When/TM/OrdinalReferenceSystem>;
+       #    rdfs:member <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::冥王代>,
+       #      <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::始生代>,
+       #      <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::原生代>,
+       #      <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::顕生代> .
+       # 
+       # <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::冥王代> a <http://hosi.org/ts/When/TM/OrdinalEra>;
+       #    ts:begin "-4600000000";
+       #    ts:end "-4000000000";
+       #    ts:label <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::冥王代::冥王代> .
+       # 
+       # <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::原生代> a <http://hosi.org/ts/When/TM/OrdinalEra>;
+       #    ts:begin "-2500000000";
+       #    ts:end "-542000000";
+       #    ts:label <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::原生代::原生代>;
+       #    rdfs:member <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::原生代::前期>,
+       #      <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::原生代::中期>,
+       #      <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::原生代::後期> .
+       # <..snip..>
+    end
+    
     # TZInfo --------------------------------------
     #  https://rubygems.org/gems/tzinfo is required for this section's operations.
     #  Please install tzinfo before operation.
