@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license
   described in the LICENSE.txt file included in this archive.
@@ -462,7 +462,7 @@ module MiniTest:V
       When::TM::Clock.local_time = When.Clock("+0900")
       event = When::V::Todo.new({
                 'rrule'   => {'FREQ'=>'YEARLY', 'BYMONTH'=>1, 'BYDAY'=>{''=>'2MO'}},
-                'due'     => 'VALUE=DATE:20160111'
+                'due'     => 'VALUE=DATE:20200113'
               })
       sample = [
         "2011-01-10",
@@ -470,11 +470,15 @@ module MiniTest:V
         "2013-01-14",
         "2014-01-13",
         "2015-01-12",
-        "2016-01-11"
+        "2016-01-11",
+        "2017-01-09",
+        "2018-01-08",
+        "2019-01-14",
+        "2020-01-13"
       ]
-      this_time = When.when?('2015-1-11').to_s
-      sample.shift while (sample[0] && sample[0] < this_time)
-      event.enum_for(When.when?('20070101'), :forward, 5).each do |date|
+      this_time = When.now.to_s
+      sample.shift while (sample[0] && sample[0] <= this_time)
+      event.enum_for(When.when?('20070101'), :forward, 9).each do |date|
         assert_equal(sample.shift, date.to_s)
       end
       assert_equal([], sample)

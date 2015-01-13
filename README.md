@@ -24,6 +24,8 @@ You can see examples of [When.exe Standard Representation](http://www.asahi-net.
 
 Preferences are changeable on [hosi.org/cookies](http://hosi.org/cookies).
 
+SPARQL endpoint is [hosi.org/japan/sparql](http://hosi.org/japan/sparql) .
+
 
 Documentation
 -------------
@@ -132,7 +134,8 @@ Example Usage
     end
     
     # Web service ----------------------------------
-    #  retrieve JSON response from http://hosi.org:3000 (when_exe demonstration web server)
+    #  retrieve JSON, JSON-LD, Turtle response from http://hosi.org:3000 (when_exe demonstration web server)
+    # (Notation3, RDF/XML, N-Triples and XML formats are also available.)
     require 'open-uri'
     open('http://hosi.org:3000/Date/2014-04-20.json') do |json|
       puts json.read #=> newlines and blanks are inserted for readability.
@@ -236,7 +239,34 @@ Example Usage
        # <..snip..>
     end
     
-    # TZInfo --------------------------------------
+    #
+    # SPARQL endpoint ------------------------------
+    #  https://rubygems.org/gems/sparql is required for this section's operations.
+    #  Please install sparql before operation.
+    
+    require 'sparql'
+    PREFIXES = When::Parts::Resource.namespace_prefixes(
+      '_co:Common', '_co:Common?V=0618', '_m:Calendar', '_m:Japanese', '_n:Japanese/Notes')
+    
+    client = SPARQL::Client.new("http://hosi.org/japan/sparql")
+    
+    client.query(PREFIXES.keys.map {|key|
+      "PREFIX #{key}: <#{PREFIXES[key].last}> "}.join("\n") +
+      %(
+        SELECT DISTINCT ?s
+        WHERE {
+          ?s ts:coordinate "10" .
+          ?s DayNote:廿四節気 SolarTerm:清明 .
+          ?s DayNote:干支     Stem-Branch:壬戌 .
+        }
+      )).each do |solution|
+      p solution[:s].to_s #=>
+        #=> "http://hosi.org/tp/0689-03-10%5E%5EJapanese"
+        #=> "http://hosi.org/tp/1490-03-10%5E%5EJapanese"
+    end
+    
+    #
+    # TZInfo ---------------------------------------
     #  https://rubygems.org/gems/tzinfo is required for this section's operations.
     #  Please install tzinfo before operation.
     

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -49,10 +49,12 @@ module When
       #
       def self._default_start(date)
         case date.start
-        when ::Date::JULIAN    ; 'Julian'
-        when ::Date::GREGORIAN ; 'Gregorian'
-        else                   ; "Civil?reform_jdn=#{date.start}"
+        when ::Date::JULIAN    ; return 'Julian'
+        when ::Date::GREGORIAN ; return 'Gregorian'
         end
+        start = date.start
+        start = start.to_i if start == start.to_i
+        "Civil?reform_jdn=#{start}"
       end
 
       # 年月日 -> 通日

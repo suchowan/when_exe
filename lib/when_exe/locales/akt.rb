@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2014 Takashi SUGA
+  Copyright (C) 2014-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -151,8 +151,9 @@ module When
     # Convert AKT string to katakana scripts
     #
     def self.akt(string, locale='ja')
-      string.gsub(/([^aeiou])\1/, 'ッ\1').
-             gsub(/m([fpb])/, 'n\1').
+      string.downcase.
+        gsub(/([^aeiou])\1/, 'ッ\1').
+        gsub(/m([fpb])/, 'n\1').
         gsub(AKT_keys[locale]) {|code|
         AKT[locale][code] || code
       }
