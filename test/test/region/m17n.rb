@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license
   described in the LICENSE.txt file included in this archive.
@@ -125,18 +125,18 @@ module MiniTest
     def test__to_h
       [
        ['HLC0.0.0.0.0',
-         {:calendar=>["_e:LongCount::PHLC",-13], :sdn=>584283, :cal_date=>[13, 0, 0, 0, 0],
+         {:calendar=>["PHLC",-13], :sdn=>584283, :cal_date=>[13, 0, 0, 0, 0],
           :notes=>[[{:note=>"Trecena", :value=>"Trecena(4/13)"},
                     {:note=>"Tzolk'in", :value=>"Ajaw(19/20)"},
                     {:note=>"Lords_of_the_Night", :value=>"G9(0/9)"},
                     {:note=>"Haab'", :value=>"8Kumk'u/365"}]], :locale=>'en'}],
 
        ['1985-1-1',
-         {:calendar=>["_c:Gregorian"], :sdn=>2446067, :cal_date=>[1985, 1, 1],
+         {:calendar=>["Gregorian"], :sdn=>2446067, :cal_date=>[1985, 1, 1],
           :notes=>[[{:note=>"Month", :value=>"January"}],[{:note=>"Week", :value=>"Tuesday(1)"}]], :locale=>'en'}],
 
        ['明治7.5.7',
-         {:calendar=>["_e:Japanese::明治",1867], :sdn=>2405651, :cal_date=>[7, 5, 7],
+         {:calendar=>["明治",1867], :sdn=>2405651, :cal_date=>[7, 5, 7],
           :notes=>[[{:note=>"干支",  :value=>"甲戌(10)", :position=>"共通"}],
                    [{:note=>"月名",  :value=>"5月",      :position=>"月建"}],
                    [{:note=>"七曜",  :value=>"木曜日(3)", :position=>"共通"},
@@ -144,7 +144,7 @@ module MiniTest
                     {:note=>"六曜",  :value=>"赤口",     :position=>"民間"}]], :locale=>'ja'}],
 
        ['明治17.5.7',
-         {:calendar=>["_e:Japanese::明治",1867], :sdn=>2409304, :cal_date=>[17, 5, 7],
+         {:calendar=>["明治",1867], :sdn=>2409304, :cal_date=>[17, 5, 7],
           :notes=>[[{:note=>"干支",  :value=>"甲申(20)", :position=>"共通"}],
                    [{:note=>"月名",  :value=>"5月",      :position=>"月建"}],
                    [{:note=>"七曜",  :value=>"水曜日(2)", :position=>"共通"},
@@ -152,7 +152,7 @@ module MiniTest
                     {:note=>"六曜",  :value=>"先負",     :position=>"民間"}]], :locale=>'ja'}],
 
        ['CE-2010.06.08T12:00:00+09:00',
-         {:calendar=>["_e:Common::BCE", 1, true], :sdn=>987064, :cal_date=>[-2011, 6, 8],
+         {:calendar=>["BeforeCommonEra", 1, true], :sdn=>987064, :cal_date=>[-2011, 6, 8],
           :notes=>[[{:note=>"Month", :value=>"June"}],[]], :locale=>'en',
           :clk_time=>[987064, 12, 0, 0]}],
 
@@ -180,10 +180,10 @@ module MiniTest
         end
       end
 
-      assert_equal({:Frame=>"http://hosi.org/When/CalendarTypes/Gregorian",
+      assert_equal({:Frame=>"Gregorian",
                     :Precision=>0,
                     :Sdn=>2456388,
-                    :Calendar=>["http://hosi.org/When/CalendarTypes/Gregorian"],
+                    :Calendar=>["Gregorian"],
                     :Notes=>[[{:Note=>"Month", :Value=>"April"}],
                              [{:Note=>"Week", :Value=>"Friday(4)"}]],
                     :CalDate=>[2013, 4, 5]},

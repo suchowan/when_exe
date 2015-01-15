@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2014 Takashi SUGA
+  Copyright (C) 2014-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -104,14 +104,14 @@ date = when?('1868-10-22')
 p date                                #=> 1868-10-22
 list = date ^ CalendarEra('Japanese')
 p list                                #=> [慶応04(1868).09.07, 明治01(1868).09.07]
-p list[0].calendar_name[3]            #=> nil
-p list[1].calendar_name[3]            #=> true (改元前)
+p list[0].calendar_era_go_back        #=> nil
+p list[1].calendar_era_go_back        #=> true (改元前)
 # **改元後
 date = when?('1868-10-23')
 p date                                #=> 1868-10-23
 list = date ^ CalendarEra('Japanese')
 p list                                #=> [明治01(1868).09.08]
-p list[0].calendar_name[3]            #=> nil
+p list[0].calendar_era_go_back        #=> nil
 p list[0].calendar_era.reference_date #=> 01(1868)
 
 # 年号の reference_date の“精度”が“年”なら、年初に遡って検索をヒットさせる
@@ -122,13 +122,13 @@ date = when?('1912-7-29')
 p date                                #=> 1912-07-29
 list = date ^ CalendarEra('Japanese')
 p list                                #=> [明治45(1912).07.29]
-p list[0].calendar_name[3]            #=> nil
+p list[0].calendar_era_go_back        #=> nil
 # **改元後
 date = when?('1912-7-30')
 p date                                #=> 1912-07-30
 list = date ^ CalendarEra('Japanese')
 p list                                #=> [大正01(1912).07.30]
-p list[0].calendar_name[3]            #=> nil
+p list[0].calendar_era_go_back        #=> nil
 p list[0].calendar_era.reference_date #=> 01(1912).07.30
 
 # 年号の reference_date の“精度”が“日”なら、年初に遡って検索をヒットさせない

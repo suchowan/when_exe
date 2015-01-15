@@ -7,80 +7,110 @@
 
 module When
   #
-  # When::Parts::Resource ‚Ö‚Ì’Ç‰Á
+  # When::Parts::Resource ã¸ã®è¿½åŠ 
   # 
   module Parts::Resource
 
     DocRoot = "http://www.rubydoc.info/gems/when_exe/#{When::VERSION}/When/"
 
     Schema = {
-      'ts:reference'       => {'ts:reference' => "#{DocRoot}Locale#reference-instance_method"               },
-      'ts:label'           => {'ts:reference' => "#{DocRoot}BasicTypes/M17n#label-instance_method"          },
-      'ts:prev'            => {'ts:reference' => "#{DocRoot}TM/TemporalPosition#prev-instance_method"       },
-      'ts:succ'            => {'ts:reference' => "#{DocRoot}TM/TemporalPosition#succ-instance_method"       },
-      'ts:frame'           => {'ts:reference' => "#{DocRoot}TM/TemporalPosition#frame-instance_method"      },
-      'ts:ruler'           => {'ts:reference' => "#{DocRoot}TM/TemporalPosition#query-instance_method"      },
-      'ts:coordinate'      => {'ts:reference' => "#{DocRoot}TM/CalDate#cal_date-instance_method"            },
-      'ts:sdn'             => {'ts:reference' => "#{DocRoot}TM/CalDate#to_i-instance_method"                },
-      'ts:calendarEra'     => {'ts:reference' => "#{DocRoot}TM/CalDate#calendar_era-instance_method"        },
-      'ts:referenceEvent'  => {'ts:reference' => "#{DocRoot}TM/Clock#reference_event-instance_method"       },
-      'ts:referenceTime'   => {'ts:reference' => "#{DocRoot}TM/Clock#reference_time-instance_method"        },
-      'ts:utcReference'    => {'ts:reference' => "#{DocRoot}TM/Clock#utc_reference-instance_method"         },
-      'ts:dateBasis'       => {'ts:reference' => "#{DocRoot}TM/Clock#date_basis-instance_method"            },
-      'ts:referenceFrame'  => {'ts:reference' => "#{DocRoot}TM/Calendar#reference_frame-instance_method"    },
-      'ts:timeBasis'       => {'ts:reference' => "#{DocRoot}TM/Calendar#time_basis-instance_method"         },
-      'ts:referenceEvent'  => {'ts:reference' => "#{DocRoot}TM/CalendarEra#reference_event-instance_method" },
-      'ts:referenceDate'   => {'ts:reference' => "#{DocRoot}TM/CalendarEra#reference_date-instance_method"  },
-      'ts:julianReference' => {'ts:reference' => "#{DocRoot}TM/CalendarEra#julian_reference-instance_method"},
-      'ts:datingSystem'    => {'ts:reference' => "#{DocRoot}TM/CalendarEra#dating_system-instance_method"   },
-      'ts:epoch'           => {'ts:reference' => "#{DocRoot}TM/CalendarEra#epoch-instance_method"           },
-      'ts:remainder'       => {'ts:reference' => "#{DocRoot}Coordinates/Residue#remainder-instance_method"  },
-      'ts:divisor'         => {'ts:reference' => "#{DocRoot}Coordinates/Residue#divisor-instance_method"    },
-      'ts:longitude'       => {'ts:reference' => "#{DocRoot}Coordinates/Spatial#longitude-instance_method"  },
-      'ts:latitude'        => {'ts:reference' => "#{DocRoot}Coordinates/Spatial#latitude-instance_method"   },
-      'ts:altitide'        => {'ts:reference' => "#{DocRoot}Coordinates/Spatial#latitude-instance_method"   },
-      'ts:event'           => {'ts:reference' => "#{DocRoot}CalendarNote#event-instance_method"             },
+      'reference'       => "Locale#reference-instance_method",
+      'label'           => "BasicTypes/M17n#label-instance_method",
+      'prev'            => "TM/TemporalPosition#prev-instance_method",
+      'succ'            => "TM/TemporalPosition#succ-instance_method",
+      'frame'           => "TM/TemporalPosition#frame-instance_method",
+      'ruler'           => "TM/TemporalPosition#query-instance_method",
+      'coordinate'      => "TM/CalDate#cal_date-instance_method",
+      'sdn'             => "TM/CalDate#to_i-instance_method",
+      'calendarEra'     => "TM/CalDate#calendar_era-instance_method",
+      'referenceEvent'  => "TM/Clock#reference_event-instance_method",
+      'referenceTime'   => "TM/Clock#reference_time-instance_method",
+      'utcReference'    => "TM/Clock#utc_reference-instance_method",
+      'dateBasis'       => "TM/Clock#date_basis-instance_method",
+      'referenceFrame'  => "TM/Calendar#reference_frame-instance_method",
+      'timeBasis'       => "TM/Calendar#time_basis-instance_method",
+      'referenceEvent'  => "TM/CalendarEra#reference_event-instance_method",
+      'referenceDate'   => "TM/CalendarEra#reference_date-instance_method",
+      'julianReference' => "TM/CalendarEra#julian_reference-instance_method",
+      'datingSystem'    => "TM/CalendarEra#dating_system-instance_method",
+      'epoch'           => "TM/CalendarEra#epoch-instance_method",
+      'remainder'       => "Coordinates/Residue#remainder-instance_method",
+      'divisor'         => "Coordinates/Residue#divisor-instance_method",
+      'longitude'       => "Coordinates/Spatial#longitude-instance_method",
+      'latitude'        => "Coordinates/Spatial#latitude-instance_method",
+      'altitide'        => "Coordinates/Spatial#latitude-instance_method",
+      'event'           => "CalendarNote#event-instance_method",
     }
 
     XSD  = 'http://www.w3.org/2001/XMLSchema'
     RDFS = 'http://www.w3.org/2000/01/rdf-schema#'
     RDF  = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
 
+    #
+    # @private
+    #
+    module MinimumLinkedDataAPI
+
+      attr_accessor :iri
+      private :iri=
+
+      def rdf_graph(options={})
+        self
+      end
+    end
+
     class << self
 
-      # Schema ƒIƒuƒWƒFƒNƒg‚ğ¶¬‚·‚é
+      # context ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆã™ã‚‹
       #
-      # @return [Hash] #to_linked_data ƒƒ\ƒbƒh‚ğ’Ç‰Á‚µ‚½ Hash
+      # @param [String] iri self ã«ä¸ãˆã‚‹ iri
       #
-      def schema
-        hash = {'@context'=>{'ts'=>base_uri.sub(/When\/$/, '') + 'ts#'},
-                '@graph'  => Schema.keys.map {|id|
-          next nil unless id =~ /\Ats:/
-          item = {}
-          item['@id'] = id
-          Schema[id].each_pair do |key, ref|
-            item[key] = {'@id'=>ref}
-          end
-          item
-        }.compact}
-        class << hash
-          def rdf_graph(options={})
-            self
-          end
-          def iri
-            self['@context']['ts'][0..-2]
-          end
+      # @return [Hash]
+      #
+      def context(iri=nil)
+        ts = base_uri.sub(/When\/$/, 'ts#')
+        hash = {'ts' => ts}
+        Schema.each_pair do |key, ref|
+          hash['ts:' + key] = {'@type' => '@id'}
         end
+        bless(hash, iri || ts[0..-2])
+      end
+
+      # Schema ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆã™ã‚‹
+      #
+      # @param [String] iri self ã«ä¸ãˆã‚‹ iri
+      #
+      # @return [Hash]
+      #
+      def schema(iri=nil)
+        ts = base_uri.sub(/When\/$/, 'ts#')
+        hash =
+          {'@context'=>{'ts' => ts},
+           '@graph'  => Schema.keys.map {|id| {'@id'=>'ts:'+id, 'ts:reference'=>{'@id'=>DocRoot + Schema[id]}}}
+          }
+        bless(hash, iri || ts[0..-2])
+      end
+
+      # Hash ã«æœ€ä½é™ã®ãƒ¡ã‚½ãƒƒãƒ‰ã‚’è¿½åŠ ã™ã‚‹
+      #
+      # @param [Hash] hash ãƒ¡ã‚½ãƒƒãƒ‰ã‚’è¿½åŠ ã•ã‚Œã‚‹ Hash
+      # @param [String] iri hash ã«ä¸ãˆã‚‹ iri
+      #
+      # @return [Hash]
+      #
+      def bless(hash, iri)
+        hash.extend(MinimumLinkedDataAPI)
+        hash.send(:iri=, iri)
         hash
       end
 
-      # jsonld ‚ğ•\Œ»‚·‚é Hash ‚ğŠeí‚ÌRDF•\Œ»Œ`®‚É•ÏŠ·‚·‚é
+      # jsonld ã‚’è¡¨ç¾ã™ã‚‹ Hash ã‚’å„ç¨®ã®RDFè¡¨ç¾å½¢å¼ã«å¤‰æ›ã™ã‚‹
       #
-      # @param [Hash] jsonld_hash jsonld ‚ğ•\Œ»‚·‚é Hash
-      # @param [Symbol] writer RDF•\Œ»Œ`® (ƒfƒtƒHƒ‹ƒg :jsonld - ’P‚É Hash ‚ğ JSON‰»)
-      # @param [Hash] prefixes prefix ‚©‚ç namespace ‚ğˆø‚­ Hash
+      # @param [Hash] jsonld_hash jsonld ã‚’è¡¨ç¾ã™ã‚‹ Hash
+      # @param [Symbol] writer RDFè¡¨ç¾å½¢å¼ (ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ :jsonld - å˜ã« Hash ã‚’ JSONåŒ–)
+      # @param [Hash] prefixes prefix ã‹ã‚‰ namespace ã‚’å¼•ã Hash
       #
-      # @return [String] writer ‚Åw’è‚³‚ê‚½RDF•\Œ»Œ`®‚Ì•¶š—ñ
+      # @return [String] writer ã§æŒ‡å®šã•ã‚ŒãŸRDFè¡¨ç¾å½¢å¼ã®æ–‡å­—åˆ—
       #
       def to_linked_data(jsonld_hash, writer=:jsonld, prefixes=nil)
         if writer == :jsonld
@@ -94,15 +124,15 @@ module When
         end
       end
 
-      # w’è‚Ì”ÍˆÍ‚ÌResourceƒIƒuƒWƒFƒNƒg‚ÌƒOƒ‰ƒt‚Ì jsonld ‚ğ•\Œ»‚·‚é Hash ‚ğ¶¬‚·‚é
+      # æŒ‡å®šã®ç¯„å›²ã®Resourceã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã‚°ãƒ©ãƒ•ã® jsonld ã‚’è¡¨ç¾ã™ã‚‹ Hash ã‚’ç”Ÿæˆã™ã‚‹
       #
-      # @param [Range or Array] objects jsonld ‚ğ•\Œ»‚·‚é Hash ‚ğ¶¬‚·‚éResourceƒIƒuƒWƒFƒNƒg‚Ì”ÍˆÍ‚Ü‚½‚Í”z—ñ
-      # @param [Hash] options ˆÈ‰º‚Ì’Ê‚è
-      # @option options [Boolean] :include ©g‚ªŠÜ‚ŞResourceƒIƒuƒWƒFƒNƒg‚ğƒOƒ‰ƒt‚ÉŠÜ‚ß‚é(ƒfƒtƒHƒ‹ƒg nil)
-      # @option options [Object] @... ‚»‚Ì‚Ü‚Ü–ß‚è’l‚ÌHash‚É’Ç‰Á
-      # @option options [Symbol] ‚»‚Ì‘¼ {When::TM::CalDate#to_jsonld_hash} ‚È‚Ç‚ğQÆ
+      # @param [Range or Array] objects jsonld ã‚’è¡¨ç¾ã™ã‚‹ Hash ã‚’ç”Ÿæˆã™ã‚‹Resourceã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ç¯„å›²ã¾ãŸã¯é…åˆ—
+      # @param [Hash] options ä»¥ä¸‹ã®é€šã‚Š
+      # @option options [Boolean] :include è‡ªèº«ãŒå«ã‚€Resourceã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ã‚°ãƒ©ãƒ•ã«å«ã‚ã‚‹(ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ nil)
+      # @option options [Object] @... ãã®ã¾ã¾æˆ»ã‚Šå€¤ã®Hashã«è¿½åŠ 
+      # @option options [Symbol] ãã®ä»– {When::TM::CalDate#to_jsonld_hash} ãªã©ã‚’å‚ç…§
       #
-      # @return [Hash] jsonld ‚ğ•\Œ»‚·‚é Hash
+      # @return [Hash] jsonld ã‚’è¡¨ç¾ã™ã‚‹ Hash
       #
       def rdf_graph(objects, options={})
         jsonld_hash = {}
@@ -123,9 +153,9 @@ module When
         jsonld_hash
       end
 
-      # Linked Data —p namespace URI ‚Ì Array ‚Ì Hash ‚ğ¶¬‚·‚é
+      # Linked Data ç”¨ namespace URI ã® Array ã® Hash ã‚’ç”Ÿæˆã™ã‚‹
       #
-      # @param [Array<When::Parts::Resource or String>] resources namespace ‚ğ’Šo‚·‚é resource ‚Ì Array
+      # @param [Array<When::Parts::Resource or String>] resources namespace ã‚’æŠ½å‡ºã™ã‚‹ resource ã® Array
       #
       # @return [Hash]
       #
@@ -151,21 +181,21 @@ module When
         }
       end
 
-      # URI‚ÌArray‚ÌÅŒã‚Ì—v‘f‚ğ prefix ‚É‘Î‰‚·‚é namespace ‚Æ‚İ‚È‚µ‚Ä json-ld ‚Ì @context ‚É“K‡‚·‚éŒ`®‚É•ÏŠ·‚·‚é
+      # URIã®Arrayã®æœ€å¾Œã®è¦ç´ ã‚’ prefix ã«å¯¾å¿œã™ã‚‹ namespace ã¨ã¿ãªã—ã¦ json-ld ã® @context ã«é©åˆã™ã‚‹å½¢å¼ã«å¤‰æ›ã™ã‚‹
       #
-      # @param [Hash<String=>Array<String>>] prefixes Linked Data —p namespace URI‚ÌArray‚ÌHash
+      # @param [Hash<String=>Array<String>>] prefixes Linked Data ç”¨ namespace URIã®Arrayã®Hash
       #
-      # @return [Hash<String=>String>] prefix ‚Æ namespace ‚Ì1‘Î1‘Î‰
+      # @return [Hash<String=>String>] prefix ã¨ namespace ã®1å¯¾1å¯¾å¿œ
       #
       def prefixs_to_context(prefixes)
          Hash[*(prefixes.keys.map {|key| [key, prefixes[key].last]}.flatten)]
       end
 
-      # json-ld ‚Ì @context ‚É“K‡‚·‚éŒ`®‚Å‹Lq‚³‚ê‚½ 1‘Î1‘Î‰‚·‚é prefix ‚Æ namespace ‚ğ Linked Data —p namespace URI‚ÌArray‚ÌHash‰»‚·‚é
+      # json-ld ã® @context ã«é©åˆã™ã‚‹å½¢å¼ã§è¨˜è¿°ã•ã‚ŒãŸ 1å¯¾1å¯¾å¿œã™ã‚‹ prefix ã¨ namespace ã‚’ Linked Data ç”¨ namespace URIã®Arrayã®HashåŒ–ã™ã‚‹
       #
-      # @param [Hash<String=>String>] prefixes prefix ‚Æ namespace ‚Ì1‘Î1‘Î‰
+      # @param [Hash<String=>String>] prefixes prefix ã¨ namespace ã®1å¯¾1å¯¾å¿œ
       #
-      # @return [Hash<String=>Array<String>>] Linked Data —p namespace URI‚ÌArray‚ÌHash
+      # @return [Hash<String=>Array<String>>] Linked Data ç”¨ namespace URIã®Arrayã®Hash
       #
       def context_to_prefixs(prefixes)
          hash = {}
@@ -176,7 +206,7 @@ module When
       end
     end
 
-    # Linked Data —p namespace URI ‚Ì Array ‚Ì Hash ‚ğ¶¬‚·‚é
+    # Linked Data ç”¨ namespace URI ã® Array ã® Hash ã‚’ç”Ÿæˆã™ã‚‹
     #
     # @return [Hash]
     #
@@ -190,34 +220,34 @@ module When
       prefixes
     end
 
-    # ©g‚ğ root ‚Æ‚·‚éƒOƒ‰ƒt‚Ì jsonld ‚ğ•\Œ»‚·‚é Hash ‚ğŠeí‚ÌRDF•\Œ»Œ`®‚É•ÏŠ·‚·‚é
+    # è‡ªèº«ã‚’ root ã¨ã™ã‚‹ã‚°ãƒ©ãƒ•ã® jsonld ã‚’è¡¨ç¾ã™ã‚‹ Hash ã‚’å„ç¨®ã®RDFè¡¨ç¾å½¢å¼ã«å¤‰æ›ã™ã‚‹
     #
-    # @param [Symbol] writer RDF•\Œ»Œ`® (ƒfƒtƒHƒ‹ƒg :jsonld - ’P‚É Hash ‚ğ JSON‰»)
-    # @param [Hash] options “à•”‚ÅŒÄ‚Ño‚· #to_jsonld_hash ‚É‚»‚Ì‚Ü‚Ü“n‚·
+    # @param [Symbol] writer RDFè¡¨ç¾å½¢å¼ (ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ :jsonld - å˜ã« Hash ã‚’ JSONåŒ–)
+    # @param [Hash] options å†…éƒ¨ã§å‘¼ã³å‡ºã™ #to_jsonld_hash ã«ãã®ã¾ã¾æ¸¡ã™
     #
-    # @return [String] writer ‚Åw’è‚³‚ê‚½RDF•\Œ»Œ`®‚Ì•¶š—ñ
+    # @return [String] writer ã§æŒ‡å®šã•ã‚ŒãŸRDFè¡¨ç¾å½¢å¼ã®æ–‡å­—åˆ—
     #
     def to_linked_data(writer=:jsonld, options={})
       jsonld_hash = rdf_graph(options)
       When::Parts::Resource.to_linked_data(jsonld_hash, writer, jsonld_hash['@context'])
     end
 
-    # ©g‚ğ root ‚Æ‚·‚éƒOƒ‰ƒt‚Ì jsonld ‚ğ•\Œ»‚·‚é Hash ‚ğ¶¬‚·‚é
+    # è‡ªèº«ã‚’ root ã¨ã™ã‚‹ã‚°ãƒ©ãƒ•ã® jsonld ã‚’è¡¨ç¾ã™ã‚‹ Hash ã‚’ç”Ÿæˆã™ã‚‹
     #
-    # @param [Hash] options {When::Parts::Resource.rdf_graph} ‚ğQÆ
+    # @param [Hash] options {When::Parts::Resource.rdf_graph} ã‚’å‚ç…§
     #
-    # @return [Hash] jsonld ‚ğ•\Œ»‚·‚é Hash
+    # @return [Hash] jsonld ã‚’è¡¨ç¾ã™ã‚‹ Hash
     #
     def rdf_graph(options={})
       When::Parts::Resource.rdf_graph([self], options)
     end
 
-    # ResourceƒIƒuƒWƒFƒNƒg‚Ì jsonld ‚ğƒOƒ‰ƒt‚É’Ç‰Á‚·‚é
+    # Resourceã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã® jsonld ã‚’ã‚°ãƒ©ãƒ•ã«è¿½åŠ ã™ã‚‹
     #
-    # @param [Array<Hash>] graph ŒÂ•Ê‚ÌResourceƒIƒuƒWƒFƒNƒg‚Ì jsonld hash ‚Ì Array
-    # @param [Hash] options {When::Parts::Resource.rdf_graph} ‚ğQÆ
+    # @param [Array<Hash>] graph å€‹åˆ¥ã®Resourceã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã® jsonld hash ã® Array
+    # @param [Hash] options {When::Parts::Resource.rdf_graph} ã‚’å‚ç…§
     #
-    # @return [Array] jsonld hash ‚Ì Array
+    # @return [Array] jsonld hash ã® Array
     #
     def register_graph(graph, options={})
       jsonld_hash = to_jsonld_hash(options)
@@ -230,20 +260,20 @@ module When
       end
     end
 
-    # ResourceƒIƒuƒWƒFƒNƒg‚Ì jsonld ‚ğ•\Œ»‚·‚é Hash ‚ğ¶¬‚·‚é
+    # Resourceã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã® jsonld ã‚’è¡¨ç¾ã™ã‚‹ Hash ã‚’ç”Ÿæˆã™ã‚‹
     #
-    # @param [Hash] options ˆÈ‰º‚Ì’Ê‚è
-    # @option options [Hash] :prefixes Linked Data —p namespace URI ‚Ì Array ‚Ì Hash ('@context'ŒİŠ·‚Å‚à‰Â)
-    # @option options [Boolean] :context true ‚È‚ç ‰Â”\‚ÈŒÀ‚è namespace ‚ğ prefix ‚É•ÏŠ·‚·‚é
-    # @option options [String or Boolean] :prev ‚Ğ‚Æ‚Â‘O‚ÌResourceƒIƒuƒWƒFƒNƒg‚ÌIRI
-    # @option options [String or Boolean] :succ ‚Ğ‚Æ‚ÂŒã‚ÌResourceƒIƒuƒWƒFƒNƒg‚ÌIRI
-    # @option options [String or Boolean] :included ©g‚ğŠÜ‚ŞeResourceƒIƒuƒWƒFƒNƒg‚ÌIRI
-    # @option options [Object] @... ‚»‚Ì‚Ü‚Ü–ß‚è’l‚ÌHash‚É”½‰f
+    # @param [Hash] options ä»¥ä¸‹ã®é€šã‚Š
+    # @option options [Hash] :prefixes Linked Data ç”¨ namespace URI ã® Array ã® Hash ('@context'äº’æ›ã§ã‚‚å¯)
+    # @option options [Boolean] :context true ãªã‚‰ å¯èƒ½ãªé™ã‚Š namespace ã‚’ prefix ã«å¤‰æ›ã™ã‚‹
+    # @option options [String or Boolean] :prev ã²ã¨ã¤å‰ã®Resourceã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®IRI
+    # @option options [String or Boolean] :succ ã²ã¨ã¤å¾Œã®Resourceã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®IRI
+    # @option options [String or Boolean] :included è‡ªèº«ã‚’å«ã‚€è¦ªResourceã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®IRI
+    # @option options [Object] @... ãã®ã¾ã¾æˆ»ã‚Šå€¤ã®Hashã«åæ˜ 
     #
-    # @note :prev,:succ,:included ‚ª true ‚Ì‚Æ‚«‚Í©g‚Å“–ŠYIRI‚ğŒvZ‚·‚éB
-    #                                nil,false ‚Ì‚Æ‚«‚Í“–ŠYî•ñ‚ğ–ß‚è’l‚ÌHash‚É’Ç‰Á‚µ‚È‚¢B
+    # @note :prev,:succ,:included ãŒ true ã®ã¨ãã¯è‡ªèº«ã§å½“è©²IRIã‚’è¨ˆç®—ã™ã‚‹ã€‚
+    #                                nil,false ã®ã¨ãã¯å½“è©²æƒ…å ±ã‚’æˆ»ã‚Šå€¤ã®Hashã«è¿½åŠ ã—ãªã„ã€‚
     #
-    # @return [Hash] jsonld ‚ğ•\Œ»‚·‚é Hash
+    # @return [Hash] jsonld ã‚’è¡¨ç¾ã™ã‚‹ Hash
     #
     def to_jsonld_hash(options={})
       neighbor  = {
@@ -270,7 +300,7 @@ module When
     private
 
     #
-    # jsonld_hash ‚Æ context, base ‚ğ€”õ‚·‚é
+    # jsonld_hash ã¨ context, base ã‚’æº–å‚™ã™ã‚‹
     #
     def hash_and_variables(options)
       base = When::Parts::Resource.base_uri.sub(/When\/$/, '')
@@ -287,7 +317,7 @@ module When
     end
 
     #
-    # jsonld_hash ‚ÌŒÂ•Ê•”•ª
+    # jsonld_hash ã®å€‹åˆ¥éƒ¨åˆ†
     #
     def hash_for_jsonld(ts, options)
       tp   = ts.sub('ts#', 'tp/')
@@ -314,7 +344,7 @@ module When
     end
 
     #
-    # qŒê‚ğƒRƒ“ƒpƒNƒg‰»‚·‚é
+    # è¿°èªã‚’ã‚³ãƒ³ãƒ‘ã‚¯ãƒˆåŒ–ã™ã‚‹
     #
     def compact_predicate(hash, context, prefixes)
       [hash, hash['@reverse']].each do |h|
@@ -330,14 +360,15 @@ module When
     end
 
     #
-    # namespace ‚ğ prefix ‚ÉƒRƒ“ƒpƒNƒg‰»‚·‚é
+    # namespace ã‚’ prefix ã«ã‚³ãƒ³ãƒ‘ã‚¯ãƒˆåŒ–ã™ã‚‹
     #
     def compact_namespace_to_prefix(source, prefixes, context=nil)
       return source unless prefixes
       prefixes.each_pair do |key, value|
         Array(value).each do |prefix|
           start = source.index(prefix)
-          return key + ':' + source[prefix.length..-1] if start == 0
+          body  = source[prefix.length..-1]
+          return key + ':' + body if start == 0 && body !~ /:/
         end
       end
       return source unless context
@@ -346,8 +377,9 @@ module When
       if namespace =~ /^Ahttp:\/\/([^.]+)\.wikipedia\.org/
         prefix = "wiki_#{$1}"
       elsif namespace && namespace.index(When::Parts::Resource.base_uri) == 0
-        parent = begin When.Resource(namespace.sub(/::\z/, '')) rescue return source end
-        prefix = (parent.kind_of?(When::BasicTypes::M17n) ? parent : parent.label) / 'en'
+        label  = begin When.Resource(namespace.sub(/::\z/, '')) rescue return source end
+        label  = label.label unless label.kind_of?(When::BasicTypes::M17n)
+        prefix = label.to_m17n / 'en'
         return source unless prefix =~ /\A[-A-Z\d_]+\z/i
       else
         return source
@@ -361,14 +393,14 @@ module When
   end
 
   #
-  # When::BasicTypes::M17n ‚Ö‚Ì’Ç‰Á
+  # When::BasicTypes::M17n ã¸ã®è¿½åŠ 
   # 
   class BasicTypes::M17n
 
     private
 
     #
-    # jsonld_hash ‚ÌŒÂ•Ê•”•ª
+    # jsonld_hash ã®å€‹åˆ¥éƒ¨åˆ†
     #
     def hash_for_jsonld(ts, options)
       hash = {}
@@ -380,14 +412,14 @@ module When
   end
 
   #
-  # When::TM::Clock ‚Ö‚Ì’Ç‰Á
+  # When::TM::Clock ã¸ã®è¿½åŠ 
   # 
   class TM::Clock
 
     private
 
     #
-    # jsonld_hash ‚ÌŒÂ•Ê•”•ª
+    # jsonld_hash ã®å€‹åˆ¥éƒ¨åˆ†
     #
     def hash_for_jsonld(ts, options)
       hash = {}
@@ -399,11 +431,11 @@ module When
   end
 
   #
-  # When::TM::CalDate ‚Ö‚Ì’Ç‰Á
+  # When::TM::CalDate ã¸ã®è¿½åŠ 
   # 
   class TM::CalDate
 
-    # URI - linked data —p
+    # URI - linked data ç”¨
     #
     # @overload to_uri_linkeddata()
     #
@@ -416,36 +448,36 @@ module When
       When::Parts::Resource.base_uri.sub(/When\/$/, 'tp/') + date
     end
 
-    # ©g‚ğ root ‚Æ‚·‚éƒOƒ‰ƒt‚Ì jsonld ‚ğ•\Œ»‚·‚é Hash ‚ğŠeí‚ÌRDF•\Œ»Œ`®‚É•ÏŠ·‚·‚é
+    # è‡ªèº«ã‚’ root ã¨ã™ã‚‹ã‚°ãƒ©ãƒ•ã® jsonld ã‚’è¡¨ç¾ã™ã‚‹ Hash ã‚’å„ç¨®ã®RDFè¡¨ç¾å½¢å¼ã«å¤‰æ›ã™ã‚‹
     #
-    # @param [Symbol] writer RDF•\Œ»Œ`® (ƒfƒtƒHƒ‹ƒg :jsonld - ’P‚É Hash ‚ğ JSON‰»)
-    # @param [Hash] options “à•”‚ÅŒÄ‚Ño‚· #to_jsonld_hash ‚É‚»‚Ì‚Ü‚Ü“n‚·B‚½‚¾‚µA
-    # @option options [Boolean] :include ©g‚ªŠÜ‚Ş•ª‰ğ”\‚ª‚‚¢CalDateƒIƒuƒWƒFƒNƒg‚ğƒOƒ‰ƒt‚ÉŠÜ‚ß‚é(ƒfƒtƒHƒ‹ƒg true)
+    # @param [Symbol] writer RDFè¡¨ç¾å½¢å¼ (ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ :jsonld - å˜ã« Hash ã‚’ JSONåŒ–)
+    # @param [Hash] options å†…éƒ¨ã§å‘¼ã³å‡ºã™ #to_jsonld_hash ã«ãã®ã¾ã¾æ¸¡ã™ã€‚ãŸã ã—ã€
+    # @option options [Boolean] :include è‡ªèº«ãŒå«ã‚€åˆ†è§£èƒ½ãŒé«˜ã„CalDateã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ã‚°ãƒ©ãƒ•ã«å«ã‚ã‚‹(ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ true)
     #
-    # @return [String] writer ‚Åw’è‚³‚ê‚½RDF•\Œ»Œ`®‚Ì•¶š—ñ
+    # @return [String] writer ã§æŒ‡å®šã•ã‚ŒãŸRDFè¡¨ç¾å½¢å¼ã®æ–‡å­—åˆ—
     #
     def to_linked_data(writer=:jsonld, options={})
       hash = rdf_graph({:include=>true}.update(options))
       When::Parts::Resource.to_linked_data(hash, writer, hash['@context'])
     end
 
-    # ©g‚ğ root ‚Æ‚·‚éƒOƒ‰ƒt‚Ì jsonld ‚ğ•\Œ»‚·‚é Hash ‚ğ¶¬‚·‚é
+    # è‡ªèº«ã‚’ root ã¨ã™ã‚‹ã‚°ãƒ©ãƒ•ã® jsonld ã‚’è¡¨ç¾ã™ã‚‹ Hash ã‚’ç”Ÿæˆã™ã‚‹
     #
-    # @param [Hash] options {When::Parts::Resource.rdf_graph} ‚ğQÆ
+    # @param [Hash] options {When::Parts::Resource.rdf_graph} ã‚’å‚ç…§
     #
-    # @return [Hash] jsonld ‚ğ•\Œ»‚·‚é Hash
+    # @return [Hash] jsonld ã‚’è¡¨ç¾ã™ã‚‹ Hash
     #
     def rdf_graph(options={})
       root = options[:include] && precision < When::YEAR ? floor(When::YEAR) : self
       When::Parts::Resource.rdf_graph([root], options)
     end
 
-    # CalDateƒIƒuƒWƒFƒNƒg‚Ì jsonld ‚ğƒOƒ‰ƒt‚É’Ç‰Á‚·‚é
+    # CalDateã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã® jsonld ã‚’ã‚°ãƒ©ãƒ•ã«è¿½åŠ ã™ã‚‹
     #
-    # @param [Array<Hash>] graph ŒÂ•Ê‚ÌCalDateƒIƒuƒWƒFƒNƒg‚Ì jsonld hash ‚Ì Array
-    # @param [Hash] options {When::Parts::Resource.rdf_graph} ‚ğQÆ
+    # @param [Array<Hash>] graph å€‹åˆ¥ã®CalDateã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã® jsonld hash ã® Array
+    # @param [Hash] options {When::Parts::Resource.rdf_graph} ã‚’å‚ç…§
     #
-    # @return [Array] jsonld hash ‚Ì Array
+    # @return [Array] jsonld hash ã® Array
     #
     def register_graph(graph, options={})
       jsonld_hash = to_jsonld_hash(options)
@@ -460,21 +492,21 @@ module When
       end
     end
 
-    # CalDateƒIƒuƒWƒFƒNƒg‚Ì jsonld ‚ğ•\Œ»‚·‚é Hash ‚ğ¶¬‚·‚é
+    # CalDateã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã® jsonld ã‚’è¡¨ç¾ã™ã‚‹ Hash ã‚’ç”Ÿæˆã™ã‚‹
     #
-    # @param [Hash] options ˆÈ‰º‚Ì’Ê‚è
-    # @option options [Hash] :prefixes Linked Data —p namespace URI ‚Ì Array ‚Ì Hash ('@context'ŒİŠ·‚Å‚à‰Â)
-    # @option options [Boolean] :context true ‚È‚ç ‰Â”\‚ÈŒÀ‚è namespace ‚ğ prefix ‚É•ÏŠ·‚·‚é
-    # @option options [String or Boolean] :prev ‚Ğ‚Æ‚Â‘O‚ÌCalDateƒIƒuƒWƒFƒNƒg‚ÌIRI
-    # @option options [String or Boolean] :succ ‚Ğ‚Æ‚ÂŒã‚ÌCalDateƒIƒuƒWƒFƒNƒg‚ÌIRI
-    # @option options [String or Boolean] :included ©g‚ğŠÜ‚Ş•ª‰ğ”\‚ª1’á‚¢CalDateƒIƒuƒWƒFƒNƒg‚ÌIRI
-    # @option options [Hash] :note —ï’ŒvZ‚ÌƒIƒvƒVƒ‡ƒ“ {When::Parts::Resource#notes} ‚ğQÆ
-    # @option options [Object] @... ‚»‚Ì‚Ü‚Ü–ß‚è’l‚ÌHash‚É”½‰f
+    # @param [Hash] options ä»¥ä¸‹ã®é€šã‚Š
+    # @option options [Hash] :prefixes Linked Data ç”¨ namespace URI ã® Array ã® Hash ('@context'äº’æ›ã§ã‚‚å¯)
+    # @option options [Boolean] :context true ãªã‚‰ å¯èƒ½ãªé™ã‚Š namespace ã‚’ prefix ã«å¤‰æ›ã™ã‚‹
+    # @option options [String or Boolean] :prev ã²ã¨ã¤å‰ã®CalDateã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®IRI
+    # @option options [String or Boolean] :succ ã²ã¨ã¤å¾Œã®CalDateã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®IRI
+    # @option options [String or Boolean] :included è‡ªèº«ã‚’å«ã‚€åˆ†è§£èƒ½ãŒ1ä½ã„CalDateã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®IRI
+    # @option options [Hash] :note æš¦æ³¨è¨ˆç®—ã®ã‚ªãƒ—ã‚·ãƒ§ãƒ³ {When::Parts::Resource#notes} ã‚’å‚ç…§
+    # @option options [Object] @... ãã®ã¾ã¾æˆ»ã‚Šå€¤ã®Hashã«åæ˜ 
     #
-    # @note :prev,:succ,:included ‚ª true ‚Ì‚Æ‚«‚Í©g‚Å“–ŠYIRI‚ğŒvZ‚·‚éB
-    #                                nil,false ‚Ì‚Æ‚«‚Í“–ŠYî•ñ‚ğ–ß‚è’l‚ÌHash‚É’Ç‰Á‚µ‚È‚¢B
+    # @note :prev,:succ,:included ãŒ true ã®ã¨ãã¯è‡ªèº«ã§å½“è©²IRIã‚’è¨ˆç®—ã™ã‚‹ã€‚
+    #                                nil,false ã®ã¨ãã¯å½“è©²æƒ…å ±ã‚’æˆ»ã‚Šå€¤ã®Hashã«è¿½åŠ ã—ãªã„ã€‚
     #
-    # @return [Hash] jsonld ‚ğ•\Œ»‚·‚é Hash
+    # @return [Hash] jsonld ã‚’è¡¨ç¾ã™ã‚‹ Hash
     #
     def to_jsonld_hash(options={})
       hash, context, base = hash_and_variables(options)
@@ -498,20 +530,45 @@ module When
           }
         }) if options[:included] && precision + frame.indices.size > 0
       compact_predicate(hash, context, options[:prefixes])
-      note_options = {:indices=>precision, :notes=>:all, :method=>:iri}
+      note_options = {:indices=>precision, :notes=>:all}
       note_options.update(options[:note]) if options[:note]
       notes(note_options).first.each do |note|
         next unless note[:note]
-        value =
-          case note[:value]
-          when When::Parts::Resource ; note[:value].iri
-          when Array                 ; note[:value].flatten.reject {|v| v.kind_of?(Hash)}.last.to_s
-          else                       ; note[:value]
-          end
+        if note[:value].kind_of?(Array)
+          value = note[:value].flatten.reject {|v| v.kind_of?(Hash) || v =~ /-\z/ }.map {|v| _value_str(note[:note], v)}
+          value = value.first if value.size == 1
+        else
+          value =_value_str(note[:note], note[:value])
+        end
         id    = compact_namespace_to_prefix(value, options[:prefixes], context)
-        hash[compact_namespace_to_prefix(note[:note], options[:prefixes], context)] = (id == value && id !~ /:\/\//) ? id : {'@id'=>id}
+        hash[compact_namespace_to_prefix(_note_str(note[:note]), options[:prefixes], context)] = (id == value && id !~ /:\/\//) ? id : {'@id'=>id}
       end
       hash
+    end
+
+    private
+
+    #
+    # ã§ãã‚‹ã ã‘ä¸Šä½ã® IRI ã‚’ note ã® IRI ã¨ã™ã‚‹
+    #
+    def _note_str(note)
+      note = note.parent if note.equal?(note.parent.label)
+      note.iri
+    end
+
+    #
+    # ã§ãã‚‹ã ã‘ IRI ã‚’ä½¿ç”¨ã™ã‚‹ã‚ˆã†ã«ã—ã¤ã¤ value ã‚’ JSON å¯èƒ½ãªå‹ã«å¤‰æ›ã™ã‚‹
+    #
+    def _value_str(note, value)
+      case value
+      when Integer, Float ; value
+      when When::Parts::Resource
+         value.parent.equal?(note.parent)              ? value.to_s       :
+        !value.parent.kind_of?(When::BasicTypes::M17n) ? value.parent.iri :
+         value.registered?                             ? value.iri        :
+         value.to_s
+      else                ; value.to_s
+      end
     end
   end
 end

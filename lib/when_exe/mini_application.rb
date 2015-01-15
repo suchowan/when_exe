@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2013-2014 Takashi SUGA
+  Copyright (C) 2013-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -244,9 +244,9 @@ module When
              eras = (date ^ list[i]).delete_if {|e| !e.leaf?}
              unless options[:go_back] == :All
                if options[:go_back] == :After
-                 eras = [eras[(eras.index {|e| e.calendar_era_name[3]}) || -1]]
+                 eras = [eras[(eras.index {|e| e.calendar_era_go_back}) || -1]]
                else
-                 eras.delete_if {|e| e.calendar_era_name[3]}
+                 eras.delete_if {|e| e.calendar_era_go_back}
                end
              end
              list[i,1] = eras.map {|e| e.calendar_era}

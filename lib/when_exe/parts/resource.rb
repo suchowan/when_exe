@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -34,8 +34,20 @@ module When::Parts
     # @private
     ConstList = []
 
-    # private
+    # @private
     IRIHeader = /\A[_a-z\d]+:[^:]/i
+
+    # @private
+    IRIEncodeTable = {'#'=>'%23', '<'=>'%3C', '>'=>'%3E', '{'=>'%7B', '}'=>'%7D'}
+
+    # @private
+    IRIDecodeTable = IRIEncodeTable.invert
+
+    # @private
+    IRIEncode = /#{IRIEncodeTable.keys.join('|')}/
+
+    # @private
+    IRIDecode = /#{IRIDecodeTable.keys.join('|')}/
 
     # @private
     class ContentLine
@@ -445,9 +457,9 @@ module When::Parts
 
       # @private
       def _decode(iri)
+        iri = iri.gsub(When::Parts::Resource::IRIDecode) {|c| When::Parts::Resource::IRIDecodeTable[c]}
         return iri unless iri =~ /%28/
 
-        iri = iri.dup
         begin
           unless iri.gsub!(/%28.*?%29/) {|token|
             token.gsub(/%([\dA-F]{2})/i) {$1.to_i(16).chr}

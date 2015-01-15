@@ -22,6 +22,14 @@ module When
       expression == '' ? super : When::EncodingConversion.to_external_encoding(expression)
     end
 
+    # 多言語対応文字列化
+    #
+    # @return [When::BasicTypes::M17n]
+    #
+    def to_m17n
+      label
+    end
+
     #
     # オブジェクトの内容を Hash 化
     #
@@ -746,7 +754,8 @@ module When
       # @return [String]
       #
       def _to_uri(date)
-        date.gsub(/\./, '-').gsub(/%/, '@').gsub(/#/, '%23') + caret_frame
+        (date.gsub(/\./, '-').gsub(/%/, '@') + caret_frame).
+          gsub(When::Parts::Resource::IRIEncode) {|c| When::Parts::Resource::IRIEncodeTable[c]}
       end
 
       # caret 付きの frame 名
@@ -758,7 +767,7 @@ module When
       def caret_frame
         prefix = When::Parts::Resource.base_uri + 'CalendarTypes/'
         path   = frame.iri
-        return '' if @calendar_era_name || path == prefix + 'Gregorian'
+        return '' if @calendar_era_props || path == prefix + 'Gregorian'
         path   = path[prefix.length..-1] if path.index(prefix) == 0
         '^^' + path
       end
@@ -785,7 +794,7 @@ module When
         when 'B' ; (name(MONTH-d).translate(locale))            # 現在のロケールにおける月の完全な名前
         when 'C' ; year(d).div(100)                             # 世紀 (西暦年の上 2 桁)
         when 'd' ; day(d)                                       # 月内通算日
-        when 'E' ; Array(calendar_era_name)[0].translate(locale)# 年号
+        when 'E' ; Array(@calendar_era_props)[0].translate(locale)# 年号
         when 'F' ; floor(DAY).to_m17n.translate(locale)         # ISO 8601 形式の日付フォーマット
         when 'G' ; cwyear(d)                                    # ISO 8601 週単位表記の年
         when 'g' ; cwyear(d) % 100                              # ISO 8601 週単位表記の年の下2桁
@@ -1031,7 +1040,7 @@ module When
       #      [ true       然り ]
       #
       def calendar_name
-        void, epoch, reverse, back = @calendar_era_name
+        void, epoch, reverse, back = @calendar_era_props
         name = [@calendar_era || @frame, epoch, reverse, back]
         name.pop until name[-1]
         return name
@@ -1276,7 +1285,7 @@ module When
       def to_m17n(precision=@precision, round=false)
         date = m17n(_date_to_s(precision))
         return date unless @calendar_era
-        return _parent_labels.inject(m17n(@calendar_era_name[0])) {|era_name, parent|
+        return _parent_labels.inject(m17n(calendar_era_name)) {|era_name, parent|
           era_name.prefix(m17n(parent) + '::')
         } + date
       end
@@ -1291,7 +1300,7 @@ module When
       def to_s(precision=@precision, round=false)
         date = _date_to_s(precision)
         return date unless @calendar_era
-        return _parent_labels.inject(@calendar_era_name[0].to_s) {|era_name, parent|
+        return _parent_labels.inject(calendar_era_name.to_s) {|era_name, parent|
           parent.to_s + '::' + era_name
         } + date
       end
@@ -1357,8 +1366,8 @@ module When
 
         # 年
         year_by_epoch = @cal_date[0]
-        if @calendar_era_name
-          era, epoch, reverse = @calendar_era_name
+        if @calendar_era_props
+          era, epoch, reverse = @calendar_era_props
           year_in_term        = reverse ? -year_by_epoch : year_by_epoch
           year_by_calendar    = epoch + year_by_epoch if epoch
           terms  << year_in_term

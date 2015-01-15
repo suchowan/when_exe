@@ -1027,6 +1027,7 @@ module When::TM
         key, epoch, reverse = options.delete(:label) || args
         key = When::Locale.ideographic_unification(key)
         if key.kind_of?(String)
+          key.gsub!(When::Parts::Resource::IRIDecode) {|c| When::Parts::Resource::IRIDecodeTable[c]}
           key, *parents = key.split(/::/).reverse
         else
           parents = []
@@ -1306,7 +1307,7 @@ module When::TM
 
       # 発見した日時の属性設定
       cal_date.send(:calendar_era=, self)
-      cal_date.send(:calendar_era_name=, [@label, @epoch_year, reverse?, cal_date.to_i < @epoch[0].to_i])
+      cal_date.send(:calendar_era_props=, [@label, @epoch_year, reverse?, cal_date.to_i < @epoch[0].to_i])
       cal_date.cal_date[0]      -= @epoch_year
       cal_date.trans             = trans_options.dup
       cal_date.query             = (epoch.query || {}).dup
@@ -1496,7 +1497,7 @@ module When::TM
       case @reference_date
       when String  ; format, r_date, r_era = When::BasicTypes::DateTime._to_array(@reference_date)
       when Array   ; r_era, *r_date        = @reference_date
-      when CalDate ; r_era,  r_date        = @reference_date.calendar_era_name, @reference_date.cal_date
+      when CalDate ; r_era,  r_date        = @reference_date.calendar_era_props, @reference_date.cal_date
       when nil     ;
       else         ; raise TypeError, "ReferenceDate is invalid type"
       end
@@ -1555,7 +1556,7 @@ module When::TM
       # julian_reference and reference_date
       @julian_reference = JulianDate.universal_time(@reference_date.universal_time)
       @reference_date.cal_date[0] -= @epoch_year
-      @reference_date.send(:calendar_era_name=, [(r_era ? r_era : @label), @epoch_year])
+      @reference_date.send(:calendar_era_props=, [(r_era ? r_era : @label), @epoch_year])
       if (r_date)
         raise ArgumentError, "JulianReference and ReferenceDate are mismatch" unless (@epoch_year == +j_date[0]-(+r_date[0]))
         raise ArgumentError, "JulianReference and ReferenceDate are mismatch" unless (j_date[1..-1] == r_date[1..-1])

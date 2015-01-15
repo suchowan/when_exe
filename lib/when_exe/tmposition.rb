@@ -478,7 +478,7 @@ module When::TM
         return position unless [:raise, :check].include?(validate)
 
         # 時間位置の存在確認
-        date[0] = -date[0] if position.calendar_era_name && position.calendar_era_name[2] # 紀元前
+        date[0] = -date[0] if position.calendar_era_props && position.calendar_era_reverse # 紀元前
         date.each_index do |i|
           break unless date[i]
           next if When::Coordinates::Pair._force_pair(date[i]) == When::Coordinates::Pair._force_pair(position.cal_date[i])
@@ -1612,18 +1612,6 @@ module When::TM
     #
     alias :calendar :frame
 
-    # 暦年代名
-    #
-    # @return [Array] ( name, epoch, reverse, go back )
-    #   - name    [String]  暦年代名
-    #   - epoch   [Integer] 使用する When::TM::Calendar で暦元に対応する年
-    #   - reverse [Boolean] 年数が昇順(false,nil)か降順(true)か
-    #   - go back [Boolean] 参照イベントより前の暦日か(true)、否か(false,nil)
-    #
-    attr_accessor :calendar_era_name
-    private :calendar_era_name=
-    alias :calendarEraName :calendar_era_name
-
     # 暦年代
     #
     # @return [When::TM::CalendarEra]
@@ -1631,6 +1619,50 @@ module When::TM
     attr_accessor :calendar_era
     private :calendar_era=
     alias :calendarEra :calendar_era
+
+    # 暦年代属性
+    #
+    # @return [Array] ( name, epoch, reverse, go back )
+    #   - name    [String]  暦年代名
+    #   - epoch   [Integer] 使用する When::TM::Calendar で暦元に対応する年
+    #   - reverse [Boolean] 年数が昇順(false,nil)か降順(true)か
+    #   - go back [Boolean] 参照イベントより前の暦日か(true)、否か(false,nil)
+    #
+    attr_accessor :calendar_era_props
+    private :calendar_era_props=
+
+    # 暦年代名
+    #
+    # @return [String] 暦年代名
+    #
+    def calendar_era_name
+      @calendar_era_props[0]
+    end
+    alias :calendarEraName :calendar_era_name
+
+    # 暦年代元期
+    #
+    # @return [Integer] 使用する When::TM::Calendar で暦元に対応する年
+    #
+    def calendar_era_epoch
+      @calendar_era_props[1]
+    end
+
+    # 暦年代正逆
+    #
+    # @return [Boolean] 年数が昇順(false,nil)か降順(true)か
+    #
+    def calendar_era_reverse
+      @calendar_era_props[2]
+    end
+
+    # 暦年代遡及
+    #
+    # @return [Boolean] 参照イベントより前の暦日か(true)、否か(false,nil)
+    #
+    def calendar_era_go_back
+      @calendar_era_props[3]
+    end
 
     # 時法の取得 - ダミー
     def clock
@@ -1663,10 +1695,10 @@ module When::TM
     # 暦法上の通日
     #
     def _to_i
-      name, base = @calendar_era_name
-      if base
+      void, epoch = @calendar_era_props
+      if epoch
         date     = @cal_date.dup
-        date[0] += base 
+        date[0] += epoch
       else
         date     = @cal_date
       end
@@ -1703,7 +1735,7 @@ module When::TM
     #
     def most_significant_coordinate
       coordinate  = @cal_date[0]
-      coordinate += @calendar_era_name[1] if @calendar_era_name
+      coordinate += calendar_era_epoch if @calendar_era_props
       @frame.index_of_MSC.times do |i|
         coordinate = +coordinate * @frame.indices[i].unit + @cal_date[i+1] - @frame.indices[i].base
       end
@@ -1819,17 +1851,13 @@ module When::TM
     # @return [Boolean]
     #
     def leaf?
-      name, = @calendar_era_name
-      return true unless name.respond_to?(:_pool)
-      era  = name._pool['..']
-      return true unless era.respond_to?(:leaf?)
-      return era.leaf?
+      ! @calendar_era.respond_to?(:_pool) || @calendar_era.leaf?
     end
 
     # 属性の Hash
     # @private
     def _attr
-      super.merge({:era_name=>@calendar_era_name, :era=>@calendar_era})
+      super.merge({:era_name=>@calendar_era_props, :era=>@calendar_era})
     end
     protected
 
@@ -1852,9 +1880,9 @@ module When::TM
     #
     def initialize(date, options={})
       # 年号 & 日付
-      @calendar_era_name = options[:era_name]
-      @calendar_era      = options[:era]
-      @cal_date          = date
+      @calendar_era_props = options[:era_name]
+      @calendar_era       = options[:era]
+      @cal_date           = date
 
       super(options)
     end
@@ -1868,12 +1896,12 @@ module When::TM
       cal_date_index = @cal_date.index(nil) || @cal_date.length
 
       # 日付の正規化
-      if @calendar_era_name
+      if @calendar_era_props
         # Calendar Era がある場合
         trans_options = @trans || {} # TODO? 消す
         count = trans_options[:count] || 1
         query_options = (@query || {}).dup
-        query_options[:label] = @calendar_era_name
+        query_options[:label] = @calendar_era_props
         query_options[:count] = count
         era = date  = nil
         if @calendar_era
@@ -1889,13 +1917,13 @@ module When::TM
           end
         end
         raise RangeError, "Out of CalendarEra Range" unless era
-        @calendar_era_name = date.calendar_era_name
-        @calendar_era      = era
+        @calendar_era_props = date.calendar_era_props
+        @calendar_era       = era
         @cal_date = date.cal_date
         @frame    = date.frame
         @query    = (@query||{}).merge(date.query)
         @trans    = (@trans||{}).merge(date.trans)
-        @keys    |= @calendar_era_name[0].keys | @frame.keys
+        @keys    |= calendar_era_name.keys | @frame.keys
       else
         # Calendar Era がない場合
         @frame = When.Resource(options[:frame] || @frame || 'Gregorian', '_c:')
@@ -1954,13 +1982,13 @@ module When::TM
     # 年号を除外した @frame の暦法に対応する日付
     def _date_without_era
       date = @cal_date.dup
-      date[0] += @calendar_era_name[1] if @calendar_era_name
+      date[0] += calendar_era_epoch if @calendar_era_props
       date
     end
 
     # 年号に続く日付
     def _date_with_era(date)
-      date[0] -= @calendar_era_name[1] if @calendar_era_name
+      date[0] -= calendar_era_epoch if @calendar_era_props
       date
     end
 
@@ -2213,7 +2241,7 @@ module When::TM
         if second && second != 0 && time_standard.has_leap?
           zero    = DateAndTime.new(@cal_date, time[0..-2],
                                    {:frame=>@frame, :clock=>clock,  :precision=>precision,
-                                    :era_name=>@calendar_era_name,  :era=>options[:era],
+                                    :era_name=>@calendar_era_props,  :era=>options[:era],
                                     :time_standard=>time_standard, :location=>@location})
         end
 
@@ -2228,9 +2256,9 @@ module When::TM
 
         # 夏時間の調整
         if clock._need_validate
-          if @calendar_era_name
+          if @calendar_era_props
             cal_date     = @cal_date.dup
-            cal_date[0] += @calendar_era_name[1]
+            cal_date[0] += calendar_era_epoch
           else
             cal_date     = @cal_date
           end
