@@ -1636,7 +1636,7 @@ module When::TM
     # @return [String] 暦年代名
     #
     def calendar_era_name
-      @calendar_era_props[0]
+      @calendar_era_props ? @calendar_era_props[0] : nil
     end
     alias :calendarEraName :calendar_era_name
 
@@ -1645,7 +1645,7 @@ module When::TM
     # @return [Integer] 使用する When::TM::Calendar で暦元に対応する年
     #
     def calendar_era_epoch
-      @calendar_era_props[1]
+      @calendar_era_props ?  @calendar_era_props[1] : 0
     end
 
     # 暦年代正逆
@@ -1653,7 +1653,7 @@ module When::TM
     # @return [Boolean] 年数が昇順(false,nil)か降順(true)か
     #
     def calendar_era_reverse
-      @calendar_era_props[2]
+      @calendar_era_props ? @calendar_era_props[2] : false
     end
 
     # 暦年代遡及
@@ -1661,7 +1661,7 @@ module When::TM
     # @return [Boolean] 参照イベントより前の暦日か(true)、否か(false,nil)
     #
     def calendar_era_go_back
-      @calendar_era_props[3]
+      @calendar_era_props ? @calendar_era_props[3] : false
     end
 
     # 時法の取得 - ダミー
