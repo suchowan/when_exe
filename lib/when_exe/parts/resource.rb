@@ -44,7 +44,7 @@ module When::Parts
     IRIDecodeTable = IRIEncodeTable.invert
 
     # @private
-    IRIEncode = /#{IRIEncodeTable.keys.join('|')}/
+    IRIEncode = /[#{IRIEncodeTable.keys.join('')}]/
 
     # @private
     IRIDecode = /#{IRIDecodeTable.keys.join('|')}/

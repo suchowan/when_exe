@@ -310,7 +310,8 @@ module When::TM
       def _instance(specification, options={})
 
         # prefix - RFC 5545 Options
-        iso8601form = When::Parts::Resource::ContentLine.extract_rfc5545_Property(specification, options)
+        iso8601form = When::Parts::Resource::ContentLine.extract_rfc5545_Property(specification, options).
+                      gsub(When::Parts::Resource::IRIDecode) {|c| When::Parts::Resource::IRIDecodeTable[c]}
 
         # suffix - Frame specification
         if iso8601form =~ /\A(.*[^\d])\((([-+*&%@!>=<?\dW.]|\{.+?\})+)\)\z/

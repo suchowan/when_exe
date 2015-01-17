@@ -138,7 +138,7 @@ module When
         jsonld_hash = {}
         sub_options = {}
         options.each_pair do |key, value|
-          (/^@/ =~ key ? jsonld_hash : sub_options)[key] = value
+          (/^@/ =~ key.to_s ? jsonld_hash : sub_options)[key] = value
         end
         jsonld_hash['@graph']  ||= []
         sub_options[:prefixes] ||= When::Parts::Resource.namespace_prefixes if options[:context]
@@ -306,7 +306,7 @@ module When
       base = When::Parts::Resource.base_uri.sub(/When\/$/, '')
       hash = {}
       options.each_pair do |key, value|
-        hash[key] = value if /^@/ =~ key
+        hash[key] = value if /^@/ =~ key.to_s
       end
       hash[RDF + 'type'] = {'@id'=>base + 'ts/' + self.class.to_s.gsub(/::/, '/')}
       if options[:context]
@@ -386,7 +386,7 @@ module When
       end
       prefixes[prefix] ||= []
       prefixes[prefix] << namespace
-      prefixes[prefix].sort_by! {|value| -value.length}
+      prefixes[prefix] = prefixes[prefix].sort_by {|value| -value.length}
       context[prefix] = prefixes[prefix].last
       prefix + ':' + item
     end

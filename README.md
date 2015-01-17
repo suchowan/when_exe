@@ -24,7 +24,7 @@ You can see examples of [When.exe Standard Representation](http://www.asahi-net.
 
 Preferences are changeable on [hosi.org/cookies](http://hosi.org/cookies).
 
-SPARQL endpoint is [hosi.org/japan/sparql](http://hosi.org/japan/sparql) .
+SPARQL endpoint is [hosi.org/japan/sparql](http://hosi.org/japan/sparql).
 
 
 Documentation
@@ -38,10 +38,15 @@ Available calendar eras are defined using definition tables in [CalendarEra name
 
 Whole TemporalReferenceSystem resources are listed in the [Resource Dictionary](http://www2u.biglobe.ne.jp/~suchowan/ResourceDictionary.html).
 
+For further detail, please refer to the [when_exe Wiki](http://www2u.biglobe.ne.jp/~suchowan/when_exe_wiki.html) pages.
+
+
 License
 -------
 
 This beta version's license is limited. Please see [LICENSE.txt](https://github.com/suchowan/when_exe/blob/master/LICENSE.txt) for details.
+
+Data sets [TemporalPositionDataSet](http://hosi.org/tp.rdf) and [TemporalReferenceSystemDataSet](http://hosi.org/When.rdf) should be used according to [[CC-BY-ND>http://creativecommons.org/licenses/by-nd/4.0/]] license.
 
 
 Source Code
@@ -326,4 +331,3 @@ Example Usage
         # 2014-12-31T00:00:00.00+09:00...2015-01-01T00:00:00.00+09:00 - 大晦日
     end
 
-For further detail, please refer to the [when_exe Wiki](http://www2u.biglobe.ne.jp/~suchowan/when_exe_wiki.html) pages.
