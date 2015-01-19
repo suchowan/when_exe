@@ -368,7 +368,7 @@ module When
         Array(value).each do |prefix|
           start = source.index(prefix)
           body  = source[prefix.length..-1]
-          return key + ':' + body if start == 0 && body !~ /:/
+          return key + ':' + body if start == 0 && body !~ /[:#\/]/
         end
       end
       return source unless context
