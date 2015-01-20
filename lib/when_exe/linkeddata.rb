@@ -234,7 +234,10 @@ module When
 
     # 自身を root とするグラフの jsonld を表現する Hash を生成する
     #
-    # @param [Hash] options {When::Parts::Resource.rdf_graph} を参照
+    # @param [Hash] options 以下の通り
+    # @option options [Boolean] :include 自身が含むResourceオブジェクトをグラフに含める(デフォルト nil)
+    # @option options [Object] @... そのまま戻り値のHashに追加
+    # @option options [Symbol] その他 {When::TM::CalDate#to_jsonld_hash} などを参照
     #
     # @return [Hash] jsonld を表現する Hash
     #
@@ -245,7 +248,10 @@ module When
     # Resourceオブジェクトの jsonld をグラフに追加する
     #
     # @param [Array<Hash>] graph 個別のResourceオブジェクトの jsonld hash の Array
-    # @param [Hash] options {When::Parts::Resource.rdf_graph} を参照
+    # @param [Hash] options { 以下の通り
+    # @option options [Boolean] :include 自身が含むResourceオブジェクトをグラフに含める(デフォルト nil)
+    # @option options [Object] @... そのまま戻り値のHashに追加
+    # @option options [Symbol] その他 {When::TM::CalDate#to_jsonld_hash} などを参照
     #
     # @return [Array] jsonld hash の Array
     #
@@ -463,7 +469,10 @@ module When
 
     # 自身を root とするグラフの jsonld を表現する Hash を生成する
     #
-    # @param [Hash] options {When::Parts::Resource.rdf_graph} を参照
+    # @param [Hash] options 以下の通り
+    # @option options [Boolean] :include 自身が含むResourceオブジェクトをグラフに含める(デフォルト nil)
+    # @option options [Object] @... そのまま戻り値のHashに追加
+    # @option options [Symbol] その他 {When::TM::CalDate#to_jsonld_hash} などを参照
     #
     # @return [Hash] jsonld を表現する Hash
     #
@@ -475,7 +484,10 @@ module When
     # CalDateオブジェクトの jsonld をグラフに追加する
     #
     # @param [Array<Hash>] graph 個別のCalDateオブジェクトの jsonld hash の Array
-    # @param [Hash] options {When::Parts::Resource.rdf_graph} を参照
+    # @param [Hash] options 以下の通り
+    # @option options [Boolean] :include 自身が含むResourceオブジェクトをグラフに含める(デフォルト nil)
+    # @option options [Object] @... そのまま戻り値のHashに追加
+    # @option options [Symbol] その他 {When::TM::CalDate#to_jsonld_hash} などを参照
     #
     # @return [Array] jsonld hash の Array
     #
