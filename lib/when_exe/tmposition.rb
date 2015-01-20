@@ -314,7 +314,7 @@ module When::TM
                       gsub(When::Parts::Resource::IRIDecode) {|c| When::Parts::Resource::IRIDecodeTable[c]}
 
         # suffix - Frame specification
-        if iso8601form =~ /\A(.*[^\d])\((([-+*&%@!>=<?\dW.]|\{.+?\})+)\)\z/
+        if iso8601form =~ /\A(.*[^\d])\((([-+*&%@!>=<?\dW.T:]|\{.+?\})+)\)\z/
           frame, iso8601form = $~[1..2]
           frame.sub!(/_+\z/, '')
         else

@@ -59,7 +59,7 @@ module MiniTest::LinkedData
           "@reverse"=>
            {"rdfs:member"=>
              {"@id"=>"http://hosi.org/tp/2015-01%5E%5ECivil?note=Ephemeris"}},
-          "day:Moon_Age"=>"Moon_Age(25.4)"}]},
+          "day:Moon_Age"=>"Moon_Age(24.4)"}]},
       '明治5-12-' => {"@context"=>
         {"xsd"=>"http://www.w3.org/2001/XMLSchema",
          "rdf"=>"http://www.w3.org/1999/02/22-rdf-syntax-ns#",

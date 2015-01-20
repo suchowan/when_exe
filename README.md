@@ -3,7 +3,7 @@ when_exe - A multicultural and multilingualized calendar library
 
 [![Gem Version](https://badge.fury.io/rb/when_exe.svg)](http://badge.fury.io/rb/when_exe)
 
-[when_exe](http://rubygems.org/gems/when_exe) is a multicultural and multilingualized calendar library based on [ISO 8601](http://en.wikipedia.org/wiki/ISO_8601), [ISO 19108](http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=26013), [RFC 5545(iCalendar)](http://tools.ietf.org/html/rfc5545) and [RFC6350](http://tools.ietf.org/html/rfc6350). JSON-LD format for TemporalPosition and TemporalReferenceSystem are available.
+[when_exe](http://rubygems.org/gems/when_exe) is a multicultural and multilingualized calendar library based on [ISO 8601](http://en.wikipedia.org/wiki/ISO_8601), [ISO 19108](http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=26013), [RFC 5545(iCalendar)](http://tools.ietf.org/html/rfc5545) and [RFC6350](http://tools.ietf.org/html/rfc6350). JSON-LD formats for TemporalPosition and TemporalReferenceSystem are available.
 
 [<img alt='Architecture' title='display this figure at actual size' src='https://raw.githubusercontent.com/suchowan/when_exe/f7bb8b51259f0c1653c6c37b3ce20bd2a6ab7914/architecture.png' width='637' height='408'/>](https://raw.githubusercontent.com/suchowan/when_exe/f7bb8b51259f0c1653c6c37b3ce20bd2a6ab7914/architecture.png)
 

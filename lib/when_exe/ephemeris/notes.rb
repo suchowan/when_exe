@@ -308,7 +308,8 @@ class When::CalendarNote
     #
     def moon_age(date, options={})
       @phase ||= When.CalendarNote('LunarPhases')
-      noon = date.floor(When::DAY,When::SYSTEM) + 0.5
+      noon  = date.floor(When::DAY,When::SYSTEM)
+      noon += 0.5 if noon.kind_of?(When::TM::DateAndTime)
       @root['Moon_Age'][noon.to_f - @phase.phase(noon, [-30.0,30.0]).to_f]
     end
 
