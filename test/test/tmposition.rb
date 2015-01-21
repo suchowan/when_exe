@@ -152,6 +152,16 @@ LIST
       assert_raises(ArgumentError) {When.tm_pos(2014, 8, When.Residue('SA:6'), :invalid=>:raise)}
     end
 
+    def test__prefixed_calendar
+      [['平成27(2015).1.15', '平成27(2015).01.15'],
+       ['HinduLuniSolar?note=HinduNote&location=(_co:Indian::Ujjain)&type=SBSA&start_month=5(1936-10<10)', '1936-10<10-'],
+       ['HinduLuniSolar?note=HinduNote&type=SBSA&start_month=5&location=(_co:Indian::Ujjain)(1936-10<10)', '1936-10<10-']
+      ].each do |sample|
+        date = When.when?(sample[0])
+        assert_equal([sample[1], 2457038], [date.to_s, date.to_i])
+      end
+    end
+
     def test__calendar_reform_in_japan
       date0  = When.when?('明治5.12.1')
       date1  = date0 + When::P1M
