@@ -16,7 +16,7 @@ module When
       "[Gregorian=en:Gregorian_calendar,          グレゴリオ暦  ]",
       "[RevisedJulian=en:Revised_Julian_calendar, 修正ユリウス暦]",
       "[Swedish=en:Swedish_calendar,              スウェーデン暦]",
-      "[Civil in the West=en:Civil_calendar, 西暦, *alias:Civil]"
+      "[Customizable Western=en:Civil_calendar, 西暦, *alias:Civil]"
     ]]
   end
 
