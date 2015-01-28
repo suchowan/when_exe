@@ -692,6 +692,38 @@ module When::CalendarTypes
        @origin_of_MSC...(@origin_of_MSC+@rule_table['T']['Rule'].length)
     end
 
+    # 朔閏表の有効範囲(日)
+    #
+    # @return [Range] 有効範囲(ユリウス通日)
+    #
+    def range_by_day
+       @range_by_day ||= @origin_of_LSC...(@origin_of_LSC+@rule_table['T']['Days'])
+    end
+
+    # 指定の日付は有効か?
+    #
+    # @param [When::TM::CalDate or Integer] date
+    #
+    # @return [Boolean] true 有効 / false 無効
+    #
+    def valid_by_day?(date)
+      date = date.to_i
+      return true if range_by_day.include?(date)
+      if date <= range_by_day.first
+        case @before
+        when PatternTableBasedLuniSolar; @before.valid_by_day?(date)
+        when false, nil                ; false
+        else                           ; true
+        end
+      else
+        case @after
+        when PatternTableBasedLuniSolar; @after.valid_by_day?(date)
+        when false, nil                ; false
+        else                           ; true
+        end
+      end
+    end
+
     private
 
     #  new で指定された月日配当規則をプログラムで利用可能にします。

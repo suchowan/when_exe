@@ -16,7 +16,8 @@ module When
       "[Gregorian=en:Gregorian_calendar,          グレゴリオ暦  ]",
       "[RevisedJulian=en:Revised_Julian_calendar, 修正ユリウス暦]",
       "[Swedish=en:Swedish_calendar,              スウェーデン暦]",
-      "[Customizable Western=en:Civil_calendar, 西暦, *alias:Civil]"
+      "[Customizable Western=http://www2u.biglobe.ne.jp/~suchowan/wiki/pref_examples_en.html, " +
+       "西暦=http://www2u.biglobe.ne.jp/~suchowan/wiki/pref_examples.html, *alias:Civil]"
     ]]
   end
 

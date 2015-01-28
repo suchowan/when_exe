@@ -240,7 +240,7 @@ module When
           case list[i]
           when When::TM::Calendar ; list.slice!(i) if options[:extent] && !list[i].domain[''].include?(date)
           when Class              ; 
-          else
+          when When::TM::CalendarEra
              eras = (date ^ list[i]).delete_if {|e| !e.leaf?}
              unless options[:go_back] == :All
                if options[:go_back] == :After
@@ -250,6 +250,8 @@ module When
                end
              end
              list[i,1] = eras.map {|e| e.calendar_era}
+          else
+             list[i,1] = list[i].child
           end
         end
 
