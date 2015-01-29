@@ -30,6 +30,24 @@ module When
       label
     end
 
+    # suffix 付の名前
+    #
+    # @param [When::BasicTypes::M17n] format 書式
+    # @param [String, Array<String>] locale 文字列化を行う locale の指定(デフォルト : オブジェクト生成時に保持している locale すべて)
+    #
+    # @return [When::BasicTypes::M17n]
+    #
+    def suffixed_label(format, locale=nil)
+      if @suffix
+        format = m17n([format]*self.keys.length, nil, nil, {:locale=>self.keys}) if format.instance_of?(String)
+        format._printf([label, @suffix], locale)
+      elsif locale
+        label.translate(locale)
+      else
+        label
+      end
+    end
+
     #
     # オブジェクトの内容を Hash 化
     #
@@ -688,17 +706,17 @@ module When
         hash
       end
 
-      # 指定の書式による多言語対応文字列化 - pattern で指定した書式で多言語対応文字列化する
+      # 指定の書式による多言語対応文字列化 - format で指定した書式で多言語対応文字列化する
       #
-      # @param [When::BasicTypes::M17n] pattern 書式
+      # @param [When::BasicTypes::M17n] format 書式
       # @param [String, Array<String>] locale 文字列化を行う locale の指定(デフォルト : オブジェクト生成時に保持している locale すべて)
       #
       # @return [When::BasicTypes::M17n]
       #
-      def strftime(pattern=@frame.strftime, locale=nil)
-        pattern = m17n([pattern]*self.keys.length, nil, nil, {:locale=>self.keys}) if pattern.instance_of?(String)
-        pattern._printf([], locale) do |k, *t|
-          _strftime(k, pattern, [''])
+      def strftime(format=@frame.strftime, locale=nil)
+        format = m17n([format]*self.keys.length, nil, nil, {:locale=>self.keys}) if format.instance_of?(String)
+        format._printf([], locale) do |k, *t|
+          _strftime(k, format, [''])
         end
       end
 
@@ -823,36 +841,36 @@ module When
       # 指定の書式による多言語対応文字列化
       #
       # @param [String] locale 文字列化を行う locale
-      # @param [When::BasicTypes::M17n] pattern 書式
+      # @param [When::BasicTypes::M17n] format 書式
       #
       # @return [Array] 書式と文字列化項目からなる配列
       #
-      def _strftime(locale, pattern, t)
-        format, *terms = t
-        pattern = pattern.translate(locale) if pattern.kind_of?(When::BasicTypes::M17n)
-        pattern.scan(/(%[O\d]*(?:\.(\d+))?.)|(.)/) do |c,e,s|
+      def _strftime(locale, format, t)
+        pattern, *terms = t
+        format = format.translate(locale) if format.kind_of?(When::BasicTypes::M17n)
+        format.scan(/(%[O\d]*(?:\.(\d+))?.)|(.)/) do |c,e,s|
           case c
           when /\A%%/
-            format += '%%'
+            pattern += '%%'
           when /\A%/
             action = TemporalPosition.format[c[-1..-1]]
             case action
             when Array
-              format += action[0]
+              pattern += action[0]
               terms  << _term(action[1], locale, c[1..-2].to_i, e||3)
             when String
               action = action.translate(locale) if action.kind_of?(When::BasicTypes::M17n)
               if (action =~ /%/)
-                format, *terms = _strftime(locale, action, [format] + terms)
+                pattern, *terms = _strftime(locale, action, [pattern] + terms)
               else
-                format += action
+                pattern += action
               end
             end
           else
-            format += s
+            pattern += s
           end
         end
-        [format] + terms
+        [pattern] + terms
       end
 
       #
@@ -1049,11 +1067,14 @@ module When
       #
       # 参照ラベル
       #
+      # @param [When::BasicTypes::M17n] format 書式
+      # @param [String, Array<String>] locale 文字列化を行う locale の指定(デフォルト : オブジェクト生成時に保持している locale すべて)
+      #
       # @return [When::BasicTypes::M17n]
       #
-      def reference_label
-        return @calendar_era.hierarchy.map {|e| e.label} if @calendar_era
-        return [@frame.label] if @frame.label
+      def reference_label(format=nil, locale=nil)
+        return @calendar_era.hierarchy.map {|e| format ? e.suffixed_label(format, locale) : e.label} if @calendar_era
+        return [format ? @frame.suffixed_label(format, locale) : @frame.label] if @frame.label
         [When::BasicTypes::M17n.new(@frame.class.to_s.split(/::/)[-1])]
       end
 
