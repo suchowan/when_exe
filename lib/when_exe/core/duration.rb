@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2013 Takashi SUGA
+  Copyright (C) 2013-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -36,13 +36,29 @@ end
 if ::Object.const_defined?(:Date) && ::Date.method_defined?(:+)
   class Date
 
+    # @private
     alias :_plus_  :+
+
+    # 加算
+    #
+    # @param [When::TM::Duration] other 加える時間間隔(他の型の場合は動作に変更なし)
+    #
+    # @return [::Date]
+    #
     def +(other)
       other.kind_of?(When::TM::Duration) ? self + other.rational_duration : self._plus_(other)
     end
 
 
+    # @private
     alias :_minus_ :-
+
+    # 減算
+    #
+    # @param [When::TM::Duration] other 減じる時間間隔(他の型の場合は動作に変更なし)
+    #
+    # @return [::Date]
+    #
     def -(other)
       case other
       when When::TM::Duration ; self - other.rational_duration
@@ -59,13 +75,28 @@ end
 # @private
 class Time
 
+  # @private
   alias :_plus_  :+
+
+  # 加算
+  #
+  # @param [When::TM::Duration] other 加える時間間隔(他の型の場合は動作に変更なし)
+  #
+  # @return [::Time]
+  #
   def +(other)
     other.kind_of?(When::TM::Duration) ? self + other.to_f : self._plus_(other)
   end
 
-
+  # @private
   alias :_minus_ :-
+
+  # 減算
+  #
+  # @param [When::TM::Duration] other 減じる時間間隔(他の型の場合は動作に変更なし)
+  #
+  # @return [::Time]
+  #
   def -(other)
     other.kind_of?(When::TM::Duration) ? self - other.to_f : self._minus_(other)
   end

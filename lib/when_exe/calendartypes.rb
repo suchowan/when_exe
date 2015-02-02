@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -173,22 +173,22 @@ module When::CalendarTypes
 
     # 朔閏表を生成する
     #
-    # @param  [Range] range 生成範囲(西暦年)
+    # @param  [Range] year_range 生成範囲(西暦年)
     # @param  [Integer] length 大の月の日数
     # @param  [When::TM::Duration] duration チェックする月の間隔
     #
     # @return [Hash] 朔閏表
     #
-    def lunar_table(range, length=30, duration=When::P1M)
-      date  = When.TemporalPosition(range.first, {:frame=>self}).floor
+    def lunar_table(year_range, length=30, duration=When::P1M)
+      date  = When.TemporalPosition(year_range.first, {:frame=>self}).floor
       table = []
       hash  = {
-        'origin_of_MSC' => range.first,
+        'origin_of_MSC' => year_range.first,
         'origin_of_LSC' => date.to_i,
         'rule_table'    => table
       }
       list  = ''
-      while range.include?(date[When::YEAR])
+      while year_range.include?(date[When::YEAR])
         month = date[When::MONTH] * 1
         char  = Pattern[month..month]
         char  = char.downcase unless date.length(When::MONTH) == length
@@ -206,20 +206,20 @@ module When::CalendarTypes
     # 朔閏表を比較する
     #
     # @param  [When::TM::Calendar] base 基準とする暦法
-    # @param  [Range] range 比較範囲(西暦年)
+    # @param  [Range] year_range 比較範囲(西暦年)
     # @param  [Integer] length 大の月の日数
     # @param  [When::TM::Duration] duration チェックする月の間隔
     #
     # @return [Hash] 朔閏表の差分
     #
-    def verify(base, range=base.range, length=30, duration=When::P1M)
-      range = When::Parts::GeometricComplex.new(range) & When::Parts::GeometricComplex.new(self.range) if respond_to?(:range)
-      base_table = base.lunar_table(range, length, duration)
-      self_table = self.lunar_table(range, length, duration)
+    def verify(base, year_range=base.year_range, length=30, duration=When::P1M)
+      year_range = When::Parts::GeometricComplex.new(year_range) & When::Parts::GeometricComplex.new(self.year_range) if respond_to?(:year_range)
+      base_table = base.lunar_table(year_range, length, duration)
+      self_table = self.lunar_table(year_range, length, duration)
       hash = {}
-      range.each do |year|
-        difference = _verify(base_table['rule_table'][year-range.first],
-                             self_table['rule_table'][year-range.first])
+      year_range.each do |year|
+        difference = _verify(base_table['rule_table'][year-year_range.first],
+                             self_table['rule_table'][year-year_range.first])
         hash[year] = difference if difference
       end
       hash
@@ -590,19 +590,19 @@ module When::CalendarTypes
       # ひとつのひな型朔閏表からの差分で朔閏表を生成する
       #
       # @param [Array] definition ひな型朔閏表
-      # @param [Range] range 生成する朔閏表の年代範囲
+      # @param [Range] year_range 生成する朔閏表の年代範囲
       # @param [Hash{Integer=>(String or Hash{String or Regexp=>String})}] difference 差分情報
       #
       # @return [Array] 生成された朔閏表定義
       #
-      def patch(definition, range=nil, difference={})
+      def patch(definition, year_range=nil, difference={})
         When.Calendar(definition)
-        base    = When::CalendarTypes.const_get(definition)
-        hash    = base[-1].dup
-        range ||= hash['origin_of_MSC']...(hash['origin_of_MSC']+hash['rule_table'].size)
-        range   = range.to_a
-        hash['origin_of_LSC'] += hash['rule_table'][range[0]-hash['origin_of_MSC']][1]
-        hash['rule_table']     = range.map {|year|
+        base         = When::CalendarTypes.const_get(definition)
+        hash         = base[-1].dup
+        year_range ||= hash['origin_of_MSC']...(hash['origin_of_MSC']+hash['rule_table'].size)
+        year_range   = year_range.to_a
+        hash['origin_of_LSC'] += hash['rule_table'][year_range[0]-hash['origin_of_MSC']][1]
+        hash['rule_table']     = year_range.map {|year|
           original = hash['rule_table'][year-hash['origin_of_MSC']][0]
           case difference[year]
           when String ; next difference[year]
@@ -614,7 +614,7 @@ module When::CalendarTypes
           }
           original
         }
-        hash['origin_of_MSC']  = range[0]
+        hash['origin_of_MSC']  = year_range[0]
         base[0..-2] + [hash]
       end
 
@@ -662,18 +662,18 @@ module When::CalendarTypes
 
     # 朔閏表を生成する
     #
-    # @param  [Range] sub_range 生成範囲(西暦年) デフォルトは self.range
+    # @param  [Range] sub_range 生成範囲(西暦年) デフォルトは self.year_range
     # @param  [Integer] length 大の月の日数(ダミー)
     # @param  [When::TM::Duration] duration チェックする月の間隔(ダミー)
     #
     # @return [Hash] 朔閏表
     #
     def lunar_table(sub_range=nil, length=nil, duration=nil)
-      sub_range ||= range
+      sub_range ||= year_range
       last  = sub_range.last
       last -= 1 if sub_range.exclude_end?
       [sub_range.first, last].each do |edge|
-        raise RangeError, 'Range exceeded: ' + sub_range.to_s unless range.include?(edge)
+        raise RangeError, 'Range exceeded: ' + sub_range.to_s unless year_range.include?(edge)
       end
       {
         'origin_of_MSC' => sub_range.first,
@@ -688,7 +688,7 @@ module When::CalendarTypes
     #
     # @return [Range] 有効範囲(西暦年)
     #
-    def range
+    def year_range
        @origin_of_MSC...(@origin_of_MSC+@rule_table['T']['Rule'].length)
     end
 
@@ -696,8 +696,8 @@ module When::CalendarTypes
     #
     # @return [Range] 有効範囲(ユリウス通日)
     #
-    def range_by_day
-       @range_by_day ||= @origin_of_LSC...(@origin_of_LSC+@rule_table['T']['Days'])
+    def sdn_range
+       @sdn_range ||= @origin_of_LSC...(@origin_of_LSC+@rule_table['T']['Days'])
     end
 
     # 指定の日付は有効か?
@@ -706,18 +706,18 @@ module When::CalendarTypes
     #
     # @return [Boolean] true 有効 / false 無効
     #
-    def valid_by_day?(date)
+    def within_sdn_range?(date)
       date = date.to_i
-      return true if range_by_day.include?(date)
-      if date <= range_by_day.first
+      return true if sdn_range.include?(date)
+      if date <= sdn_range.first
         case @before
-        when PatternTableBasedLuniSolar; @before.valid_by_day?(date)
+        when PatternTableBasedLuniSolar; @before.within_sdn_range?(date)
         when false, nil                ; false
         else                           ; true
         end
       else
         case @after
-        when PatternTableBasedLuniSolar; @after.valid_by_day?(date)
+        when PatternTableBasedLuniSolar; @after.within_sdn_range?(date)
         when false, nil                ; false
         else                           ; true
         end

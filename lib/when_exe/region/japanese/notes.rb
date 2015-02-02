@@ -1263,6 +1263,7 @@ class When::CalendarNote
                    :clock=>dates.s_date.frame._time_basis[0]})
         patch = (@patch || Patch)[date.to_i] unless dates.o_date.frame.respond_to?(:twin) &&
                                                     dates.o_date.frame.twin
+        date_without_era = date.without_era
         longitude, motsu = patch ? patch : dates.cal4note.s_terms.position(date)
 
         # 三伏 - 庚
@@ -1273,14 +1274,14 @@ class When::CalendarNote
         if !notes['三伏'] && notes['干'].remainder == 6 # 庚
           index = dates.range >= 11 ? 1 : 0
           if 109 <= longitude && longitude <= 129      # 夏至から
-            term = dates.cal4note.s_terms.term(date, [-270,360])
+            term = dates.cal4note.s_terms.term(date_without_era, [-270,360])
             diff = dates.s_date.to_i - term.to_i
             notes['三伏'] = Notes10[0][index] if 20 <= diff && diff <= 29
             notes['三伏'] = Notes10[1][index] if 30 <= diff && diff <= 39
           elsif longitude == 135                     # 立秋
             notes['三伏'] = Notes10[2][index]
           elsif 136 <= longitude && longitude <= 144 # 立秋から
-            term = dates.cal4note.s_terms.term(date, [-225,360])
+            term = dates.cal4note.s_terms.term(date_without_era, [-225,360])
             diff = dates.s_date.to_i - term.to_i
             notes['三伏'] = Notes10[2][index] if 0 < diff && diff <= 9
           end
@@ -1291,7 +1292,7 @@ class When::CalendarNote
         # 春秋分から -5..4
         if !notes['社'] && notes['干'].remainder == 4 # 戊
           if (longitude + 5) % 180 < 10 # 春秋分の近傍
-            term = dates.cal4note.s_terms.term(date - When.Duration('P5D'), [0,180])
+            term = dates.cal4note.s_terms.term(date_without_era - When.Duration('P5D'), [0,180])
             diff = dates.s_date.to_i - term.to_i
             notes['社'] = '社' if -5 <= diff && diff <= 4
           end
@@ -1302,7 +1303,7 @@ class When::CalendarNote
         # 大寒から -6..5
         if !notes['臘'] && notes['支'].remainder == 4 # 辰
           if (longitude - 339) % 360 < 12 # 大寒の近傍
-            term = dates.cal4note.s_terms.term(date - When.Duration('P6D'), [345,360])
+            term = dates.cal4note.s_terms.term(date_without_era - When.Duration('P6D'), [345,360])
             diff = dates.s_date.to_i - term.to_i
             notes['臘'] = '臘' if -6 <= diff && diff <= 5
           end
@@ -1341,7 +1342,7 @@ class When::CalendarNote
             notes['入梅'] = '入梅' if longitude == 80 && motsu == 1
           elsif notes['干'].remainder == 8 # 壬
             if (longitude - 75) % 360 <= 10 # 芒種の近傍
-              term  = dates.cal4note.s_terms.term(date - When.Duration('P11D'), [75,360])
+              term  = dates.cal4note.s_terms.term(date_without_era - When.Duration('P11D'), [75,360])
               diff  = dates.s_date.to_i - term.to_i
               diff += 1 if dates.year >= 1740
               notes['入梅'] = '入梅' if dates.range >= 11 && 1 <= diff && diff <= 10
@@ -1357,7 +1358,7 @@ class When::CalendarNote
         # 立春を起算日とする雑節
         #
         unless notes['節分'] && notes['八十八夜'] && notes['二百十日'] && notes['二百廿日']
-          term = dates.cal4note.s_terms.term(date + When.Duration('P3D'), [-45,360])
+          term = dates.cal4note.s_terms.term(date_without_era + When.Duration('P3D'), [-45,360])
           case dates.s_date.to_i - term.to_i
           when  -1 ; notes['節分']     ||= '節分'
           when  87 ; notes['八十八夜'] ||= '八十八夜'
@@ -1446,7 +1447,7 @@ class When::CalendarNote
           if dates.range < 11
             notes['彼岸'] = '彼岸' if longitude % 180 == 2 # 宣明暦以前(没を除いて３日後)
           else
-            term = dates.cal4note.s_terms.term(date - When.Duration('P7D'), [0,180]) # 近傍の春秋分
+            term = dates.cal4note.s_terms.term(date_without_era - When.Duration('P7D'), [0,180]) # 近傍の春秋分
             case dates.s_date.to_i - term.to_i
             when  2 ; notes['彼岸'] = '彼岸' if dates.range == 11 # 貞享暦(没を含めて３日後)
             when -5 ; notes['彼岸'] = '彼岸' if longitude >  180 && (1755...1844).include?(dates.year) # 宝暦暦・寛政暦(春-６日前))

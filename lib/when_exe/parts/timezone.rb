@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -126,7 +126,13 @@ module When::Parts
     # @return [When::Coordinates::Spatial]
     def location
       return @location if @location
-      tzinfo = self.class.tz_info[label]
+      city_tz = @timezone
+      unless self.class.tz_info[label]
+        while city_tz.kind_of?(TZInfo::LinkedTimezone)
+          city_tz = TZInfo::Timezone.get(city_tz.send(:info).link_to_identifier)
+        end
+      end
+      tzinfo = self.class.tz_info[city_tz.identifier]
       longitude = When::Coordinates.to_dms(tzinfo.longitude, 'EW')
       latitude  = When::Coordinates.to_dms(tzinfo.latitude,  'NS')
       @location = When.Resource("_l:long=#{longitude}&lat=#{latitude}&label=#{label}")

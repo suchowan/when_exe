@@ -505,7 +505,7 @@ module When::TM
         main[:clock] = clock if clock
         [:indeterminated_position, :frame, :events, :precision,
          :era_name, :era, :abbr, :extra_year_digits, :ordinal_date_digits, :wkst, :time_standard, :location].each do |key|
-          main[key] = query.delete(key) if (query.key?(key))
+          main[key] = query.delete(key) if query.key?(key)
         end
         long = query.delete(:long)
         lat  = query.delete(:lat)
@@ -703,14 +703,13 @@ module When::TM
 
     # 標準ライブラリの DateTime オブジェクトへの変換
     #
+    # @param [Integer] start ::DateTime オブジェクトのグレゴリオ改暦日(ユリウス通日)
     # @param [Hash] option  時間の歩度が1.0でない場合のための option
     #   see {When::TM::TemporalPosition._instance}
     #
-    # @param [Integer] start ::DateTime オブジェクトのグレゴリオ改暦日(ユリウス通日)
-    #
     # @return [::DateTime]
     #
-    def to_datetime(option={:frame=>When::UTC}, start=_default_start)
+    def to_datetime(start=_default_start, option={:frame=>When::UTC})
       return JulianDate.dynamical_time(dynamical_time, option).to_datetime unless time_standard.rate_of_clock == 1.0
       raise TypeError, "Clock not assigned" unless clock
       Rational
@@ -721,14 +720,13 @@ module When::TM
 
     # 標準ライブラリの Date オブジェクトへの変換
     #
+    # @param [Integer] start ::DateTime オブジェクトのグレゴリオ改暦日(ユリウス通日)
     # @param [Hash] option  時間の歩度が1.0でない場合のための option
     #   see {When::TM::TemporalPosition._instance}
     #
-    # @param [Integer] start ::DateTime オブジェクトのグレゴリオ改暦日(ユリウス通日)
-    #
     # @return [::Date]
     #
-    def to_date(option={}, start=_default_start)
+    def to_date(start=_default_start, option={})
       return JulianDate.dynamical_time(dynamical_time, option).to_date unless time_standard.rate_of_clock == 1.0
       ::Date.jd(to_i, start)
     end
@@ -1031,12 +1029,12 @@ module When::TM
     # 属性のコピー
     # @private
     def _copy(options={})
-      @frame         = options[:frame]         if (options.key?(:frame))
-      @events        = options[:events]        if (options.key?(:events))
-      @precision     = options[:precision]     if (options.key?(:precision))
-      @query         = options[:query]         if (options.key?(:query))
-      @location      = options[:location]      if (options.key?(:location))
-      @time_standard = options[:time_standard] if (options.key?(:time_standard))
+      @frame         = options[:frame]         if options.key?(:frame)
+      @events        = options[:events]        if options.key?(:events)
+      @precision     = options[:precision]     if options.key?(:precision)
+      @query         = options[:query]         if options.key?(:query)
+      @location      = options[:location]      if options.key?(:location)
+      @time_standard = options[:time_standard] if options.key?(:time_standard)
       @sdn = @universal_time = @local_time = @dynamical_time = @period = nil
       _normalize(options)
       return self
@@ -1403,7 +1401,7 @@ module When::TM
     #
     def initialize(universal_time, options={})
       @frame = options.delete(:frame)
-      @frame = When.Clock(@frame) if (@frame.kind_of?(String))
+      @frame = When.Clock(@frame) if @frame.kind_of?(String)
       @frame = @frame._daylight(universal_time) if @frame && @frame._need_validate
       precision    = options.delete(:precision)
       precision  ||= DAY unless @frame.kind_of?(Clock)
@@ -1517,9 +1515,12 @@ module When::TM
     # 属性のコピー
     # @private
     def _copy(options={})
-      @clk_time = options[:time]  if (options.key?(:time))
-      @frame    = options[:clock] if (options.key?(:clock))
-      if (options.key?(:tz_prop))
+      @clk_time = options[:time] if options.key?(:time)
+      if options.key?(:clock)
+        options.delete(:frame)
+        @frame  = options[:clock]
+      end
+      if options.key?(:tz_prop)
         @frame  = @frame.dup
         @frame.tz_prop = options[:tz_prop]
       end
@@ -1719,6 +1720,21 @@ module When::TM
                                                           'year' => most_significant_coordinate})
     end
 
+    # 暦年代の削除
+    #
+    # @return [When::TM::CalDate] 暦年代を削除した When::TM::CalDate
+    #
+    def without_era
+      target  = dup
+      return target unless calendar_era
+      options = _attr
+      options[:era]      = nil
+      options[:era_name] = nil
+      options[:date]     = cal_date.dup
+      options[:date][0] += calendar_era_epoch
+      target._copy(options)
+    end
+
     # 要素の参照
     #
     # @param [Integer, String] index 参照する要素の指定
@@ -1865,7 +1881,9 @@ module When::TM
     # 属性のコピー
     # @private
     def _copy(options={})
-      @cal_date = options[:date] if (options.key?(:date))
+      @cal_date           = options[:date]     if options.key?(:date)
+      @calendar_era       = options[:era]      if options.key?(:era)
+      @calendar_era_props = options[:era_name] if options.key?(:era_name)
       return super
     end
 
