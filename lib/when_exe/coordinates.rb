@@ -1482,6 +1482,11 @@ module When::Coordinates
     # 要素の正規化
     def _normalize(args=[], options={})
 
+      # 同一視
+      @long ||= @longitude
+      @lat  ||= @latitude
+      @alt  ||= @altitude
+
       # 時間帯による指定
       @tz = When::Parts::Timezone.tz_info[@tz] if @tz.kind_of?(String)
       if @tz
@@ -1492,8 +1497,8 @@ module When::Coordinates
 
       # データの整形
       @label = When::BasicTypes::M17n.new(@label)        if @label.kind_of?(Hash)
-      @long  = When::Coordinates.to_deg_225(@long || @longitude, 'EW') if @long || @longitude
-      @lat   = When::Coordinates.to_deg_225(@lat  || @latitude,  'NS') if @lat  || @latitude
+      @long  = When::Coordinates.to_deg_225(@long, 'EW') if @long
+      @lat   = When::Coordinates.to_deg_225(@lat,  'NS') if @lat
       @datum = When.Resource(@datum || 'Earth', '_ep:')
       @long ||= 0.0
       @lat  ||= 0.0
