@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -34,10 +34,31 @@ module When
 
   module CalendarTypes
 
+    _rule_table400 = {
+      'T'  => {'Rule'  =>(16...416).to_a.map {|y|
+        y % 400 == 0 ? 366 :
+        y % 100 == 0 ? 365 :
+        y %   4 == 0 ? 366 :
+                       365
+      }},
+      365 => {'Length'=>[30] * 12 + [5]},
+      366 => {'Length'=>[30] * 12 + [6]}
+    }
+
+    _rule_table128 = {
+      'T'  => {'Rule'  =>(20...148).to_a.map {|y|
+        y % 128 == 0 ? 365 :
+        y %   4 == 0 ? 366 :
+                       365
+      }},
+      365 => {'Length'=>[30] * 12 + [5]},
+      366 => {'Length'=>[30] * 12 + [6]}
+    }
+
     #
     # French Calendar
     #
-    FrenchRepublican =  [SolarYearTableBased, {
+    FrenchRepublican = [SolarYearTableBased, {
       'label'   => 'French::FrenchRepublican',
       'indices' => [
          When.Index('French::Month', {:unit =>13}),
@@ -50,7 +71,53 @@ module When
        'rule_table'    => {
          365 => {'Length'=>[30] * 12 + [5]},
          366 => {'Length'=>[30] * 12 + [6]}
-        }
+       }
     }]
+
+    #
+    # FrenchRepublicanRomme
+    #
+    FrenchRepublicanRomme = [CyclicTableBased, {
+      'label'   => 'French::FrenchRepublican',
+      'origin_of_LSC' => 2381318,
+      'origin_of_MSC' => 16,
+      'before'        => 'FrenchRepublican',
+      'indices' => [
+         When.Index('French::Month', {:unit =>13}),
+         When::Coordinates::DefaultDayIndex
+       ],
+      'rule_table'    => _rule_table400
+    }]
+
+    #
+    # FrenchRepublicanContinuous
+    #
+    FrenchRepublicanContinuous = [CyclicTableBased, {
+      'label'   => 'French::FrenchRepublican',
+      'origin_of_LSC' => 2380953,
+      'origin_of_MSC' => 15,
+      'before'        => 'FrenchRepublican',
+      'indices' => [
+         When.Index('French::Month', {:unit =>13}),
+         When::Coordinates::DefaultDayIndex
+       ],
+      'rule_table'    => _rule_table400
+    }]
+
+    #
+    # FrenchRepublicanTropical
+    #
+    FrenchRepublicanTropical = [CyclicTableBased, {
+      'label'   => 'French::FrenchRepublican',
+      'origin_of_LSC' => 2382779,
+      'origin_of_MSC' => 20,
+      'before'        => 'FrenchRepublican',
+      'indices' => [
+         When.Index('French::Month', {:unit =>13}),
+         When::Coordinates::DefaultDayIndex
+       ],
+      'rule_table'    => _rule_table128
+    }]
+
   end
 end
