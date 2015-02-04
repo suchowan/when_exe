@@ -11,7 +11,10 @@ module When
     French = [self, [
       "locale:[=en:, ja=ja:, alias]",
       "names:[French=]",
-      "[FrenchRepublican=en:French_Republican_Calendar, フランス共和暦=ja:%%<フランス革命暦>]",
+      "[FrenchRepublican=en:French_Republican_Calendar,              フランス共和暦=ja:%%<フランス革命暦>            ]",
+      "[FrenchRepublican (Romme)=en:French_Republican_Calendar,      フランス共和暦 (Romme)=ja:%%<フランス革命暦>     ]",
+      "[FrenchRepublican (Continuous)=en:French_Republican_Calendar, フランス共和暦 (Continuous)=ja:%%<フランス革命暦>]",
+      "[FrenchRepublican (128)=en:French_Republican_Calendar,        フランス共和暦 (128)=ja:%%<フランス革命暦>       ]",
 
       [self,
         "names:[Month, 月=ja:%%<月_(暦)>]",
@@ -78,7 +81,7 @@ module When
     # FrenchRepublicanRomme
     #
     FrenchRepublicanRomme = [CyclicTableBased, {
-      'label'   => 'French::FrenchRepublican',
+      'label'   => 'French::FrenchRepublican (Romme)',
       'origin_of_LSC' => 2381318,
       'origin_of_MSC' => 16,
       'before'        => 'FrenchRepublican',
@@ -93,7 +96,7 @@ module When
     # FrenchRepublicanContinuous
     #
     FrenchRepublicanContinuous = [CyclicTableBased, {
-      'label'   => 'French::FrenchRepublican',
+      'label'   => 'French::FrenchRepublican (Continuous)',
       'origin_of_LSC' => 2380953,
       'origin_of_MSC' => 15,
       'before'        => 'FrenchRepublican',
@@ -108,7 +111,7 @@ module When
     # FrenchRepublicanTropical
     #
     FrenchRepublicanTropical = [CyclicTableBased, {
-      'label'   => 'French::FrenchRepublican',
+      'label'   => 'French::FrenchRepublican (128)',
       'origin_of_LSC' => 2382779,
       'origin_of_MSC' => 20,
       'before'        => 'FrenchRepublican',

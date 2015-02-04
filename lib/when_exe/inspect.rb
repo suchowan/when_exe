@@ -35,11 +35,12 @@ module When
     # @param [When::BasicTypes::M17n] format 書式
     # @param [String, Array<String>] locale 文字列化を行う locale の指定(デフォルト : オブジェクト生成時に保持している locale すべて)
     #
-    # @return [When::BasicTypes::M17n]
+    # @return [String]
     #
     def suffixed_label(format, locale=nil)
       if @suffix
-        format = m17n([format]*self.keys.length, nil, nil, {:locale=>self.keys}) if format.instance_of?(String)
+        @suffix = When.Resource(@suffix).to_m17n unless @suffix.kind_of?(When::Parts::Resource) || @suffix !~ /:/
+        format  = m17n([format]*self.keys.length, nil, nil, {:locale=>self.keys}) if format.instance_of?(String)
         format._printf([label, @suffix], locale)
       elsif locale
         label.translate(locale)

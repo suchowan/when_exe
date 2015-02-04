@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2013-2014 Takashi SUGA
+  Copyright (C) 2013-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -8,6 +8,15 @@
 require 'when_exe/region/chinese/calendars'
 
 module When
+
+  class BasicTypes::M17n
+
+    Vietnamese = [self, [
+      "locale:[=en:, ja=ja:, alias]",
+      "names:[Vietnam, ベトナム]"
+    ]]
+
+  end
 
   module CalendarTypes
 

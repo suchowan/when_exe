@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -11,7 +11,7 @@ module When
     Islamic = [self, [
       "locale:[=en:, ja=ja:, ar=ar:, alias]",
       "names:[Islamic=]",
-      "[TabularIslamic=en:Islamic_calendar, イスラーム暦=ja:%%<ヒジュラ暦>]",
+      "[TabularIslamic=en:Islamic_calendar, イスラーム暦(30年周期)=ja:%%<ヒジュラ暦>]",
       "[EphemerisBasedIslamic=en:Islamic_calendar, イスラーム暦=ja:%%<ヒジュラ暦>]",
 
       [self,

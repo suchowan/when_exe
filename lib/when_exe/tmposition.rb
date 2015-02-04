@@ -2123,7 +2123,18 @@ module When::TM
     #
     def floor(digit=DAY, precision=digit)
       count    = digit - clock.indices.length
-      date     = (digit>=DAY) ? @cal_date.dup : @frame._validate(@cal_date[0..(digit-1)])
+
+      if digit>=DAY
+        date     = @cal_date.dup
+      elsif @calendar_era_props
+        date     = @cal_date.dup
+        date[0] += calendar_era_epoch
+        date     = @frame._validate(date[0..(digit-1)])
+        date[0] -= calendar_era_epoch
+      else
+        date     = @frame._validate(@cal_date[0..(digit-1)])
+      end
+
       time     = @clk_time.clk_time[0..((digit<=DAY) ? 0 : ((count>=0) ? -1 : digit))]
       time[0] += to_i
       time     = clock._validate(time)
@@ -2197,7 +2208,13 @@ module When::TM
       case options[:time]
       when Array
         if clock._need_validate
-          new_clock = clock._daylight([@frame, options[:date], options[:time]])
+          if @calendar_era_props
+            date     = options[:date].dup
+            date[0] += calendar_era_epoch
+          else
+            date     = options[:date]
+          end
+          new_clock = clock._daylight([@frame, date, options[:time]])
           options[:time] = options[:time].map {|t| t * 1}
         else
           new_clock = clock

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -47,7 +47,7 @@ module When
         "locale:[=en:, ja=ja:, alias]",
         "names:[Calendar=]",
 
-        "[Intercalary %s=, *閏]",
+        "[Intercalary %s=, *閏, zh:閏]",
 
         [M17n,
           "names:[Month, 月=ja:%%<月_(暦)>, /datetime/prompts/month]",

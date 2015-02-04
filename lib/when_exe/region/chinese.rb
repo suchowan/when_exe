@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -11,10 +11,11 @@ module When
 
     Chinese = [self, [
       "locale:[=ja:, en=en:, alias]",
-      "names:[Chinese=]",
+      "names:[中国, *China]",
       "[中国太陽暦(節月)=ja:%%<二十四節気>#%.<暦月と節月>, *ChineseSolar=en:Solar_term]",
       "[中国太陰太陽暦=ja:%%<中国暦>, *ChineseLuniSolar=en:Chinese_calendar]",
       "[彝暦=ja:%%<イ族>, *Yi=en:Yi_people]",
+      "[北京, *Beijing]",
 
       [self,
         "names:[月=ja:%%<月_(暦)>, *Month]",

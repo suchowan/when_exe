@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -12,8 +12,10 @@ module When
       "locale:[=en:, ja=ja:, ar=ar:, alias=ja:]",
       "names:[Iranian=]",
       "[SolarHijri=en:Solar_Hijri_calendar#Details_of_the_modern_calendar, ヘジラ太陽暦=ja:%%<イラン暦>]",
-      "[SolarHijriAlgorithmic=en:Solar_Hijri_calendar#Solar_Hijri_algorithmic_calendar, ヘジラ太陽暦=ja:%%<イラン暦>]",
+      "[SolarHijri (Combined)=en:Solar_Hijri_calendar#Details_of_the_modern_calendar, ヘジラ太陽暦(多種接続)=ja:%%<イラン暦>]",
+      "[SolarHijriAlgorithmic=en:Solar_Hijri_calendar#Solar_Hijri_algorithmic_calendar, ヘジラ太陽暦(2820年周期)=ja:%%<イラン暦>]",
       "[Jalali=en:Jalali_calendar, ジャラーリー暦]",
+      "[JalaliAlgorithmic=en:Jalali_calendar, ジャラーリー暦(2820年周期)=ja:%%<ジャラーリー暦>]",
       "[Borji=, ボルジ暦=]",
 
       [self,
@@ -142,7 +144,7 @@ module When
     # Table Based Jalali Calendar
     #
     TableBasedJalali = [CyclicTableBased, {
-      'label'         => 'Iranian::Jalali',
+      'label'         => 'Iranian::JalaliAlgorithmic',
       'indices'       => _indicesJ,
       'origin_of_LSC' => 1948321 + 173125,
       'origin_of_MSC' => 475,
@@ -175,7 +177,7 @@ module When
     # Table Based Borji Calendar
     #
     TableBasedBorji = [PatternTableBasedSolar, {
-      'label'         => 'Iranian::SolarHijri',
+      'label'         => 'Iranian::SolarHijri (Combined)',
       'indices'       => _indicesM,
       'origin_of_MSC' => 1230,
       'origin_of_LSC' => 2397203,

@@ -69,7 +69,7 @@ module MiniTest
           assert_equal(sample.shift, [v.label, v.divisor, v.remainder])
         end
 
-        assert_equal("hinoto", stem[3].label.translate('en'))
+        assert_equal("Fire-yin", stem[3].label.translate('en'))
 
         date0 = When.when?('2011-05-16T12:34:56Z')
         date = date0 & (kinoto & ushi)

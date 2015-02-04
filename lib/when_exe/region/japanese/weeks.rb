@@ -21,20 +21,20 @@ class When::CalendarNote
     # 暦注要素の定義
     #
     Notes = [When::BasicTypes::M17n, [
-      "locale:[=en:, ja=ja:, alias]",
+      "locale:[=en:, ja=ja:, zh=ja:, alias]",
       "names:[Rokuyo=]",
 
       # 日の暦注 ----------------------------
       [When::BasicTypes::M17n,
         "names:[day]",
         [When::BasicTypes::M17n,
-          "names:[Rokuyo=, 六曜]",
-          [DayOfWeek, "label:[Taian=,      *大安]", {'delta'=>6}],
-          [DayOfWeek, "label:[Shakko=,     *赤口]", {'delta'=>6}],
-          [DayOfWeek, "label:[Sensho=,     *先勝]", {'delta'=>6}],
-          [DayOfWeek, "label:[Tomobiki=,   *友引]", {'delta'=>6}],
-          [DayOfWeek, "label:[Sembu=,      *先負]", {'delta'=>6}],
-          [DayOfWeek, "label:[Butsumetsu=, *仏滅]", {'delta'=>6}]
+          "names:[Rokuyo=, 六曜, 六曜=zh:%%<六曜>]",
+          [DayOfWeek, "label:[Taian=,      *大安, 大安]", {'delta'=>6}],
+          [DayOfWeek, "label:[Shakko=,     *赤口, 赤口]", {'delta'=>6}],
+          [DayOfWeek, "label:[Sensho=,     *先勝, 先勝]", {'delta'=>6}],
+          [DayOfWeek, "label:[Tomobiki=,   *友引, 友引]", {'delta'=>6}],
+          [DayOfWeek, "label:[Sembu=,      *先負, 先負]", {'delta'=>6}],
+          [DayOfWeek, "label:[Butsumetsu=, *仏滅, 仏滅]", {'delta'=>6}]
         ]
       ]
     ]]
