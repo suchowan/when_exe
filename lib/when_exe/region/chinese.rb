@@ -16,6 +16,7 @@ module When
       "[中国太陰太陽暦=ja:%%<中国暦>, *ChineseLuniSolar=en:Chinese_calendar]",
       "[彝暦=ja:%%<イ族>, *Yi=en:Yi_people]",
       "[北京, *Beijing]",
+      "[現代中国=, ModernChinese=, *Modern=]",
 
       [self,
         "names:[月=ja:%%<月_(暦)>, *Month]",
@@ -811,7 +812,7 @@ module When
         @formula           *= 2 if @formula.length == 1
         @formula[0]        += (@formula[0] =~ /\?/ ? '&' : '?') + 'formula=12S' if @formula[0].kind_of?(String)
         @formula[1]        += (@formula[1] =~ /\?/ ? '&' : '?') + 'formula=1L'  if @formula[1].kind_of?(String)
-        @note             ||= When.CalendarNote('Chinese')
+        @note             ||= When.CalendarNote('SolarNote')
         @indices          ||= [
             When.Index('Chinese::Month'),
             When::Coordinates::DefaultDayIndex
@@ -871,7 +872,7 @@ module When
         @intercalary_span ||= 12
         @intercalary_span   =  @intercalary_span.to_i
         @intercalary_month  = (@intercalary_month.to_i - @base_month) % 12 + 1 if @intercalary_month
-        @note             ||= When.CalendarNote('Chinese')
+        @note             ||= When.CalendarNote('SolarNote')
         @indices          ||= [
             When.Index('Chinese::Month', {:branch=>{1=>'_m:Calendar::閏'}}),
             When::Coordinates::DefaultDayIndex

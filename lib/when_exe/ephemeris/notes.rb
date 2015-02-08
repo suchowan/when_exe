@@ -345,6 +345,7 @@ class When::CalendarNote
       nil
     end
 
+    #
     # 干潮・満潮の日時
     #
     # @param [When::TM::TemporalPosition] date
@@ -356,7 +357,6 @@ class When::CalendarNote
     #   [Integer] +1:満潮, -1:干潮
     #
     #   [When::TM::TemporalPosotion] 干潮・満潮の日時
-    #
     #
     def tide(date, options={})
       return nil unless @interval
@@ -417,6 +417,145 @@ class When::CalendarNote
     def formula(location)
       return @formula unless @formula.kind_of?(Hash)
       @formula[location] ||= When.Resource("Formula?location=(#{location})", '_ep:')
+    end
+  end
+
+  #
+  # 節月の暦注
+  #
+  class SolarNote < self
+
+    Notes = [When::BasicTypes::M17n, [
+      "locale:[=en:, ja=ja:, zh=zh:, alias=ja:]",
+      "names:[SolarMonth=, 節月=, 節月=]",
+
+      # 年の暦注 ----------------------------
+      [When::BasicTypes::M17n,
+        "names:[year]",
+        [When::BasicTypes::M17n,
+          "names:[Year]"
+        ]
+      ],
+
+      # 月の暦注 ----------------------------
+      [When::BasicTypes::M17n,
+        "names:[month]",
+        [When::BasicTypes::M17n,
+          "names:[Month]"
+        ]
+      ],
+
+      # 日の暦注 ----------------------------
+      [When::BasicTypes::M17n,
+        "names:[day]",
+         "[Week,                           週,         週        ]", # 七曜
+         "[StemBranch=en:Sexagenary_cycle, 干支,       干支      ]", # 六十干支
+         "[SolarTerm=en:Solar_term,  二十四節気, 節気=zh:%%<节气>]", # 二十四節気
+         "[Motsu=,                         没=,        没=       ]"  # 没
+      ]
+    ]]
+
+    #
+    # 年の干支
+    #
+    # @param [When::TM::TemporalPosition] date
+    # @param [Hash] options dummy
+    #
+    # @return [When::Coordinates::Residue] 六十干支
+    #
+    def year(date, options={})
+      When.Residue('干支')[(date.year-4) % 60]
+    end
+
+    #
+    # 七曜
+    #
+    # @param [When::TM::TemporalPosition] date
+    # @param [Hash] options dummy
+    #
+    # @return [When::Coordinates::Residue] 七曜
+    #
+    def week(date, options={})
+      When.Residue('Week')[date.to_i % 7]
+    end
+
+    #
+    # 日の干支
+    #
+    # @param [When::TM::TemporalPosition] date
+    # @param [Hash] options dummy
+    #
+    # @return [When::Coordinates::Residue] 六十干支
+    #
+    def stembranch(date, options={})
+      When.Residue('干支')[(date.to_i-11) % 60]
+    end
+
+    #
+    # 二十四節気
+    #
+    # @param [When::TM::TemporalPosition] date
+    # @param [Hash] options dummy
+    #
+    # @return [When::Coordinates::Residue] 二十四節気 or nil
+    #
+    def solarterm(date, options={})
+      _day_notes(date, options)['二十四節気']
+    end
+
+    #
+    # 没
+    #
+    # @param [When::TM::TemporalPosition] date
+    # @param [Hash] options dummy
+    #
+    # @return [When::BasicTypes::M17n] 没 or nil
+    #
+    def motsu(date, options={})
+      _day_notes(date, options)['没']
+    end
+
+    private
+
+    # オブジェクトの正規化
+    def _normalize(args=[], options={})
+      @prime  ||= [%w(Year), %w(Month), %w(Week StemBranch SolarTerm Motsu)]
+      super
+    end
+
+    #
+    # 日の暦注
+    #
+    # @param [When::TM::TemporalPosition] date
+    # @param [Hash] options dummy
+    #
+    # @return [Hash] 暦注名=>暦注値
+    #
+    def _day_notes(date, options={})
+      s_date = When.when?(date.to_cal_date.to_s,
+        {:frame=>date.frame,
+         :clock=>(date.frame.kind_of?(When::CalendarTypes::EphemerisBasedSolar) || !date.frame.twin ?
+            date.frame :
+            When.Calendar(date.frame.twin))._time_basis[0]
+        })
+
+      # 没
+      notes   = {}
+      longitude, motsu = SolarTerms.new('formula'=>date.frame.formula[0]).position(s_date)
+      if motsu == 0
+        notes['没'] = '没' unless date.most_significant_coordinate >= 1685 && date.frame.iri =~ /JapaneseTwin/
+        return notes
+      end
+
+      # 廿四節気
+      div, mod = longitude.divmod(15)
+      if mod == 0
+        note = (div - 21) % 24
+        div, mod = note.divmod(2)
+        notes['二十四節気'] ||= 
+         When.Resource(date.frame.iri =~ /戊寅|麟徳|儀鳳/ ? '_co:Common?V=0618' : '_co:Common')['二十四節気::*'][(note-3) % 24]
+      end
+      notes
     end
   end
 end

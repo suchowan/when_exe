@@ -11,6 +11,7 @@ module When
     Japanese = [self, [
       "locale:[=ja:, en=en:, alias=ja:]",
       "names:[日本, Japan]",
+      "[現代日本=, ModernJapanese=, *Modern=]",
 
       # Remarks
       "[典拠 - 科研22520700=," +

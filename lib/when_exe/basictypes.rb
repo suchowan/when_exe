@@ -50,7 +50,7 @@ module When
           if options[:abbr].kind_of?(When::TimeValue)
             options[:abbr] = ((options[:frame]||When::Gregorian) ^ options[:abbr]).cal_date
           end
-          date_time = date_time.gsub(/_([\d])/, '\1')
+          date_time = date_time.gsub(/[_\s]+([\d])/, '\1')
           begin
             return _to_array_basic(date_time, options)
           rescue ArgumentError

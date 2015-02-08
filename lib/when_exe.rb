@@ -60,14 +60,16 @@ module When
     # @option options [When::Coordinates::Spatial]  :location              デフォルトの空間位置
     # @option options [When::TM::IntervalLength]    :until                 V::Event::Enumerator の until
     # @option options [Hash{String=>String}]        :alias                 Locale の読替パターン         ({ 読替前のlocale=>読替後のlocale })
-    # @option options [String]                      :namespace_format      名前空間定義の省略時に名前空間生成に用いる書式
+    # @option options [Hash{String=>String}]        :namespace_format      名前空間定義の省略時に名前空間生成に用いる書式
     # @option options [Hash{String=>String}]        :unification           漢字の包摂パターン            ({ 包摂前の文字列=>包摂後の文字列 })
+    # @option options [Numeric]                     :wikipedia_interval    Wikipedia の連続的な参照を抑制するための遅延時間/秒
     # @option options [Array<String>]               :order                 CalendarEra の検索順序        ([ IRI of When::TM::CalendarEra ])
     # @option options [Hash{String=>Array, String}] :format                strftime で用いる記号の定義   ({ 記号=>[ 書式,項目名 ] or 記号列 })
     # @option options [Array<Array>]                :leap_seconds          閏秒の挿入記録                ([ [JD, TAI-UTC, (MJD, OFFSET)] ])
     # @option options [String]                      :base_uri              Base URI for When_exe Resources (Default When::SourceURI)
     # @option options [Hash<String=>String>]        :additional_namespaces User defined namespaces (Default {})
     # @option options [String]                      :root_dir              Root Directory for When_exe Resources Cash data (Default When::RootDir)
+    # @option options [Boolean]                     :leave_const           If true, leave Constants of When module defined
     # @option options [Boolean]                     :direct                '_' で終わるメソッドをキャッシュせずに毎回計算するか否か
     # @option options [Hash{Symbol=>boolean}]       :escape                毎回 method_missing を発生させるメソッドを true にする
     # @option options [false, nil]                  :escape                to_str, to_ary, to_hash のみ毎回 method_missing を発生させる
@@ -361,6 +363,7 @@ module When
     autoload :SolarTerms,              'when_exe/ephemeris/notes'
     autoload :LunarPhases,             'when_exe/ephemeris/notes'
     autoload :Ephemeris,               'when_exe/ephemeris/notes'
+    autoload :SolarNote,               'when_exe/ephemeris/notes'
     autoload :Japanese,                'when_exe/region/japanese/notes'
     autoload :CommonWithRokuyo,        'when_exe/region/japanese/weeks'
     autoload :RokuyoWeek,              'when_exe/region/japanese/weeks'
