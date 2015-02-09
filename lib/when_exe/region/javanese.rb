@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -9,9 +9,9 @@ module When
   class BasicTypes::M17n
 
     Javanese = [self, [
-      "locale:[=en:, ja=ja:, alias]",
+      "locale:[=en:, ja=ja:, zh=zh:, alias]",
       "names:[Javanese=]",
-      "[JavaneseLunar=, ジャワ・イスラーム暦=]",
+      "[JavaneseLunar=, ジャワ・イスラーム暦=, 爪哇伊斯蘭曆=]",
       "[Pranatamangsa=, プラノトモンソ=]",
 
       [self,
@@ -142,11 +142,11 @@ module When
 
     # サカ紀元
      JavaneseLunar = [self, [
-      "locale:[=en:, ja=ja:, alias]",
-      "period:[JavaneseLunar=, ジャワ・イスラーム暦=]",
-      ["[SE=, サカ暦=, alias:Javanese_Saka_Era]1547.1.1", '@CE', "1035-01-01^Javanese1547",
-								 "1163-01-01^Javanese1675",
-								 "1237-01-01^Javanese1749", '+Infinity']
+      "locale:[=en:, ja=ja:, zh=zh:, alias]",
+      "period:[JavaneseLunar=, ジャワ・イスラーム暦=, 爪哇伊斯蘭曆=]",
+      ["[SE=, サカ暦=, 塞種紀元=, alias:Javanese_Saka_Era]1547.1.1", '@CE', "1035-01-01^Javanese1547",
+							 "1163-01-01^Javanese1675",
+							 "1237-01-01^Javanese1749", '+Infinity']
     ]]
   end
 

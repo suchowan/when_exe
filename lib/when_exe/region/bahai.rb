@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2013-2014 Takashi SUGA
+  Copyright (C) 2013-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -9,12 +9,12 @@ module When
   class BasicTypes::M17n
 
     Bahai = [self, [
-      "locale:[=en:, ar=ar:, alias=en:]",
-      "names:[Bahai=]",
-      "[Bahai=en:Bah%C3%A1%27%C3%AD_calendar, ja:バハーイー暦=ja:%%<バハーイー教>]",
+      "locale:[=en:, ja=ja:, zh=zh:]",
+      "names:[Bahai=en:Bah%C3%A1%27%C3%AD_calendar, バハーイー暦=ja:%%<バハーイー教>, 巴哈伊曆=zh:%%<巴哈伊曆法>]",
 
       # %0s は“閏”の表記を抑制する指定となっている
       [self,
+        "locale:[=en:, ar=ar:, alias=en:]",
         "names:[Month, 月=ja:%%<月_(暦)>]",
         "[Bahá=,      بهاء=,    Splendour=  ]", #  1
         "[Jalál=,     جلال=,    Glory=      ]", #  2
@@ -90,7 +90,7 @@ module When
     # Bahá'í Calendar
     #
     Bahai = [SolarYearTableBasedWithSunset, {
-      'label'           => 'Bahai::Bahai',
+      'label'           => 'Bahai',
       'indices'         => _Indices,
       'origin_of_MSC'   => -1844 + 19*19,
       'diff_to_CE'      =>  0,

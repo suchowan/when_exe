@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2014 Takashi SUGA
+  Copyright (C) 2014-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -10,9 +10,8 @@ module When
   class BasicTypes::M17n
 
     Pax = [self, [
-      "locale:[=en:, ja]",
-      "names:[Pax=]",
-      "[Pax=en:Pax_Calendar, パックス暦=ja:%%<13の月の暦>#%.<パックス暦>]",
+      "locale:[=en:, ja, zh]",
+      "names:[Pax=en:Pax_Calendar, パックス暦=ja:%%<13の月の暦>#%.<パックス暦>, 十三月曆]",
 
       # %0s は“閏”の表記を抑制する指定となっている
       [self,
@@ -41,7 +40,7 @@ module When
     # Pax Calendar
     #
     Pax = [CyclicTableBased, {
-      'label'            => 'Pax::Pax',
+      'label'            => 'Pax',
       'origin_of_LSC'    => 1721061,
       'indices'          => [
         When.Index('Pax::Month', {:branch=>{+1=>When.Resource('_m:Pax::Month::*')[13]}}),

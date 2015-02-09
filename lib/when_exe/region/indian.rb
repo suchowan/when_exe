@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -11,15 +11,16 @@ module When
   class BasicTypes::M17n
 
     Indian = [self, [
-      "locale:[=en:, ja=ja:, hi=hi:, alias]",
-      "names:[Indian=]",
-      "[IndianNationalSolar=en:Indian_national_calendar, インド国定暦, era:SE=]",
-      "[Nanakshahi=en:Nanakshahi_calendar,  ナーナク暦=]",
-      "[RevisedBengali=en:Bengali_calendar, 改訂ベンガル暦=]",
-      "[HinduSolar=en:Hindu_calendar,       インド太陽暦=ja:%%<ヒンドゥー暦>]",
-      "[HinduLuniSolar=en:Hindu_calendar,   インド太陰太陽暦=ja:%%<ヒンドゥー暦>]",
+      "locale:[=en:, ja=ja:, zh=zh:, alias]",
+      "names:[Indian=en:India, インド, 印度]",
+      "[IndianNationalSolar=en:Indian_national_calendar, インド国定暦,                         印度國定曆, era:SE=]",
+      "[Nanakshahi=en:Nanakshahi_calendar,               ナーナク暦=,                          拿那克曆=]",
+      "[RevisedBengali=en:Bengali_calendar,              改訂ベンガル暦=,                      改变孟加拉曆=]",
+      "[HinduSolar=en:Hindu_calendar,                    インド太陽暦=ja:%%<ヒンドゥー暦>,     印度陽曆=]",
+      "[HinduLuniSolar=en:Hindu_calendar,                インド太陰太陽暦=ja:%%<ヒンドゥー暦>, 印度陰陽曆=]",
 
       [self,
+        "locale:[=en:, ja=ja:, hi=hi:, alias]",
         "names:[IntercalaryMonth=en:Intercalation, 閏月]",
         "[%s Śuklapakṣa=,        %s 白分=,   _IAST_=]",
         "[%s Kṛṣṇapakṣa=,        %s 黒分=,   _IAST_=]",
@@ -34,6 +35,7 @@ module When
       ],
 
       [self,
+        "locale:[=en:, ja=ja:, hi=hi:, alias]",
         "names:[LunarMonth=, 太陰月=ja:%%<月_(暦)>]",
         "[Mārgaśīra=en:Margashirsha,   マールガシールシャ=, _IAST_=]",
         "[Pauṣa=en:Pausha,             パウシャ=,           _IAST_=]",
@@ -50,6 +52,7 @@ module When
       ],
 
       [self,
+        "locale:[=en:, ja=ja:, hi=hi:, alias]",
         "names:[SolarMonth=, 太陽月=ja:%%<月_(暦)>]",
         "[Maysha=,                     白羊宮,              _IAST_=]",
         "[Vrushabha=,                  金牛宮,              _IAST_=]",
@@ -104,7 +107,7 @@ module When
     # Location of cities in India
     Indian = [When::BasicTypes::M17n, [
       "locale:[=en:, ja=ja:, alias]",
-      "names:[Indian]",
+      "names:[Indian=en:India, インド, zh:印度]",
       [Spatial, "long:+82.5", "lat:N23.11", "label:[CentralIndia=,      インド中部=]"         ],
       [Spatial, "long:+82.5", "lat:+29.0",  "label:[NorthIndia=,        インド北部]"          ],
       [Spatial, "long:+78.0", "lat:+27.2",  "label:[Agra,               アーグラ]"            ],

@@ -9,16 +9,17 @@ module When
   class BasicTypes::M17n
 
     Iranian = [self, [
-      "locale:[=en:, ja=ja:, ar=ar:, alias=ja:]",
-      "names:[Iranian=]",
-      "[SolarHijri=en:Solar_Hijri_calendar#Details_of_the_modern_calendar, ヘジラ太陽暦=ja:%%<イラン暦>]",
-      "[SolarHijri (Combined)=en:Solar_Hijri_calendar#Details_of_the_modern_calendar, ヘジラ太陽暦(多種接続)=ja:%%<イラン暦>]",
-      "[SolarHijriAlgorithmic=en:Solar_Hijri_calendar#Solar_Hijri_algorithmic_calendar, ヘジラ太陽暦(2820年周期)=ja:%%<イラン暦>]",
-      "[Jalali=en:Jalali_calendar, ジャラーリー暦]",
-      "[JalaliAlgorithmic=en:Jalali_calendar, ジャラーリー暦(2820年周期)=ja:%%<ジャラーリー暦>]",
+      "locale:[=en:, ja=ja:, zh=zh:, alias=ja:]",
+      "names:[Iranian=en:Iranian_calendars, イラン暦, 伊朗曆]",
+      "[SolarHijri=en:Solar_Hijri_calendar#Details_of_the_modern_calendar, ヘジラ太陽暦=ja:%%<イラン暦>, 希吉拉陽暦=zh:%%<伊朗曆>]",
+      "[SolarHijri (Combined)=en:Solar_Hijri_calendar#Details_of_the_modern_calendar, ヘジラ太陽暦(多種接続)=ja:%%<イラン暦>, 希吉拉陽暦(連接起來)=zh:%%<伊朗曆>]",
+      "[SolarHijriAlgorithmic=en:Solar_Hijri_calendar#Solar_Hijri_algorithmic_calendar, ヘジラ太陽暦(2820年周期)=ja:%%<イラン暦>, 希吉拉陽暦(2820年週期)=zh:%%<伊朗曆>]",
+      "[Jalali=en:Jalali_calendar, ジャラーリー暦, 波斯曆=]",
+      "[JalaliAlgorithmic=en:Jalali_calendar, ジャラーリー暦(2820年周期)=ja:%%<ジャラーリー暦>, 波斯曆(2820年週期)=]",
       "[Borji=, ボルジ暦=]",
 
       [self,
+      "locale:[=en:, ja=ja:, ar=ar:, alias=ja:]",
         "names:[Month, 月=ja:%%<月_(暦)>]",
         "[Farvardīn=,   ファルヴァルディーン=, فروردین=,  フラワシ             ]",
         "[Ordībehesht=, オルディーベヘシュト=, اردیبهشت=, アシャ・ワヒシュタ   ]",

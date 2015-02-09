@@ -19,9 +19,8 @@ module When
   class BasicTypes::M17n
 
     Goddess = [self, [
-      "locale:[=en:, ja]",
-      "names:[Goddess=]",
-      "[Goddess(MMG)=http://calendars.wikia.com/wiki/Goddess_Lunar_Calendar, ゴッデス暦, *alias:Goddess]",
+      "locale:[=en:, ja, zh]",
+      "names:[Goddess(MMG)=http://calendars.wikia.com/wiki/Goddess_Lunar_Calendar, ゴッデス暦(MMG), 女神曆(MMG), *alias:Goddess]",
 
       [self,
         "names:[Month]",
@@ -39,7 +38,7 @@ module When
     # Goddess Calendar
     #
     Goddess =  [CyclicTableBased, {
-      'label'         => 'Goddess::Goddess',
+      'label'         => 'Goddess',
       'origin_of_LSC' => 2415611 - 180432,  # 1901-08-14 Base Cycle = No.1
       'note'          => [['_m:Calendar::Month'],
                           ['_co:Common::Week', '_n:Ephemeris/Notes::day::Moon_Age']],

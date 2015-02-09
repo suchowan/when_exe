@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2014 Takashi SUGA
+  Copyright (C) 2014-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -10,9 +10,8 @@ module When
   class BasicTypes::M17n
 
     Armenian = [self, [
-      "locale:[=en:, ja=ja:, alias]",
-      "names:[Armenian=]",
-      "[Armenian=en:Armenian_calendar, アルメニア暦=]",
+      "locale:[=en:, ja=ja:, zh=zh:, alias]",
+      "names:[Armenian=en:Armenian_calendar, アルメニア暦=, 亞美尼亞曆=zh:%%<亞美尼亞曆法>]",
 
       [self,
         "names:[Month=, 月=ja:%%<月_(暦)>]",
@@ -39,7 +38,7 @@ module When
     # Armenian Calendar
     #
     Armenian =  [CyclicTableBased, {
-      'label'         => 'Armenian::Armenian',
+      'label'         => 'Armenian',
       'origin_of_LSC' => 1922868,
       'origin_of_MSC' =>       1,
       'epoch_in_CE'   =>     552,

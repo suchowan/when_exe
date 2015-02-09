@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -10,10 +10,10 @@ module When
   class BasicTypes::M17n
 
     Symmetry = [self, [
-      "locale:[=en:, ja]",
+      "locale:[=en:, ja, zh]",
       "names:[Symmetry=]",
-      "[Sym454=en:Symmetry454, 対称454暦=]",
-      "[Sym010=http://individual.utoronto.ca/kalendis/classic.htm, 対称010暦=]"
+      "[Sym454=en:Symmetry454, 対称454暦=, 対称454曆=]",
+      "[Sym010=http://individual.utoronto.ca/kalendis/classic.htm, 対称010暦=, 対称010曆=]"
     ]]
   end
 

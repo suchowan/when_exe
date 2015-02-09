@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -10,8 +10,8 @@ module When
   class BasicTypes::M17n
 
     Roman = [self, [
-      "locale:[=en:, ja=ja:, alias]",
-      "names:[Roman=]",
+      "locale:[=en:, ja=ja:, zh=zh:, alias]",
+      "names:[Roman=en:Roman_calendar, ローマ暦, 羅馬曆]",
 
       # Remarks
       '[based on Chris Bennett "Roman Dates" (Retrieved 2013-05-13)=http://www.tyndalehouse.com/Egypt/ptolemies/chron/roman/chron_rom_intro_fr.htm,' +
@@ -98,9 +98,9 @@ module When
 
     # From http://en.wikipedia.org/wiki/Julian_calendar#Sacrobosco.27s_theory_on_month_lengths
     Julian = [self, [
-      "locale:[=en:, ja=ja:, alias]",
-      "period:[Roman=en:Roman_calendar, ローマ暦]",
-      ["[AUC=en:Ab_urbe_condita, 建国紀元=ja:%%<ローマ建国紀元>, alias:Ab_urbe_condita]709.1.1",
+      "locale:[=en:, ja=ja:, zh=zh:, alias]",
+      "period:[Roman=en:Roman_calendar, ローマ暦, 羅馬曆]",
+      ["[AUC=en:Ab_urbe_condita, 建国紀元=ja:%%<ローマ建国紀元>, 建城紀年=zh:%%<羅馬建城紀年>, alias:Ab_urbe_condita]709.1.1",
        '@CE', "-44-01-01^JulianA",
                "-7-03-01^JulianB",
                 "8-01-01^JulianC", "476-09-04"]
@@ -108,9 +108,9 @@ module When
 
     # From Chris Bennett, http://www.tyndalehouse.com/Egypt/ptolemies/chron/roman/chron_rom_intro_fr.htm
     Roman = [self, [
-      "locale:[=en:, ja=ja:, alias]",
-      "period:[Roman=en:Roman_calendar, ローマ暦]",
-      ["[AUC=en:Ab_urbe_condita, 建国紀元=ja:%%<ローマ建国紀元>, alias:Ab_urbe_condita]492.5.1",
+      "locale:[=en:, ja=ja:, zh=zh:, alias]",
+      "period:[Roman=en:Roman_calendar, ローマ暦, 羅馬曆]",
+      ["[AUC=en:Ab_urbe_condita, 建国紀元=ja:%%<ローマ建国紀元>, 建城紀年=zh:%%<羅馬建城紀年>, alias:Ab_urbe_condita]492.5.1",
        '@CE', "-261-05-01^RomanA?border=0-5-1",
               "-221-03-01^RomanA?border=0-3-1",
               "-152-01-01^RomanA",

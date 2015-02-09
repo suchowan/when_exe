@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2014 Takashi SUGA
+  Copyright (C) 2014-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -19,12 +19,12 @@ module When
   class BasicTypes::M17n
 
     Zoroastrian = [self, [
-      "locale:[=en:, ja=ja:, ar=ar:, alias=ja:]",
-      "names:[Zoroastrian=]",
-      "[Zoroastrian=en:Zoroastrian_calendar#The_reckoning_of_years,   ゾロアスター暦=]",
-      "[Qadimi=en:Zoroastrian_calendar#The_Qadimi_calendar ,          カディミ暦=    ]",
-      "[Shahanshahi=en:Zoroastrian_calendar#The_Shahanshahi_calendar, 諸王の王の暦=  ]",
-      "[Fasli=en:Zoroastrian_calendar#The_Fasli_calendar ,            ファスリ暦=    ]"
+      "locale:[=en:, ja=ja:, zh=zh:, alias=ja:]",
+      "names:[Zoroastrian=en:Zoroastrian_calendar,                    ゾロアスター暦=, 瑣羅亞斯德曆=]",
+      "[Zoroastrian=en:Zoroastrian_calendar#The_reckoning_of_years,   ゾロアスター暦=, 瑣羅亞斯德曆=]",
+      "[Qadimi=en:Zoroastrian_calendar#The_Qadimi_calendar,           カディミ暦=    ]",
+      "[Shahanshahi=en:Zoroastrian_calendar#The_Shahanshahi_calendar, 諸王の王の暦=, 王里面王暦=]",
+      "[Fasli=en:Zoroastrian_calendar#The_Fasli_calendar,             ファスリ暦=    ]"
     ]]
   end
 

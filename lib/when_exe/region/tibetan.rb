@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -9,36 +9,35 @@ module When
   class BasicTypes::M17n
 
     Tibetan = [self, [
-      "locale:[=en:, ja=ja:, hi=hi:, alias]",
-      "names:[Tibetan=]",
-      "[Tibetan=en:Tibetan_calendar, 時輪暦=ja:%%<チベット暦>]",
+      "locale:[=en:, ja=ja:, zh=zh:, hi=hi:, alias]",
+      "names:[Tibetan=en:Tibetan_calendar, 時輪暦=ja:%%<チベット暦>, 藏曆]",
 
       [self,
         "names:[IntercalaryMonth=en:Intercalation, 閏月]",
-        "[%s=,        %s宿月=,   _IAST_=]",
-        "[adhika %s=, 閏%s宿月=, _IAST_=]"
+        "[%s=,        %s宿月=,   %s宿月=,   _IAST_=]",
+        "[adhika %s=, 閏%s宿月=, 閏%s宿月=, _IAST_=]"
       ],
 
       [self,
         "names:[IntercalaryDay=en:Intercalation, 閏日=ja:%%<閏>]",
-        "[%s and next day=, %sと翌日=]",
-        "[Intercalary %s=,  重%s=]"
+        "[%s and next day=, %sと翌日=, %s和第二天=]",
+        "[Intercalary %s=,  重%s=,     重%s=      ]"
       ],
 
       [self,
         "names:[Month, 月=ja:%%<月_(暦)>]",
-        "[Mārgaśīra=en:Margashirsha,   觜=, _IAST_=]",
-        "[Pauṣa=en:Pausha,             鬼=, _IAST_=]",
-        "[Māgha=en:Maagha,             星=, _IAST_=]",
-        "[Phālguna=en:Phalguna,        翼=, _IAST_=]",
-        "[Caitra=en:Chaitra,           角=, _IAST_=]",
-        "[Vaiśākha=en:Vaisakha,        氐=, _IAST_=]",
-        "[Jyaiṣṭha=en:Jyeshta,         心=, _IAST_=]",
-        "[Āṣāḍha=en:Aashaadha,         箕=, _IAST_=]",
-        "[Śrāvaṇa=en:Shraavana,        牛=, _IAST_=]",
-        "[Bhādrapada=en:Bhadrapada,    室=, _IAST_=]",
-        "[Āśvina=en:Ashwin,            婁=, _IAST_=]",
-        "[Kārttika=en:Kartika_(month), 昴=, _IAST_=]"
+        "[Mārgaśīra=en:Margashirsha,   觜=ja:%%<觜宿>, 觜=zh:%%<觜宿>, _IAST_=]",
+        "[Pauṣa=en:Pausha,             鬼=ja:%%<鬼宿>, 鬼=zh:%%<鬼宿>, _IAST_=]",
+        "[Māgha=en:Maagha,             星=ja:%%<星宿>, 星=zh:%%<星宿>, _IAST_=]",
+        "[Phālguna=en:Phalguna,        翼=ja:%%<翼宿>, 翼=zh:%%<翼宿>, _IAST_=]",
+        "[Caitra=en:Chaitra,           角=ja:%%<角宿>, 角=zh:%%<角宿>, _IAST_=]",
+        "[Vaiśākha=en:Vaisakha,        氐=ja:%%<氐宿>, 氐=zh:%%<氐宿>, _IAST_=]",
+        "[Jyaiṣṭha=en:Jyeshta,         心=ja:%%<心宿>, 心=zh:%%<心宿>, _IAST_=]",
+        "[Āṣāḍha=en:Aashaadha,         箕=ja:%%<箕宿>, 箕=zh:%%<箕宿>, _IAST_=]",
+        "[Śrāvaṇa=en:Shraavana,        牛=ja:%%<牛宿>, 牛=zh:%%<牛宿>, _IAST_=]",
+        "[Bhādrapada=en:Bhadrapada,    室=ja:%%<室宿>, 室=zh:%%<室宿>, _IAST_=]",
+        "[Āśvina=en:Ashwin,            婁=ja:%%<婁宿>, 婁=zh:%%<婁宿>, _IAST_=]",
+        "[Kārttika=en:Kartika_(month), 昴=ja:%%<昴宿>, 昴=zh:%%<昴宿>, _IAST_=]"
       ]
     ]]
   end

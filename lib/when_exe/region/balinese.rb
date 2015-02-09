@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -9,9 +9,9 @@ module When
   class BasicTypes::M17n
 
     Balinese = [self, [
-      "locale:[=en:, ja=ja:, alias]",
+      "locale:[=en:, ja=ja:, zh=zh:, alias]",
       "names:[Balinese=]",
-      "[BalineseLuniSolar=, バリ・サカ暦=]",
+      "[BalineseLuniSolar=, バリ・サカ暦=, 峇里陰陽曆=]",
       "[Tenganan, テンガナン暦=]",
 
       [self,
@@ -133,13 +133,13 @@ module When
     # バリのサカ暦
     #
     BalineseLuniSolar = [self, [
-      "locale:[=en:, ja=ja:, alias]",
-      "period:[BalineseLuniSolar=, バリ・サカ暦=]",
-      ["[SE=, サカ暦=, alias:Balinese_Saka_Era]1887-07<13", '@CE', "1965-07<13^BalineseLuniSolar1965",
-								   "1971-07-04^BalineseLuniSolar1971",
-								   "1993-07-08^BalineseLuniSolar1993",
-								   "1999-06<10^BalineseLuniSolar2000",
-								   "2003-07<14^BalineseLuniSolar2003", '+Infinity']
+      "locale:[=en:, ja=ja:, zh=zh:, alias]",
+      "period:[BalineseLuniSolar=, バリ・サカ暦=, 峇里陰陽曆=]",
+      ["[SE=, サカ暦=, 塞種紀元=, alias:Balinese_Saka_Era]1887-07<13", '@CE', "1965-07<13^BalineseLuniSolar1965",
+							 "1971-07-04^BalineseLuniSolar1971",
+							 "1993-07-08^BalineseLuniSolar1993",
+							 "1999-06<10^BalineseLuniSolar2000",
+							 "2003-07<14^BalineseLuniSolar2003", '+Infinity']
     ]]
   end
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2014 Takashi SUGA
+  Copyright (C) 2014-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -10,10 +10,11 @@ module When
   class BasicTypes::M17n
 
     AncientOrient = [self, [
-      "locale:[=en:, ja=ja:, alias]",
-      "names:[AncientOrient=en:Ancient_Orient, 古代オリエント]",
-      "[Babylonian=en:Babylonian_calendar, バビロニア暦]",
-      "[Seleucid=en:Seleucid_era, セレウコス紀元=]",
+      "locale:[=en:, ja=ja:, zh=zh:, alias]",
+      "names:[AncientOrient=en:Ancient_Orient, 古代オリエント, 古代近東]",
+      "[Babylonian=en:Babylonian_calendar, バビロニア暦, 巴比倫尼亞曆=]",
+      "[Seleucid=en:Seleucid_era, セレウコス紀元=, 塞琉古紀年=]",
+      "[Hellenistic=en:Hellenistic_period, ヘレニズム, 希臘化時代]",
 
       # Remarks
       '[based on Chris Bennett "Babylonian and Seleucid Dates" (Retrieved 2014-06-29)=http://suchowan.at.webry.info/201407/article_8.html,' +
@@ -24,8 +25,8 @@ module When
 
       [self,
         "names:[IntercalaryMonth=en:Intercalation, 閏月]",
-        "[%s I=,  第１=]",
-        "[%s II=, 第２=]",
+        "[%s I=,  第１=, 第一=]",
+        "[%s II=, 第２=, 第二=]",
       ],
 
       [self,
@@ -373,10 +374,10 @@ module When
 
     # 古代オリエント
     AncientOrient = [self, [
-      "locale:[=en:, ja=ja:]",
-      "area:[AncientOrient=en:Ancient_Orient, 古代オリエント]",
+      "locale:[=en:, ja=ja:, zh=zh:]",
+      "area:[AncientOrient=en:Ancient_Orient, 古代オリエント, 古代近東]",
       [self,
-	"period:[Neo-Babylonian,新バビロニア]",
+	"period:[Neo-Babylonian, 新バビロニア, 新巴比倫王國]",
 	["[Nabopolassar,                              ナボポラッサル                                    ]0",	"@F",	"-0625^BabylonianPD"],
 	["[NebuchadnezzarII=en:Nebuchadnezzar_II,     ネブカドネザルII=ja:%%<ネブカドネザル2世>         ]1",	"@A",	"-0603"],
 	["[AmelMarduk=en:Amel-Marduk,                 アメル・マルドゥク                                ]1",	"@A",	"-0561"], # 0?
@@ -385,7 +386,7 @@ module When
 	["[Nabonidus,                                 ナボニドゥス                                      ]1",	"@A",	"-0554", "-0538.10="]
       ],
       [self,
-	"period:[Achaemenid,アケメネス朝]",
+	"period:[Achaemenid, アケメネス朝, 阿契美尼德王朝]",
 	["[CyrusII=en:Cyrus_the_Great,                キュロスII=ja:%%<キュロス2世>                     ]1",	"@F",	"-0549^BabylonianPD"],
 	["[CambysesII=en:Cambyses_II,                 カンビュセスII=ja:%%<カンビュセス2世>             ]1",	"@A",	"-0528"],
 	["[Bardiya,                                   スメルディス                                      ]1",	"@A",	"-0521"],

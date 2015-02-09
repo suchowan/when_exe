@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -9,30 +9,29 @@ module When
   class BasicTypes::M17n
 
     Jewish = [self, [
-      "locale:[=en:, ja=ja:, alias]",
-      "names:[Jewish=]",
-      "[Jewish=en:Hebrew_calendar, ユダヤ暦]",
+      "locale:[=en:, ja=ja:, zh=zh:, alias]",
+      "names:[Jewish=en:Hebrew_calendar, ユダヤ暦, 希伯來曆]",
 
       [self,
         "names:[IntercalaryMonth=en:Intercalation, 閏月]",
-        "[%s I=,  第１=]",
-        "[%s II=, 第２=]",
+        "[%s I=,  第１=, 第一=]",
+        "[%s II=, 第２=, 第二=]",
       ],
 
       [self,
         "names:[Month, 月=ja:%%<月_(暦)>]",
-        "[Tishrei,  ティシュリー=]",
-        "[Cheshvan, マルヘシュバン=]",
-        "[Kislev,   キスレーヴ=]",
-        "[Tevet,    テベット=]",
-        "[Shevat,   シュバット=]",
-        "[Adar,     アダル]",
-        "[Nisan,    ニサン=]",
-        "[Iyar,     イヤール=]",
-        "[Sivan,    シバン]",
-        "[Tammuz,   タムーズ=]",
-        "[Av,       アブ]",
-        "[Elul,     エルール=]"
+        "[Tishrei,  ティシュリー=,   提斯利月]",
+        "[Cheshvan, マルヘシュバン=, 瑪西班月]",
+        "[Kislev,   キスレーヴ=,     基斯流月]",
+        "[Tevet,    テベット=,       提別月  ]",
+        "[Shevat,   シュバット=,     細罷特月]",
+        "[Adar,     アダル,          亞達月  ]",
+        "[Nisan,    ニサン=,         尼散月  ]",
+        "[Iyar,     イヤール=,       以珥月  ]",
+        "[Sivan,    シバン=,         西彎月  ]",
+        "[Tammuz,   タムーズ=,       搭模斯月]",
+        "[Av,       アブ=,           埃波月  ]",
+        "[Elul,     エルール=,       以祿月  ]"
       ]
     ]]
   end
@@ -62,7 +61,7 @@ module When
 
       # オブジェクトの正規化
       def _normalize(args=[], options={})
-        @label = 'Jewish::Jewish'
+        @label = 'Jewish'
 
         # Default Parameters
         Rational

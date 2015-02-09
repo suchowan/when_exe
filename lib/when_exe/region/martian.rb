@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2013-2014 Takashi SUGA
+  Copyright (C) 2013-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -10,9 +10,9 @@ module When
   class BasicTypes::M17n
 
     Martian = [self, [
-      "locale:[=en:, ja=ja:, alias]",
+      "locale:[=en:, ja=ja:, zh=zh:, alias]",
       "names:[Martian=]",
-      "[Darian=en:Darian_calendar, ダリアン暦]",
+      "[Darian=en:Darian_calendar, ダリアン暦, 大流士火星曆]",
 
       [self,
         "names:[DarianMonth=, 月=ja:%%<月_(暦)>]",

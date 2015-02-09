@@ -9,25 +9,25 @@ module When
   class BasicTypes::M17n
 
     Islamic = [self, [
-      "locale:[=en:, ja=ja:, ar=ar:, alias]",
-      "names:[Islamic=]",
-      "[TabularIslamic=en:Islamic_calendar, イスラーム暦(30年周期)=ja:%%<ヒジュラ暦>]",
-      "[EphemerisBasedIslamic=en:Islamic_calendar, イスラーム暦=ja:%%<ヒジュラ暦>]",
+      "locale:[=en:, ja=ja:, zh=zh:, ar=ar:, alias]",
+      "names:[Islamic=en:Islamic_calendar, イスラーム暦=ja:%%<ヒジュラ暦>, 伊斯蘭曆]",
+      "[TabularIslamic=en:Islamic_calendar, イスラーム暦(30年周期)=ja:%%<ヒジュラ暦>, 伊斯蘭曆]",
+      "[EphemerisBasedIslamic=en:Islamic_calendar, イスラーム暦=ja:%%<ヒジュラ暦>, 伊斯蘭曆]",
 
       [self,
         "names:[Month, 月=ja:%%<月_(暦)>]",
-        "[Muharram,                         ムハッラム=,                   محرم]",
-        "[Safar,                            サファル=,                     صفر]",
-        "[Rabi'_al-awwal,                   ラビーウ・アル＝アウワル=,     ربيع الأول]",
-        "[Rabi'_al-thani,                   ラビーウ・アル＝サーニー=,     ربيع الآخر]",
-        "[Jumada_al-awwal,                  ジュマーダー・アル＝アウワル=, جمادى الأولى]",
-        "[Jumada_al-Thani,                  ジュマーダー・アル＝サーニー=, جمادى الآخرة]",
-        "[Rajab,                            ラジャブ=,                     رجب]",
-        "[Sha'aban,                         シャアバーン=,                 شعبان]",
-        "[Ramadan=en:Ramadan_(calendar_month), ラマダーン,                 رمضان]",
-        "[Shawwal,                          シャウワール=,                 شوال]",
-        "[Dhu_al-Qi'dah,                    ズー・アル＝カーイダ=,         ذو القعدة]",
-        "[Dhu_al-Hijjah,                    ズー・アル＝ヒッジャ=,         ذو الحجة]"
+        "[Muharram,                         ムハッラム=,                  穆哈蘭姆月,       محرم]",
+        "[Safar,                            サファル=,                    色法爾月,         صفر]",
+        "[Rabi'_al-awwal,                   ラビーウ・アル＝アウワル=,    賴比爾·敖外魯月,  ربيع الأول]",
+        "[Rabi'_al-thani,                   ラビーウ・アル＝サーニー=,    賴比爾·阿色尼月,  ربيع الآخر]",
+        "[Jumada_al-awwal,                  ジュマーダー・アル＝アウワル=,主馬達·敖外魯月=, جمادى الأولى]",
+        "[Jumada_al-Thani,                  ジュマーダー・アル＝サーニー=,主馬達·阿色尼月=, جمادى الآخرة]",
+        "[Rajab,                            ラジャブ=,                    賴哲卜月=,        رجب]",
+        "[Sha'aban,                         シャアバーン=,                舍爾邦月,         شعبان]",
+        "[Ramadan=en:Ramadan_(calendar_month), ラマダーン,                賴買丹月,         رمضان]",
+        "[Shawwal,                          シャウワール=,                閃瓦魯月,         شوال]",
+        "[Dhu_al-Qi'dah,                    ズー・アル＝カーイダ=,        都爾喀爾德月=,    ذو القعدة]",
+        "[Dhu_al-Hijjah,                    ズー・アル＝ヒッジャ=,        都爾黑哲月,       ذو الحجة]"
       ]
     ]]
   end

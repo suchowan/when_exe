@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -10,9 +10,8 @@ module When
 
     Shire = [self, [
       "namespace:[cal=http://en.wikipedia.org/wiki/Middle-earth_calendar#]",
-      "locale:[=en:, ja=ja:, alias]",
-      "names:[Shire=]",
-      "[Shire=en:The_Lord_of_the_Rings, ホビット庄暦=ja:%%<指輪物語>]",
+      "locale:[=en:, ja=ja:, zh=zh:, alias]",
+      "names:[Shire=en:The_Lord_of_the_Rings, ホビット庄暦=ja:%%<指輪物語>, 中土曆=zh:%%<魔戒>]",
 
       [self,
         "names:[Festival=,                 祭=                ]",
@@ -206,7 +205,7 @@ module When
     # Shire Calendar based on summer solstice date
     #
     Shire =  [SolarYearTableBased, {
-      'label'   => 'Shire::Shire',
+      'label'   => 'Shire',
       'indices' => _shire_indices,
       'border'       => '00-00-02',
       'engine_day'   =>   -9,           # Jun 1st is 01-09

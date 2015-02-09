@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -10,9 +10,8 @@ module When
   class BasicTypes::M17n
 
     World = [self, [
-      "locale:[=en:, ja=ja:, alias]",
-      "names:[World=]",
-      "[World=en:The_World_Calendar, 世界暦]"
+      "locale:[=en:, ja=ja:, zh=zh:, alias]",
+      "names:[World=en:The_World_Calendar, 世界暦, 世界曆]"
     ]]
   end
 
@@ -160,7 +159,7 @@ module When
     # World calendar based on Gregorian calendar
     #
     World =  [SolarYearTableBased, {
-      'label'   => 'World::World',
+      'label'   => 'World',
       'rule_table'       => {
         365  => {'Length'=>[31,30,30]*3 + [31,30,31]},
         366  => {'Length'=>[31,30,30,31,30,31] *2}

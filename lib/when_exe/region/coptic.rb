@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -10,11 +10,12 @@ module When
   class BasicTypes::M17n
 
     Coptic = [self, [
-      "locale:[=en:, ja=ja:, alias]",
+      "locale:[=en:, ja=ja:, zh=zh:, alias]",
       "names:[Coptic=]",
-      "[Coptic=en:Coptic_calendar,       コプト暦    ]",
-      "[Ethiopian=en:Ethiopian_calendar, エチオピア暦=en:Ethiopian_calendar]",
-      "[Ptolemaic=en:Ptolemaic_dynasty, プトレマイオス朝]",
+      "[Coptic=en:Coptic_calendar,       コプト暦,                           科普特曆     ]",
+      "[Ethiopian=en:Ethiopian_calendar, エチオピア暦=en:Ethiopian_calendar, 埃塞俄比亞曆=]",
+      "[Egyptian=en:Egypt,               エジプト,                           埃及         ]",
+      "[Ptolemaic=en:Ptolemaic_dynasty,  プトレマイオス朝,                   托勒密王朝   ]",
 
       # Remarks
       '[based on Chris Bennett "Egyptian Dates" (Retrieved 2014-06-29)=http://www.tyndalehouse.com/Egypt/ptolemies/chron/egyptian/chron_eg_intro.htm,' +

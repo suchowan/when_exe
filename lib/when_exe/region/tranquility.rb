@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2014 Takashi SUGA
+  Copyright (C) 2014-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -10,9 +10,8 @@ module When
   class BasicTypes::M17n
 
     Tranquility = [self, [
-      "locale:[=en:, ja=ja:, alias]",
-      "names:[Tranquility=]",
-      "[Tranquility=en:Tranquility_Calendar, 静かの海の暦=]",
+      "locale:[=en:, ja=ja:, zh=zh:, alias]",
+      "names:[Tranquility=en:Tranquility_Calendar, 静かの海の暦=, 静海曆=]",
 
       [self,
         "names:[IntercalaryDay=en:Intercalation, 閏日=ja:%%<閏>]",
@@ -174,7 +173,7 @@ module When
       # Object Normalization
       #
       def _normalize(args=[], options={})
-        @label         ||= 'Tranquility::Tranquility'
+        @label         ||= 'Tranquility'
         @indices       ||= [
           When.Index('TranquilityWeekNotes::month::Month', {:unit =>13}),
           When.Index({:branch=>{1=>When.M17n('Tranquility::IntercalaryDay')[0]}})

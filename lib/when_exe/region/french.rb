@@ -9,28 +9,28 @@ module When
   class BasicTypes::M17n
 
     French = [self, [
-      "locale:[=en:, ja=ja:, alias]",
+      "locale:[=en:, ja=ja:, zh=zh:, alias]",
       "names:[French=]",
-      "[FrenchRepublican=en:French_Republican_Calendar,              フランス共和暦=ja:%%<フランス革命暦>            ]",
-      "[FrenchRepublican (Romme)=en:French_Republican_Calendar,      フランス共和暦 (Romme)=ja:%%<フランス革命暦>     ]",
-      "[FrenchRepublican (Continuous)=en:French_Republican_Calendar, フランス共和暦 (Continuous)=ja:%%<フランス革命暦>]",
-      "[FrenchRepublican (128)=en:French_Republican_Calendar,        フランス共和暦 (128)=ja:%%<フランス革命暦>       ]",
+      "[FrenchRepublican=en:French_Republican_Calendar,              フランス共和暦=ja:%%<フランス革命暦>,              法國共和曆]",
+      "[FrenchRepublican (Romme)=en:French_Republican_Calendar,      フランス共和暦 (Romme)=ja:%%<フランス革命暦>,      法國共和曆 (Romme)=zh:%%<法國共和曆>]",
+      "[FrenchRepublican (Continuous)=en:French_Republican_Calendar, フランス共和暦 (Continuous)=ja:%%<フランス革命暦>, 法國共和曆 (Continuous)=zh:%%<法國共和曆>]",
+      "[FrenchRepublican (128)=en:French_Republican_Calendar,        フランス共和暦 (128)=ja:%%<フランス革命暦>,        法國共和曆 (128)=zh:%%<法國共和曆>]",
 
       [self,
         "names:[Month, 月=ja:%%<月_(暦)>]",
-        "[Vendémiaire,    ヴァンデミエール=,       葡萄月=]",
-        "[Brumaire,       ブリュメール=,           霧月=  ]",
-        "[Frimaire,       フリメール=,             霜月=  ]",
-        "[Nivôse,         ニヴォーズ=,             雪月=  ]",
-        "[Pluviôse,       プリュヴィオーズ=,       雨月=  ]",
-        "[Ventôse,        ヴァントーズ=,           風月=  ]",
-        "[Germinal,       ジェルミナル=,           芽月=  ]",
-        "[Floréal,        フロレアル=,             花月=  ]",
-        "[Prairial,       プレリアル=,             牧草月=]",
-        "[Messidor,       メスィドール=,           収穫月=]",
-        "[Thermidor,      テルミドール=,           熱月=  ]",
-        "[Fructidor,      フリュクティドール=,     果実月=]",
-        "[Sansculottides, サン・キュロットの休日=, 予備日=]"
+        "[Vendémiaire,    ヴァンデミエール=,       霞月, 葡萄月=]",
+        "[Brumaire,       ブリュメール=,           霧月, 霧月=  ]",
+        "[Frimaire,       フリメール=,             霜月, 霜月=  ]",
+        "[Nivôse,         ニヴォーズ=,             雪月, 雪月=  ]",
+        "[Pluviôse,       プリュヴィオーズ=,       雨月, 雨月=  ]",
+        "[Ventôse,        ヴァントーズ=,           風月, 風月=  ]",
+        "[Germinal,       ジェルミナル=,           芽月, 芽月=  ]",
+        "[Floréal,        フロレアル=,             花月, 花月=  ]",
+        "[Prairial,       プレリアル=,             牧月, 牧草月=]",
+        "[Messidor,       メスィドール=,           獲月, 収穫月=]",
+        "[Thermidor,      テルミドール=,           熱月, 熱月=  ]",
+        "[Fructidor,      フリュクティドール=,     菓月, 果実月=]",
+        "[Sansculottides, サン・キュロットの休日=, 其他日子=, 予備日=]"
       ]
     ]]
   end

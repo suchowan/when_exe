@@ -12,8 +12,8 @@ module When
   class BasicTypes::M17n
 
     Vietnamese = [self, [
-      "locale:[=en:, ja=ja:, alias]",
-      "names:[Vietnam, ベトナム]"
+      "locale:[=en:, ja=ja:, zh=zh:, alias]",
+      "names:[Vietnam, ベトナム, 越南]"
     ]]
 
   end

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2014 Takashi SUGA
+  Copyright (C) 2014-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -10,9 +10,8 @@ module When
   class BasicTypes::M17n
 
     InternationalFixed = [self, [
-      "locale:[=en:, ja=ja:, alias]",
-      "names:[InternationalFixed=]",
-      "[InternationalFixed=en:International_Fixed_Calendar, 国際固定暦]"
+      "locale:[=en:, ja=ja:, zh=zh:, alias]",
+      "names:[InternationalFixed=en:International_Fixed_Calendar, 国際固定暦, 国際固定曆=]"
     ]]
   end
 
@@ -82,7 +81,7 @@ module When
     # InternationalFixed calendar based on Gregorian calendar
     #
     InternationalFixed =  [SolarYearTableBased, {
-      'label'   => 'InternationalFixed::InternationalFixed',
+      'label'   => 'InternationalFixed',
       'indices' => [
           When.Index('InternationalFixedWeekNotes::month::Month', {:unit =>13}),
          When::Coordinates::DefaultDayIndex

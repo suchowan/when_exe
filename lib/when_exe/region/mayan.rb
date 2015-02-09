@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -102,11 +102,11 @@ module When
     # Mayan Long Count
     #
     LongCount = [{}, self, [
-      "locale:[=en:, ja=ja:, alias]",
-      'area:[LongCount#{?Epoch=Epoch}=en:Mesoamerican_Long_Count_calendar, マヤ長期暦=ja:%%<長期暦>]',
-     ["[PHLC=, 先史時代=, PreHistoricLongCount=]0.0.0.0.0", "[Pre Historic=]",	'-13.0.0.0.0^LongCount#{?Epoch=Epoch}'],
-     ["[HLC=,  歴史時代=, HistoricLongCount=]0.0.0.0.1",    "[Historic Age=]",	  "0.0.0.0.1"],
-     ["[NLC=,  新時代=,   NewLongCount=]0.0.0.0.1",	    "[New Age=]",	 "13.0.0.0.1", "26.0.0.0.1"]
+      "locale:[=en:, ja=ja:, zh=zh:, alias]",
+      'area:[LongCount#{?Epoch=Epoch}=en:Mesoamerican_Long_Count_calendar, マヤ長期暦=ja:%%<長期暦>, 瑪雅長紀曆=zh:%%<長紀曆>]',
+     ["[PHLC=, 先史時代=, 史前時代=, PreHistoricLongCount=]0.0.0.0.0", "[Pre Historic=]", '-13.0.0.0.0^LongCount#{?Epoch=Epoch}'],
+     ["[HLC=,  歴史時代=, 信史時代=, HistoricLongCount=]0.0.0.0.1",    "[Historic Age=]",   "0.0.0.0.1"],
+     ["[NLC=,  新時代=,   新時代=,   NewLongCount=]0.0.0.0.1",	    "[New Age=]",	   "13.0.0.0.1", "26.0.0.0.1"]
     ]]
   end
 

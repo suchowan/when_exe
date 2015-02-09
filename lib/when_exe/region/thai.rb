@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -9,32 +9,32 @@ module When
   class BasicTypes::M17n
 
     Thai = [self, [
-      "locale:[=en:, ja=ja:, hi=hi:, alias]",
+      "locale:[=en:, ja=ja:, zh=zh:, hi=hi:, alias]",
       "names:[Thai=]",
-      "[ThaiLuniSolar=en:Thai_lunar_calendar, タイ太陰太陽暦=ja:%%<チャントラカティ>]",
+      "[ThaiLuniSolar=en:Thai_lunar_calendar, タイ太陰太陽暦=ja:%%<チャントラカティ>, 傣曆]",
 
       [self,
         "names:[IntercalaryMonth=en:Intercalation, 閏月]",
-        "[%s Śuklapakṣa=,        %s 白分=,   _IAST_]",
-        "[%s Kṛṣṇapakṣa=,        %s 黒分=,   _IAST_]",
-        "[adhika %s Śuklapakṣa=, 閏%s 白分=, _IAST_]",
-        "[adhika %s Kṛṣṇapakṣa=, 閏%s 黒分=, _IAST_]"
+        "[%s Śuklapakṣa=,        %s 白分=,   %s 上弦月=,   _IAST_]",
+        "[%s Kṛṣṇapakṣa=,        %s 黒分=,   %s 下弦月=,   _IAST_]",
+        "[adhika %s Śuklapakṣa=, 閏%s 白分=, 閏%s 上弦月=, _IAST_]",
+        "[adhika %s Kṛṣṇapakṣa=, 閏%s 黒分=, 閏%s 下弦月=, _IAST_]"
       ],
 
       [self,
         "names:[LunarMonth=, 太陰月=ja:%%<月_(暦)>]",
-        "[Mārgaśīra=en:Margashirsha,   マールガシールシャ=, _IAST_]",
-        "[Pauṣa=en:Pausha,             パウシャ=,           _IAST_]",
-        "[Māgha=en:Maagha,             マーガ=,             _IAST_]",
-        "[Phālguna=en:Phalguna,        パールグナ=,         _IAST_]",
-        "[Caitra=en:Chaitra,           チャイトラ=,         _IAST_]",
-        "[Vaiśākha=en:Vaisakha,        ヴァイシャーカ=,     _IAST_]",
-        "[Jyaiṣṭha=en:Jyeshta,         ジャイシュタ=,       _IAST_]",
-        "[Āṣāḍha=en:Aashaadha,         アーシャーダ=,       _IAST_]",
-        "[Śrāvaṇa=en:Shraavana,        シュラーヴァナ=,     _IAST_]",
-        "[Bhādrapada=en:Bhadrapada,    バードラパダ=,       _IAST_]",
-        "[Āśvina=en:Ashwin,            アーシュヴィナ=,     _IAST_]",
-        "[Kārttika=en:Kartika_(month), カールッティカ=,     _IAST_]"
+        "[Mārgaśīra=en:Margashirsha,   マールガシールシャ=, 登甘=,   _IAST_]",
+        "[Pauṣa=en:Pausha,             パウシャ=,           三月=,   _IAST_]",
+        "[Māgha=en:Maagha,             マーガ=,             四月=,   _IAST_]",
+        "[Phālguna=en:Phalguna,        パールグナ=,         五月=,   _IAST_]",
+        "[Caitra=en:Chaitra,           チャイトラ=,         六月=,   _IAST_]",
+        "[Vaiśākha=en:Vaisakha,        ヴァイシャーカ=,     七月=,   _IAST_]",
+        "[Jyaiṣṭha=en:Jyeshta,         ジャイシュタ=,       八月=,   _IAST_]",
+        "[Āṣāḍha=en:Aashaadha,         アーシャーダ=,       九月=,   _IAST_]",
+        "[Śrāvaṇa=en:Shraavana,        シュラーヴァナ=,     十月=,   _IAST_]",
+        "[Bhādrapada=en:Bhadrapada,    バードラパダ=,       十一月=, _IAST_]",
+        "[Āśvina=en:Ashwin,            アーシュヴィナ=,     十二月=, _IAST_]",
+        "[Kārttika=en:Kartika_(month), カールッティカ=,     登景=,   _IAST_]"
       ]
     ]]
   end
