@@ -659,10 +659,10 @@ module When
       return label if label
       foreign  = Locale._get_locale(locale, @access_key)
       unless foreign
-        if locale =~ RegExpEastAsia
-          return @names['zh'] if @names['zh']
-        else
-          return @names['en'] if @names['en']
+        case locale
+        when /\Aja/         ; 
+        when RegExpEastAsia ; return @names['zh'] if @names['zh']
+        else                ; return @names['en'] if @names['en']
         end
         return @names['']
       end
