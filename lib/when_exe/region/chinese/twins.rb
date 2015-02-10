@@ -12,7 +12,7 @@ module When
     # Historical Chinese Luni-Solar Calendar for Chinese Note
     ChineseLuniSolar = [self, [
       'locale:[=ja:, en=en:, zh=zh:, alias]',
-      'area:[中国の暦月=, (Auto detect) ChineseLuniSolar=, 被在中国使用陰陽曆=, *ChineseLuniSolar=]',
+      'area:[中国の暦月=, (Auto detect) ChineseLuniSolar=, 被在中國使用陰陽曆=, *ChineseLuniSolar=]',
       ['[太初暦]1.01.01',      '@CR',   '1-01-01^ChineseTwin::太初暦'], # 西暦が正になるところから開始(実際は-103.01.01)
       ['[四分暦]85.01.01',     '@CR',  '85-01-01^ChineseTwin::四分暦', '265'],
       ['[乾象暦]222.01.01',    '@CR', '222-01-01^ChineseTwin::乾象暦', '281'],
@@ -44,7 +44,7 @@ module When
     # Historical Chinese Solar Calendar for Chinese Note
     ChineseSolar = [self, [
       'locale:[=ja:, en=en:, zh=zh:, alias]',
-      'area:[中国の節月=, (Auto detect) ChineseSolar=, 被在中国使用陽曆=, *ChineseSolar]',
+      'area:[中国の節月=, (Auto detect) ChineseSolar=, 被在中國使用陽曆=, *ChineseSolar]',
       ['[太初暦]1.01.01',     '@CR',    '1-01-01^ChineseTwin::太初暦(節月)'], # 西暦が正になるところから開始(実際は-103.01.15)
       ['[四分暦]85.01.07',    '@CR',   '85-01-07^ChineseTwin::四分暦(節月)', '264-12-28'],
       ['[乾象暦]221.12.23',   '@CR',  '221-12-23^ChineseTwin::乾象暦(節月)', '280-12-31'],

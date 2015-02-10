@@ -20,6 +20,12 @@ module When
     # Locale 読み替えの初期設定
     DefaultAlias = {'alias'=>'ja', '日本語'=>'ja', '英語'=>'en'}
 
+    # 東アジアの国別コード
+    EastAsiaCC   = %w(gan hak ii kr kp ko vn ja zh)
+
+    # 東アジア判定正規表現
+    RegExpEastAsia = /\A(#{EastAsiaCC.join('|')})/
+
     # 省略時 Namespace
     DefaultNamespaces = Hash.new {|hash, key|
       hash[key] = "http://#{key}.wikipedia.org/wiki/"
@@ -652,7 +658,14 @@ module When
       label = Locale._hash_value(@names, locale, [])
       return label if label
       foreign  = Locale._get_locale(locale, @access_key)
-      return @names[''] unless foreign
+      unless foreign
+        if locale =~ RegExpEastAsia
+          return @names['zh'] if @names['zh']
+        else
+          return @names['en'] if @names['en']
+        end
+        return @names['']
+      end
       english  = @names['en'] || @names['']
       addition = english.dup.sub!(/\A#{Locale._get_locale('en', @access_key)['en']}/, '')
       foreign[locale] += addition if addition

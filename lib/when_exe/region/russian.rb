@@ -5,14 +5,15 @@
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
 
-class When::BasicTypes::M17n
+module When::Coordinates
 
-  Russian = [self, [
+  # Location of cities in Russia
+  Russian = [When::BasicTypes::M17n, [
     "locale:[=en:, ja=ja:, alias]",
     "names:[Russia, ロシア]",
-    "[Moscow, モスクワ]",
-    "[Saint_Petersburg, サンクトペテルブルク]",
-    "[Vladivostok, ウラジオストク]"
+    [Spatial, "long:37.3756E", "lat:55.4508N", "label:[Moscow,           モスクワ            ]"],
+    [Spatial, "long:30.18E",   "lat:59.57N",   "label:[Saint_Petersburg, サンクトペテルブルク]"],
+    [Spatial,"long:131.55E",   "lat:43.07N",   "label:[Vladivostok,      ウラジオストク      ]"]
   ]]
 end
 

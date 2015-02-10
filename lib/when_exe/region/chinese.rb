@@ -7,16 +7,25 @@
 
 module When
 
+  module Coordinates
+
+    # Location of cities in China
+    Chinese = [When::BasicTypes::M17n, [
+      "locale:[=ja:, en=en:, zh=zh:, alias]",
+      "names:[中国, *China, 中國]",
+      [Spatial,"long:116.2329E", "lat:39.5420N", "label:[北京, *Beijing]"]
+    ]]
+  end
+
   class BasicTypes::M17n
 
     Chinese = [self, [
-      "locale:[=ja:, en=en:, alias]",
-      "names:[中国, *China]",
-      "[中国太陽暦(節月)=ja:%%<二十四節気>#%.<暦月と節月>, *ChineseSolar=en:Solar_term]",
-      "[中国太陰太陽暦=ja:%%<中国暦>, *ChineseLuniSolar=en:Chinese_calendar]",
+      "locale:[=ja:, en=en:, zh=zh:, alias]",
+      "names:[中国, *China, 中國]",
+      "[中国太陽暦(節月)=ja:%%<二十四節気>#%.<暦月と節月>, *ChineseSolar=en:Solar_term], 中國太陽暦(節月)=ja:%%<二十四節気>#%.<暦月と節月>",
+      "[中国太陰太陽暦=ja:%%<中国暦>, *ChineseLuniSolar=en:Chinese_calendar, 中國太陰太陽暦=zh:%%<農曆>]",
       "[彝暦=ja:%%<イ族>, *Yi=en:Yi_people]",
-      "[北京, *Beijing]",
-      "[現代中国=, ModernChinese=, *Modern=]",
+      "[現代中国=, ModernChinese=, *Modern=, 現代中國=]",
 
       [self,
         "names:[月=ja:%%<月_(暦)>, *Month]",

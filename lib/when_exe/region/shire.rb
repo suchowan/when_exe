@@ -11,7 +11,7 @@ module When
     Shire = [self, [
       "namespace:[cal=http://en.wikipedia.org/wiki/Middle-earth_calendar#]",
       "locale:[=en:, ja=ja:, zh=zh:, alias]",
-      "names:[Shire=en:The_Lord_of_the_Rings, ホビット庄暦=ja:%%<指輪物語>, 中土曆=zh:%%<魔戒>]",
+      "names:[Middle-earth=en:Middle-earth_calendar#Shire_calendar, ホビット庄暦=ja:%%<指輪物語>, 中土曆=zh:%%<魔戒>, *alias:Shire]",
 
       [self,
         "names:[Festival=,                 祭=                ]",
@@ -65,15 +65,15 @@ module When
         "names:[day]",
         [When::BasicTypes::M17n,
           "names:[Week]",
-          [DayOfWeek, "label:[Saturday,     土曜日]", {'delta'=>7}],
-          [DayOfWeek, "label:[Sunday,       日曜日]", {'delta'=>7}],
-          [DayOfWeek, "label:[Monday,       月曜日]", {'delta'=>7}],
-          [DayOfWeek, "label:[Tuesday,      火曜日]", {'delta'=>7}],
-          [DayOfWeek, "label:[Wednesday,    水曜日]", {'delta'=>7}],
-          [DayOfWeek, "label:[Thursday,     木曜日]", {'delta'=>7}],
-          [DayOfWeek, "label:[Friday,       金曜日]", {'delta'=>7}],
-          [DayOfWeek, "label:[lithe,        中日= ]", {'delta'=> 365}],
-          [DayOfWeek, "label:[double,       重日= ]", {'delta'=>1827}]
+          [DayOfWeek, "label:[Saturday,  土曜日, /date/day_names/6]", {'delta'=>7}],
+          [DayOfWeek, "label:[Sunday,    日曜日, /date/day_names/0]", {'delta'=>7}],
+          [DayOfWeek, "label:[Monday,    月曜日, /date/day_names/1]", {'delta'=>7}],
+          [DayOfWeek, "label:[Tuesday,   火曜日, /date/day_names/2]", {'delta'=>7}],
+          [DayOfWeek, "label:[Wednesday, 水曜日, /date/day_names/3]", {'delta'=>7}],
+          [DayOfWeek, "label:[Thursday,  木曜日, /date/day_names/4]", {'delta'=>7}],
+          [DayOfWeek, "label:[Friday,    金曜日, /date/day_names/5]", {'delta'=>7}],
+          [DayOfWeek, "label:[lithe,     中日= ]", {'delta'=> 365}],
+          [DayOfWeek, "label:[double,    重日= ]", {'delta'=>1827}]
         ],
 
         "[Common_Week=]"

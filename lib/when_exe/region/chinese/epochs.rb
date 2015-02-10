@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -16,7 +16,7 @@ module When
     #
     Chinese = [{'V'=>{'0618'=>{'A'=>'0618', 'B'=>'0618B', 'C'=>'0618C'}}}, self, [
       "locale:[=ja:, en=en:]",
-      'area:[中国#{?V=V}=ja:%%<元号>#%.<中国>,China#{?V=V}=en:Chinese_era_name]',
+      'area:[中国#{?V=V}=ja:%%<元号>#%.<中国>,China#{?V=V}=en:Chinese_era_name, zh:中國#{?V=V}=zh:%%<年号>#%.<中國>]',
       [self,
 	"period:[秦]",
 	["[<始皇帝>]25*",			"@F"	,	"name=[始皇帝];-221*10-01^Chinese_221"],# 歳首は１０月
@@ -144,7 +144,7 @@ module When
 	["[延康=ja:%%<延康_(漢)>]1"	,	""	,	"	     220-03", "220-10-29"]
       ],
       [self,
-	"period:[三国=ja:%%<三国時代_(中国)>]",
+	"period:[三国=ja:%%<三国時代_(中国)>, zh:三國=zh:%%<三国>]",
 	[self,
 	  "period:[蜀漢]",
 	  ["[章武]1"	,			"@A"	,	"name=[昭烈帝=ja:%%<劉備>];221-04-06^Chinese_103"],	# 劉備 丙午 2185-4 四分暦を使用
@@ -334,7 +334,7 @@ module When
 	]
       ],
       [self,
-	"period:[五胡十六国=ja:%%<五胡十六国時代>]",
+	"period:[五胡十六国=ja:%%<五胡十六国時代>, zh:五胡十六國=zh:%%<五胡十六国>]",
 	[self,
 	  "period:[成漢]",
 	  ["[建初=ja:%%<建初_(成漢)>]1"	,	"@F"	,	"name=[李特];303-01^Chinese0239",			# 景帝 2677-1 考異多
@@ -790,7 +790,7 @@ module When
 	]
       ],
       [self,
-	"period:[五代十国=ja:%%<五代十国時代>]",
+	"period:[五代十国=ja:%%<五代十国時代>, zh:五代十國=zh:%%<五代十国>]",
 	[self,
 	  "period:[呉=ja:%%<呉_(十国)>]",
 	  ["[天祐=ja:%%<天祐_(唐)>,alias:天佑=ja:%%<天祐_(唐)>]4","","name=[楊渥];907-04-22^Chinese0523",		# 戊辰 唐滅亡後も、五代を認めず旧年号を使用 4.04.22
@@ -1210,8 +1210,8 @@ module When
 	["[宣統]1"	,			"@A"	,	"name=[末帝=ja:%%<愛新覚羅溥儀>];1909-01-01", "1911-11-12="],
       ],
       [self,
-	"period:[中華民国=ja:%%<民国紀元>,ROC=en:Chinese_era_name#The_Republic_of_China_Era]",
-	["[民国=ja:%%<民国紀元>,ROC=en:Chinese_era_name#The_Republic_of_China_Era]1",
+	"period:[中華民国=ja:%%<民国紀元>,ROC=en:Chinese_era_name#The_Republic_of_China_Era,zh:中華民國=zh:%%<民國紀年>]",
+	["[民国=ja:%%<民国紀元>,ROC=en:Chinese_era_name#The_Republic_of_China_Era,zh:民國=zh:%%<民國紀年>]1",
 				"@F",		"name=;1912-01-01^Gregorian?note=Chinese"]
       ]
     ]]

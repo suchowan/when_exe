@@ -248,7 +248,6 @@ module When
     autoload :Islamic,                 'when_exe/region/islamic'
     autoload :Jewish,                  'when_exe/region/jewish'
     autoload :AncientOrient,           'when_exe/region/babylonian'
-    autoload :Russian,                 'when_exe/region/russian'
     autoload :Armenian,                'when_exe/region/armenian'
     autoload :Roman,                   'when_exe/region/roman'
     autoload :Coptic,                  'when_exe/region/coptic'
@@ -396,12 +395,14 @@ module When
   end
 
   module Coordinates
+    autoload :Chinese,                 'when_exe/region/chinese'
     autoload :Tibetan,                 'when_exe/region/tibetan'
     autoload :Yi,                      'when_exe/region/chinese'
     autoload :Javanese,                'when_exe/region/javanese'
     autoload :Indian,                  'when_exe/region/indian'
     autoload :Iranian,                 'when_exe/region/iranian'
     autoload :Bahai,                   'when_exe/region/bahai'
+    autoload :Russian,                 'when_exe/region/russian'
     autoload :Roman,                   'when_exe/region/roman'
     autoload :Mayan,                   'when_exe/region/mayan'
 

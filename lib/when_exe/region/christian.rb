@@ -10,15 +10,19 @@ module When
   class BasicTypes::M17n
 
     Christian = [self, [
-      "locale:[=en:, ja=ja:, zh=zh:, alias]",
+      "namespace:[wiki=http://www2u.biglobe.ne.jp/~suchowan/wiki/]",
+      "locale:[=en:, ja=ja:, zh=zh:, kr=ko:, kp=ko:, ko=ko:, alias]",
       "names:[Christian=]",
       "[Julian=en:Julian_calendar,                ユリウス暦    , 儒略曆]",
       "[Gregorian=en:Gregorian_calendar,          グレゴリオ暦  , 格里曆]",
       "[RevisedJulian=en:Revised_Julian_calendar, 修正ユリウス暦, 儒略改革曆]",
       "[Swedish=en:Swedish_calendar,              スウェーデン暦, 瑞典曆]",
-      "[Customizable Western=http://www2u.biglobe.ne.jp/~suchowan/wiki/pref_examples_en.html, " +
-       "西暦=http://www2u.biglobe.ne.jp/~suchowan/wiki/pref_examples.html," +
-       "西元=http://www2u.biglobe.ne.jp/~suchowan/wiki/pref_examples.html, *alias:Civil]"
+      "[Customizable Western=wiki:pref_examples_en.html," +
+      "西暦=wiki:pref_examples.html," +
+      "西元=wiki:pref_examples.html," +
+      "서력기원=wiki:pref_examples.html," +
+      "서력기원=wiki:pref_examples.html," +
+      "서력기원=wiki:pref_examples.html, *alias:Civil]"
     ]]
   end
 
