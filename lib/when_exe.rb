@@ -365,7 +365,7 @@ module When
     autoload :SolarTerms,              'when_exe/ephemeris/notes'
     autoload :LunarPhases,             'when_exe/ephemeris/notes'
     autoload :Ephemeris,               'when_exe/ephemeris/notes'
-    autoload :SolarNote,               'when_exe/ephemeris/notes'
+    autoload :Solar,                   'when_exe/ephemeris/notes'
     autoload :Japanese,                'when_exe/region/japanese/notes'
     autoload :CommonWithRokuyo,        'when_exe/region/japanese/weeks'
     autoload :RokuyoWeek,              'when_exe/region/japanese/weeks'
@@ -527,9 +527,9 @@ module When
     when TM::TemporalPosition, Parts::GeometricComplex ; specification
     when TM::Position ; specification.any_other
     when Array        ; begin options = TM::TemporalPosition._options(options) ; specification.map {|e| when?(e, options)} end
-    when /\Atoday(\^{1,2}(.+))?\z/i ; today($2 ? {:frame=>$2}.update(options) : options)
-    when /\Anow(\^{1,2}(.+))?\z/i   ; now(  $2 ? {:frame=>$2}.update(options) : options)
-    when /(JDN|MJD|SDN|CEP)(\z|\^)/i; TM::JulianDate.parse(specification, options)
+    when /\Atoday((\^|%5E){1,2}(.+))?\z/i ; today($3 ? {:frame=>$3}.update(options) : options)
+    when /\Anow((\^|%5E){1,2}(.+))?\z/i   ; now(  $3 ? {:frame=>$3}.update(options) : options)
+    when /(JDN|MJD|SDN|CEP)(\z|\^|%5E)/i  ; TM::JulianDate.parse(specification, options)
     when /[\n\r]+/    ; when?(specification.split(/[\n\r]+/), options)
     when String       ; TM::TemporalPosition._instance(EncodingConversion.to_internal_encoding(specification), options)
     when Numeric      ; TM::JulianDate.new(+specification, TM::TemporalPosition._options(options))

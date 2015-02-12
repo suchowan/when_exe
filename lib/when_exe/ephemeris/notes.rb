@@ -423,7 +423,7 @@ class When::CalendarNote
   #
   # 節月の暦注
   #
-  class SolarNote < self
+  class Solar < self
 
     Notes = [When::BasicTypes::M17n, [
       "locale:[=en:, ja=ja:, zh=zh:, alias=ja:]",

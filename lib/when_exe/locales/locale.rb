@@ -658,19 +658,20 @@ module When
       label = Locale._hash_value(@names, locale, [])
       return label if label
       foreign  = Locale._get_locale(locale, @access_key)
-      unless foreign
+      if foreign
+        english  = @names['en'] || @names['']
+        addition = english.dup.sub!(/\A#{Locale._get_locale('en', @access_key)['en']}/, '')
+        foreign[locale] += addition if addition
+        update(foreign)
+        Locale._hash_value(@names, locale)
+      else
         case locale
         when /\Aja/         ; 
         when RegExpEastAsia ; return @names['zh'] if @names['zh']
         else                ; return @names['en'] if @names['en']
         end
-        return @names['']
+        @names['']
       end
-      english  = @names['en'] || @names['']
-      addition = english.dup.sub!(/\A#{Locale._get_locale('en', @access_key)['en']}/, '')
-      foreign[locale] += addition if addition
-      update(foreign)
-      return Locale._hash_value(@names, locale)
     end
 
     private

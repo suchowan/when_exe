@@ -1139,8 +1139,8 @@ module When::CalendarTypes
     # オブジェクトの正規化
     def _normalize_engine
       Rational
-      @cycle_offset = (@cycle_offset||0).to_r
-      @day_offset   = (@day_offset||0).to_r
+      @cycle_offset = @cycle_offset ? (@cycle_offset == @cycle_offset.to_i ? @cycle_offset.to_i : @cycle_offset.to_r) : 0
+      @day_offset   = @day_offset   ? (@day_offset   == @day_offset.to_i   ? @day_offset.to_i   : @day_offset.to_r  ) : 0
     end
 
     # 年初の通日

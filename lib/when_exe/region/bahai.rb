@@ -52,7 +52,7 @@ module When
       "names:[Bahai]",
 
       [Residue,
-        "label:[YearName=]", "divisor:19", "year:0", "format:[(%3$d) %1$s=]",
+        "label:[YearName=]", "divisor:19", "year:1", "format:[%1$s(%3$d)=, (%3$d)%1$s=]",
         [Residue, "label:[Alif=,   ألف=,   A=            ]", "remainder:  0"],
         [Residue, "label:[Bá=,     باء=,   B=            ]", "remainder:  1"],
         [Residue, "label:[Ab=,     أب=,    Father=       ]", "remainder:  2"],

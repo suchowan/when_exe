@@ -318,7 +318,7 @@ module When::TM
           frame, iso8601form = $~[1..2]
           frame.sub!(/_+\z/, '')
         else
-          iso8601form, frame, *rest = iso8601form.split(/\^{1,2}/)
+          iso8601form, frame, *rest = iso8601form.split(/(?:\^|%5E){1,2}/i)
           return rest.inject(_instance(iso8601form + '^' + frame, options)) {|p,c| When.Resource(c, '_c:').jul_trans(p)} unless rest.empty?
         end
 
@@ -326,7 +326,7 @@ module When::TM
         options = options.merge({:frame=>When.Resource(frame, '_c:')}) if frame
 
         # indeterminateValue
-        if (iso8601form.sub!(/\/After$|^Before\/|^Now$|^Unknown$|^[-+]Infinity\z/i, ''))
+        if (iso8601form.sub!(/\/After\z|\ABefore\/|\ANow\z|\AUnknown\z|\A[-+]Infinity\z/i, ''))
           options[:indeterminated_position] = When::TimeValue::S[$&.sub(/\//,'')]
           case options[:indeterminated_position]
           when When::TimeValue::Now,

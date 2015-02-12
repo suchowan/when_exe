@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2014 Takashi SUGA
+  Copyright (C) 2014-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -10,9 +10,9 @@ module When
   class BasicTypes::M17n
 
     WeekDate = [self, [
-      "locale:[=en:, ja]",
-      "names:[WeekDate=en:ISO_week_date, 暦週=]",
-      [self, "names:[week]"] + (1...100).to_a.map {|m| "Week #{m}"},
+      "locale:[=en:, ja, zh]",
+      "names:[WeekDate=en:ISO_week_date, 暦週=, 曆週=]",
+      [self, "names:[week, 週, 星期]"] + (1...100).to_a.map {|m| "[Week #{m}=, ja:第#{m}週=, zh:第#{m}週=]"},
     ]]
   end
 

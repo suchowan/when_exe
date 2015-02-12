@@ -94,6 +94,7 @@ module When
     autoload :Locale_uz,      'when_exe/locales/uz'
     autoload :Locale_vi,      'when_exe/locales/vi'
     autoload :Locale_wo,      'when_exe/locales/wo'
+    autoload :Locale_zh,      'when_exe/locales/zh'
     autoload :Locale_zh_CN,   'when_exe/locales/zh_CN'
     autoload :Locale_zh_HK,   'when_exe/locales/zh_HK'
     autoload :Locale_zh_TW,   'when_exe/locales/zh_TW'

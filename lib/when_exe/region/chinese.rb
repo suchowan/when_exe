@@ -821,7 +821,7 @@ module When
         @formula           *= 2 if @formula.length == 1
         @formula[0]        += (@formula[0] =~ /\?/ ? '&' : '?') + 'formula=12S' if @formula[0].kind_of?(String)
         @formula[1]        += (@formula[1] =~ /\?/ ? '&' : '?') + 'formula=1L'  if @formula[1].kind_of?(String)
-        @note             ||= When.CalendarNote('SolarNote')
+        @note             ||= When.CalendarNote('Solar')
         @indices          ||= [
             When.Index('Chinese::Month'),
             When::Coordinates::DefaultDayIndex
@@ -881,7 +881,7 @@ module When
         @intercalary_span ||= 12
         @intercalary_span   =  @intercalary_span.to_i
         @intercalary_month  = (@intercalary_month.to_i - @base_month) % 12 + 1 if @intercalary_month
-        @note             ||= When.CalendarNote('SolarNote')
+        @note             ||= When.CalendarNote('Solar')
         @indices          ||= [
             When.Index('Chinese::Month', {:branch=>{1=>'_m:Calendar::閏'}}),
             When::Coordinates::DefaultDayIndex

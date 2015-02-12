@@ -81,5 +81,10 @@ module MiniTest
         assert_equal([1,1], (When::RevisedBengali ^ date).cal_date[-2..-1])
       end
     end
+
+    def test_indian_date_7
+      date = When.when? '1936-11%3C08-%5E%5eHinduLuniSolar?note=HinduNote&location=(_co:Indian::Chennai)&start_month=5&type=SBSA'
+      assert_equal('1936-11<08-', date.to_s)
+    end
   end
 end
