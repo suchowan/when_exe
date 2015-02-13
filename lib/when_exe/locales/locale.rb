@@ -755,11 +755,11 @@ module When
         name
     end
 
-    # encode URI from patterns %%(...) or %.(...)
+    # encode URI from patterns %%(...) or %.(...) and replace space to '_'
     def _encode(source)
-      source.gsub(/%.<.+?>/) do |match|
+      source.gsub(' ','_').gsub(/%.<.+?>/) { |match|
         URI.encode(match[3..-2]).gsub('%', match[1..1])
-      end
+      }
     end
   end
 end

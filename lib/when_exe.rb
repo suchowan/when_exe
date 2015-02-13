@@ -234,6 +234,7 @@ module When
 
   class BasicTypes::M17n
     autoload :Japanese,                'when_exe/region/japanese'
+    autoload :JapaneseHoliday,         'when_exe/region/japanese'
     autoload :Chinese,                 'when_exe/region/chinese'
     autoload :Yi,                      'when_exe/region/chinese'
     autoload :Tibetan,                 'when_exe/region/tibetan'

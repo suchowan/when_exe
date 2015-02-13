@@ -20,8 +20,8 @@ module When::Coordinates
   class Kyusei     < Residue; end
 
   # Common Residue
-  Common = [{'V'=>{'0618'=>{'A'=>'awakening_of_insects=en:Jingzhe,  *啓蟄,驚蟄',
-                            'B'=>'rain_water=en:Yushui_(solar_term),*雨水,雨水'}}}, When::BasicTypes::M17n, [
+  Common = [{'V'=>{'0618'=>{'A'=>'Awakening Of Insects=en:Jingzhe,  *啓蟄,驚蟄',
+                            'B'=>'Rain Water=en:Yushui_(solar_term),*雨水,雨水'}}}, When::BasicTypes::M17n, [
     "locale:[=en:, ja=ja:, zh=zh:, tenreki, tibetan, yi, alias]",
     "names:[Common]",
 
@@ -191,30 +191,30 @@ module When::Coordinates
     [Residue,
       "locale:[=en:, ja=ja:, zh=zh:, alias]",
       "label:[SolarTerm=en:Solar_term, *二十四節気, 節気=zh:%%<节气>]", "divisor:360",
-      [Residue, "label:[vernal_equinox=en:Chunfen,                 *春分, 春分, 二月中=]  ", "remainder:0"  ],
-      [Residue, "label:[clear_and_bright=en:Qingming,              *清明, 清明, 三月節=]  ", "remainder:15" ],
-      [Residue, "label:[grain_rain=en:Guyu,                        *穀雨, 穀雨, 三月中=]  ", "remainder:30" ],
-      [Residue, "label:[start_of_summer=en:Lixia,                  *立夏, 立夏, 四月節=]  ", "remainder:45" ],
-      [Residue, "label:[grain_full=en:Xiaoman,                     *小満, 小満, 四月中=]  ", "remainder:60" ],
-      [Residue, "label:[grain_in_ear=en:Mangzhong,                 *芒種, 芒種, 五月節=]  ", "remainder:75" ],
-      [Residue, "label:[summer_solstice=en:Xiazhi,                 *夏至, 夏至, 五月中=]  ", "remainder:90" ],
-      [Residue, "label:[minor_heat=en:Xiaoshu,                     *小暑, 小暑, 六月節=]  ", "remainder:105"],
-      [Residue, "label:[major_heat=en:Dashu,                       *大暑, 大暑, 六月中=]  ", "remainder:120"],
-      [Residue, "label:[start_of_autumn=en:Liqiu,                  *立秋, 立秋, 七月節=]  ", "remainder:135"],
-      [Residue, "label:[limit_of_heat=en:Chushu,        *処暑, 処暑=zh:%%<处暑>,七月中=]  ", "remainder:150"],
-      [Residue, "label:[white_dew=en:Bailu,                        *白露, 白露, 八月節=]  ", "remainder:165"],
-      [Residue, "label:[autumnal_equinox=en:Qiufen,                *秋分, 秋分, 八月中=]  ", "remainder:180"],
-      [Residue, "label:[cold_dew=en:Hanlu,                         *寒露, 寒露, 九月節=]  ", "remainder:195"],
-      [Residue, "label:[frost_descent=en:Shuangjiang_(solar_term), *霜降, 霜降, 九月中=]  ", "remainder:210"],
-      [Residue, "label:[start_of_winter=en:Lidong,                 *立冬, 立冬, 十月節=]  ", "remainder:225"],
-      [Residue, "label:[minor_snow=en:Xiaoxue,                     *小雪, 小雪, 十月中=]  ", "remainder:240"],
-      [Residue, "label:[major_snow=en:Daxue_(solar_term),          *大雪, 大雪, 十一月節=]", "remainder:255"],
-      [Residue, "label:[winter_solstice=en:Dongzhi_(solar_term),   *冬至, 冬至, 十一月中=]", "remainder:270"],
-      [Residue, "label:[minor_cold=en:Xiaohan,                     *小寒, 小寒, 十二月節=]", "remainder:285"],
-      [Residue, "label:[major_cold=en:Dahan_(solar_term),          *大寒, 大寒, 十二月中=]", "remainder:300"],
-      [Residue, "label:[start_of_spring=en:Lichun,                 *立春, 立春, 正月節=]  ", "remainder:315"],
-      [Residue, 'label:[#{A:rain_water=en:Yushui_(solar_term),     *雨水, 雨水},正月中=]  ', "remainder:330"], # 戊寅・儀鳳暦では啓蟄
-      [Residue, 'label:[#{B:awakening_of_insects=en:Jingzhe,       *啓蟄, 驚蟄},二月節=]  ', "remainder:345"]  # 戊寅・儀鳳暦では雨水
+      [Residue, "label:[Vernal Equinox=en:Chunfen,                 *春分, 春分, 二月中=]  ", "remainder:0"  ],
+      [Residue, "label:[Clear And Bright=en:Qingming,              *清明, 清明, 三月節=]  ", "remainder:15" ],
+      [Residue, "label:[Grain Rain=en:Guyu,                        *穀雨, 穀雨, 三月中=]  ", "remainder:30" ],
+      [Residue, "label:[Start Of Summer=en:Lixia,                  *立夏, 立夏, 四月節=]  ", "remainder:45" ],
+      [Residue, "label:[Grain Full=en:Xiaoman,                     *小満, 小満, 四月中=]  ", "remainder:60" ],
+      [Residue, "label:[Grain In Ear=en:Mangzhong,                 *芒種, 芒種, 五月節=]  ", "remainder:75" ],
+      [Residue, "label:[Summer Solstice=en:Xiazhi,                 *夏至, 夏至, 五月中=]  ", "remainder:90" ],
+      [Residue, "label:[Minor Heat=en:Xiaoshu,                     *小暑, 小暑, 六月節=]  ", "remainder:105"],
+      [Residue, "label:[Major Heat=en:Dashu,                       *大暑, 大暑, 六月中=]  ", "remainder:120"],
+      [Residue, "label:[Start Of Autumn=en:Liqiu,                  *立秋, 立秋, 七月節=]  ", "remainder:135"],
+      [Residue, "label:[Limit Of Heat=en:Chushu,        *処暑, 処暑=zh:%%<处暑>,七月中=]  ", "remainder:150"],
+      [Residue, "label:[White Dew=en:Bailu,                        *白露, 白露, 八月節=]  ", "remainder:165"],
+      [Residue, "label:[Autumnal Equinox=en:Qiufen,                *秋分, 秋分, 八月中=]  ", "remainder:180"],
+      [Residue, "label:[Cold Dew=en:Hanlu,                         *寒露, 寒露, 九月節=]  ", "remainder:195"],
+      [Residue, "label:[Frost Descent=en:Shuangjiang_(solar_term), *霜降, 霜降, 九月中=]  ", "remainder:210"],
+      [Residue, "label:[Start Of Winter=en:Lidong,                 *立冬, 立冬, 十月節=]  ", "remainder:225"],
+      [Residue, "label:[Minor Snow=en:Xiaoxue,                     *小雪, 小雪, 十月中=]  ", "remainder:240"],
+      [Residue, "label:[Major Snow=en:Daxue_(solar_term),          *大雪, 大雪, 十一月節=]", "remainder:255"],
+      [Residue, "label:[Winter Solstice=en:Dongzhi_(solar_term),   *冬至, 冬至, 十一月中=]", "remainder:270"],
+      [Residue, "label:[Minor Cold=en:Xiaohan,                     *小寒, 小寒, 十二月節=]", "remainder:285"],
+      [Residue, "label:[Major Cold=en:Dahan_(solar_term),          *大寒, 大寒, 十二月中=]", "remainder:300"],
+      [Residue, "label:[Start Of Spring=en:Lichun,                 *立春, 立春, 正月節=]  ", "remainder:315"],
+      [Residue, 'label:[#{A:Rain Water=en:Yushui_(solar_term),     *雨水, 雨水},正月中=]  ', "remainder:330"], # 戊寅・儀鳳暦では啓蟄
+      [Residue, 'label:[#{B:Awakening Of Insects=en:Jingzhe,       *啓蟄, 驚蟄},二月節=]  ', "remainder:345"]  # 戊寅・儀鳳暦では雨水
     ],
 
     [Residue,
