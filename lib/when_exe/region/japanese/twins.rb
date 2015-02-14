@@ -14,7 +14,7 @@ module When
       'locale:[=ja:, en=en:, zh=zh:, alias]',
       'area:[日本の暦月=, (Auto selected) JapaneseLuniSolar=, 被在日本使用陰陽曆=, *JapaneseLuniSolar=]',
       ['[平朔儀鳳暦=]-660.01.01',  '@F',  '-660-01-01^JapaneseTwin::平朔儀鳳暦'],
-      ['[元嘉暦]454.01.01',        '@CR',  '454-01-01^ChineseTwin::元嘉暦'],
+      ['[元嘉暦]454.01.01',        '@CR',  '454-01-01^ChineseTwin::元嘉暦', '697-01-01='],
       ['[儀鳳暦]697.01.01',        '@CR',  '697-01-01^ChineseTwin::麟徳暦'],
       ['[大衍暦]764.01.01',        '@CR',  '764-01-01^ChineseTwin::大衍暦'],
       ['[五紀暦]858.01.01',        '@CR',  '858-01-01^ChineseTwin::五紀暦'],
