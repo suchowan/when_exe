@@ -24,8 +24,8 @@ module When
       "names:[中国, *China, 中國]",
       "[中国太陽暦(節月)=ja:%%<二十四節気>#%.<暦月と節月>, *ChineseSolar=en:Solar_term], 中國太陽暦(節月)=ja:%%<二十四節気>#%.<暦月と節月>",
       "[中国太陰太陽暦=ja:%%<中国暦>, *ChineseLuniSolar=en:Chinese_calendar, 中國太陰太陽暦=zh:%%<農曆>]",
-      "[彝暦=ja:%%<イ族>, *Yi=en:Yi_people]",
-      "[現代中国=, ModernChinese=, *Modern=, 現代中國=]",
+      "[彝暦=ja:%%<イ族>, *Yi=en:Yi_people, 彝曆=zh:%%<彝族>]",
+      "[現代中国=, ModernChinese=, 現代中國=, *Modern=]",
 
       [self,
         "names:[月=ja:%%<月_(暦)>, *Month]",
