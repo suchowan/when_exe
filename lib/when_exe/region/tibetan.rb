@@ -13,7 +13,7 @@ module When
       "names:[Tibetan=en:Tibetan_calendar, 時輪暦=ja:%%<チベット暦>, 藏曆]",
 
       [self,
-        "names:[IntercalaryMonth=en:Intercalation, 閏月]",
+        "names:[Month=, 月=, *alias:IntercalaryMonth=en:Intercalation]",
         "[%s=,        %s宿月=,   %s宿月=,   _IAST_=]",
         "[adhika %s=, 閏%s宿月=, 閏%s宿月=, _IAST_=]"
       ],

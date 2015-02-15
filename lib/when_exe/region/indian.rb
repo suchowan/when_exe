@@ -21,7 +21,7 @@ module When
 
       [self,
         "locale:[=en:, ja=ja:, hi=hi:, alias]",
-        "names:[IntercalaryMonth=en:Intercalation, 閏月]",
+        "names:[HalfMonth=, 半月=, pakṣa=, *IntercalaryMonth=en:Intercalation]",
         "[%s Śuklapakṣa=,        %s 白分=,   _IAST_=]",
         "[%s Kṛṣṇapakṣa=,        %s 黒分=,   _IAST_=]",
         "[adhika %s Śuklapakṣa=, 閏%s 白分=, _IAST_=]",
@@ -922,7 +922,7 @@ module When
           "names:[day]",
 
           [When::BasicTypes::M17n,
-            "names:[tithi=, ティティ=ja:%%<ティティ>]",
+            "names:[tithi=, ティティ=ja:%%<ティティ>, तिथियाँ]",
             "[Amavasya,                   新月,  _IAST_=]", # 新月
             "[Pratipad=en:Prathama_(day), １日=, _IAST_=]", #  1
             "[Dwitiya,                    ２日=, _IAST_=]", #  2

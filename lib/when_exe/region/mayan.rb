@@ -47,7 +47,10 @@ module When
       ],
 
       [Residue,
-        "label:[Trecena, トレセナ=, Trecena]", "divisor:13", 'day:#{Trecena:8}', "format:[%1$s(%3$d/13)=]"
+        "label:[Tzolk'in, ツォルキン, *Trecena]", "divisor:13",
+        [Residue,
+          "label:[Trecena, トレセナ=, Trecena]", "divisor:13", 'day:#{Trecena:8}', "format:[%1$s(%3$d/13)=]"
+        ],
       ],
 
       [Residue,
@@ -92,7 +95,7 @@ module When
   end
 
   class CalendarNote
-    Mayan = [{},['Mayan#{?Epoch=Epoch}::Trecena', 'Mayan#{?Epoch=Epoch}::Tzolk\'in',
+    Mayan = [{},['Mayan#{?Epoch=Epoch}::Trecena::Trecena', 'Mayan#{?Epoch=Epoch}::Tzolk\'in',
                       'Mayan#{?Epoch=Epoch}::Lords_of_the_Night', 'Mayan#{?Epoch=Epoch}::Haab\'']]
   end
 

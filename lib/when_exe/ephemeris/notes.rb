@@ -235,12 +235,12 @@ class When::CalendarNote
 
       # 年の暦注 ----------------------------
       [When::BasicTypes::M17n,
-        "names:[year]"
+        "names:[year, 年]"
       ],
 
       # 月の暦注 ----------------------------
       [When::BasicTypes::M17n,
-        "names:[month]",
+        "names:[month, 月]",
         [When::BasicTypes::M17n,
           "names:[Month]"
         ]
@@ -248,7 +248,7 @@ class When::CalendarNote
 
       # 日の暦注 ----------------------------
       [When::BasicTypes::M17n,
-        "names:[day]",
+        "names:[day, 日]",
           "[Sunrise,   日の出          ]", # 日の出
           "[Sunset,    日の入り        ]", # 日の入り
           [When::Coordinates::Residue,

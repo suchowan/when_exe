@@ -108,7 +108,7 @@ module MiniTest
 
     def test__tzolkin
       # No offset
-      trecena = When.Resource("_co:Mayan::Trecena")
+      trecena = When.Resource("_co:Mayan::Trecena::Trecena")
       assert_equal("トレセナ", trecena.label.translate('ja'))
       assert_equal("http://en.wikipedia.org/wiki/Trecena", trecena.label.reference)
       assert_equal(2, When.when?('2011-05-15') % trecena)
@@ -136,7 +136,7 @@ module MiniTest
       end
 
       # offset 0B
-      trecena = When.Resource("_co:Mayan?Epoch=0D::Trecena")
+      trecena = When.Resource("_co:Mayan?Epoch=0D::Trecena::Trecena")
       assert_equal("トレセナ", trecena.label.translate('ja'))
       assert_equal("http://en.wikipedia.org/wiki/Trecena", trecena.label.reference)
       assert_equal(2, When.when?('2011-05-15') % trecena)
@@ -164,7 +164,7 @@ module MiniTest
       end
 
       # offset 2B
-      trecena = When.Resource("_co:Mayan?Epoch=2D::Trecena")
+      trecena = When.Resource("_co:Mayan?Epoch=2D::Trecena::Trecena")
       assert_equal("トレセナ", trecena.label.translate('ja'))
       assert_equal("http://en.wikipedia.org/wiki/Trecena", trecena.label.reference)
       assert_equal(2, When.when?('2011-05-17') % trecena)

@@ -9,13 +9,13 @@ module When
   class BasicTypes::M17n
 
     Balinese = [self, [
-      "locale:[=en:, ja=ja:, zh=zh:, alias]",
+      "locale:[=en:, ja=ja:, alias]",
       "names:[Balinese=]",
-      "[BalineseLuniSolar=, バリ・サカ暦=, 峇里陰陽曆=]",
+      "[BalineseLuniSolar=, バリ・サカ暦=, zh:峇里陰陽曆=]",
       "[Tenganan, テンガナン暦=]",
 
       [self,
-        "names:[IntercalaryMonth=en:Intercalation, 閏月]",
+        "names:[HalfMonth=, 半月=, *IntercalaryMonth=en:Intercalation]",
         "[%s Suklapaksa=,      %s 白分=  ]",
         "[%s Krsnapaksa=,      %s 黒分=  ]",
         "[Mala %s Suklapaksa=, 閏%s 白分=]",
