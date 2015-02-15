@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -281,7 +281,7 @@ module When
       ],
       [self,
 	"period:[安土桃山時代]",
-	["[天正]1",			"@ND",	"	     1573-07-28^Japanese",
+	["[天正]1",			"@ND",	"name=[正親町];1573-07-28^Japanese",
 					      "name=[後陽成];1586-11-07", ""],
 	["[文禄]1",			"@A",	"	     1592-12-08"],
 	["[慶長]1",	"@ND",			"	     1596-10-27", "1603-02-12"]
