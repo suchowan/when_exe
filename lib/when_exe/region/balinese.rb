@@ -15,7 +15,7 @@ module When
       "[Tenganan, テンガナン暦=]",
 
       [self,
-        "names:[HalfMonth=, 半月=, *IntercalaryMonth=en:Intercalation]",
+        "names:[HalfMonth=, 半月=, zh:半月=, *IntercalaryMonth=en:Intercalation]",
         "[%s Suklapaksa=,      %s 白分=  ]",
         "[%s Krsnapaksa=,      %s 黒分=  ]",
         "[Mala %s Suklapaksa=, 閏%s 白分=]",
@@ -28,7 +28,7 @@ module When
       ],
 
       [self,
-        "names:[HinduMonth=, ヒンドゥ月=]",
+        "names:[HinduMonth=, ヒンドゥ月=, zh:印度月=]",
         "[Kelima=,    5月=]",
         "[Kenem=,     6月=]",
         "[Kepitu=,    7月=]",
@@ -44,7 +44,7 @@ module When
       ],
 
       [self,
-        "names:[TengananMonth=, テンガナン月=]",
+        "names:[TengananMonth=, テンガナン月=, zh:印度月=]",
         "[Kelima=,      5月=]",
         "[Kanem=,       6月=]",
         "[Kepitu=,      7月=]",
@@ -299,30 +299,30 @@ module When
 
     Notes = [When::BasicTypes::M17n, [
       "locale:[=en:, ja=ja:, alias]",
-      "names:[Balinese]",
+      "names:[Balinese, バリ暦注=]",
 
       # 年の暦注 ----------------------------
       [When::BasicTypes::M17n,
-        "names:[year]"
+        "names:[note for year=, 年の暦注=, *year]"
       ],
 
       # 月の暦注 ----------------------------
       [When::BasicTypes::M17n,
-        "names:[month]",
+        "names:[note for month=, 月の暦注=, *month]",
         [When::BasicTypes::M17n,
-          "names:[Month]"
+          "names:[month name=en:Month, 月の名前=ja:%%<月_(暦)>, zh:該月的名稱=, *alias:Month=]"
         ]
       ],
 
       # 日の暦注 ----------------------------
       [When::BasicTypes::M17n,
-        "names:[day]",
+        "names:[note for day=, 日の暦注=, *day]",
 
         [When::BasicTypes::M17n,
           "names:[Hari=, 日名=]",
 
           [When::BasicTypes::M17n,
-            "names:[Suklapaksa=, 白分=]",
+            "names:[Suklapaksa=, 白分=, zh:上弦月=]",
             "[Lidi=   ]",
             "[Kuda=   ]",
             "[Kidang= ]",
@@ -341,7 +341,7 @@ module When
           ],
 
           [When::BasicTypes::M17n,
-            "names:[Krsnapaksa=, 黒分=]",
+            "names:[Krsnapaksa=, 黒分=, zh:下弦月=]",
             "[Ikan=   ]",
             "[Lilin=  ]",
             "[Ulung=  ]",
@@ -461,7 +461,7 @@ module When
         ],
 
         [When::Coordinates::Residue,
-          "label:[Ingkel=]", "divisor:42", "day:20",
+          "label:[Ingkel=, インゲル=]", "divisor:42", "day:20",
           [When::Coordinates::Residue, "label:[Wong= ]", "remainder:  0"],
           [When::Coordinates::Residue, "label:[Sato= ]", "remainder:  7"],
           [When::Coordinates::Residue, "label:[Mina= ]", "remainder: 14"],
@@ -471,7 +471,7 @@ module When
         ],
 
         [When::BasicTypes::M17n,
-          "names:[Watek=]",
+          "names:[Watek=, ワテック=]",
           "[Watu-Lembu=  ]", #  7
           "[Buta-Lintah= ]", #  8
           "[Suku-Uler=   ]", #  9
@@ -487,7 +487,7 @@ module When
         ],
 
         [When::Coordinates::Residue,
-          "label:[Lintang=]", "divisor:35", "day:6",
+          "label:[Lintang=, リンタン=]", "divisor:35", "day:6",
           [When::Coordinates::Residue, "label:[Gajah=           ]", "remainder:  0"],
           [When::Coordinates::Residue, "label:[Kiriman=         ]", "remainder:  1"],
           [When::Coordinates::Residue, "label:[Jong Sarat=      ]", "remainder:  2"],
@@ -526,7 +526,7 @@ module When
         ],
 
         [When::Coordinates::Wuku,
-          "label:[Wuku=]", "divisor:210", "day:146",
+          "label:[Wuku=, ウク週=]", "divisor:210", "day:146",
           [When::Coordinates::Wuku, "label:[Sinta=       ]", "remainder:  0"],
           [When::Coordinates::Wuku, "label:[Landep=      ]", "remainder:  7"],
           [When::Coordinates::Wuku, "label:[Ukir=        ]", "remainder: 14"],
@@ -603,11 +603,13 @@ module When
     #
     def hari(date, parameter=nil)
       y, m, d = _to_date_for_note(date).cal_date
-      thiti     = [d * 1 - 1]
-      thiti[0] += 15 unless [0,1,nil].include?(m * 0)
-      thiti << (thiti[0] + 1) % 30 if d * 0 == -2
+      tithi     = [d * 1 - 1]
+      tithi[0] += 15 unless [0,1,nil].include?(m * 0)
+      tithi << (tithi[0] + 1) % 30 if d * 0 == -2
       table = When.CalendarNote('Balinese/Notes')['day']['Hari']
-      thiti.map {|t| table[t / 15][t % 15]}.join('/')
+      haris = tithi.map {|t| table[t / 15][t % 15]}
+      return haris.first if haris.length == 1
+      haris.first + '/' + haris.last
     end
 
     private

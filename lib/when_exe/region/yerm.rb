@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2014 Takashi SUGA
+  Copyright (C) 2014-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -18,12 +18,12 @@ module When
 
     Yerm = [self, [
       "locale:[=en:, ja]",
-      "names:[Yerm=]",
+      "names:[Karl Palmen's Yerm Lunar Calednar=, Karl Palmen のヤーム暦=, *Yerm=]",
       "[YermLunar=http://calendars.wikia.com/wiki/Yerm_Lunar_Calendar, ヤーム=]",
 
       [Coordinates::Residue, "label:[yerm=]", "divisor:52", "year:0", "format:[%s=]"] +
       (1..52).to_a.map {|y|  [Coordinates::Residue, "label:[Yerm #{y}=]", "remainder:#{y-1}"]},
-      [self, "names:[month]"] + (1..17).to_a.map {|m| "Month #{m}"},
+      [self, "names:[month number=en:Month, 月の番号=ja:%%<月_(暦)>, zh:該月的數=, *alias:month=]"] + (1..17).to_a.map {|m| "Month #{m}"},
       [self, "names:[night]"] + (1..30).to_a.map {|m| "Night #{m}"}
     ]]
   end

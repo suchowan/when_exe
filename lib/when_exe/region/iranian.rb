@@ -20,7 +20,7 @@ module When
 
       [self,
       "locale:[=en:, ja=ja:, ar=ar:, alias=ja:]",
-        "names:[Month, 月=ja:%%<月_(暦)>]",
+        "names:[month name=en:Month, 月の名前=ja:%%<月_(暦)>, zh:該月的名稱=, *alias:Month=]",
         "[Farvardīn=,   ファルヴァルディーン=, فروردین=,  フラワシ             ]",
         "[Ordībehesht=, オルディーベヘシュト=, اردیبهشت=, アシャ・ワヒシュタ   ]",
         "[Khordād=,     ホルダード=,           خرداد=,     ハルワタート        ]",

@@ -18,7 +18,7 @@ module When
       "*based on Research Project 22520700=http://suchowan.at.webry.info/201401/article_25.html]",
 
       [self,
-        "names:[月=ja:%%<月_(暦)>, *Month]",
+        "names:[月の名前=ja:%%<月_(暦)>, month name=en:Month, zh:該月的名稱=, *alias:Month]",
         "[正月=ja:%%<1月_(旧暦)>,    Month 1=,  睦月  ]",
         "[二月=ja:%%<2月_(旧暦)>,    Month 2=,  如月  ]",
         "[三月=ja:%%<3月_(旧暦)>,    Month 3=,  弥生  ]",

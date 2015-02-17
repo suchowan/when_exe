@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2014 Takashi SUGA
+  Copyright (C) 2014-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -10,7 +10,7 @@ module When
   class BasicTypes::M17n
 
     Discordian = [self, [
-      "locale:[=en:, ja]",
+      "locale:[=en:, ja=ja:]",
       "names:[Discordian=en:Discordian_calendar, ディスコーディアン暦=]",
       [self,
         "names:[IntercalaryDay=en:Intercalation, 閏日=ja:%%<閏>]",
@@ -26,19 +26,19 @@ module When
 
     Notes = [When::BasicTypes::M17n, [
       "namespace:[en=http://en.wiktionary.org/wiki/]",
-      "locale:[=en:]",
+      "locale:[=en:, ja=ja:]",
       "names:[Discordian]",
 
       # Notes for year ----------------------------
       [When::BasicTypes::M17n,
-        "names:[year]"
+        "names:[note for year=, 年の暦注=, *year]"
       ],
 
       # Notes for month ----------------------------
       [When::BasicTypes::M17n,
-        "names:[month]",
+        "names:[note for month=, 月の暦注=, *month]",
         [When::BasicTypes::M17n,
-          "names:[Month=en:month]",
+          "names:[month name=en:Month, 月の名前=ja:%%<月_(暦)>, zh:該月的名稱=, *alias:Month=]",
           "[Chaos=en:chaos            ]",
           "[Discord=en:discord        ]",
           "[Confusion=en:confusion    ]",
@@ -49,9 +49,9 @@ module When
 
       # Notes for day ----------------------------
       [When::BasicTypes::M17n,
-        "names:[day]",
+        "names:[note for day=, 日の暦注=, *day]",
         [When::BasicTypes::M17n,
-          "names:[Week=en:week]",
+          "names:[Five day week=, 五日週=, zh:五日週=, *alias:Week=]",
           [DayOfWeek, "label:[Sweetmorn=      ]", {'delta'=>5}],
           [DayOfWeek, "label:[Boomtime=       ]", {'delta'=>5}],
           [DayOfWeek, "label:[Pungenday=      ]", {'delta'=>5}],
@@ -61,7 +61,7 @@ module When
         ],
 
         [When::BasicTypes::M17n,
-          "names:[Holyday=]",
+          "names:[Holyday=, 祝日=, zh:祝日=]",
           "[St. Tib's Day=]", # 02-29 St. Tib's Day
           "[Mungday=      ]", # 01-05 Chaos 5
           "[Chaoflux=     ]", # 02-19 Chaos 50

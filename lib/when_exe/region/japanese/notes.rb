@@ -44,7 +44,7 @@ class When::CalendarNote
 
       # 年の暦注 ----------------------------
       [When::BasicTypes::M17n,
-        "names:[年, YearNote]",
+        "names:[年の暦注=, note for year=, prefix:YearNote=, *alias:年]",
         [Note, 0xFFFF, "label:[干支]",       'position:共通'],                               #  0: 干支
       # [Note, 0xFFFF, "label:[干=ja:%%<十干>]",
       #                                   'position:共通'],                                  #     干
@@ -82,7 +82,7 @@ class When::CalendarNote
 
       # 月の暦注 ----------------------------
       [When::BasicTypes::M17n,
-        "names:[月, MonthNote]",
+        "names:[月の暦注=, note for month=, prefix:MonthNote=, *alias:月]",
         [Note, 0xFFFF, "label:[月名=ja:%%<月_(暦)>#%.<日本の和風月名>, Month]",
                                              'position:月建'],                               #  0: 月の和名
       # [Note, 0xFFFF, "label:[干支]",       'position:共通'],                               #     干支
@@ -113,7 +113,7 @@ class When::CalendarNote
 
       # 日の暦注 ----------------------------
       [When::BasicTypes::M17n,
-        "names:[日, DayNote]",
+        "names:[日の暦注=, note for day=, prefix:DayNote=, *alias:日]",
         [Note, 0xFFFF, "label:[干支]",       'position:共通'],                               #  0: 干支
       # [Note, 0x, "label:[干=ja:%%<十干>]",
       #                                           'position:共通'],                          #     干

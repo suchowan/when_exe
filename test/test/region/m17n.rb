@@ -12,9 +12,9 @@ module MiniTest
 
     First = [
       ["Calendar", "Calendar", nil],
-      ["Month",      "月", "http://ja.wikipedia.org/wiki/%E6%9C%88_(%E6%9A%A6)"],
-      ["Month",      "月", "http://ja.wikipedia.org/wiki/%E6%9C%88_(%E6%9A%A6)"],
-      ["January",   "1月", "http://ja.wikipedia.org/wiki/1%E6%9C%88"]
+      ["Month",    "月の名前", "http://ja.wikipedia.org/wiki/%E6%9C%88_(%E6%9A%A6)"],
+      ["Month",    "月の名前", "http://ja.wikipedia.org/wiki/%E6%9C%88_(%E6%9A%A6)"],
+      ["January",  "1月",      "http://ja.wikipedia.org/wiki/1%E6%9C%88"]
     ]
 
     Second = [
@@ -117,7 +117,7 @@ module MiniTest
 
     def test__m17n_5
       month = When.Resource('_m:Calendar::Month')
-      [['en', 'Month'], ['ja', '月'], ['fr', 'Mois']].each do |sample|
+      [['en', 'month name'], ['ja', '月の名前']].each do |sample|
         assert_equal(sample[1], month.translate(sample[0]))
       end
     end
@@ -133,7 +133,7 @@ module MiniTest
 
        ['1985-1-1',
          {:calendar=>["Gregorian"], :sdn=>2446067, :cal_date=>[1985, 1, 1],
-          :notes=>[[{:note=>"Month", :value=>"January"}],[{:note=>"Week", :value=>"Tuesday(1)"}]], :locale=>'en'}],
+          :notes=>[[{:note=>"month name", :value=>"January"}],[{:note=>"Week", :value=>"Tuesday(1)"}]], :locale=>'en'}],
 
        ['明治7.5.7',
          {:calendar=>["明治",1867], :sdn=>2405651, :cal_date=>[7, 5, 7],
@@ -153,7 +153,7 @@ module MiniTest
 
        ['CE-2010.06.08T12:00:00+09:00',
          {:calendar=>["BeforeCommonEra", 1, true], :sdn=>987064, :cal_date=>[-2011, 6, 8],
-          :notes=>[[{:note=>"Month", :value=>"June"}],[]], :locale=>'en',
+          :notes=>[[{:note=>"month name", :value=>"June"}],[]], :locale=>'en',
           :clk_time=>[987064, 12, 0, 0]}],
 
        [11,
@@ -184,7 +184,7 @@ module MiniTest
                     :Precision=>0,
                     :Sdn=>2456388,
                     :Calendar=>["Gregorian"],
-                    :Notes=>[[{:Note=>"Month", :Value=>"April"}],
+                    :Notes=>[[{:Note=>"month name", :Value=>"April"}],
                              [{:Note=>"Week", :Value=>"Friday(4)"}]],
                     :CalDate=>[2013, 4, 5]},
                     When.when?('2013-4-5').to_h(:method=>:to_m17n, :locale=>'en', :camel=>true))

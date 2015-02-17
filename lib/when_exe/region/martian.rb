@@ -11,11 +11,11 @@ module When
 
     Martian = [self, [
       "locale:[=en:, ja=ja:, zh=zh:, alias]",
-      "names:[Martian=]",
+      "names:[Martian=en:Mars, 火星, 火星]",
       "[Darian=en:Darian_calendar, ダリアン暦, 大流士火星曆]",
 
       [self,
-        "names:[DarianMonth=, 月=ja:%%<月_(暦)>]",
+        "names:[month name named after the zodiac=, 黄道十二宮にちなむ月名=, 對應於黃道十二宮月份名稱=, *alias:DarianMonth=]",
         "[Sagittarius, いて=    ]",
         "[Dhanus=,     人馬=    ]",
         "[Capricornus, やぎ=    ]",
@@ -119,26 +119,26 @@ module When
 
       Notes = [When::BasicTypes::M17n, [
         "locale:[=en:, ja=ja:, alias]",
-        "names:[Darian]",
+        "names:[Darian, ダリアン暦]",
 
         # 年の暦注 ----------------------------
         [When::BasicTypes::M17n,
-          "names:[year]"
+          "names:[note for year=, 年の暦注=, *year]"
         ],
 
         # 月の暦注 ----------------------------
         [When::BasicTypes::M17n,
-          "names:[month]",
+          "names:[note for month=, 月の暦注=, *month]",
           [When::BasicTypes::M17n,
-            "names:[Month]"
+            "names:[month name=en:Month, 月の名前=ja:%%<月_(暦)>, zh:該月的名稱=, *alias:Month=]"
           ]
         ],
 
         # 日の暦注 ----------------------------
         [When::BasicTypes::M17n,
-          "names:[day]",
+          "names:[note for day=, 日の暦注=, *day]",
           [When::BasicTypes::M17n,
-            "names:[Week]",
+            "names:[Week, 週, zh:星期]",
             [DayOfWeek, "label:[Solis=,    日曜日]", {'delta'=>7}],
             [DayOfWeek, "label:[Lunae=,    月曜日]", {'delta'=>7}],
             [DayOfWeek, "label:[Martis=,   火曜日]", {'delta'=>7}],

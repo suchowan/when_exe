@@ -18,7 +18,7 @@ module When
        '典拠 - Chris Bennett "Roman Dates" (2013-05-13 閲覧)=]',
 
       [self, # ..CE-44 / ..BCE45
-        "names:[MonthA=en:Month, 月=ja:%%<月_(暦)>]",
+        "names:[month name=en:Month, 月の名前=ja:%%<月_(暦)>, 該月的名稱=, *alias:MonthA=]",
         "[Ianuarius,    1月]",
         "[Februarius,   2月]",
         "[Martius,      3月]",
@@ -34,7 +34,7 @@ module When
       ],
 
       [self, # CE-43..CE-8 / BCE44..BCE9
-        "names:[MonthB=en:Month, 月=ja:%%<月_(暦)>]",
+        "names:[month name=en:Month, 月の名前=ja:%%<月_(暦)>, 該月的名稱=, *alias:MonthB=]",
         "[Ianuarius,    1月]",
         "[Februarius,   2月]",
         "[Martius,      3月]",
@@ -50,7 +50,7 @@ module When
       ],
 
       [self, # CE-7..CE36, CE41.. / BCE8..CE36, CE41..
-        "names:[Month, 月=ja:%%<月_(暦)>]",
+        "names:[month name=en:Month, 月の名前=ja:%%<月_(暦)>, 該月的名稱=, *alias:Month=]",
         "[Ianuarius,    1月]",
         "[Februarius,   2月]",
         "[Martius,      3月]",
@@ -66,7 +66,7 @@ module When
       ],
 
       [self, # CE37..CE40
-        "names:[MonthD=en:Month, 月=ja:%%<月_(暦)>]",
+        "names:[month name=en:Month, 月の名前=ja:%%<月_(暦)>, 該月的名稱=, *alias:MonthD=]",
         "[Ianuarius,    1月]",
         "[Februarius,   2月]",
         "[Martius,      3月]",
@@ -228,7 +228,7 @@ module When
 
       # 年の暦注 ----------------------------
       [When::BasicTypes::M17n,
-        "names:[year]",
+        "names:[note for year=, 年の暦注=, *year]",
 
         [When::Coordinates::Residue,
           "label:[Solar=en:Solar_cycle_(calendar), 太陽章=]", "divisor:28", "year:-8",
@@ -260,15 +260,15 @@ module When
 
       # 月の暦注 ----------------------------
       [When::BasicTypes::M17n,
-        "names:[month]",
+        "names:[note for month=, 月の暦注=, *month]",
         [When::BasicTypes::M17n,
-          "names:[Month]"
+          "names:[month name=en:Month, 月の名前=ja:%%<月_(暦)>, zh:該月的名稱=, *alias:Month=]"
         ]
       ],
 
       # 日の暦注 ----------------------------
       [When::BasicTypes::M17n,
-        "names:[day]",
+        "names:[note for day=, 日の暦注=, *day]",
 
         [When::BasicTypes::M17n,
           "names:[Nomen]"

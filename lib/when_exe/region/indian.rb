@@ -21,7 +21,7 @@ module When
 
       [self,
         "locale:[=en:, ja=ja:, hi=hi:, alias]",
-        "names:[HalfMonth=, 半月=, pakṣa=, *IntercalaryMonth=en:Intercalation]",
+        "names:[HalfMonth=, 半月=, pakṣa=, zh:半月=, *IntercalaryMonth=en:Intercalation]",
         "[%s Śuklapakṣa=,        %s 白分=,   _IAST_=]",
         "[%s Kṛṣṇapakṣa=,        %s 黒分=,   _IAST_=]",
         "[adhika %s Śuklapakṣa=, 閏%s 白分=, _IAST_=]",
@@ -36,7 +36,7 @@ module When
 
       [self,
         "locale:[=en:, ja=ja:, hi=hi:, alias]",
-        "names:[LunarMonth=, 太陰月=ja:%%<月_(暦)>]",
+        "names:[month name named after the star mansion=, 二十七宿にちなむ月名=, zh:對應於星宿月份名稱=, *alias:LunarMonth=]",
         "[Mārgaśīra=en:Margashirsha,   マールガシールシャ=, _IAST_=]",
         "[Pauṣa=en:Pausha,             パウシャ=,           _IAST_=]",
         "[Māgha=en:Maagha,             マーガ=,             _IAST_=]",
@@ -53,7 +53,7 @@ module When
 
       [self,
         "locale:[=en:, ja=ja:, hi=hi:, alias]",
-        "names:[SolarMonth=, 太陽月=ja:%%<月_(暦)>]",
+        "names:[month name named after the zodiac=, 黄道十二宮にちなむ月名=, zh:對應於黃道十二宮月份名稱=, *alias:SolarMonth=]",
         "[Maysha=,                     白羊宮,              _IAST_=]",
         "[Vrushabha=,                  金牛宮,              _IAST_=]",
         "[Mithuna=,                    双児宮,              _IAST_=]",
@@ -69,7 +69,7 @@ module When
       ],
 
       [self,
-        "names:[NanakshahiMonth=, 太陽月=ja:%%<月_(暦)>]",
+        "names:[month name named after the star mansion=, 二十七宿にちなむ月名=, zh:對應於星宿月份名稱=, *alias:NanakshahiMonth=]",
         "[Maghar=en:Maghar_(month)    ]",
         "[Poh                         ]",
         "[Magh=en:Magh_(Sikh_calendar)]",
@@ -85,7 +85,7 @@ module When
       ],
 
       [self,
-        "names:[BengaliMonth=, 太陽月=ja:%%<月_(暦)>]",
+        "names:[month name named after the star mansion=, 二十七宿にちなむ月名=, zh:對應於星宿月份名稱=, *alias:BengaliMonth=]",
         "[Ogrôhayôn=]",
         "[Poush=    ]",
         "[Magh=     ]",
@@ -843,7 +843,7 @@ module When
 
         # 年の暦注 ----------------------------
         [When::BasicTypes::M17n,
-          "names:[year]",
+          "names:[note for year=, 年の暦注=, *alias:year]",
           [When::BasicTypes::M17n,
             "names:[samvatsara, 木星年=]",
             "[Prabhava=,      プラバヴァ=,           _IAST_=]", #  1
@@ -911,15 +911,15 @@ module When
 
         # 月の暦注 ----------------------------
         [When::BasicTypes::M17n,
-          "names:[month]",
+          "names:note for month=, 月の暦注=, *alias:month]",
           [When::BasicTypes::M17n,
-            "names:[Month]"
+            "names:[month name=en:Month, 月の名前=ja:%%<月_(暦)>, zh:該月的名稱=, *alias:Month=]"
           ]
         ],
 
         # 日の暦注 ----------------------------
         [When::BasicTypes::M17n,
-          "names:[day]",
+          "names:[note for day=, 日の暦注=, *alias:day]",
 
           [When::BasicTypes::M17n,
             "names:[tithi=, ティティ=ja:%%<ティティ>, तिथियाँ]",

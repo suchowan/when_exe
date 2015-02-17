@@ -14,7 +14,7 @@ module When
       "names:[Armenian=en:Armenian_calendar, アルメニア暦=, 亞美尼亞曆=zh:%%<亞美尼亞曆法>]",
 
       [self,
-        "names:[Month=, 月=ja:%%<月_(暦)>]",
+        "names:[month name=en:Month, 月の名前=ja:%%<月_(暦)>, 該月的名稱=, *alias:Month=]",
         "[nawasard= ]",
         "[hoṙi=     ]",
         "[sahmi=    ]",

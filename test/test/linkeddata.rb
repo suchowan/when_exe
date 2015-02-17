@@ -157,6 +157,7 @@ module MiniTest::LinkedData
          "dcq"=>"http://purl.org/dc/terms/",
          "dct"=>"http://purl.org/dc/dcmitype/",
          "ts"=>"http://hosi.org/ts#",
+         "Krsnapaksa"=>"http://hosi.org/When/CalendarNote/Balinese/Notes::day::Hari::Krsnapaksa::",
          "day"=>"http://hosi.org/When/CalendarNote/Balinese/Notes::day::",
          "Dwiwara"=>
           "http://hosi.org/When/CalendarNote/Balinese/Notes::day::Dwiwara::",
@@ -194,7 +195,7 @@ module MiniTest::LinkedData
           "ts:coordinate"=>"10",
           "@reverse"=>
            {"rdfs:member"=>{"@id"=>"http://hosi.org/tp/SE1936(2014)-07%3C"}},
-          "day:Hari"=>"Pare",
+          "day:Hari"=>{"@id"=>"Krsnapaksa:Pare"},
           "day:Dwiwara"=>{"@id"=>"Dwiwara:Menga"},
           "day:Triwara"=>{"@id"=>"Triwara:Pasah"},
           "day:Tjaturwara"=>{"@id"=>"Tjaturwara:Sri"},

@@ -11,7 +11,7 @@ module When
 
     Symmetry = [self, [
       "locale:[=en:, ja, zh]",
-      "names:[Symmetry=]",
+      "names:[Dr. Irv Bromberg's Symmetry Calendar=, Bromberg博士の対称暦=, *alias:Symmetry]",
       "[Sym454=en:Symmetry454, 対称454暦=, 対称454曆=]",
       "[Sym010=http://individual.utoronto.ca/kalendis/classic.htm, 対称010暦=, 対称010曆=]"
     ]]

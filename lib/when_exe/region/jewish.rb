@@ -19,7 +19,7 @@ module When
       ],
 
       [self,
-        "names:[Month, 月=ja:%%<月_(暦)>]",
+        "names:[month name=en:Month, 月の名前=ja:%%<月_(暦)>, 該月的名稱=, *alias:Month=]",
         "[Tishrei,  ティシュリー=,   提斯利月]",
         "[Cheshvan, マルヘシュバン=, 瑪西班月]",
         "[Kislev,   キスレーヴ=,     基斯流月]",

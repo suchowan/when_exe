@@ -215,7 +215,7 @@ module When
       child.each do |c|
         next if c.iri =~ / /
         iri = c.child ? c.iri : self.iri
-        prefixes[((c.kind_of?(When::BasicTypes::M17n) ? c : c.label) / 'en').split(/ +/).first] = [iri + '::']
+        prefixes[((c.kind_of?(When::BasicTypes::M17n) ? c : c.label).label_for_prefix).split(/ +/).first] = [iri + '::']
       end
       prefixes
     end
@@ -385,7 +385,7 @@ module When
       elsif namespace && namespace.index(When::Parts::Resource.base_uri) == 0
         label  = begin When.Resource(namespace.sub(/::\z/, '')) rescue return source end
         label  = label.label unless label.kind_of?(When::BasicTypes::M17n)
-        prefix = label.to_m17n / 'en'
+        prefix = label.to_m17n.label_for_prefix
         return source unless prefix =~ /\A[-A-Z\d_]+\z/i
       else
         return source
@@ -402,6 +402,15 @@ module When
   # When::BasicTypes::M17n への追加
   # 
   class BasicTypes::M17n
+
+    #
+    # namespace に対応させる文字列を取得する
+    #
+    # @return [String] prefix 用の文字列
+    #
+    def label_for_prefix
+      names['prefix'] || names['alias'] || names['en'] || names['']
+    end
 
     private
 

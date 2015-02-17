@@ -17,7 +17,7 @@ module When
       "[FrenchRepublican (128)=en:French_Republican_Calendar,        フランス共和暦 (128)=ja:%%<フランス革命暦>,        法國共和曆 (128)=zh:%%<法國共和曆>]",
 
       [self,
-        "names:[Month, 月=ja:%%<月_(暦)>]",
+        "names:[month name=en:Month, 月の名前=ja:%%<月_(暦)>, 該月的名稱=, *alias:Month=]",
         "[Vendémiaire,    ヴァンデミエール=,       霞月, 葡萄月=]",
         "[Brumaire,       ブリュメール=,           霧月, 霧月=  ]",
         "[Frimaire,       フリメール=,             霜月, 霜月=  ]",

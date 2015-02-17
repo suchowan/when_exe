@@ -12,17 +12,17 @@ module When
     Christian = [self, [
       "namespace:[wiki=http://www2u.biglobe.ne.jp/~suchowan/wiki/]",
       "locale:[=en:, ja=ja:, zh=zh:, kr=ko:, kp=ko:, ko=ko:, alias]",
-      "names:[Christian=]",
+      "names:[Christian=en:Christianity, キリスト教, 基督教]",
       "[Julian=en:Julian_calendar,                ユリウス暦    , 儒略曆]",
       "[Gregorian=en:Gregorian_calendar,          グレゴリオ暦  , 格里曆]",
       "[RevisedJulian=en:Revised_Julian_calendar, 修正ユリウス暦, 儒略改革曆]",
       "[Swedish=en:Swedish_calendar,              スウェーデン暦, 瑞典曆]",
       "[Customizable Western=wiki:pref_examples_en.html," +
-      "西暦=wiki:pref_examples.html," +
-      "西元=wiki:pref_examples.html," +
-      "서력기원=wiki:pref_examples.html," +
-      "서력기원=wiki:pref_examples.html," +
-      "서력기원=wiki:pref_examples.html, *alias:Civil]"
+      "西暦(カスタマイズ可能)=wiki:pref_examples.html," +
+      "西元(可定制)=wiki:pref_examples.html," +
+      "서력기원(사용자정의)=wiki:pref_examples.html," +
+      "서력기원(사용자정의)=wiki:pref_examples.html," +
+      "서력기원(사용자정의)=wiki:pref_examples.html, *alias:Civil]"
     ]]
   end
 
@@ -548,24 +548,24 @@ module When
 
     Notes = [When::BasicTypes::M17n, [
       "locale:[=en:, ja=ja:, alias]",
-      "names:[Christian]",
+      "names:[Christian=en:Christianity, キリスト教]",
 
       # 年の暦注 ----------------------------
       [When::BasicTypes::M17n,
-        "names:[year]"
+        "names:[note for year=, 年の暦注=, *year]"
       ],
 
       # 月の暦注 ----------------------------
       [When::BasicTypes::M17n,
-        "names:[month]",
+        "names:[note for month=, 月の暦注=, *month]",
         [When::BasicTypes::M17n,
-          "names:[Month]"
+          "names:[month name=en:Month, 月の名前=ja:%%<月_(暦)>, zh:該月的名稱=, *alias:Month=]"
         ]
       ],
 
       # 日の暦注 ----------------------------
       [When::BasicTypes::M17n,
-        "names:[day]",
+        "names:[note for day=, 日の暦注=, *day]",
         [When::BasicTypes::M17n, "names:[Week,           七曜]"      ],
         [When::BasicTypes::M17n, "names:[Easter,         復活祭]"    ],
         [When::BasicTypes::M17n, "names:[Christmas,      クリスマス]"],

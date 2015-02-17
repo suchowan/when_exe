@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2014 Takashi SUGA
+  Copyright (C) 2014-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -30,14 +30,14 @@ module When
 
       # Notes for year ----------------------------
       [When::BasicTypes::M17n,
-        "names:[year]"
+        "names:[note for year=, 年の暦注=, *year]"
       ],
 
       # Notes for month ----------------------------
       [When::BasicTypes::M17n,
-        "names:[month]",
+        "names:[note for month=, 月の暦注=, *month]",
         [When::BasicTypes::M17n,
-          "names:[Month]",
+          "names:[month name=en:Month, 月の名前=ja:%%<月_(暦)>, zh:該月的名稱=, *alias:Month=]",
           "[A=] ",
           "[B=] ",
           "[C=] ",
@@ -47,9 +47,9 @@ module When
 
       # Notes for day ----------------------------
       [When::BasicTypes::M17n,
-        "names:[day]",
+        "names:[note for day=, 日の暦注=, *day]",
         [When::BasicTypes::M17n,
-          "names:[Week]",
+          "names:[Week, 週, zh:星期]",
           [DayOfWeek, "label:[Sunday,     日曜日, /date/day_names/0]", {'delta'=>  7}],
           [DayOfWeek, "label:[Monday,     月曜日, /date/day_names/1]", {'delta'=>  7}],
           [DayOfWeek, "label:[Tuesday,    火曜日, /date/day_names/2]", {'delta'=>  7}],

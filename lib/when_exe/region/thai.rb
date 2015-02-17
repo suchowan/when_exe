@@ -10,11 +10,11 @@ module When
 
     Thai = [self, [
       "locale:[=en:, ja=ja:, zh=zh:, hi=hi:, alias]",
-      "names:[Thai=]",
+      "names:[Thailand, タイ=ja:タイ王国, 泰国, *alias:Thai]",
       "[ThaiLuniSolar=en:Thai_lunar_calendar, タイ太陰太陽暦=ja:%%<チャントラカティ>, 傣曆]",
 
       [self,
-        "names:[HalfMonth=, 半月=, *alias:IntercalaryMonth=en:Intercalation]",
+        "names:[HalfMonth=, 半月=, zh:半月=, *alias:IntercalaryMonth=en:Intercalation]",
         "[%s Śuklapakṣa=,        %s 白分=,   %s 上弦月=,   _IAST_]",
         "[%s Kṛṣṇapakṣa=,        %s 黒分=,   %s 下弦月=,   _IAST_]",
         "[adhika %s Śuklapakṣa=, 閏%s 白分=, 閏%s 上弦月=, _IAST_]",

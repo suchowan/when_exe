@@ -20,10 +20,11 @@ module When
 
     Goddess = [self, [
       "locale:[=en:, ja, zh]",
-      "names:[Goddess(MMG)=http://calendars.wikia.com/wiki/Goddess_Lunar_Calendar, ゴッデス暦(MMG), 女神曆(MMG), *alias:Goddess]",
+      "names:[ Peter Meyer's Goddes Lunar Calendar=,  Peter Meyer のゴッデス暦=, *alias:Goddess=]",
+      "[Goddess(MMG)=http://calendars.wikia.com/wiki/Goddess_Lunar_Calendar, ゴッデス暦(MMG), 女神曆(MMG), *alias:Goddess]",
 
       [self,
-        "names:[Month]",
+        "names:[month name=en:Month, 月の名前=ja:%%<月_(暦)>, 該月的名稱=, *alias:Month=]",
         "[Athena]", "[Brigid]", "[Cerridwen]", "[Diana ]",
         "[Epona ]", "[Freya ]", "[Gaea     ]", "[Hathor]",
         "[Inanna]", "[Juno  ]", "[Kore     ]", "[Lilith]",
@@ -38,7 +39,7 @@ module When
     # Goddess Calendar
     #
     Goddess =  [CyclicTableBased, {
-      'label'         => 'Goddess',
+      'label'         => 'Goddess::Goddess',
       'origin_of_LSC' => 2415611 - 180432,  # 1901-08-14 Base Cycle = No.1
       'note'          => [['_m:Calendar::Month'],
                           ['_co:Common::Week', '_n:Ephemeris/Notes::day::Moon_Age']],

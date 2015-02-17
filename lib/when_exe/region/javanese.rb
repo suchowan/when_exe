@@ -10,12 +10,12 @@ module When
 
     Javanese = [self, [
       "locale:[=en:, ja=ja:, zh=zh:, alias]",
-      "names:[Javanese=]",
+      "names:[Javanese=en:Java, ジャワ=ja:ジャワ島, 爪哇=zh:爪哇岛]",
       "[JavaneseLunar=, ジャワ・イスラーム暦=, 爪哇伊斯蘭曆=]",
       "[Pranatamangsa=, プラノトモンソ=]",
 
       [self,
-        "names:[HinduMonth=, ヒンドゥ月=]",
+        "names:[HinduMonth=, ヒンドゥ月=, 印度月=]",
         "[Kalima=,      5月=]",
         "[Kanem=,       6月=]",
         "[Kapitu=,      7月=]",
@@ -31,7 +31,7 @@ module When
       ],
 
       [self,
-        "names:[IslamicMonth=, イスラーム月=]",
+        "names:[IslamicMonth=, イスラーム月=, 伊斯蘭月=]",
         "[Suro=,        1月=]",
         "[Sapar=,       2月=]",
         "[Mulud=,       3月=]",
@@ -58,10 +58,10 @@ module When
     # Javanese Residues
     Javanese = [When::BasicTypes::M17n, [
       "locale:[=en:, ja=ja:, alias]",
-      "names:[Javanese]",
+      "names:[Javanese=en:Java, ジャワ=ja:ジャワ島, zh:爪哇=zh:爪哇岛]",
 
       [Residue,
-        "label:[Windu=]", "divisor:8", "year:3",
+        "label:[Windu=, ウィンドゥ=]", "divisor:8", "year:3",
         [Residue, "label:[Alip=   ]", "remainder:  0"],
         [Residue, "label:[Ehe=    ]", "remainder:  1"],
         [Residue, "label:[Jimawal=]", "remainder:  2"],
@@ -103,7 +103,7 @@ module When
       ],
 
       [Residue,
-        "label:[Wuku=]", "divisor:210", "day:146",
+        "label:[Wuku=, ウク週=]", "divisor:210", "day:146",
         [Residue, "label:[Sinto=       ]", "remainder:  0"],
         [Residue, "label:[Landep=      ]", "remainder:  7"],
         [Residue, "label:[Wukir=       ]", "remainder: 14"],

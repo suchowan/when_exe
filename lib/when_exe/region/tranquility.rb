@@ -30,18 +30,18 @@ module When
     #
     Notes = [When::BasicTypes::M17n, [
       "locale:[=en:, ja=ja:, alias]",
-      "names:[Tranquility]",
+      "names:[Tranquility, 静かの海]",
 
       # Notes for year ----------------------------
       [When::BasicTypes::M17n,
-        "names:[year]"
+        "names:[note for year=, 年の暦注=, *year]"
       ],
 
       # Notes for month ----------------------------
       [When::BasicTypes::M17n,
-        "names:[month]",
+        "names:[note for month=, 月の暦注=, *month]",
         [When::BasicTypes::M17n,
-          "names:[Month]",
+          "names:[month name=en:Month, 月の名前=ja:%%<月_(暦)>, zh:該月的名稱=, *alias:Month=]",
           "[Archimedes,                        アルキメデス                                         ]",
           "[Brahe=en:Tycho_Brahe,              ブラーエ=ja:%%<ティコ・ブラーエ>                     ]",
           "[Copernicus=en:Nicolaus_Copernicus, コペルニクス=ja:%%<ニコラウス・コペルニクス>         ]",
@@ -60,9 +60,9 @@ module When
 
       # Notes for day ----------------------------
       [When::BasicTypes::M17n,
-        "names:[day]",
+        "names:[note for day=, 日の暦注=, *day]",
         [When::BasicTypes::M17n,
-          "names:[Week]",
+          "names:[Week, 週, zh:星期]",
           [DayOfWeek, "label:[Friday,    金曜日, /date/day_names/5]", {'delta'=>  7}],
           [DayOfWeek, "label:[Saturday,  土曜日, /date/day_names/6]", {'delta'=>  7}],
           [DayOfWeek, "label:[Sunday,    日曜日, /date/day_names/0]", {'delta'=>  7}],

@@ -15,7 +15,7 @@ module When
       "[EphemerisBasedIslamic=en:Islamic_calendar, イスラーム暦=ja:%%<ヒジュラ暦>, 伊斯蘭曆]",
 
       [self,
-        "names:[Month, 月=ja:%%<月_(暦)>]",
+        "names:[month name=en:Month, 月の名前=ja:%%<月_(暦)>, 該月的名稱=, *alias:Month=]",
         "[Muharram,                         ムハッラム=,                  穆哈蘭姆月,       محرم]",
         "[Safar,                            サファル=,                    色法爾月,         صفر]",
         "[Rabi'_al-awwal,                   ラビーウ・アル＝アウワル=,    賴比爾·敖外魯月,  ربيع الأول]",

@@ -28,7 +28,7 @@ module When
       "[現代中国=, ModernChinese=, 現代中國=, *Modern=]",
 
       [self,
-        "names:[月=ja:%%<月_(暦)>, *Month]",
+        "names:[月の名前=ja:%%<月_(暦)>, month name=en:Month, 該月的名稱=, *alias:Month]",
         "[正月=ja:%%<1月_(旧暦)>,    Month 1= ]",
         "[二月=ja:%%<2月_(旧暦)>,    Month 2= ]",
         "[三月=ja:%%<3月_(旧暦)>,    Month 3= ]",
@@ -44,7 +44,7 @@ module When
       ],
 
       [self,
-        "names:[月=ja:%%<月_(暦)>, *MonthA=en:Month]",
+        "names:[月の名前=ja:%%<月_(暦)>, month name=en:Month, 該月的名稱=, *alias:MonthA=en:Month]",
         "[一月=ja:%%<1月_(旧暦)>,   Month 1= ]",
         "[二月=ja:%%<2月_(旧暦)>,   Month 2= ]",
         "[三月=ja:%%<3月_(旧暦)>,   Month 3= ]",
@@ -60,7 +60,7 @@ module When
       ],
 
       [self,
-        "names:[月=ja:%%<月_(暦)>, *MonthB=en:Month]",
+        "names:[月の名前=ja:%%<月_(暦)>, month name=en:Month, 該月的名稱=, *alias:MonthB=en:Month]",
         "[建寅月=ja:%%<1月_(旧暦)>,  Month 3= ]",
         "[建卯月=ja:%%<2月_(旧暦)>,  Month 4= ]",
         "[建辰月=ja:%%<3月_(旧暦)>,  Month 5= ]",
@@ -77,11 +77,11 @@ module When
     ]]
 
     Yi = [self, [
-      "locale:[=ja:, en=en:, alias]",
-      "names:[Yi=]",
+      "locale:[=ja:, en=en:, zh=zh:, alias]",
+      "names:[彝暦=ja:%%<イ族>, *Yi=en:Yi_people, 彝曆=zh:%%<彝族>]",
 
       [self,
-        "names:[月=ja:%%<月_(暦)>, *Month]",
+        "names:[月の名前=ja:%%<月_(暦)>, month name=en:Month, 該月的名稱=, *alias:Month]",
         "[木公月=, Month 1= ]",
         "[木母月=, Month 2= ]",
         "[火公月=, Month 3= ]",
@@ -105,7 +105,7 @@ module When
       "names:[Yi]",
 
       [Residue,
-        "label:[YearName=]", "divisor:8", "year:0",
+        "label:[年の名前=, year name=, zh:該年的名稱=, *alias:YearName=]", "divisor:8", "year:0",
         [Residue, "label:[東北之年=, NorthEastYear=]", "remainder:  0"],
         [Residue, "label:[東方之年=, EastYear=     ]", "remainder:  1"],
         [Residue, "label:[東南之年=, SouthEastYear=]", "remainder:  2"],

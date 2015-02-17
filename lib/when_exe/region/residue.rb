@@ -81,7 +81,7 @@ module When::Coordinates
     ],
 
     [Stem,
-      "label:[Stem=en:Celestial_stem, *干=ja:%%<十干>]", "divisor:10", "day:11", "year:4",
+      "label:[Stem=en:Celestial_stem, *干=ja:%%<十干>, 天干]", "divisor:10", "day:11", "year:4",
       [Stem, "label:[Wood-yang=,  *甲, 甲, 甲=, 木男=, 木公=]", "remainder:0"],
       [Stem, "label:[Wood-yin=,   *乙, 乙, 乙=, 木女=, 木母=]", "remainder:1"],
       [Stem, "label:[Fire-yang=,  *丙, 丙, 丙=, 火男=, 火公=]", "remainder:2"],
@@ -95,7 +95,7 @@ module When::Coordinates
     ],
 
     [Branch,
-      "label:[Branch=en:Earthly_Branches, *支=ja:%%<十二支>]", "divisor:12", "day:11", "year:4",
+      "label:[Branch=en:Earthly_Branches, *支=ja:%%<十二支>, 地支]", "divisor:12", "day:11", "year:4",
       [Branch, "label:[Rat=,     *子, 子, 子=, 鼠=, 鼠=]", "remainder: 0"],
       [Branch, "label:[Ox=,      *丑, 丑, 好=, 牛=, 牛=]", "remainder: 1"],
       [Branch, "label:[Tiger=,   *寅, 寅, 寅=, 虎=, 虎=]", "remainder: 2"],
@@ -111,7 +111,7 @@ module When::Coordinates
     ],
 
     [StemBranch,
-      "label:[Stem-Branch=en:Sexagenary_cycle, *干支]", "divisor:60", "day:11", "year:4", "format:[%s(%02d)=]",
+      "label:[Stem-Branch=en:Sexagenary_cycle, *干支, 干支]", "divisor:60", "day:11", "year:4", "format:[%s(%02d)=]",
       [StemBranch, "label:[Wood-yang-Rat=,     *甲子, 甲子, 甲子=, 木男鼠=, 木公鼠=]", "remainder: 0"],
       [StemBranch, "label:[Wood-yin-Ox=,       *乙丑, 乙丑, 乙好=, 木女牛=, 木母牛=]", "remainder: 1"],
       [StemBranch, "label:[Fire-yang-Tiger=,   *丙寅, 丙寅, 丙寅=, 火男虎=, 火公虎=]", "remainder: 2"],

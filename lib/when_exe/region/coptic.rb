@@ -11,7 +11,7 @@ module When
 
     Coptic = [self, [
       "locale:[=en:, ja=ja:, zh=zh:, alias]",
-      "names:[Coptic=]",
+      "names:[Coptic=en:Copts, コプト, 科普特=zh:科普特人]",
       "[Coptic=en:Coptic_calendar,       コプト暦,                           科普特曆     ]",
       "[Ethiopian=en:Ethiopian_calendar, エチオピア暦=en:Ethiopian_calendar, 埃塞俄比亞曆=]",
       "[Egyptian=en:Egypt,               エジプト,                           埃及         ]",
@@ -22,7 +22,7 @@ module When
        '典拠 - Chris Bennett "Egyptian Dates" (2014-06-29 閲覧)=]',
 
       [self,
-        "names:[EgyptianMonth=, 月=ja:%%<月_(暦)>]",
+        "names:[month name=en:Month, 月の名前=ja:%%<月_(暦)>, 該月的名稱=, *alias:EgyptianMonth=]",
         "[tut=,      トート=      ]",
         "[baba=,     バーバ=      ]",
         "[hatur=,    ハートール=  ]",
@@ -39,7 +39,7 @@ module When
       ],
 
       [self,
-        "names:[EthiopianMonth=, 月=ja:%%<月_(暦)>]",
+        "names:[month name=en:Month, 月の名前=ja:%%<月_(暦)>, 該月的名稱=, *alias:EthiopianMonth=]",
         "[Mäskäräm=, マスカラム=  ]",
         "[Ṭəqəmt=,   テケルト=    ]",
         "[Ḫədar=,    ヘダル=      ]",

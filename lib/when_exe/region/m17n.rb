@@ -50,7 +50,7 @@ module When
         "[Intercalary %s=, *閏, zh:閏]",
 
         [M17n,
-          "names:[Month, 月=ja:%%<月_(暦)>, /datetime/prompts/month]",
+          "names:[month name=en:Month, 月の名前=ja:%%<月_(暦)>, zh:該月的名稱=, *alias:Month=]",
           "[January,   1月, /date/month_names/1] ",
           "[February,  2月, /date/month_names/2] ",
           "[March,     3月, /date/month_names/3] ",

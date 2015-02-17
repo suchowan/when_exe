@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2014 Takashi SUGA
+  Copyright (C) 2014-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -15,7 +15,7 @@ module When
       "[HankeHenry=en:Hanke-Henry_Permanent_Calendar, ハンキ＝ヘンリー暦=ja:%%<ハンキ＝ヘンリー・パーマネント・カレンダー>]",
 
       [self,
-        "names:[Month, 月=ja:%%<月_(暦)>]",
+        "names:[month name=en:Month, 月の名前=ja:%%<月_(暦)>, zh:該月的名稱=, *alias:Month=]",
         "[January,   1月, /date/month_names/1] ",
         "[February,  2月, /date/month_names/2] ",
         "[March,     3月, /date/month_names/3] ",

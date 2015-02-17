@@ -13,7 +13,7 @@ module When
       "names:[Tibetan=en:Tibetan_calendar, 時輪暦=ja:%%<チベット暦>, 藏曆]",
 
       [self,
-        "names:[Month=, 月=, *alias:IntercalaryMonth=en:Intercalation]",
+        "names:[Month=, 月の名前=, 該月的名稱=, *alias:IntercalaryMonth=en:Intercalation]",
         "[%s=,        %s宿月=,   %s宿月=,   _IAST_=]",
         "[adhika %s=, 閏%s宿月=, 閏%s宿月=, _IAST_=]"
       ],
@@ -25,7 +25,7 @@ module When
       ],
 
       [self,
-        "names:[Month, 月=ja:%%<月_(暦)>]",
+        "names:[month name=en:Month, 月の名前=ja:%%<月_(暦)>, 該月的名稱=, *alias:Month=]",
         "[Mārgaśīra=en:Margashirsha,   觜=ja:%%<觜宿>, 觜=zh:%%<觜宿>, _IAST_=]",
         "[Pauṣa=en:Pausha,             鬼=ja:%%<鬼宿>, 鬼=zh:%%<鬼宿>, _IAST_=]",
         "[Māgha=en:Maagha,             星=ja:%%<星宿>, 星=zh:%%<星宿>, _IAST_=]",
@@ -169,7 +169,7 @@ module When
             When.Index('Tibetan::Month', {:branch=>{0=>intercalary_month[0], 1=>intercalary_month[1]}, :shift=>2}),
             When.Index({:branch=>{-2=>intercalary_day[0], +1=>intercalary_day[1]}})
           ]
-        @label      ||= 'Tibetan::Tibetan'
+        @label      ||= 'Tibetan'
         @diff_to_CE ||= 0
         @type       ||= 1
         @parameter = case @type.to_i

@@ -15,7 +15,7 @@ module When
       # %0s は“閏”の表記を抑制する指定となっている
       [self,
         "locale:[=en:, ar=ar:, alias=en:]",
-        "names:[Month, 月=ja:%%<月_(暦)>]",
+        "names:[month name=en:Month, ja:月の名前=ja:%%<月_(暦)>, zh:該月的名稱=, *alias:Month=]",
         "[Bahá=,      بهاء=,    Splendour=  ]", #  1
         "[Jalál=,     جلال=,    Glory=      ]", #  2
         "[Jamál=,     جمال=,    Beauty=     ]", #  3
@@ -49,10 +49,11 @@ module When
     # Bahai years
     Bahai = [When::BasicTypes::M17n, [
       "locale:[=en:, ar=ar:, alias=en:]",
-      "names:[Bahai]",
+      "names:[Bahá'í Faith, بهائية, ja:バハーイー教, *alias:Bahai=]",
 
       [Residue,
-        "label:[YearName=]", "divisor:19", "year:1", "format:[%1$s(%3$d)=, (%3$d)%1$s=]",
+        "label:[year name=, ja:年の名前=, zh:該年的名稱=, *alias:YearName=]",
+        "divisor:19", "year:1", "format:[%1$s(%3$d)=, (%3$d)%1$s=]",
         [Residue, "label:[Alif=,   ألف=,   A=            ]", "remainder:  0"],
         [Residue, "label:[Bá=,     باء=,   B=            ]", "remainder:  1"],
         [Residue, "label:[Ab=,     أب=,    Father=       ]", "remainder:  2"],
