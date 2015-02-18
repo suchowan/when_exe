@@ -608,7 +608,7 @@ module When
       tithi << (tithi[0] + 1) % 30 if d * 0 == -2
       table = When.CalendarNote('Balinese/Notes')['day']['Hari']
       haris = tithi.map {|t| table[t / 15][t % 15]}
-      return haris.first if haris.length == 1
+      return haris.first + '' if haris.length == 1
       haris.first + '/' + haris.last
     end
 

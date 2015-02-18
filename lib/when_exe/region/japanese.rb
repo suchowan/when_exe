@@ -92,9 +92,8 @@ module When
     ]]
 
     JapaneseHoliday = [self, [
-      "locale:[=ja:, en=en:, alias=ja:]",
-      "names:[日本の祝祭日, JapaneseHoliday]",
-
+      "locale:[=ja:, en=en:, zh=zh:, alias=ja:]",
+      "names:[日本の祝祭日=ja:%%<国民の祝日>, JapaneseHoliday=en:Public_holidays_in_Japan, 日本假期=zh:日本公共假日]",
       "[元旦,                         New Year's Day            ]",
       "[四方拝,                       New Year's Day            ]",
       "[元日,                         New Year's Day            ]",
@@ -110,7 +109,7 @@ module When
       "[昭和の日,                     Shōwa Day                 ]",
       "[憲法記念日,                   Constitution Memorial Day ]",
       "[こどもの日,                   Children's Day (Japan)    ]",
-      "[七夕節句,                     Qixi Festival             ]",
+      "[七夕節句=ja:%%<七夕>          Qixi Festival             ]",
       "[お盆,                         Bon Festival              ]",
       "[海の日,                       Marine Day                ]",
       "[山の日,                       Mountain Day=             ]",
