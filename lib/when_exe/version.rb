@@ -7,5 +7,18 @@
 
 module When
   VERSION   = "0.4.1"
-  COPYRIGHT = "(C) 2011-2015 Takashi SUGA"
+  YEARS     = "(C) 2011-2015"
+  AUTHOR    = "Takashi SUGA"
+  COPYRIGHT = "#{YEARS} #{AUTHOR}"
+
+  class BasicTypes::M17n
+    Rights = [self, [
+      "locale:[=en:, ja=ja:, alias]",
+      "names:[Basic information=, 基本情報=, *alias:Rights=]",
+      "[#{YEARS}=, *alias:Years]",
+      "[#{AUTHOR}=http://hosi.org/TakashiSuga, 須賀 隆=, *alias:Author=]",
+      "[When.exe written in Ruby language=http://www2u.biglobe.ne.jp/~suchowan/when_exe_wiki.html,  When.exe Ruby版=,  *alias:Title=]",
+      "[Gem Ver. #{VERSION}=http://rubygems.org/gems/when_exe, *alias:Version=]"
+    ]]
+  end
 end
