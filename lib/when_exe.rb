@@ -160,7 +160,6 @@ module When
   #
   RootDir   = ENV["WHEN_EXE_ROOT_DIR"] || File.dirname(__FILE__).sub(/\/[^\/]*\z/,'')
 
-  require 'when_exe/version'
   require 'when_exe/locales/locale'
   require 'when_exe/locales/autoload'
   require 'when_exe/parts/enumerator'
@@ -181,6 +180,7 @@ module When
   require 'when_exe/region/m17n'
   require 'when_exe/region/residue'
   require 'when_exe/inspect'
+  require 'when_exe/version'
   require 'when_exe/linkeddata'
 
   #
