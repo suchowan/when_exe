@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require "when_exe/version"
+require "when_exe"
 
 Gem::Specification.new do |s|
   s.name        = "when_exe"
