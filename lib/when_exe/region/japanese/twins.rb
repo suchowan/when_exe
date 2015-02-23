@@ -13,7 +13,7 @@ module When
     JapaneseLuniSolar = [{}, self, [
       'locale:[=ja:, en=en:, zh=zh:, alias]',
       'area:[日本の暦月=, (Auto selected) JapaneseLuniSolar=, 被在日本使用陰陽曆=, *JapaneseLuniSolar=]',
-      ['[平朔儀鳳暦=]-660.01.01',  '@F',  '-660-01-01^JapaneseTwin::平朔儀鳳暦'],
+      ['[平朔儀鳳暦=]01.01.01',  '@F',     '001-01-01^JapaneseTwin::平朔儀鳳暦'], # 西暦が正になるところから開始(実際は-659.01.01)
       ['[元嘉暦]454.01.01',        '@CR',  '454-01-01^ChineseTwin::元嘉暦', '697-01-01='],
       ['[儀鳳暦]697.01.01',        '@CR',  '697-01-01^ChineseTwin::麟徳暦'],
       ['[大衍暦]764.01.01',        '@CR',  '764-01-01^ChineseTwin::大衍暦'],
@@ -36,7 +36,7 @@ module When
     JapaneseSolar = [{}, self, [
       'locale:[=ja:, en=en:, zh=zh, alias]',
       'area:[日本の節月=, (Auto selected) JapaneseSolar=, 被在日本使用陽曆=, *JapaneseSolar=]',
-      ['[平朔儀鳳暦=]-661.01.01',  '@F',  '-661-01-01^JapaneseTwin::平朔儀鳳暦(節月)'], # 年の始めに遡って開始(実際は12.22)
+      ['[平朔儀鳳暦=]01.01.01',    '@F',   '001-01-01^JapaneseTwin::平朔儀鳳暦(節月)'], # 年の始めに遡って開始
       ['[元嘉暦]454.01.12',        '@CR',  '454-01-12^ChineseTwin::元嘉暦(節月)'],
       ['[儀鳳暦]696.12.27',        '@CR',  '696-12-27^ChineseTwin::麟徳暦(節月)'],
       ['[大衍暦]764.01.06',        '@CR',  '764-01-06^ChineseTwin::大衍暦(節月)'],
