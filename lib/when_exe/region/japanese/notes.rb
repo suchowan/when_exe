@@ -713,7 +713,7 @@ class When::CalendarNote
       NoteTypes.each do |line|
         return Dates.new(o_date, year, date.precision, line[1]) if year >= line[0]
       end
-      nil
+      Dates.new(o_date, year, date.precision, NoteTypes.last[1])
     end
 
     #
@@ -728,7 +728,7 @@ class When::CalendarNote
       (date^ When.era(:area=>'日本')).each do |list|
         return list[0] if list[0]
       end
-      nil
+      When.Calendar('JapaneseTwin::平朔儀鳳暦') ^ date
     end
 
     #
