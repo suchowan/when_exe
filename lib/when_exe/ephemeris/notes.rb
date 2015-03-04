@@ -262,7 +262,9 @@ class When::CalendarNote
             "names:[Tide, 潮汐]",            # 満潮干潮日時
             "[High_Tide=en:Tide, 満潮=ja:%%<潮汐>]",
             "[Low_Tide=en:Tide,  干潮=ja:%%<潮汐>]"
-          ]
+          ],
+          "[SolarTerm=,  二十四節気    ]", # 二十四節気
+          "[LunarPhase=, 月の位相      ]"  # 月の位相
       ]
     ]]
 
@@ -391,6 +393,39 @@ class When::CalendarNote
       }
     rescue
       nil
+    end
+
+    #
+    # 太陽黄経
+    #
+    # @param [When::TM::TemporalPosition] date
+    # @param [Hash] options dummy
+    #
+    # @return [When::Coordinates::Residue] 二十四節気
+    #
+    def solarterm(date, options={})
+      @term ||= When.CalendarNote('SolarTerms')
+      longitude, motsu = @term.position(date)
+      return nil if motsu == 0
+      div, mod = longitude.divmod(15)
+      return nil unless mod == 0
+      When.Resource('_co:Common::二十四節気::*')[div]
+    end
+
+    #
+    # 月の位相
+    #
+    # @param [When::TM::TemporalPosition] date
+    # @param [Hash] options dummy
+    #
+    # @return [When::Coordinates::Residue] 月の位相
+    #
+    def lunarphase(date, options={})
+      @phase ||= When.CalendarNote('LunarPhases')
+      longitude, metsu = @phase.position(date)
+      div, mod = longitude.divmod(90)
+      return nil unless mod == 0
+      When.Resource('_co:Common::月相::*')[div]
     end
 
     private
