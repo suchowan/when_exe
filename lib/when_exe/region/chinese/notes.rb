@@ -94,7 +94,7 @@ module  When
       # @return [When::Coordinates::Residue] 六十干支
       #
       def year(date, options={})
-        When.Residue('干支')[(date.year-4) % 60]
+        When.Residue('干支')[(date.most_significant_coordinate-4) % 60]
       end
 
       #
