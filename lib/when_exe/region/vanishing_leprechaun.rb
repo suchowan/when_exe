@@ -37,6 +37,8 @@ module When
       #
       def _normalize(args=[], options={})
         @label         ||= 'VanishingLeprechaun::VanishingLeprechaun'
+        @note          ||= [['_m:Calendar::Month'],
+                            ['_co:Common::Week', '_n:Ephemeris/Notes::day::SolarTerm']]
         @origin_of_LSC ||= -372154
         @origin_of_MSC ||=   -5731
         @epoch_in_CE   ||=       0
