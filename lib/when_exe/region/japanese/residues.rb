@@ -362,8 +362,12 @@ module When::Coordinates
       notes['甲子待']   ||= @remainder == 0  ? '甲子待' : nil
       notes['己巳'  ]   ||= @remainder == 5  ? '己巳'   : nil
       notes['庚申待']   ||= @remainder == 56 ? '庚申待' : nil
-      notes['犯土'  ]   ||= [7,8,9,10,11].include?(@remainder)    ? '大犯土' : {6 =>'大犯土始', 12=>'大犯土終', 13=>'犯土間日'}[@remainder]
-      notes['犯土'  ]   ||= [15,16,17,18,19].include?(@remainder) ? '小犯土' : {14=>'小犯土始', 20=>'小犯土終'}[@remainder]
+      if dates.range >= 14
+        notes['犯土']   ||= {6 =>'大犯土始', 14=>'小犯土始'}[@remainder]
+      else
+        notes['犯土']   ||= [7,8,9,10,11].include?(@remainder)    ? '大犯土' : {6 =>'大犯土始', 12=>'大犯土終', 13=>'犯土間日'}[@remainder]
+        notes['犯土']   ||= [15,16,17,18,19].include?(@remainder) ? '小犯土' : {14=>'小犯土始', 20=>'小犯土終'}[@remainder]
+      end
       notes['十方暮']   ||= [21,22,23,24,25,26,27,28].include?(@remainder) ? '十方暮' : {20=>'十方暮始', 29=>'十方暮終'}[@remainder]
       unless notes['八專']
         note = Rules['八專'][@remainder]

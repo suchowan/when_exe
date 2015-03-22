@@ -255,7 +255,7 @@ class When::CalendarNote
                                              'position:仮名暦'],                             # 89: 干支
         [Note, 0xC000, "label:[己巳]",       'position:仮名暦'],                             # 90: 干支
         [Note, 0xF800, "label:[庚申待]",     'position:仮名暦'],                             # 91: 干支
-        [Note, 0x3800, "label:[犯土]",       'position:仮名暦'],                             # 92: 干支
+        [Note, 0xF800, "label:[犯土]",       'position:仮名暦'],                             # 92: 干支
         [Note, 0xF800, "label:[十方暮]",     'position:仮名暦'],                             # 93: 干支
         [Note, 0xF800, "label:[一粒万倍=ja:%%<一粒万倍日>]",
                                              'position:仮名暦', 'suffix:日'],                # 94: 支 節月

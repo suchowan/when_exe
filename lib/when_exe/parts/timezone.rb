@@ -86,9 +86,8 @@ module When::Parts
 
         @tz_info = {}
         zones.each_pair do |id, hash|
-          if hash.keys.size == 1
-            @tz_info[id] = hash[hash.keys[0]]
-          else
+          @tz_info[id] = hash[hash.keys[0]]
+          unless hash.keys.size == 1
             hash.each_pair do |c, z|
               @tz_info["#{id}(#{c})"] = z
             end
@@ -149,7 +148,7 @@ module When::Parts
     def initialize(identifier)
       @identifier = identifier
       id, query   = identifier.split('?', 2)
-      @timezone   = TZInfo::Timezone.get(id)
+      @timezone   = TZInfo::Timezone.get(id.sub(/\(.+?\)\z/,''))
       unless TZInfo::TimeOrDateTime.method_defined?(:_to_datetime)
         if TZInfo::RubyCoreSupport.respond_to?(:datetime_new)
           TZInfo::TimeOrDateTime.class_eval %Q{
