@@ -273,6 +273,8 @@ class When::CalendarNote
                                              'position:上段 上段 中段 中段上', 'suffix:日'], #103: 干支 節月
         [Note, 0x3FFF, "label:[雑事吉=]",    'position:雑事吉'],                             #104: 干支 節月
         [Note, 0x3FFF, "label:[小字注=]",    'position:下段小字 下段小字 下段小字 下段小字'],#105: 干支 節月
+        [Note, 0xC000, "label:[土用の丑]",   'position:雑節'],                               #106: 土用の丑
+        [Note, 0xC000, "label:[陰陽遁始]",   'position:民間'],                               #107: 九星の陰遁・陽遁の折り返し日
       ]
     ]]
 
@@ -599,7 +601,7 @@ class When::CalendarNote
         notes_hash['廿八宿'] ||= root['宿'][(residue+18) % 28]
 
         # 九星
-        notes_hash['九星'] ||= root['九星'][When::Coordinates::Kyusei.year(residue)]
+        notes_hash['九星']   ||= root['九星'][When::Coordinates::Kyusei.year(residue)]
 
         # 大小
         unless notes_hash['大小']
@@ -689,7 +691,8 @@ class When::CalendarNote
         notes_hash['鬼宿']   ||= /鬼/ =~ notes_hash['廿八宿'].to_s ? '鬼宿' : nil
 
         # 九星
-        notes_hash['九星']   ||= root['九星'][When::Coordinates::Kyusei.day(dates.s_date, dates.cal4note.s_terms)]
+        notes_hash['九星']     ||= root['九星'][When::Coordinates::Kyusei.day(dates.s_date, dates.cal4note.s_terms)]
+        notes_hash['陰陽遁始'] ||= When::Coordinates::Kyusei.is_turn?(dates.s_date, dates.cal4note.s_terms)
 
         notes_hash
       end
@@ -1394,6 +1397,35 @@ class When::CalendarNote
           notes['日食'] = note
         end
 
+        # 彼岸
+        unless notes['彼岸']
+          if dates.range < 11
+            notes['彼岸'] = '彼岸' if longitude % 180 == 2 # 宣明暦以前(没を除いて３日後)
+          else
+            term = dates.cal4note.s_terms.term(date_without_era - When.Duration('P7D'), [0,180]) # 近傍の春秋分
+            case dates.s_date.to_i - term.to_i
+            when  2 ; notes['彼岸'] = '彼岸' if dates.range == 11 # 貞享暦(没を含めて３日後)
+            when -5 ; notes['彼岸'] = '彼岸' if longitude >  180 && (1755...1844).include?(dates.year) # 宝暦暦・寛政暦(春-６日前))
+            when -1 ; notes['彼岸'] = '彼岸' if longitude <= 180 && (1755...1844).include?(dates.year) # 宝暦暦・寛政暦(秋-２日前)
+            when -3 ; notes['彼岸'] = (dates.range < 14 ? '彼岸' : '彼岸入り') if dates.year >= 1844   # 天保暦以降(秋-４日前)
+            when  0 ; notes['彼岸'] = '彼岸の中日' if dates.range >= 14 # 明治改暦以降
+            when +3 ; notes['彼岸'] = '彼岸明け'   if dates.range >= 14 # 明治改暦以降
+            end
+          end
+          notes['彼岸'] = nil unless /彼岸/ =~ notes['彼岸']
+        end
+
+        # 土用の丑
+        if !notes['土用の丑'] && notes['支'].remainder == 1 # 丑
+          first  = dates.cal4note.s_terms.term(date_without_era - When.Duration('P20D'), [117,360]) # 夏の土用
+          last   = dates.cal4note.s_terms.term(date_without_era - When.Duration('P20D'), [135,360]) # 立夏
+          length = last.to_i - first.to_i
+          diff   = dates.s_date.to_i - first.to_i
+          notes['土用の丑'] = '土用の丑'   if  0 <= diff && diff < 12
+          notes['土用の丑'] = '土用二の丑' if 12 <= diff && diff < length
+          notes['土用の丑'] = nil unless /土用/ =~ notes['土用の丑']
+        end
+
         # 没
         if motsu == 0
           notes['没'] = dates.range < 11 ? '没' : nil
@@ -1444,22 +1476,6 @@ class When::CalendarNote
         notes['六十卦']   ||= mod == 15 ? Notes60_A[(div - 10) % 12] : nil
         div, mod = longitude.divmod(6)
         notes['六十卦']   ||= mod == 0  ? Notes60_B[(div - 53) % 60] : nil
-
-        # 彼岸
-        unless notes['彼岸']
-          if dates.range < 11
-            notes['彼岸'] = '彼岸' if longitude % 180 == 2 # 宣明暦以前(没を除いて３日後)
-          else
-            term = dates.cal4note.s_terms.term(date_without_era - When.Duration('P7D'), [0,180]) # 近傍の春秋分
-            case dates.s_date.to_i - term.to_i
-            when  2 ; notes['彼岸'] = '彼岸' if dates.range == 11 # 貞享暦(没を含めて３日後)
-            when -5 ; notes['彼岸'] = '彼岸' if longitude >  180 && (1755...1844).include?(dates.year) # 宝暦暦・寛政暦(春-６日前))
-            when -1 ; notes['彼岸'] = '彼岸' if longitude <= 180 && (1755...1844).include?(dates.year) # 宝暦暦・寛政暦(秋-２日前)
-            when -3 ; notes['彼岸'] = '彼岸' if dates.year >= 1844 # 天保暦以降(秋-４日前)
-            end
-          end
-          notes['彼岸'] = nil unless notes['彼岸'] == '彼岸'
-        end
 
         notes
       end

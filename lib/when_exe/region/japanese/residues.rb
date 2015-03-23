@@ -12,6 +12,8 @@ module When::Coordinates
   #
   class Kyusei < Residue
 
+    StartOfSequence = {-1=>'九星陽遁始め', +1=>'九星陰遁始め'}
+
     class << self
 
       #
@@ -22,7 +24,7 @@ module When::Coordinates
       # @return [Integer]
       #
       def year(y)
-	(y + 2) % 9
+        (y + 2) % 9
       end
 
       #
@@ -33,7 +35,7 @@ module When::Coordinates
       # @return [Integer]
       #
       def month(m)
-	(m + 2) % 9
+        (m + 2) % 9
       end
 
       #
@@ -45,19 +47,47 @@ module When::Coordinates
       # @return [Integer]
       #
       def day(date, s_terms)
+        thres, delta, sign = _parameters(date, s_terms)
+        delta = 8 - delta if sign < 0
+        return delta % 9
+      end
+
+      #
+      # 陰遁・陽遁折り返し日か?
+      #
+      # @param [When::TM::TemporalPosition] date 節月による日付
+      # @param [When::CalendarNote::Japanese::SolarTerms] s_terms
+      #
+      # @return [String]
+      #
+      def is_turn?(date, s_terms)
+        thres, delta, sign = _parameters(date, s_terms)
+        return nil unless thres == delta
+        StartOfSequence[sign]
+      end
+
+      private
+
+      #
+      # 日の九星計算パラメータ
+      #
+      # @param [When::TM::TemporalPosition] date 節月による日付
+      # @param [When::CalendarNote::Japanese::SolarTerms] s_terms
+      #
+      # @return [Integer, Integer, Integer]
+      #
+      def _parameters(date, s_terms)
         date = When.when?(date.to_cal_date.to_s, {:frame=>date.frame, :clock=>date.frame.time_basis})
 
-        [-90,-270].each do |deg|
-          prev   = s_terms.term(date, [deg,180])                     # 直前の冬至または夏至
+        [+90,-90,-270].each do |deg|
+          prev   = s_terms.term(date, [deg,180])                     # 直後および直前の冬至または夏至
           sign   = s_terms.position(prev)[0] == 270 ? -1 : +1        # 陽遁か?(冬至:-1, 夏至:+1)
           base   = prev.to_i                                         # 当該の冬至または夏至のユリウス日
           kanshi = (base + 17) % 60 - 28                             # 最も近い甲子との日数差
           base  -= kanshi                                            # 当該陰陽遁の始め
           delta  = date.to_i - base                                  # 始めからの日数
-          if (kanshi>=29 ? 30 : 0)<= delta # 区間に入るかの確認(甲午の前後1日以内は甲午折り返し)
-            delta = 8 - delta if sign < 0
-            return delta % 9
-          end
+          thres  = kanshi >= 29 ? 30 : 0                             # 区間の始めの delta (甲午の前後1日以内は甲午折り返し)
+          return [thres, delta, sign] if thres <= delta              # 区間に入れば確定
        end
        raise ArgumentError, "can't find any solstice."
       end
