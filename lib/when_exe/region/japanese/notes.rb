@@ -175,7 +175,7 @@ class When::CalendarNote
         [Note, 0xFFFF, "label:[三伏]",       'position:中段 中段 中段 中段'],                # 39: 干 太陽黄経
         [Note, 0x3FFC, "label:[除手足甲=]",  'position:中段 中段 中段 中段'],                # 40: 晦(除手足甲)、支(片方のみ), 没滅凶会日×
         [Note, 0x3FFC, "label:[沐浴=]",      'position:中段 中段 中段 中段'],                # 41: 支 没滅凶会日×
-        [Note, 0x3FFD, "label:[臘=ja:%%<臘日>]",
+        [Note, 0xFFFD, "label:[臘=ja:%%<臘日>]",
                                              'position:中段 中段 中段 中段', 'suffix:日'],   # 42: 支 太陽黄経
         [Note, 0x3FFC, "label:[伐=]",        'position:中段 中段 中段 中段上', 'suffix:日'], # 43: 干支
         [Note, 0x3FFC, "label:[五墓=ja:%%<暦注下段>#%.<五墓日>]",
@@ -1306,12 +1306,12 @@ class When::CalendarNote
 
         # 臘 - 辰
         #
-        # 大寒から -6..5
+        # 小寒から 12..23
         if !notes['臘'] && notes['支'].remainder == 4 # 辰
-          if (longitude - 339) % 360 < 12 # 大寒の近傍
-            term = dates.cal4note.s_terms.term(date_without_era - When.Duration('P6D'), [345,360])
+          if (longitude - 295) % 360 < 15 # 大寒の近傍
+            term = dates.cal4note.s_terms.term(date_without_era - When.Duration('P25D'), [285,360])
             diff = dates.s_date.to_i - term.to_i
-            notes['臘'] = '臘' if -6 <= diff && diff <= 5
+            notes['臘'] = '臘' if 12 <= diff && diff <= 23
           end
         end
 
