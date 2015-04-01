@@ -972,7 +972,7 @@ class When::CalendarNote
       # 仮名暦
       notes['赤舌'  ] ||= d0 == (m * 5 - 3) % 6 + 1 ? '赤舌' : nil
       notes['大赤'  ] ||= d0 % 8 == (m * 7 - 3) % 8 ? '大赤' : nil
-      notes['不成就'] ||= d0 % 8 == [6,3,2,1,4,5][m % 6] || (misoka && m % 6 == 0) ? '不成就' : nil # 『現代こよみ読み解き事典』 for 不成就日
+      notes['不成就'] ||= d0 % 8 == [6,3,2,1,4,5][m % 6] ? '不成就' : nil # 『現代こよみ読み解き事典』 for 不成就日(ただし6・12月晦日は無効化)
       notes['六曜'  ] ||= When::RokuyoWeek.rokuyo_value(m, d0)
       notes
     end
