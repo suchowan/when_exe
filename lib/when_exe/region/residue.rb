@@ -26,7 +26,7 @@ module When::Coordinates
     "names:[Common]",
 
     [Residue,
-      "label:[Week, 週]", "divisor:7", "day:0",
+      "label:[Week, 週]", "divisor:7", "day:0", "format:[%1$s(%2$d)=, ar:(%2$d)%1$s=]",
       [Residue, "label:[Monday,    月曜日, /date/day_names/1]", "remainder:0"],
       [Residue, "label:[Tuesday,   火曜日, /date/day_names/2]", "remainder:1"],
       [Residue, "label:[Wednesday, 水曜日, /date/day_names/3]", "remainder:2"],

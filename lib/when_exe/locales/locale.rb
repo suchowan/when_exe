@@ -46,7 +46,7 @@ module When
       '竜'=>'龍'
     }
 
-    # Escape
+    # Escape for RFC6868
     # @private
     Escape = {
       "\\\\" => "\\",
@@ -191,9 +191,7 @@ module When
         # source の配列化
         if source.kind_of?(String)
           source = $1 if (source=~/\A\s*\[?(.+?)\]?\s*\z/m)
-          source = source.scan(/((?:[^\\\n\r,]|\\.)+)(?:[\n\r,]+(?!\z))?|[\n\r,]+/m).flatten.map {|token|
-            (token||'').gsub(/\\./) {|escape| Escape[escape] || escape}
-          }
+          source = _split_with_rfc6868_escape(source)
         end
 
         # 各Localeの展開
@@ -235,6 +233,14 @@ module When
           end
         end
         list.unshift(line)
+      end
+
+      # rfc6868 による Escape を含んだ文字列 ".., .., .." を分割する
+      # @private
+      def _split_with_rfc6868_escape(source)
+        source.scan(/((?:[^\\\n\r,]|\\.)+)(?:[\n\r,]+(?!\z))?|[\n\r,]+/m).flatten.map {|token|
+          (token||'').gsub(/\\./) {|escape| Escape[escape] || escape}
+        }
       end
 
       # locale 指定を解析して Hash の値を取り出す
@@ -690,7 +696,7 @@ module When
           @values    = [names]
           return names
         end
-        names = $1.split(/[\n\r,]+/)
+        names = $1.split(/[\n\r]+/).map {|line| Locale._split_with_rfc6868_escape(line)}.flatten
       end
 
       mark     = []

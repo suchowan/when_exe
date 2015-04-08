@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -52,7 +52,8 @@ module When::TimeStandard
      [2451179.5, 32.0],
      [2453736.5, 33.0],
      [2454832.5, 34.0],
-     [2456109.5, 35.0]]
+     [2456109.5, 35.0],
+     [2457204.5, 36.0]]
 
   DeltaT  = [                                                                63.467, # 1999
      63.827, 64.092, 64.300, 64.473, 64.573, 64.689, 64.846, 65.145, 65.456, 65.779, # 2000-
