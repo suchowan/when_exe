@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-    Copyright (C) 2014 Takashi SUGA
+    Copyright (C) 2014-2015 Takashi SUGA
 
     You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -52,13 +52,14 @@ class When::Coordinates::Spatial
   #
   # @param [When::TM::TemporalPosition] date
   # @param [Range<When::TM::TemporalPosition>] date
-  #   @note Rangeの場合午前6時より前は前日扱い
+  #   @note Rangeの場合夜半より翌日に向けmargin経過時点より前は前日扱い
+  # @param [When::TM::Duration] margin 
   # @param [Block] block
   #
   # @return [Array<String, Numeric, Array<Array<Numeric or When::TM::TemporalPosition, String>>>] 食の情報(のArray(dateがRangeの場合))
   #   @see When::Coordinates::Spatial#eclipse_info
   #
-  def lunar_eclipse(date, &block)
+  def lunar_eclipse(date, margin=When::PT6H, &block)
     if date.kind_of?(Range)
       last  = date.last.to_i
       last -= 1 if date.exclude_end?
@@ -74,7 +75,7 @@ class When::Coordinates::Spatial
         data = EclipseRange.include?(time % EclipseHalfYear) ?
                  eclipse_info(@mean._to_seed_type(time, date), When.Resource('_ep:Earth'), When.Resource('_ep:Moon'),
                    When.Resource('_ep:Shadow'), [self, When.Resource('_ep:Moon')]) : nil
-        @ecls[[cn,clock.to_s]] = data ? [(data[2][data[2].size / 2][0]-When::PT6H).to_i, data] : nil
+        @ecls[[cn,clock.to_s]] = data ? [(data[2][data[2].size / 2][0]-margin).to_i, data] : nil
       end
       key, info = @ecls[[cn,clock.to_s]]
       return info unless first

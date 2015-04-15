@@ -1049,7 +1049,7 @@ class When::CalendarNote
             note, = Japanese::Eclipse::Eclipses[key.gsub(/[()]/,'')]
           elsif dates.o_date.location &&
                 dates.o_date.frame.kind_of?(When::CalendarTypes::Christian)
-            info  = dates.o_date.location.lunar_eclipse(date..date)
+            info  = dates.o_date.location.lunar_eclipse(date..date, dates.range >= 14 ? When::PT0H : When::PT6H)
             note  = '月' + Japanese::Eclipse.eclipse_summary(info[0]) unless info.empty?
           end
           if note
