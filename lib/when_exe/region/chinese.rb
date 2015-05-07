@@ -886,6 +886,9 @@ module When
             When.Index('Chinese::Month', {:branch=>{1=>'_m:Calendar::閏'}}),
             When::Coordinates::DefaultDayIndex
           ]
+        instance_eval %Q{
+          alias :_flags :_flags_reverse
+        } if @reverse
         super
       end
 
@@ -956,15 +959,7 @@ module When
         return Array.new(n, false) if m1-m0 == n
         return Array.new(n+1) {|i| i==@intercalary_month} if @intercalary_month # for 四分暦
         return _intercalary_pattern(y, n/2) + _intercalary_pattern(y + n/24.0, n/2) if n > @intercalary_span
-        flags = Array.new(n+1, false)
-        n.times do |i|
-          m0 += 1
-          if _intercalary?(m0)
-            flags[i+1] = true
-            return flags
-          end
-        end
-        raise ArgumentError, "Intercalary month not found"
+        return _flags(m0, n)
       end
 
       #  指定の月の中気の有無
@@ -979,6 +974,45 @@ module When
         e = _new_month(m+1) - 1
         d = Residue.mod(e) {|n| _new_epoch(n)}
         e - d[1] < _new_month(m)
+      end
+
+      # 閏判定表(最初を選択)
+      #
+      # @param [Numeric] m 最初の通月
+      # @param [Numeric] n 区間の長さ
+      #
+      # @return [Array<Boolean>] f 閏判定表
+      #
+      def _flags(m,n)
+        flags = Array.new(n+1, false)
+        n.times do |i|
+          m += 1
+          if _intercalary?(m)
+            flags[i+1] = true
+            return flags
+          end
+        end
+        raise ArgumentError, "Intercalary month not found"
+      end
+
+      # 閏判定表(最後を選択)
+      #
+      # @param [Numeric] m 最初の通月
+      # @param [Numeric] n 区間の長さ
+      #
+      # @return [Array<Boolean>] f 閏判定表
+      #
+      def _flags_reverse(m,n)
+        flags = Array.new(n+1, false)
+        m += n
+        n.times do |i|
+          if _intercalary?(m)
+            flags[-i-1] = true
+            return flags
+          end
+          m -= 1
+        end
+        raise ArgumentError, "Intercalary month not found"
       end
     end
 
