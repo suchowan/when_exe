@@ -458,13 +458,13 @@ module When
       autoload :Jewish,                'when_exe/region/jewish'
       autoload :AncientOrient,         'when_exe/region/babylonian'
       autoload :Roman,                 'when_exe/region/roman'
-      autoload :Julian,                'when_exe/region/roman'
+      autoload :Julians,               'when_exe/region/roman'
       autoload :Pope,                  'when_exe/region/pope'
       autoload :Byzantine,             'when_exe/region/christian'
       autoload :LongCount,             'when_exe/region/mayan'
 
       # Defualt search path for Epochs and Eras
-      DefaultEpochs = ['Common',   'ModernJapanese',
+      DefaultEpochs = ['Common',   'ModernJapanese', 'Gregorian', 'Julian',
                        'Hijra',    'Jewish',    'Iranian',
                        'Roman',    'Byzantine', 'AncientOrient', 'LongCount',
                        'BalineseLuniSolar',  'JavaneseLunar',

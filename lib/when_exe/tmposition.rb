@@ -1927,7 +1927,7 @@ module When::TM
           era, date = _search_era(@calendar_era, trans_options)
         else
           eras = CalendarEra._instance(query_options)
-          raise ArgumentError, "CalendarEraName doesn't exist: #{query_options[:label]}" if (eras.size==0)
+          raise ArgumentError, "CalendarEraName doesn't exist: #{query_options[:label]}" if eras.empty?
           eras.each do |e|
             era, date = _search_era(e, trans_options)
             next unless era
@@ -1983,7 +1983,7 @@ module When::TM
           end
           era  = new_era
         when TimeValue
-          return era, date
+         return era, date
         else
           break
         end

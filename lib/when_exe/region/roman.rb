@@ -97,7 +97,7 @@ module When
   class TM::CalendarEra
 
     # From http://en.wikipedia.org/wiki/Julian_calendar#Sacrobosco.27s_theory_on_month_lengths
-    Julian = [self, [
+    Julians = [self, [
       "locale:[=en:, ja=ja:, zh=zh:, alias]",
       "period:[Roman=en:Roman_calendar, ローマ暦, 羅馬曆]",
       ["[AUC=en:Ab_urbe_condita, 建国紀元=ja:%%<ローマ建国紀元>, 建城紀年=zh:%%<羅馬建城紀年>, alias:Ab_urbe_condita]709.1.1",

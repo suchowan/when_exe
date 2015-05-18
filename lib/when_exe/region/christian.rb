@@ -13,8 +13,8 @@ module When
       "namespace:[wiki=http://www2u.biglobe.ne.jp/~suchowan/wiki/]",
       "locale:[=en:, ja=ja:, zh=zh:, kr=ko:, kp=ko:, ko=ko:, alias]",
       "names:[Christian=en:Christianity, キリスト教, 基督教]",
-      "[Julian=en:Julian_calendar,                ユリウス暦    , 儒略曆]",
-      "[Gregorian=en:Gregorian_calendar,          グレゴリオ暦  , 格里曆]",
+      "[Julian=en:Julian_calendar,                ユリウス暦    , 儒略曆, era:J]",
+      "[Gregorian=en:Gregorian_calendar,          グレゴリオ暦  , 格里曆, era:G]",
       "[RevisedJulian=en:Revised_Julian_calendar, 修正ユリウス暦, 儒略改革曆]",
       "[Swedish=en:Swedish_calendar,              スウェーデン暦, 瑞典曆]",
       "[Customizable Western=wiki:pref_examples_en.html," +
