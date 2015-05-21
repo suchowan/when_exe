@@ -538,7 +538,7 @@ module When::TM
 
         # PeriodDuration
         sign, *args = PeriodDuration._to_array(specification)
-        if (sign)
+        if sign
           args << options
           duration = PeriodDuration.new(*args)
           return (sign >= 0) ? duration : -duration
@@ -548,14 +548,14 @@ module When::TM
         specification =~ /(.+?)(?:\[([-+]?\d+)\])?\z/
         options[:sdn] = $2.to_i if $2
         f, d, t, z, e, r = When::BasicTypes::DateTime._to_array($1, options)
-        raise ArgumentError, "Timezone conflict: #{z} - #{options[:clock]}" if (z && options[:clock])
         options.delete(:abbr)
+        z2  = When.Clock(options[:clock]) if z && options[:clock]
         z ||= options[:clock]
-        z = When.Clock(z) if (z =~ /\A[A-Z]+\z/)
+        z   = When.Clock(z) if z =~ /\A[A-Z]+\z/
 
         unless d
           # ClockTime
-          raise ArgumentError, "Timezone conflict: #{z} - #{options[:clock]}" if (z && options[:frame])
+          raise ArgumentError, "Timezone conflict: #{z} - #{options[:clock]}" if z && options[:frame]
           options[:frame] ||= z
           options.delete(:clock)
           return ClockTime.new(t, options)
@@ -563,7 +563,7 @@ module When::TM
 
         options[:era_name] = e if e
         options[:_format ] = f if f
-        d, w = d[0..0], d[1..-1] if (f == :week || f == :day)
+        d, w = d[0..0], d[1..-1] if f == :week || f == :day
         position = z ? DateAndTime.new(d, t||[0], options.update({:clock => z})) :
                    t ? DateAndTime.new(d, t,      options)                       :
                        CalDate.new(d, options)
@@ -586,7 +586,7 @@ module When::TM
             position &= residue
           end
         end
-        return position
+        z2 ? z2 ^ position : position
       end
     end
 

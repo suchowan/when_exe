@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license
   described in the LICENSE.txt file included in this archive.
@@ -48,7 +48,7 @@ require './test/calendartypes'
 require './test/calendarnote'
 require './test/inspect'
 require './test/linkeddata'
-require './test/googlecalendar'
+require './test/obsolete/googlecalendar'
 require './test/region/m17n'
 require './test/region/residue'
 require './test/region/christian'

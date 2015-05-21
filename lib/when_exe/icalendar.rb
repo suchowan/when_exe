@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -1090,15 +1090,15 @@ module When::V
       end
 
       def _first_seed(target, dtstart)
-        if (@rule['FREQ'].kind_of?(When::TM::Duration))
+        if @rule['FREQ'].kind_of?(When::TM::Duration)
           @interval  = @rule['FREQ']
-          @interval *= @rule['INTERVAL'] unless (@rule['INTERVAL'] == 1)
+          @interval *= @rule['INTERVAL'] unless @rule['INTERVAL'] == 1
         else
           @interval  = When::TM::PeriodDuration.new(@rule['INTERVAL'], FreqIndex[@rule['FREQ']])
         end
-        return dtstart if (dtstart == target)
+        return dtstart if dtstart == target
         interval_time = (dtstart + @interval) - dtstart
-        return dtstart if (interval_time == 0)
+        return dtstart if interval_time == 0
         duration = target.kind_of?(Numeric) ? target - dtstart.universal_time : (target - dtstart).duration
         div, mod = duration.divmod(interval_time.duration)
         seed = dtstart + (@interval * div)
@@ -1117,28 +1117,28 @@ module When::V
       end
 
       def _succ(depth=0)
-        return nil if (@rule['COUNT'] && (@count >= @rule['COUNT']))
+        return nil if @rule['COUNT'] && (@count >= @rule['COUNT'])
         step = @steps[depth]
-        unless (step)
+        unless step
           step = Step.new(_candidates(depth-1))
           @steps[depth..-1] = [step]
         end
 
         case depth
         when 0
-          if (@logics.length == 0)
+          if @logics.length == 0
             result = @steps[0]._current_date
             @steps[0..-1] = [Step.new(_next_seed(result))]
           else
             loop do
               result = _succ(depth+1)
-              break if (result)
+              break if result
               @steps[0..-1] = [Step.new(_next_seed(@steps[0]._current_date))]
             end
           end
-          return (@direction==:reverse) ? nil : :next if (@dtstart > result)
-          return (@direction==:reverse) ? :next : nil if (@rule['UNTIL'] && (result > @rule['UNTIL']))
-          if (@tz_prop)
+          return (@direction==:reverse) ? nil : :next if @dtstart > result
+          return (@direction==:reverse) ? :next : nil if @rule['UNTIL'] && (result > @rule['UNTIL'])
+          if @tz_prop
             result = result.dup._copy({:tz_prop=>nil, :validate=>:done})
             result.clock.tz_prop = @tz_prop
           end
@@ -1149,9 +1149,9 @@ module When::V
           return step._previuos_date
 
         else
-          while (step._current_date) do
+          while step._current_date do
             result = _succ(depth+1)
-            return result if (result)
+            return result if result
             @steps[depth..-1] = [step._inc]
           end
           return nil
@@ -1371,10 +1371,10 @@ module When::V
 
         # @private
         def _bound(seed, week_start)
-          if (@freq_index == When::WEEK)
+          if @freq_index == When::WEEK
             # 週の初め
             bound = seed & week_start
-            if (bound == seed)
+            if bound == seed
               lower_bound  = bound.floor(When::DAY, nil)
               higher_bound = lower_bound  + week_start.duration
             else
@@ -1593,6 +1593,14 @@ module When::V
         # BYHOURを実装
         # @private
         class Hour < Logic
+          # @private
+          def _bound(seed, week_start)
+            return super unless @freq_index == When::WEEK
+            lower_bound  = seed.floor(When::DAY, nil)
+            higher_bound = lower_bound  + week_start.duration
+            [lower_bound, higher_bound]
+          end
+
           # @private
           def initialize(by_part, list, lower=nil, upper=nil, leap=false)
             super(by_part, list)

@@ -20,7 +20,7 @@ rescue LoadError, NoMethodError
 end
 begin
   gem 'gcalapi'
-  autoload :GoogleCalendar, 'when_exe/googlecalendar'
+  autoload :GoogleCalendar, 'when_exe/obsolete/googlecalendar'
 rescue LoadError, NoMethodError
 end
 
