@@ -295,39 +295,42 @@ Example Usage
     p When.when?('TZID=America/New_York:1997-10-26T02:30') #=> 1997-10-26T02:30-05:00
     p When.when?('TZID=America/New_York:1997-10-26T03:30') #=> 1997-10-26T03:30-05:00
     
+    #
     # Google Calendar ------------------------------
-    #  https://github.com/suchowan/gcalapi is required for this section's operations.
-    #  Please install gcalapi before operation.
-    #  Please replace xxxxxxxx and ******** to valid id/password pair and access Google Calendar.
+    #  https://rubygems.org/gems/google-api-client is required for this section's operations.
+    #  Please install google-api-client and add authorization file 'google-api.yaml' before operation.
     
-    service = GoogleCalendar::Service.new('xxxxxxxx@gmail.com', '********')
-    feed = "http://www.google.com/calendar/feeds/%s__%s%%40holiday.calendar.google.com/public/full" %
-            ['japanese', 'ja']
-    gcal = GoogleCalendar::Calendar::new(service, feed)
-    gcal.enum_for({'start-min'=>'2014-01-01', 'start-max'=>'2015-01-01',
-                   'orderby'=>'starttime', 'sortorder'=>'a'
-                  }).each do |range|
-      puts '%s - %s' % [range, range.events[0].summary] #=>
-        # 2014-01-01T00:00:00.00+09:00...2014-01-02T00:00:00.00+09:00 - 元日
-        # 2014-01-02T00:00:00.00+09:00...2014-01-03T00:00:00.00+09:00 - 銀行休業日
-        # 2014-01-03T00:00:00.00+09:00...2014-01-04T00:00:00.00+09:00 - 銀行休業日
-        # 2014-01-13T00:00:00.00+09:00...2014-01-14T00:00:00.00+09:00 - 成人の日
-        # 2014-02-11T00:00:00.00+09:00...2014-02-12T00:00:00.00+09:00 - 建国記念の日
-        # 2014-03-21T00:00:00.00+09:00...2014-03-22T00:00:00.00+09:00 - 春分の日
-        # 2014-04-29T00:00:00.00+09:00...2014-04-30T00:00:00.00+09:00 - 昭和の日
-        # 2014-05-03T00:00:00.00+09:00...2014-05-04T00:00:00.00+09:00 - 憲法記念日
-        # 2014-05-04T00:00:00.00+09:00...2014-05-05T00:00:00.00+09:00 - みどりの日
-        # 2014-05-05T00:00:00.00+09:00...2014-05-06T00:00:00.00+09:00 - こどもの日
-        # 2014-05-06T00:00:00.00+09:00...2014-05-07T00:00:00.00+09:00 - みどりの日 振替休日
-        # 2014-07-21T00:00:00.00+09:00...2014-07-22T00:00:00.00+09:00 - 海の日
-        # 2014-09-15T00:00:00.00+09:00...2014-09-16T00:00:00.00+09:00 - 敬老の日
-        # 2014-09-23T00:00:00.00+09:00...2014-09-24T00:00:00.00+09:00 - 秋分の日
-        # 2014-10-13T00:00:00.00+09:00...2014-10-14T00:00:00.00+09:00 - 体育の日
-        # 2014-11-03T00:00:00.00+09:00...2014-11-04T00:00:00.00+09:00 - 文化の日
-        # 2014-11-23T00:00:00.00+09:00...2014-11-24T00:00:00.00+09:00 - 勤労感謝の日
-        # 2014-11-24T00:00:00.00+09:00...2014-11-25T00:00:00.00+09:00 - 勤労感謝の日 振替休日
-        # 2014-12-23T00:00:00.00+09:00...2014-12-24T00:00:00.00+09:00 - 天皇誕生日
-        # 2014-12-25T00:00:00.00+09:00...2014-12-26T00:00:00.00+09:00 - クリスマス
-        # 2014-12-31T00:00:00.00+09:00...2015-01-01T00:00:00.00+09:00 - 大晦日
+    require 'google/api_client'
+    require "yaml"
+    oauth_yaml = YAML.load_file('google-api.yaml')
+    client = Google::APIClient.new(:application_name => "when_exe",
+                                   :application_version => When::VERSION)
+    client.authorization.client_id = oauth_yaml["client_id"]
+    client.authorization.client_secret = oauth_yaml["client_secret"]
+    client.authorization.scope = oauth_yaml["scope"]
+    client.authorization.refresh_token = oauth_yaml["refresh_token"]
+    client.authorization.access_token = oauth_yaml["access_token"]
+    service = client.discovered_api('calendar', 'v3')
+    calendar = When::GoogleAPI::Calendar.new(client, service,
+                     'en.japanese#holiday@group.v.calendar.google.com')
+    calendar.enum_for(When.when?('20150101/1231')).each do |date|
+      p [date, date.events[0].summary] #=>
+    # [2015-01-01, "New Year's Day"]
+    # [2015-01-12, "Coming of Age Day"]
+    # [2015-02-11, "National Foundation Day"]
+    # [2015-03-21, "Spring Equinox"]
+    # [2015-04-29, "Shōwa Day"]
+    # [2015-05-03, "Constitution Memorial Day"]
+    # [2015-05-04, "Greenery Day"]
+    # [2015-05-05, "Children's Day"]
+    # [2015-05-06, "Constitution Memorial Day observed"]
+    # [2015-07-20, "Sea Day"]
+    # [2015-09-21, "Respect for the Aged Day"]
+    # [2015-09-22, "Bridge Public holiday"]
+    # [2015-09-23, "Autumn Equinox"]
+    # [2015-10-12, "Sports Day"]
+    # [2015-11-03, "Culture Day"]
+    # [2015-11-23, "Labor Thanksgiving Day"]
+    # [2015-12-23, "Emperor's Birthday"]
     end
 

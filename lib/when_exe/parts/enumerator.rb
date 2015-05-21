@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -270,12 +270,12 @@ module When::Parts
     private
 
     def _range(rest)
-      if rest[0].instance_of?(Range)
+      if rest[0].kind_of?(Range)
         range, @count_limit, others = rest
         raise ArgumentError, "Too many arguments" if others
         @first   = When.when?(range.first)
         @last    = When.when?(range.last)
-        @exdate |= @last if (range.exclude_end?)
+        @exdate |= @last if range.exclude_end?
         if (@first > @last)
           @first, @last = @last, @first
           @direction = :reverse
@@ -395,6 +395,18 @@ module When::Parts
       end
 
       private
+
+      def _range(rest)
+        @first, @direction, @count_limit, others = rest
+        raise ArgumentError, "Too many arguments" if others
+        raise ArgumentError, "Too few arguments"  unless @first
+        @direction ||= :forward
+        @last        = nil
+        @count_limit = @options[:count_limit] if @options[:count_limit] && (!@count_limit || @count_limit > @options[:count_limit])
+        @options.delete(:count_limit)
+        @direction   = @options[:direction] if @options[:direction]
+        @options.delete(:direction)
+      end
 
       def _succ
         return @current_list.shift

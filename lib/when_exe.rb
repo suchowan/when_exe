@@ -18,11 +18,6 @@ begin
   autoload :TZInfo, 'tzinfo'
 rescue LoadError, NoMethodError
 end
-begin
-  gem 'gcalapi'
-  autoload :GoogleCalendar, 'when_exe/obsolete/googlecalendar'
-rescue LoadError, NoMethodError
-end
 
 autoload :URI,       'uri'
 autoload :OpenURI,   'open-uri'
@@ -171,6 +166,7 @@ module When
   require 'when_exe/ephemeris'
   require 'when_exe/coordinates'
   require 'when_exe/icalendar'
+  require 'when_exe/google_api'
   require 'when_exe/tmobjects'
   require 'when_exe/timestandard'
   require 'when_exe/tmposition'
