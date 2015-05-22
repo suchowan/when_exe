@@ -8,7 +8,7 @@
 
 require 'fileutils'
 require 'yaml'
-require 'google/api_client'
+require 'google/api_client' if FileTest.exist?('google-api.yaml')
 
 module MiniTest
 
@@ -56,6 +56,8 @@ module MiniTest
         assert_equal([], holidays)
       end
     else
+      def test__enum_for
+      end
       puts "Tests for GoogleCalendar have been skipped at line #{__LINE__} of #{__FILE__.split(/\//)[-1]}."
     end
   end
