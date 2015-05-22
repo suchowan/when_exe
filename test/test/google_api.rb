@@ -46,8 +46,9 @@ module MiniTest
         client.authorization.refresh_token = oauth_yaml["refresh_token"]
         client.authorization.access_token = oauth_yaml["access_token"]
         service = client.discovered_api('calendar', 'v3')
-        calendar = When::GoogleAPI::Calendar.new(client, service,
+        calendar = When::GoogleAPI::Calendar.list(client, service,
                          'en.japanese#holiday@group.v.calendar.google.com')
+        assert_equal(calendar.calendar_id, 'en.japanese#holiday@group.v.calendar.google.com')
         holidays = HOLIDAYS.dup
         calendar.enum_for(When.when?('20150101/1231')).each do |date|
           assert_equal(holidays.shift, [date.to_s, date.events[0].summary])

@@ -311,7 +311,7 @@ Example Usage
     client.authorization.refresh_token = oauth_yaml["refresh_token"]
     client.authorization.access_token = oauth_yaml["access_token"]
     service = client.discovered_api('calendar', 'v3')
-    calendar = When::GoogleAPI::Calendar.new(client, service,
+    calendar = When::GoogleAPI::Calendar.list(client, service,
                      'en.japanese#holiday@group.v.calendar.google.com')
     calendar.enum_for(When.when?('20150101/1231')).each do |date|
       p [date, date.events[0].summary] #=>
