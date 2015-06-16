@@ -224,23 +224,24 @@ Example Usage
        # @prefix xsd: <http://www.w3.org/2001/XMLSchema> .
        # 
        # <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge> a <http://hosi.org/ts/When/TM/OrdinalReferenceSystem>;
-       #    rdfs:member <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::冥王代>,
-       #      <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::始生代>,
-       #      <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::原生代>,
-       #      <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::顕生代> .
+       #    rdfs:member <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::Hadean>,
+       #      <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::Archean>,
+       #      <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::Proterozoic>,
+       #      <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::Phanerozoic> .
        # 
-       # <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::冥王代> a <http://hosi.org/ts/When/TM/OrdinalEra>;
-       #    ts:begin "-4600000000";
-       #    ts:end "-4000000000";
-       #    ts:label <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::冥王代::冥王代> .
+       # <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::Archean> a <http://hosi.org/ts/When/TM/OrdinalEra>;
+       #    ts:begin "-4000000000";
+       #    ts:end "-2500000000";
+       #    ts:label <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::Archean::Archean>;
+       #    rdfs:member <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::Archean::Eoarchean>,
+       #      <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::Archean::Paleoarchean>,
+       #      <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::Archean::Mesoarchean>,
+       #      <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::Archean::Neoarchean> .
        # 
-       # <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::原生代> a <http://hosi.org/ts/When/TM/OrdinalEra>;
-       #    ts:begin "-2500000000";
-       #    ts:end "-542000000";
-       #    ts:label <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::原生代::原生代>;
-       #    rdfs:member <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::原生代::前期>,
-       #      <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::原生代::中期>,
-       #      <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::原生代::後期> .
+       # <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::Archean::Eoarchean> a <http://hosi.org/ts/When/TM/OrdinalEra>;
+       #    ts:begin "-4000000000";
+       #    ts:end "-3600000000";
+       #    ts:label <http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge::Archean::Eoarchean::Eoarchean> .
        # <..snip..>
     end
     
@@ -301,15 +302,15 @@ Example Usage
     #  Please install google-api-client and add authorization file 'google-api.yaml' before operation.
     
     require 'google/api_client'
-    require "yaml"
+    require 'yaml'
     oauth_yaml = YAML.load_file('google-api.yaml')
-    client = Google::APIClient.new(:application_name => "when_exe",
+    client = Google::APIClient.new(:application_name => 'when_exe',
                                    :application_version => When::VERSION)
-    client.authorization.client_id = oauth_yaml["client_id"]
-    client.authorization.client_secret = oauth_yaml["client_secret"]
-    client.authorization.scope = oauth_yaml["scope"]
-    client.authorization.refresh_token = oauth_yaml["refresh_token"]
-    client.authorization.access_token = oauth_yaml["access_token"]
+    client.authorization.client_id = oauth_yaml['client_id']
+    client.authorization.client_secret = oauth_yaml['client_secret']
+    client.authorization.scope = oauth_yaml['scope']
+    client.authorization.refresh_token = oauth_yaml['refresh_token']
+    client.authorization.access_token = oauth_yaml['access_token']
     service = client.discovered_api('calendar', 'v3')
     calendar = When::GoogleAPI::Calendar.list(client, service,
                      'en.japanese#holiday@group.v.calendar.google.com')

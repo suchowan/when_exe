@@ -11,7 +11,7 @@ class When::TM::OrdinalReferenceSystem
   # Geological Ages
   #
   GeologicalAge = [self, [
-    "locale:[=ja:, en=en:]",
+    "locale:[=ja:, *en=en:]",
     "*area:[地球,Earth]",
 
     [When::TM::OrdinalEra,
