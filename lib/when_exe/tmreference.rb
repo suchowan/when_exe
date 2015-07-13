@@ -665,7 +665,7 @@ module When::TM
     # 時刻配列の分解能
     # @private
     def _precision(time, default=nil)
-      nil_index = time.index(nil) || time.length
+      nil_index = time.compact.length
       precision = nil_index - 1 if (nil_index < @base.length || time[-1].kind_of?(Integer))
       When::Coordinates::Index.precision(default || precision)
     end
@@ -1561,9 +1561,9 @@ module When::TM
         raise ArgumentError, "JulianReference and ReferenceDate are mismatch" unless (@epoch_year == +j_date[0]-(+r_date[0]))
         raise ArgumentError, "JulianReference and ReferenceDate are mismatch" unless (j_date[1..-1] == r_date[1..-1])
         #raise ArgumentError, "JulianReference and ReferenceDate are mismatch" unless (j_date == r_date)
-        if    (r_date[1] == nil)
+        if    !r_date[1]
           @reference_date.precision = When::YEAR
-        elsif (r_date[2] == nil)
+        elsif !r_date[2]
           @reference_date.precision = When::MONTH
         end
       end

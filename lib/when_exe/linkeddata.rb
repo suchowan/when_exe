@@ -23,7 +23,6 @@ module When
       'coordinate'      => "TM/CalDate#cal_date-instance_method",
       'sdn'             => "TM/CalDate#to_i-instance_method",
       'calendarEra'     => "TM/CalDate#calendar_era-instance_method",
-      'referenceEvent'  => "TM/Clock#reference_event-instance_method",
       'referenceTime'   => "TM/Clock#reference_time-instance_method",
       'utcReference'    => "TM/Clock#utc_reference-instance_method",
       'dateBasis'       => "TM/Clock#date_basis-instance_method",

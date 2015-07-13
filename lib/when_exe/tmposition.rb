@@ -1047,7 +1047,7 @@ module When::TM
     # @param [Hash] options see {When::TM::TemporalPosition._instance}
     #
     def initialize(options={})
-      options.reject! {|key,value| value == nil}
+      options.reject! {|key,value| !value}
       options.each_pair do |key,value|
         self.instance_variable_set("@#{key}", value)
       end
@@ -1912,7 +1912,7 @@ module When::TM
     def _normalize(options={})
 
       # 日付配列の長さ
-      cal_date_index = @cal_date.index(nil) || @cal_date.length
+      cal_date_index = @cal_date.compact.length
 
       # 日付の正規化
       if @calendar_era_props

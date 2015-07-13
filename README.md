@@ -250,7 +250,7 @@ Example Usage
     #  https://rubygems.org/gems/sparql is required for this section's operations.
     #  Please install sparql before operation.
     
-    require 'sparql'
+    require 'sparql/client'
     PREFIXES = When::Parts::Resource.namespace_prefixes(
       '_co:Common', '_co:Common?V=0618', '_m:Calendar', '_m:Japanese', '_n:Japanese/Notes')
     
