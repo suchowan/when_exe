@@ -482,7 +482,9 @@ module When
 
         # 暦元天正冬至から当該年の近日点通過までの日数
         def _perihelion_(year)
-          _winter_solstice(year) + @anomalistic_year_shift
+          date = _winter_solstice_(year)
+          return date unless @anomalistic_year_shift
+          date + year * @precession + @anomalistic_year_shift
         end
 
         # 歳周(当該年の日数)
@@ -550,7 +552,7 @@ module When
           end
 
           # 定朔
-          solar_unit  = _year_length(year) / @year_length
+          solar_unit  = (_year_length(year) + (@anomalistic_year_shift ? @precession : 0))/ @year_length
           mean_motion = (@lunar_mean_motion - @solar_weight / solar_unit) * 10000_0000
           @day_epoch + mean_lunation - send('_anomaly_' + @anomaly_method.downcase, mean_lunation, year, solar_unit, mean_motion)
         end
@@ -649,7 +651,8 @@ module When
         def _initialize_rissei
           @year_length              =  @year_length.to_f                  # 暦元の冬至年 / 日
           @year_span                = (@year_span || 1).to_i              # 冬至年の改訂周期 / 年
-          @anomalistic_year_shift   = (@anomalistic_year_shift || 0).to_f # 暦應(冬至から近日点通過までの日数)
+          @anomalistic_year_shift   =  @anomalistic_year_shift.to_f if @anomalistic_year_shift # 暦應(暦元での冬至から近日点通過までの日数)
+          @precession               = (@precession || 0.015).to_f         # 歳差
           @lunation_length          =  @lunation_length.to_f              # 朔実(朔望月)
           @lunation_shift           =  @lunation_shift.to_f               # 閏應(暦元前経朔から暦元天正冬至までの日数)
           @lunar_mean_motion        =  @lunar_mean_motion.to_f            # 月平行(恒星天に対する月の平均運動 / 日)
