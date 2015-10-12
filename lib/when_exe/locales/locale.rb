@@ -336,7 +336,7 @@ module When
         contents = nil
         begin
           OpenURI
-          source   = open(path, 'r'+mode)
+          source   = open(path.sub(/^http:/, 'https:'), 'r'+mode, {:ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE})
           contents = source.read
         ensure
           @wikipedia_last_access = Time.now.to_f
