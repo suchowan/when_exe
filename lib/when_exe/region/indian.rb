@@ -911,7 +911,7 @@ module When
 
         # 月の暦注 ----------------------------
         [When::BasicTypes::M17n,
-          "names:note for month=, 月の暦注=, *alias:month]",
+          "names:[note for month=, 月の暦注=, *alias:month]",
           [When::BasicTypes::M17n,
             "names:[month name=en:Month, 月の名前=ja:%%<月_(暦)>, zh:該月的名稱=, *alias:Month=]"
           ]

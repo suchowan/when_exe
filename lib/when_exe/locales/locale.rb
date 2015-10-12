@@ -275,6 +275,17 @@ module When
         return nil
       end
 
+      # DBpedia URI の取得
+      #
+      # @param [String] source もとの URI
+      #
+      # @return [String] DBpedia URI
+      # @private
+      def _dbpedia(source)
+        return nil unless Ref =~ source
+        return "http://#{$1=='en' ? '' : $1+'.'}dbpedia.org/resource/#{$2}"
+      end
+
       private
 
       # Locale の読み替えパターン
@@ -436,6 +447,16 @@ module When
     def reference(loc='')
       loc ||= ''
       return Locale._hash_value(@link, loc.sub('_', '-'))
+    end
+
+    # 特定 locale に対応した DBpedia URI の取得
+    #
+    # @param [String] loc locale の指定
+    #
+    # @return [String] loc に対応した DBpedia URI
+    #
+    def dbpedia(loc='')
+      Locale._dbpedia(reference(loc))
     end
 
     # 部分文字列

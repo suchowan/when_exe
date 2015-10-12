@@ -15,6 +15,7 @@ module When
 
     Schema = {
       'reference'       => "Locale#reference-instance_method",
+      'dbpedia'         => "Locale#dbpedia-instance_method",
       'label'           => "BasicTypes/M17n#label-instance_method",
       'prev'            => "TM/TemporalPosition#prev-instance_method",
       'succ'            => "TM/TemporalPosition#succ-instance_method",
@@ -420,7 +421,8 @@ module When
       hash = {}
       hash[RDFS + 'label'] = names.keys.map {|key| key=='' ? names[key] : {'@language'=>key, '@value'=>names[key]}}
       hash[ts   + 'label'] = label
-      hash[ts   + 'reference'] = link.values.map {|ref| {'@id'=>ref}}
+      hash[ts   + 'reference'] = link.values.uniq.map {|ref| {'@id'=>ref}}
+      hash[ts   + 'dbpedia']   = link.values.uniq.map {|ref| Locale._dbpedia(ref)}.compact.map {|uri| {'@id'=>uri}}
       hash
     end
   end
