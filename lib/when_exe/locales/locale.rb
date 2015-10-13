@@ -275,15 +275,15 @@ module When
         return nil
       end
 
-      # DBpedia URI の取得
+      # DBpedia IRI の取得
       #
       # @param [String] source もとの URI
       #
-      # @return [String] DBpedia URI
+      # @return [String] DBpedia IRI
       # @private
       def _dbpedia(source)
         return nil unless Ref =~ source
-        return "http://#{$1=='en' ? '' : $1+'.'}dbpedia.org/resource/#{$2}"
+        return "http://#{$1=='en' ? '' : $1+'.'}dbpedia.org/resource/#{URI.decode($2)}"
       end
 
       private
