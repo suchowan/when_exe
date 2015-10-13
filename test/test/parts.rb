@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license
   described in the LICENSE.txt file included in this archive.
@@ -83,7 +83,7 @@ Getsuyou
 Monday
 ]
 LABEL
-ISO, jwiki=http://ja.wikipedia.org/wiki/, ewiki=http://en.wikipedia.org/wiki/
+ISO, jwiki=https://ja.wikipedia.org/wiki/, ewiki=https://en.wikipedia.org/wiki/
 NS
 =jwiki:, en=ewiki:
 LOCALE
@@ -98,9 +98,9 @@ LOCALE
     def test__reference
       assert_equal(nil, Term1.reference('ja_JP'))
       assert_equal(nil, Term1.reference('en_US'))
-      assert_equal("http://ja.wikipedia.org/wiki/Getsuyou", Term2.reference('ja_JP'))
-      assert_equal("http://en.wikipedia.org/wiki/Monday", Term2.reference('en_US'))
-      assert_equal("http://ja.wikipedia.org/wiki/%E6%9C%88%E6%9B%9C%E6%97%A5", Term3.reference('ja_JP'))
+      assert_equal("https://ja.wikipedia.org/wiki/Getsuyou", Term2.reference('ja_JP'))
+      assert_equal("https://en.wikipedia.org/wiki/Monday", Term2.reference('en_US'))
+      assert_equal("https://ja.wikipedia.org/wiki/%E6%9C%88%E6%9B%9C%E6%97%A5", Term3.reference('ja_JP'))
     end
 
     def test__labels
@@ -111,17 +111,17 @@ LOCALE
 
     def test__link
       assert_equal({},Term1.link)
-      assert_equal({""=>"http://ja.wikipedia.org/wiki/Getsuyou",
-                   "en"=>"http://en.wikipedia.org/wiki/Monday"}, Term2.link)
-      assert_equal({"ja"=>"http://ja.wikipedia.org/wiki/%E6%9C%88%E6%9B%9C%E6%97%A5",
-                    ""=>"http://en.wikipedia.org/wiki/Monday"}, Term3.link)
+      assert_equal({""=>"https://ja.wikipedia.org/wiki/Getsuyou",
+                   "en"=>"https://en.wikipedia.org/wiki/Monday"}, Term2.link)
+      assert_equal({"ja"=>"https://ja.wikipedia.org/wiki/%E6%9C%88%E6%9B%9C%E6%97%A5",
+                    ""=>"https://en.wikipedia.org/wiki/Monday"}, Term3.link)
     end
 
     def test__prefix
       date = When.when?('0594-09=12^Japanese')
       assert_equal(["閏九月", String], [date.name('Month').label.to_s, date.name('Month').label.class])
       assert_equal(["閏九月", String], [date.name('Month').to_s,  date.name('Month').to_s.class])
-      assert_equal("http://ja.wikipedia.org/wiki/%E9%96%8F", date.name('Month').reference('ja'))
+      assert_equal("https://ja.wikipedia.org/wiki/%E9%96%8F", date.name('Month').reference('ja'))
       assert_equal("閏九月", date.name('Month').translate('日本語'))
       assert_equal("閏長月", date.name('Month').translate('alias'))
       assert_equal("Intercalary Month 9", date.name('Month').translate('en_US'))

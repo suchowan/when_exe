@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license
   described in the LICENSE.txt file included in this archive.
@@ -11,7 +11,7 @@ module MiniTest
   class Inspect < MiniTest::TestCase
 
     def test__strftime_1
-      ns     = 'ISO, jwiki=http://ja.wikipedia.org/wiki/, ewiki=http://en.wikipedia.org/wiki/'
+      ns     = 'ISO, jwiki=https://ja.wikipedia.org/wiki/, ewiki=https://en.wikipedia.org/wiki/'
       locale = '=jwiki:, en=ewiki:'
       term1  = When::BasicTypes::M17n.new('[月曜, Monday]',                      ns, locale)
       term2  = When::BasicTypes::M17n.new('[です, It is]',                       ns, locale)

@@ -1,10 +1,10 @@
 BEGIN:B:M17N
-# Copyright (C) 2011-2013 Takashi SUGA
+# Copyright (C) 2011-2015 Takashi SUGA
 #
 # You may use and/or modify this file according to the license
 # described in the LICENSE.txt file included in this archive.
-  NAMESPACE:[ja=http://ja.wikipedia.org/wiki/]
-  NAMESPACE;ALTID=1;PREFIX=en:http://en.wikipedia.org/wiki/
+  NAMESPACE:[ja=https://ja.wikipedia.org/wiki/]
+  NAMESPACE;ALTID=1;PREFIX=en:https://en.wikipedia.org/wiki/
   LOCALE:[=en:, ja=ja:, alias]
   NAMES:[Locations]
 

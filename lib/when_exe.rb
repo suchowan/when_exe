@@ -879,7 +879,7 @@ module When
     locale = options.delete(:locale) || 'en'
     title  = EncodingConversion.to_internal_encoding(title)
     entry, query = title.split('?', 2)
-    url  = "http://#{locale}.wikipedia.org/wiki/#{URI.encode(entry).gsub(' ', '_')}"
+    url  = "https://#{locale}.wikipedia.org/wiki/#{URI.encode(entry).gsub(' ', '_')}"
     Locale.send(:wikipedia_object, url, options) unless options.empty?
     url += '?' + query if query
     object = Parts::Resource._instance(url)

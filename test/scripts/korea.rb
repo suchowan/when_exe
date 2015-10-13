@@ -11,7 +11,7 @@ include When
 
 class When::TM::CalendarEra
   Korea = [self, [
-    'namespace:[en=http://en.wikipedia.org/wiki/, ja=http://ja.wikipedia.org/wiki/]',
+    'namespace:[en=https://en.wikipedia.org/wiki/, ja=https://ja.wikipedia.org/wiki/]',
     'locale:[=en:, ja=ja:, alias]',
     'area:[Korea, 朝鮮]',
     ['[秦漢]1.01.01',    '@CR',    "1-01-01^Chinese_103"],

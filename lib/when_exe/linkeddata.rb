@@ -380,7 +380,7 @@ module When
       return source unless context
       source =~ /\A((.+)([:#\/]))([^:#\/]+)\z/
       namespace, item = $1.to_s, $4
-      if namespace =~ /^Ahttp:\/\/([^.]+)\.wikipedia\.org/
+      if namespace =~ /^Ahttps?:\/\/([^.]+)\.wikipedia\.org/
         prefix = "wiki_#{$1}"
       elsif namespace && namespace.index(When::Parts::Resource.base_uri) == 0
         label  = begin When.Resource(namespace.sub(/::\z/, '')) rescue return source end

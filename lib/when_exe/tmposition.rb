@@ -1296,7 +1296,7 @@ module When::TM
 
     # Modified Julian Date
     # 
-    # see {http://en.wikipedia.org/wiki/Julian_day#Variants MJD}
+    # see {https://en.wikipedia.org/wiki/Julian_day#Variants MJD}
     JDN_of_MJD = 2400000.5
 
     # Countdown to Equinoctial Planetconjunction 

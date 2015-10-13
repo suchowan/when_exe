@@ -1,5 +1,5 @@
 BEGIN:VCALENDAR
-# Copyright (C) 2011-2014 Takashi SUGA
+# Copyright (C) 2011-2015 Takashi SUGA
 #
 # You may use and/or modify this file according to the license
 # described in the LICENSE.txt file included in this archive.
@@ -7,8 +7,8 @@ BEGIN:VCALENDAR
 
 VERSION:2.0
 PRODID:-//hacksw/handcal//NONSGML v1.0//EN
-NAMESPACE;ALTID=1;PREFIX=ja:http://ja.wikipedia.org/wiki/
-NAMESPACE;ALTID=1;PREFIX=en:http://en.wikipedia.org/wiki/
+NAMESPACE;ALTID=1;PREFIX=ja:https://ja.wikipedia.org/wiki/
+NAMESPACE;ALTID=1;PREFIX=en:https://en.wikipedia.org/wiki/
 BEGIN:VTIMEZONE
 TZID:Asia/Tokyo
 X-LIC-LOCATION:Asia/Tokyo

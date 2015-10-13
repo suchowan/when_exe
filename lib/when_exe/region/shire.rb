@@ -9,7 +9,7 @@ module When
   class BasicTypes::M17n
 
     Shire = [self, [
-      "namespace:[cal=http://en.wikipedia.org/wiki/Middle-earth_calendar#]",
+      "namespace:[cal=https://en.wikipedia.org/wiki/Middle-earth_calendar#]",
       "locale:[=en:, ja=ja:, zh=zh:, alias]",
       "names:[Middle-earth=en:Middle-earth_calendar#Shire_calendar, ホビット庄暦=ja:%%<指輪物語>, 中土曆=zh:%%<魔戒>, *alias:Shire]",
 

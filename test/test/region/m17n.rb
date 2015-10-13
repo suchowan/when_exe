@@ -12,24 +12,24 @@ module MiniTest
 
     First = [
       ["Calendar", "Calendar", nil],
-      ["Month",    "月の名前", "http://ja.wikipedia.org/wiki/%E6%9C%88_(%E6%9A%A6)"],
-      ["Month",    "月の名前", "http://ja.wikipedia.org/wiki/%E6%9C%88_(%E6%9A%A6)"],
-      ["January",  "1月",      "http://ja.wikipedia.org/wiki/1%E6%9C%88"]
+      ["Month",    "月の名前", "https://ja.wikipedia.org/wiki/%E6%9C%88_(%E6%9A%A6)"],
+      ["Month",    "月の名前", "https://ja.wikipedia.org/wiki/%E6%9C%88_(%E6%9A%A6)"],
+      ["January",  "1月",      "https://ja.wikipedia.org/wiki/1%E6%9C%88"]
     ]
 
     Second = [
-      ["January",   "1月", "http://ja.wikipedia.org/wiki/1%E6%9C%88" ],
-      ["February",  "2月", "http://ja.wikipedia.org/wiki/2%E6%9C%88" ],
-      ["March",     "3月", "http://ja.wikipedia.org/wiki/3%E6%9C%88" ],
-      ["April",     "4月", "http://ja.wikipedia.org/wiki/4%E6%9C%88" ],
-      ["May",       "5月", "http://ja.wikipedia.org/wiki/5%E6%9C%88" ],
-      ["June",      "6月", "http://ja.wikipedia.org/wiki/6%E6%9C%88" ],
-      ["July",      "7月", "http://ja.wikipedia.org/wiki/7%E6%9C%88" ],
-      ["August",    "8月", "http://ja.wikipedia.org/wiki/8%E6%9C%88" ],
-      ["September", "9月", "http://ja.wikipedia.org/wiki/9%E6%9C%88" ],
-      ["October",  "10月", "http://ja.wikipedia.org/wiki/10%E6%9C%88"],
-      ["November", "11月", "http://ja.wikipedia.org/wiki/11%E6%9C%88"],
-      ["December", "12月", "http://ja.wikipedia.org/wiki/12%E6%9C%88"]
+      ["January",   "1月", "https://ja.wikipedia.org/wiki/1%E6%9C%88" ],
+      ["February",  "2月", "https://ja.wikipedia.org/wiki/2%E6%9C%88" ],
+      ["March",     "3月", "https://ja.wikipedia.org/wiki/3%E6%9C%88" ],
+      ["April",     "4月", "https://ja.wikipedia.org/wiki/4%E6%9C%88" ],
+      ["May",       "5月", "https://ja.wikipedia.org/wiki/5%E6%9C%88" ],
+      ["June",      "6月", "https://ja.wikipedia.org/wiki/6%E6%9C%88" ],
+      ["July",      "7月", "https://ja.wikipedia.org/wiki/7%E6%9C%88" ],
+      ["August",    "8月", "https://ja.wikipedia.org/wiki/8%E6%9C%88" ],
+      ["September", "9月", "https://ja.wikipedia.org/wiki/9%E6%9C%88" ],
+      ["October",  "10月", "https://ja.wikipedia.org/wiki/10%E6%9C%88"],
+      ["November", "11月", "https://ja.wikipedia.org/wiki/11%E6%9C%88"],
+      ["December", "12月", "https://ja.wikipedia.org/wiki/12%E6%9C%88"]
     ]
 
     def test__m17n_1
@@ -59,12 +59,12 @@ module MiniTest
 
     def test__m17n_2
       march = When.m17n(['en:March=en_ns:', 'ja:3月=ja_ns:'],
-                   {'en_ns'=>'http://en.wikipedia.org/wiki/',
-                    'ja_ns'=>'http://ja.wikipedia.org/wiki/'})
+                   {'en_ns'=>'https://en.wikipedia.org/wiki/',
+                    'ja_ns'=>'https://ja.wikipedia.org/wiki/'})
 
       [
-        ['ja', ["3月", "3月", "http://ja.wikipedia.org/wiki/3%E6%9C%88"]],
-        ['en', ["March", "March", "http://en.wikipedia.org/wiki/March" ]]
+        ['ja', ["3月", "3月", "https://ja.wikipedia.org/wiki/3%E6%9C%88"]],
+        ['en', ["March", "March", "https://en.wikipedia.org/wiki/March" ]]
       ].each do |sample|
         assert_equal(sample[1], [march.translate(sample[0]), march.translate(sample[0]), march.reference(sample[0])])
       end

@@ -23,9 +23,9 @@ p gregorian.translate('fr')                  #=> "Gregorian" (未定義でデフ
 p gregorian/'ja'                             #=> "グレゴリオ暦"
 p gregorian/'en'                             #=> "Gregorian"
 p gregorian/'fr'                             #=> "Gregorian" (未定義でデフォルト使用)
-p gregorian.reference('ja')                  #=> "http://ja.wikipedia.org/wiki/%E3%82%B0%E3%83%AC%E3%82%B4%E3%83%AA%E3%82%AA%E6%9A%A6"
-p gregorian.reference('en')                  #=> "http://en.wikipedia.org/wiki/Gregorian_calendar"
-p gregorian.reference('fr')                  #=> "http://en.wikipedia.org/wiki/Gregorian_calendar" (未定義でデフォルト使用)
+p gregorian.reference('ja')                  #=> "https://ja.wikipedia.org/wiki/%E3%82%B0%E3%83%AC%E3%82%B4%E3%83%AA%E3%82%AA%E6%9A%A6"
+p gregorian.reference('en')                  #=> "https://en.wikipedia.org/wiki/Gregorian_calendar"
+p gregorian.reference('fr')                  #=> "https://en.wikipedia.org/wiki/Gregorian_calendar" (未定義でデフォルト使用)
 p 'Gregorian'.calendar.label.iri             #=> "http://hosi.org/When/BasicTypes/M17n/Christian::Gregorian" (同じIRIのオブジェクト)
 
 # * 一月
@@ -37,9 +37,9 @@ p january.translate('fr')                    #=> "janvier"
 p january/'ja'                               #=> "1月"
 p january/'en'                               #=> "January"
 p january/'fr'                               #=> "janvier"
-p january.reference('ja')                    #=> "http://ja.wikipedia.org/wiki/1%E6%9C%88"
-p january.reference('en')                    #=> "http://en.wikipedia.org/wiki/January"
-p january.reference('fr')                    #=> "http://en.wikipedia.org/wiki/January" (未定義でデフォルト使用)
+p january.reference('ja')                    #=> "https://ja.wikipedia.org/wiki/1%E6%9C%88"
+p january.reference('en')                    #=> "https://en.wikipedia.org/wiki/January"
+p january.reference('fr')                    #=> "https://en.wikipedia.org/wiki/January" (未定義でデフォルト使用)
 p '1月'.month_name.iri                       #=> "http://hosi.org/When/BasicTypes/M17n/Calendar::Month::January" (同じIRIのオブジェクト)
 p 'Calendar::Month::January'.m17n.iri   #=> "http://hosi.org/When/BasicTypes/M17n/Calendar::Month::January" (同じIRIのオブジェクト)
 

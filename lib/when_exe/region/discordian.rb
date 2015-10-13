@@ -25,7 +25,7 @@ module When
   class CalendarNote::DiscordianWeek < CalendarNote::Week
 
     Notes = [When::BasicTypes::M17n, [
-      "namespace:[en=http://en.wiktionary.org/wiki/]",
+      "namespace:[en=https://en.wiktionary.org/wiki/]",
       "locale:[=en:, ja=ja:]",
       "names:[Discordian]",
 

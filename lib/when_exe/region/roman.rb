@@ -96,7 +96,7 @@ module When
 
   class TM::CalendarEra
 
-    # From http://en.wikipedia.org/wiki/Julian_calendar#Sacrobosco.27s_theory_on_month_lengths
+    # From https://en.wikipedia.org/wiki/Julian_calendar#Sacrobosco.27s_theory_on_month_lengths
     Julians = [self, [
       "locale:[=en:, ja=ja:, zh=zh:, alias]",
       "period:[Roman=en:Roman_calendar, ローマ暦, 羅馬曆]",
@@ -124,7 +124,7 @@ module When
 
   module CalendarTypes
 
-    # From http://en.wikipedia.org/wiki/Julian_calendar#Sacrobosco.27s_theory_on_month_lengths
+    # From https://en.wikipedia.org/wiki/Julian_calendar#Sacrobosco.27s_theory_on_month_lengths
     _Index0     = When::Coordinates::DefaultDayIndex
     _IndicesB12 = [When.Index('Roman::MonthB', {:unit=>12}), _Index0]
     _Indices12  = [When.Index('Roman::Month',  {:unit=>12}), _Index0]

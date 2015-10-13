@@ -1101,7 +1101,7 @@ module When
       #
       # @return [When::BasicTypes::M17n] 木星年の名称
       #
-      # see {http://en.wikipedia.org/wiki/Samvatsara Samvatsara}
+      # see {https://en.wikipedia.org/wiki/Samvatsara Samvatsara}
       #
       def samvatsara(dates)
         year_kali = dates.l_date.most_significant_coordinate + dates.l_date.frame.epoch_in_CE + 3101

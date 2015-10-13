@@ -48,10 +48,10 @@ module MiniTest
       # No offset
       haab = When.Resource("_co:Mayan::Haab'")
       assert_equal("ハアブ", haab.label.translate('ja'))
-      assert_equal("http://en.wikipedia.org/wiki/Haab'", haab.label.reference)
+      assert_equal("https://en.wikipedia.org/wiki/Haab'", haab.label.reference)
       pop = When.Resource("_co:Mayan::Haab'::Pop")
       assert_equal("Pop", pop.label.translate('en'))
-      assert_equal("http://en.wikipedia.org/wiki/File:Maya-Pop.jpg", pop.label.reference)
+      assert_equal("https://en.wikipedia.org/wiki/File:Maya-Pop.jpg", pop.label.reference)
       date0 = When.when?('2011-05-16T12:34:56Z')
       sample = [
         "2012-04-12T12:34:56Z",
@@ -68,10 +68,10 @@ module MiniTest
       # offset 0B
       haab = When.Resource("_co:Mayan?Epoch=0D::Haab'")
       assert_equal("ハアブ", haab.label.translate('ja'))
-      assert_equal("http://en.wikipedia.org/wiki/Haab'", haab.label.reference)
+      assert_equal("https://en.wikipedia.org/wiki/Haab'", haab.label.reference)
       pop = When.Resource("_co:Mayan?Epoch=0D::Haab'::Pop")
       assert_equal("Pop", pop.label.translate('en'))
-      assert_equal("http://en.wikipedia.org/wiki/File:Maya-Pop.jpg", pop.label.reference)
+      assert_equal("https://en.wikipedia.org/wiki/File:Maya-Pop.jpg", pop.label.reference)
       date0 = When.when?('2011-05-16T12:34:56Z')
       sample = [
         "2012-04-12T12:34:56Z",
@@ -88,10 +88,10 @@ module MiniTest
       # offset 2B
       haab = When.Resource("_co:Mayan?Epoch=2D::Haab'")
       assert_equal("ハアブ", haab.label.translate('ja'))
-      assert_equal("http://en.wikipedia.org/wiki/Haab'", haab.label.reference)
+      assert_equal("https://en.wikipedia.org/wiki/Haab'", haab.label.reference)
       pop = When.Resource("_co:Mayan?Epoch=2D::Haab'::Pop")
       assert_equal("Pop", pop.label.translate('en'))
-      assert_equal("http://en.wikipedia.org/wiki/File:Maya-Pop.jpg", pop.label.reference)
+      assert_equal("https://en.wikipedia.org/wiki/File:Maya-Pop.jpg", pop.label.reference)
       date0 = When.when?('2011-05-16T12:34:56Z')
       sample = [
         "2012-04-14T12:34:56Z",
@@ -110,16 +110,16 @@ module MiniTest
       # No offset
       trecena = When.Resource("_co:Mayan::Trecena::Trecena")
       assert_equal("トレセナ", trecena.label.translate('ja'))
-      assert_equal("http://en.wikipedia.org/wiki/Trecena", trecena.label.reference)
+      assert_equal("https://en.wikipedia.org/wiki/Trecena", trecena.label.reference)
       assert_equal(2, When.when?('2011-05-15') % trecena)
 
 
       tzolkin = When.Resource("_co:Mayan::Tzolk'in")
       assert_equal("ツォルキン", tzolkin.label.translate('ja'))
-      assert_equal("http://en.wikipedia.org/wiki/Tzolk'in", tzolkin.label.reference)
+      assert_equal("https://en.wikipedia.org/wiki/Tzolk'in", tzolkin.label.reference)
       ajaw = When.Resource("_co:Mayan::Tzolk'in::Ajaw")
       assert_equal("Ajaw", ajaw.label.translate('en'))
-      assert_equal("http://en.wikipedia.org/wiki/File:MAYA-g-log-cal-D20-Ajaw-cdxW.png", ajaw.label.reference('alias'))
+      assert_equal("https://en.wikipedia.org/wiki/File:MAYA-g-log-cal-D20-Ajaw-cdxW.png", ajaw.label.reference('alias'))
       date0 = When.when?('2011-05-16T12:34:56Z')
       sample = [
         "2011-05-21T12:34:56Z",
@@ -138,16 +138,16 @@ module MiniTest
       # offset 0B
       trecena = When.Resource("_co:Mayan?Epoch=0D::Trecena::Trecena")
       assert_equal("トレセナ", trecena.label.translate('ja'))
-      assert_equal("http://en.wikipedia.org/wiki/Trecena", trecena.label.reference)
+      assert_equal("https://en.wikipedia.org/wiki/Trecena", trecena.label.reference)
       assert_equal(2, When.when?('2011-05-15') % trecena)
 
 
       tzolkin = When.Resource("_co:Mayan?Epoch=0D::Tzolk'in")
       assert_equal("ツォルキン", tzolkin.label.translate('ja'))
-      assert_equal("http://en.wikipedia.org/wiki/Tzolk'in", tzolkin.label.reference)
+      assert_equal("https://en.wikipedia.org/wiki/Tzolk'in", tzolkin.label.reference)
       ajaw = When.Resource("_co:Mayan?Epoch=0D::Tzolk'in::Ajaw")
       assert_equal("Ajaw", ajaw.label.translate('en'))
-      assert_equal("http://en.wikipedia.org/wiki/File:MAYA-g-log-cal-D20-Ajaw-cdxW.png", ajaw.label.reference('alias'))
+      assert_equal("https://en.wikipedia.org/wiki/File:MAYA-g-log-cal-D20-Ajaw-cdxW.png", ajaw.label.reference('alias'))
       date0 = When.when?('2011-05-16T12:34:56Z')
       sample = [
         "2011-05-21T12:34:56Z",
@@ -166,16 +166,16 @@ module MiniTest
       # offset 2B
       trecena = When.Resource("_co:Mayan?Epoch=2D::Trecena::Trecena")
       assert_equal("トレセナ", trecena.label.translate('ja'))
-      assert_equal("http://en.wikipedia.org/wiki/Trecena", trecena.label.reference)
+      assert_equal("https://en.wikipedia.org/wiki/Trecena", trecena.label.reference)
       assert_equal(2, When.when?('2011-05-17') % trecena)
 
 
       tzolkin = When.Resource("_co:Mayan?Epoch=2D::Tzolk'in")
       assert_equal("ツォルキン", tzolkin.label.translate('ja'))
-      assert_equal("http://en.wikipedia.org/wiki/Tzolk'in", tzolkin.label.reference)
+      assert_equal("https://en.wikipedia.org/wiki/Tzolk'in", tzolkin.label.reference)
       ajaw = When.Resource("_co:Mayan?Epoch=2D::Tzolk'in::Ajaw")
       assert_equal("Ajaw", ajaw.label.translate('en'))
-      assert_equal("http://en.wikipedia.org/wiki/File:MAYA-g-log-cal-D20-Ajaw-cdxW.png", ajaw.label.reference('alias'))
+      assert_equal("https://en.wikipedia.org/wiki/File:MAYA-g-log-cal-D20-Ajaw-cdxW.png", ajaw.label.reference('alias'))
       date0 = When.when?('2011-05-16T12:34:56Z')
       sample = [
         "2011-05-23T12:34:56Z",

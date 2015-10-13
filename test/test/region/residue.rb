@@ -41,13 +41,13 @@ module MiniTest
         assert_equal("日曜日", When.Resource(iri + '::Week::Sunday::Sunday').translate('ja'))
 
         sample = [
-          ["Monday",    "月曜日", "http://en.wikipedia.org/wiki/Monday"],
-          ["Tuesday",   "火曜日", "http://en.wikipedia.org/wiki/Tuesday"],
-          ["Wednesday", "水曜日", "http://en.wikipedia.org/wiki/Wednesday"],
-          ["Thursday",  "木曜日", "http://en.wikipedia.org/wiki/Thursday"],
-          ["Friday",    "金曜日", "http://en.wikipedia.org/wiki/Friday"],
-          ["Saturday",  "土曜日", "http://en.wikipedia.org/wiki/Saturday"],
-          ["Sunday",    "日曜日", "http://en.wikipedia.org/wiki/Sunday"]
+          ["Monday",    "月曜日", "https://en.wikipedia.org/wiki/Monday"],
+          ["Tuesday",   "火曜日", "https://en.wikipedia.org/wiki/Tuesday"],
+          ["Wednesday", "水曜日", "https://en.wikipedia.org/wiki/Wednesday"],
+          ["Thursday",  "木曜日", "https://en.wikipedia.org/wiki/Thursday"],
+          ["Friday",    "金曜日", "https://en.wikipedia.org/wiki/Friday"],
+          ["Saturday",  "土曜日", "https://en.wikipedia.org/wiki/Saturday"],
+          ["Sunday",    "日曜日", "https://en.wikipedia.org/wiki/Sunday"]
         ]
         assert_equal(7, When::Parts::Resource[iri + '::Week'].child.size)
         When::Parts::Resource[iri + '::Week'].child.each do |obj|

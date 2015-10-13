@@ -19,7 +19,7 @@ class When::TM::OrdinalReferenceSystem
       "begin:-4_600_000_000-"
     ],
     [When::TM::OrdinalEra,
-      "namespace:[root=http://ja.wikipedia.org/wiki/%%<始生代>#]",
+      "namespace:[root=https://ja.wikipedia.org/wiki/%%<始生代>#]",
       "*eon:[始生代,Archean]",
       [When::TM::OrdinalEra,
         "*era:[原始生代=root:%.<原始生代_(Eoarchean)>,Eoarchean]",

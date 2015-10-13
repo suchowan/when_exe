@@ -28,7 +28,7 @@ module When
 
     # 省略時 Namespace
     DefaultNamespaces = Hash.new {|hash, key|
-      hash[key] = "http://#{key}.wikipedia.org/wiki/"
+      hash[key] = "https://#{key}.wikipedia.org/wiki/"
       }.update({
       'mailto' => false,
       'https'  => false,
@@ -57,7 +57,7 @@ module When
 
     # Wikipedia の URL の正規表現
     # @private
-    Ref  = /\Ahttp:\/\/(.+?)\.wikipedia\.org\/wiki\/([^#]+?)\z/
+    Ref  = /\Ahttps?:\/\/(.+?)\.wikipedia\.org\/wiki\/([^#]+?)\z/
 
     # Wikipedia の多言語リンクの正規表現
     # @private
@@ -75,7 +75,7 @@ module When
       #
       # @param [Hash] options 下記の通り
       # @option options [Hash]    :alias              Locale の読み替えパターンを Hash で指定する。
-      # @option options [Hash]    :namespace_foramt   名前空間定義の省略時に名前空間生成に用いる書式
+      # @option options [Hash]    :namespace_format   名前空間定義の省略時に名前空間生成に用いる書式
       # @option options [Hash]    :unification        漢字の包摂パターンを Hash で指定する。
       # @option options [Numeric] :wikipedia_interval Wikipedia の連続的な参照を抑制するための遅延時間/秒
       #
@@ -85,7 +85,7 @@ module When
       #
       def _setup_(options={})
         @aliases            = options[:alias]            || DefaultAlias
-        @namespaces         = options[:namespace_foramt] || DefaultNamespaces
+        @namespaces         = options[:namespace_format] || DefaultNamespaces
         @unifications       = options[:unification]      || DefaultUnification
         @wikipedia_interval = options[:wikipedia_interval]
       end
@@ -96,7 +96,7 @@ module When
       #
       def _setup_info
         {:alias              => _alias,
-         :namespace_foramt   => _namespaces,
+         :namespace_format   => _namespaces,
          :unification        => _unification,
          :wikipedia_interval => @wikipedia_interval}
       end
@@ -336,7 +336,7 @@ module When
         contents = nil
         begin
           OpenURI
-          source   = open(path.sub(/^http:/, 'https:'), 'r'+mode, {:ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE})
+          source   = open(path, 'r'+mode, {:ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE})
           contents = source.read
         ensure
           @wikipedia_last_access = Time.now.to_f
@@ -354,7 +354,7 @@ module When
         }
         contents.scan(Link) do |link|
           word[:names][$2] = $4
-          word[:link ][$2] = "http://#{$2}.wikipedia.org/wiki/#{$3}"
+          word[:link ][$2] = "https://#{$2}.wikipedia.org/wiki/#{$3}"
         end
         object = When::BasicTypes::M17n.new(word)
 

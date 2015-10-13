@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2015 Takashi SUGA
 
   You may use and/or modify this file according to the license
   described in the LICENSE.txt file included in this archive.
@@ -386,7 +386,7 @@ Getsuyou
 Monday
 ]
 LABEL
-ISO, jwiki=http://ja.wikipedia.org/wiki/, ewiki=http://en.wikipedia.org/wiki/
+ISO, jwiki=https://ja.wikipedia.org/wiki/, ewiki=https://en.wikipedia.org/wiki/
 NS
 =jwiki:, en=ewiki:
 LOCALE

@@ -588,14 +588,14 @@ module When
       #       prefix: - namespace 引数の指定により URI に展開する
       #
       # @example
-      #   M17n.new(['3月', 'fr:Mars=http://fr.wikipedia.org/wiki/Mars_(mois)', 'March'],
-      #            {'en_wikipedia'=>'http://en.wikipedia.org/wiki/',
-      #             'ja_wikipedia'=>'http://ja.wikipedia.org/wiki/'},
+      #   M17n.new(['3月', 'fr:Mars=https://fr.wikipedia.org/wiki/Mars_(mois)', 'March'],
+      #            {'en_wikipedia'=>'https://en.wikipedia.org/wiki/',
+      #             'ja_wikipedia'=>'https://ja.wikipedia.org/wiki/'},
       #            ['=ja_wikipedia:', '*en=en_wikipedia:']) を行うと、生成された M17n では、
       #   @names     = {''  =>'3月', 'fr'=>'Mars', 'en'=>'March'}
-      #   @namespace = {''  =>'http://ja.wikipedia.org/wiki/3%E6%9C%88',
-      #                 'fr'=>'http://fr.wikipedia.org/wiki/Mars_(mois)',
-      #                 'en'=>'http://en.wikipedia.org/wiki/March'}
+      #   @namespace = {''  =>'https://ja.wikipedia.org/wiki/3%E6%9C%88',
+      #                 'fr'=>'https://fr.wikipedia.org/wiki/Mars_(mois)',
+      #                 'en'=>'https://en.wikipedia.org/wiki/March'}
       #   となり、通常の String として振舞う場合は 'March' として振舞う
       #
       def initialize(*args)

@@ -260,7 +260,7 @@ module When::Parts
       def _setup_(options={})
         super()
         @_prefix = {
-          '_wp'  => 'http://en.wikipedia.org/wiki/',
+          '_wp'  => 'https://en.wikipedia.org/wiki/',
           '_w'   => base_uri + '/',
           '_p'   => base_uri + 'Parts/',
           '_b'   => base_uri + 'BasicTypes/',

@@ -9,7 +9,7 @@
 
   References
 
- (1) http://en.wikipedia.org/wiki/Zoroastrian_calendar
+ (1) https://en.wikipedia.org/wiki/Zoroastrian_calendar
  (2) http://www.moonwise.co.uk/year/1375zoroastrian.htm
  (3) http://www.zoroastrian.org/articles/nowruz.htm
 

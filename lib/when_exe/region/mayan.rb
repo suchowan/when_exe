@@ -24,7 +24,7 @@ module When
 
       [Residue,
         "label:[Haab', ハアブ, Haab]", "divisor:365", 'day:#{Haab:300}', "format:[%2$d%1$s/365=]",
-        "namespace:[glyph=http://en.wikipedia.org/wiki/File:]",
+        "namespace:[glyph=https://en.wikipedia.org/wiki/File:]",
         [Residue, "label:[Pop     =glyph:Maya-Pop.jpg,            ポプ,        Pop   ]", "remainder:  0"],
         [Residue, "label:[Wo'     =glyph:Maya-Dresden-wo.jpg,     ウオ,        Wo    ]", "remainder: 20"],
         [Residue, "label:[Sip     =glyph:Maya-Dresden-sip.jpg,    シプ,        Sip   ]", "remainder: 40"],
@@ -54,7 +54,7 @@ module When
       ],
 
       [Residue,
-        "namespace:[glyph=http://en.wikipedia.org/wiki/File:MAYA-g-log-cal-]",
+        "namespace:[glyph=https://en.wikipedia.org/wiki/File:MAYA-g-log-cal-]",
         "label:[Tzolk'in, ツォルキン, Tzolkin]", "divisor:20", 'day:#{Tzolkin:4}', "format:[%s(%d/20)=]",
         [Residue, "label:[Imix'   =glyph:D01-Imix.png,     イミシュ,   Imix    =glyph:D01-Imix-cdxW.png    ]", "remainder: 0"],
         [Residue, "label:[Ik'     =glyph:D02-Ik.png,       イック,     Ik      =glyph:D02-Ik-cdxW.png      ]", "remainder: 1"],

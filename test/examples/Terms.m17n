@@ -3,8 +3,8 @@ BEGIN:B:M17n
 #
 # You may use and/or modify this file according to the license
 # described in the LICENSE.txt file included in this archive.
-  NAMESPACE:[en=http://en.wikipedia.org/wiki/,
-             ja=http://ja.wikipedia.org/wiki/]
+  NAMESPACE:[en=https://en.wikipedia.org/wiki/,
+             ja=https://ja.wikipedia.org/wiki/]
   LOCALE:[=en:, ja=ja:, alias]
   NAMES:[Calendar=]
 

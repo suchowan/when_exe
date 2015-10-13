@@ -274,7 +274,7 @@ class When::CalendarNote
         [Note, 0x3FFF, "label:[雑事吉=]",    'position:雑事吉'],                             #104: 干支 節月
         [Note, 0x3FFF, "label:[小字注=]",    'position:下段小字 下段小字 下段小字 下段小字'],#105: 干支 節月
         [Note, 0xC000, "label:[土用の丑]",   'position:雑節'],                               #106: 土用の丑
-        [Note, 0xC000, "label:[陰陽遁始]",   'position:民間'],                               #107: 九星の陰遁・陽遁の折り返し日
+        [Note, 0xC000, "label:[陰陽遁始=]",  'position:民間'],                               #107: 九星の陰遁・陽遁の折り返し日
       ]
     ]]
 
