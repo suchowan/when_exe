@@ -660,7 +660,7 @@ module When
           @anomalistic_month_shift  =  @anomalistic_month_shift.to_f      # 転應(暦元前近/遠地点通過から暦元天正冬至までの日数)
           @anomaly_method           =  @anomaly_method || 'a'             # (経朔-定朔)の計算方法
           @anomaly_precision        = (@anomaly_precision || 1.0E-5).to_f # c 方式 での収束判定誤差 / 日
-          @solar_weight             =  @solar_weight   || 0               # (経朔-定朔)の計算で用いる実行差での太陽盈縮の重み(0:非考慮,1:考慮)
+          @solar_weight             = (@solar_weight      || 0     ).to_i # (経朔-定朔)の計算で用いる実行差での太陽盈縮の重み(0:非考慮,1:考慮)
           @lunar_unit               =  @lunar_unit.to_f                   # 太陰遅速計算用招差法定数の時間の単位(限)
           @m                        =  _rissei_j(@m)                      # 太陰遅速計算用招差法定数
           @s                        =  _rissei_j(@s)                      # 太陽盈縮計算用招差法定数

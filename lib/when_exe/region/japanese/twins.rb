@@ -102,7 +102,9 @@ module When
             'year_length'              => 365.241696,       # 暦元の冬至年 / 日
             'anomalistic_year_shift'   => 6.445,            # 暦應(暦元での冬至から近日点通過までの日数)
             'lunation_shift'           =>  2.779 - 0.015,   # 閏應(暦元前経朔から暦元天正冬至までの日数)
-            'anomalistic_month_shift'  => 22.72  - 0.015    # 転應(暦元前近/遠地点通過から暦元天正冬至までの日数)
+            'anomalistic_month_shift'  => 22.72  - 0.015,   # 転應(暦元前近/遠地点通過から暦元天正冬至までの日数)
+            'anomaly_method'           => '#{Method:a}',    # (経朔-定朔)の計算方法(a:差分, b:微分, c:幾何学的補正)
+            'solar_weight'             => '#{Weight:1}',    # (経朔-定朔)の計算で用いる実行差での太陽盈縮の重み(0:非考慮,1:考慮)
          })]
         }
        }
@@ -118,7 +120,9 @@ module When
             'year_length'              => 365.241696,       # 暦元の冬至年 / 日
             'anomalistic_year_shift'   => 6.445,            # 暦應(暦元での冬至から近日点通過までの日数)
             'lunation_shift'           =>  2.779,           # 閏應(暦元前経朔から暦元天正冬至までの日数)
-            'anomalistic_month_shift'  => 22.72             # 転應(暦元前近/遠地点通過から暦元天正冬至までの日数)
+            'anomalistic_month_shift'  => 22.72,            # 転應(暦元前近/遠地点通過から暦元天正冬至までの日数)
+            'anomaly_method'           => '#{Method:a}',    # (経朔-定朔)の計算方法(a:差分, b:微分, c:幾何学的補正)
+            'solar_weight'             => '#{Weight:1}',    # (経朔-定朔)の計算で用いる実行差での太陽盈縮の重み(0:非考慮,1:考慮)
          })]
         }
        }
@@ -134,7 +138,9 @@ module When
             'year_length'              => 365.241696,       # 暦元の冬至年 / 日
             'anomalistic_year_shift'   => 6.445,            # 暦應(暦元での冬至から近日点通過までの日数)
             'lunation_shift'           =>  2.779 + 0.2138,  # 閏應(暦元前経朔から暦元天正冬至までの日数)
-            'anomalistic_month_shift'  => 22.72  + 0.2138   # 転應(暦元前近/遠地点通過から暦元天正冬至までの日数)
+            'anomalistic_month_shift'  => 22.72  + 0.2138,  # 転應(暦元前近/遠地点通過から暦元天正冬至までの日数)
+            'anomaly_method'           => '#{Method:a}',    # (経朔-定朔)の計算方法(a:差分, b:微分, c:幾何学的補正)
+            'solar_weight'             => '#{Weight:1}',    # (経朔-定朔)の計算で用いる実行差での太陽盈縮の重み(0:非考慮,1:考慮)
          })]
         }
        }
@@ -150,7 +156,9 @@ module When
             'year_length'              => 365.241696,       # 暦元の冬至年 / 日
             'anomalistic_year_shift'   => 6.445,            # 暦應(暦元での冬至から近日点通過までの日数)
             'lunation_shift'           =>  2.779 - 0.0677,  # 閏應(暦元前経朔から暦元天正冬至までの日数)
-            'anomalistic_month_shift'  => 22.72  - 0.0677   # 転應(暦元前近/遠地点通過から暦元天正冬至までの日数)
+            'anomalistic_month_shift'  => 22.72  - 0.0677,  # 転應(暦元前近/遠地点通過から暦元天正冬至までの日数)
+            'anomaly_method'           => '#{Method:a}',    # (経朔-定朔)の計算方法(a:差分, b:微分, c:幾何学的補正)
+            'solar_weight'             => '#{Weight:1}',    # (経朔-定朔)の計算で用いる実行差での太陽盈縮の重み(0:非考慮,1:考慮)
          })]
         }
        }
@@ -167,7 +175,9 @@ module When
             'anomalistic_year_shift'   => 6.455,            # 暦應(暦元での冬至から近日点通過までの日数)
             'lunation_shift'           => 25.654,           # 閏應(暦元前経朔から暦元天正冬至までの日数)
             'anomalistic_month_shift'  => 18.88,            # 転應(暦元前近/遠地点通過から暦元天正冬至までの日数)
-            's'                        => ChineseSolar.change_unit(365.241556 / 365.241696, _japanese_common['s'])
+            's'                        => ChineseSolar.change_unit(365.241556 / 365.241696, _japanese_common['s']),
+            'anomaly_method'           => '#{Method:a}',    # (経朔-定朔)の計算方法(a:差分, b:微分, c:幾何学的補正)
+            'solar_weight'             => '#{Weight:1}',    # (経朔-定朔)の計算で用いる実行差での太陽盈縮の重み(0:非考慮,1:考慮)
          })]
         }
        }
@@ -184,7 +194,9 @@ module When
             'anomalistic_year_shift'   => 7.42,             # 暦應(暦元での冬至から近日点通過までの日数)
             'lunation_shift'           => 25.82,            # 閏應(暦元前経朔から暦元天正冬至までの日数)
             'anomalistic_month_shift'  => 19.307,           # 転應(暦元前近/遠地点通過から暦元天正冬至までの日数)
-            's'                        => ChineseSolar.change_unit(365.241626 / 365.241696, _japanese_common['s'])
+            's'                        => ChineseSolar.change_unit(365.241626 / 365.241696, _japanese_common['s']),
+            'anomaly_method'           => '#{Method:a}',    # (経朔-定朔)の計算方法(a:差分, b:微分, c:幾何学的補正)
+            'solar_weight'             => '#{Weight:1}',    # (経朔-定朔)の計算で用いる実行差での太陽盈縮の重み(0:非考慮,1:考慮)
          })]
         }
        }
