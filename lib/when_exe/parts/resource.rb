@@ -47,7 +47,7 @@ module When::Parts
     IRIEncode = /[#{IRIEncodeTable.keys.join('')}]/
 
     # @private
-    IRIDecode = /#{IRIDecodeTable.keys.join('|')}/
+    IRIDecode = /#{IRIDecodeTable.keys.join('|')}/i
 
     # @private
     class ContentLine
@@ -457,7 +457,7 @@ module When::Parts
 
       # @private
       def _decode(iri)
-        iri = iri.gsub(When::Parts::Resource::IRIDecode) {|c| When::Parts::Resource::IRIDecodeTable[c]}
+        iri = iri.gsub(When::Parts::Resource::IRIDecode) {|c| When::Parts::Resource::IRIDecodeTable[c.upcase]}
         return iri unless iri =~ /%28/
 
         begin
@@ -736,7 +736,7 @@ module When::Parts
         path = root.instance_of?(String) ? root : label.to_s
         if root.respond_to?(:iri)
           root_iri = root.iri
-          path = root_iri + '::' + path if root_iri
+          path = root_iri + '::' + path.gsub(/[<>]/) {|char|'%' + char.ord.to_s(16)} if root_iri
         end
         @iri = path
       end
