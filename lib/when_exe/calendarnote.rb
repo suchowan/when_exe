@@ -35,19 +35,9 @@ module When
     end
 
     #
-    # 暦注要素のひな形クラス
+    # 暦注要素であることを示す
     #
-    # @private
-    class NoteElement < When::BasicTypes::Object
-      #
-      # _m17n_form のための要素生成
-      #
-      # @param [Hash] options 下記のとおり
-      # @option options [Symbol] :method :to_m17n なら label を返す、その他は When::Parts::Resource#to_h 参照
-      #
-      def _to_hash_value(options={})
-        options[:method] == :to_m17n ? label : super
-      end
+    module NoteElement
     end
 
     #
@@ -476,6 +466,7 @@ module When
           arg, method = $1, $2 if (arg =~ /\A(.+)#([_A-Z0-9]+)\z/i)
           obj = When.Resource(arg, prefix)
           obj = obj.copy(method) if method
+          obj.extend NoteElement
           obj
         when Array
           _to_iri(arg, prefix)

@@ -32,7 +32,19 @@ class When::CalendarNote
     # 日本暦注の要素
     #
     # @private
-    class Note < When::CalendarNote::NoteElement
+    class Note < When::BasicTypes::Object
+
+      include When::CalendarNote::NoteElement
+
+      #
+      # _m17n_form のための要素生成
+      #
+      # @param [Hash] options 下記のとおり
+      # @option options [Symbol] :method :to_m17n なら label を返す、その他は When::Parts::Resource#to_h 参照
+      #
+      def _to_hash_value(options={})
+        options[:method] == :to_m17n ? label : super
+      end
     end
 
     #

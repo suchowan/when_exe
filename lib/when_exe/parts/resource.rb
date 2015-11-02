@@ -731,6 +731,7 @@ module When::Parts
     # @return [Sring]
     #
     def iri(prefix=false)
+      return nil unless @_pool
       unless @iri
         root = @_pool['..']
         path = root.instance_of?(String) ? root : label.to_s

@@ -156,9 +156,9 @@ module When
           @repeat_count   = @repeat_count.to_i
 
           # 太陽の盈縮表の生成
-          #   [先後數, 朓朒数, (立成b, 立成c)]
+          #   [先後數, 朓朒数, (初率b, 別差c)]
           #      ↓
-          #   [区間の始めの冬至からの経過日数, 朓朒数, 立成b, 立成c]
+          #   [区間の始めの冬至からの経過日数, 朓朒数, 初率b, 別差c]
           @s = @s.map {|item| item.dup}
           if @rissei # 立成の計算・比較
             puts "\n  ["+ @denominator.to_s + "]" if @rissei == @rissei.upcase
@@ -218,6 +218,7 @@ module When
               t02 / 2.0
             end
           r = v < 0 ? 12.0/(17*11) : 12.0/(16*11)
+         # 初率b, 別差c
           [v * r, (t12-t01) * r * r]
         end
 

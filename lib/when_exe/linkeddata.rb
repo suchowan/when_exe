@@ -40,6 +40,7 @@ module When
       'latitude'        => "Coordinates/Spatial#latitude-instance_method",
       'altitide'        => "Coordinates/Spatial#latitude-instance_method",
       'event'           => "CalendarNote#event-instance_method",
+      'note'            => "CalendarNote/NoteElement",
     }
 
     XSD  = 'http://www.w3.org/2001/XMLSchema'
@@ -85,8 +86,9 @@ module When
       def schema(iri=nil)
         ts = base_uri.sub(/When\/$/, 'ts#')
         hash =
-          {'@context'=>{'ts' => ts},
-           '@graph'  => Schema.keys.map {|id| {'@id'=>'ts:'+id, 'ts:reference'=>{'@id'=>DocRoot + Schema[id]}}}
+          {'@context'=>{'rdf'=>RDF, 'ts' => ts},
+           '@graph'  => Schema.keys.map {|id| {'@id'=>'ts:'+id, 'rdf:type'=>{'@id'=>'rdf:Property'},
+                                               'ts:reference'=>{'@id'=>DocRoot + Schema[id]}}}
           }
         bless(hash, iri || ts[0..-2])
       end
@@ -315,6 +317,8 @@ module When
         hash[key] = value if /^@/ =~ key.to_s
       end
       hash[RDF + 'type'] = {'@id'=>base + 'ts/' + self.class.to_s.gsub(/::/, '/')}
+      hash[RDFS + 'subPropertyOf'] = {'@id'=>base + 'ts#note'} if kind_of?(When::CalendarNote::NoteElement) ||
+                                                                  kind_of?(When::Parts::Resource) && /\/notes\// =~ iri && !leaf?
       if options[:context]
         options[:prefixes] ||= When::Parts::Resource.namespace_prefixes
         context = hash['@context'] || {}
