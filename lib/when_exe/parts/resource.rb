@@ -872,7 +872,7 @@ module When::Parts
         return false unless leaf.equal?(root._pool[leaf.label])
         leaf = root
       end
-      Resource._pool.value?(leaf)
+      Resource._pool.values.map {|resource| resource.object_id}.include?(leaf.object_id)
     end
 
     # When::BasicTypes::M17n の生成/参照
