@@ -341,7 +341,7 @@ module When::Coordinates
       notes['天一']     ||= begin
         note = Rules['天一'][@remainder]
         dates.range >= 15 ?  note.dup.sub!(/天上始/, '天上') :
-        dates.range >= 11 ?  note : note.dup.sub!(/始/, '')
+        dates.range >= 10 ?  note : note.dup.sub!(/始/, '')
       end
       notes['土公']     ||= Rules['土公'][@remainder]
       notes['五墓']     ||= [4,22,28,31,37].include?(@remainder) ? '五墓' : nil
