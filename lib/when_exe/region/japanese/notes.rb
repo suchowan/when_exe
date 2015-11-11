@@ -88,7 +88,7 @@ class When::CalendarNote
         [Note, 0x0003, "label:[天道=]",      'position:暦序',   'suffix:-'],                 # 14: 支
         [Note, 0x0003, "label:[人道=]",      'position:暦序',   'suffix:-'],                 # 15: 支
         [Note, 0x3FFC, "label:[歳次=]",      'position:暦序',   'suffix:-'],                 # 16: 支
-        [Note, 0xF800, "label:[金神]",       'position:仮名暦', 'suffix:在'],                # 17: 干
+        [Note, 0xFC00, "label:[金神]",       'position:仮名暦', 'suffix:在'],                # 17: 干
         [Note, 0xFFFF, "label:[大小]",       'position:暦序']                                # 18: 朔閏表
       ],
 
@@ -148,10 +148,10 @@ class When::CalendarNote
         [Note, 0x3FFC, "label:[六十卦=]",    'position:時候'],                               # 12: 太陽黄経
         [Note, 0xF800, "label:[節分]",       'position:雑節'],                               # 13: 立春からの日数
         [Note, 0xF800, "label:[初午]",       'position:雑節'],                               # 14: 支 節月 or 暦月
-        [Note, 0xF800, "label:[八十八夜]",   'position:雑節'],                               # 15: 立春からの日数
+        [Note, 0xFC00, "label:[八十八夜]",   'position:雑節'],                               # 15: 立春からの日数
         [Note, 0xF800, "label:[入梅]",       'position:雑節'],                               # 16: 干 太陽黄経
         [Note, 0xF800, "label:[半夏生]",     'position:雑節'],                               # 17: 干 太陽黄経
-        [Note, 0xF800, "label:[二百十日]",   'position:雑節'],                               # 18: 立春からの日数
+        [Note, 0xFC00, "label:[二百十日]",   'position:雑節'],                               # 18: 立春からの日数
         [Note, 0xF800, "label:[二百廿日=ja:%%<二百二十日>]", 'position:雑節'],               # 19: 立春からの日数
 
         [Note, 0x3FFC, "label:[大禍=ja:%%<暦注下段>#%.<大禍日>]",
@@ -268,7 +268,7 @@ class When::CalendarNote
         [Note, 0xC000, "label:[己巳]",       'position:仮名暦'],                             # 90: 干支
         [Note, 0xF800, "label:[庚申待]",     'position:仮名暦'],                             # 91: 干支
         [Note, 0xF800, "label:[犯土]",       'position:仮名暦'],                             # 92: 干支
-        [Note, 0xF800, "label:[十方暮]",     'position:仮名暦'],                             # 93: 干支
+        [Note, 0xFC00, "label:[十方暮]",     'position:仮名暦'],                             # 93: 干支
         [Note, 0xF800, "label:[一粒万倍=ja:%%<一粒万倍日>]",
                                              'position:仮名暦', 'suffix:日'],                # 94: 支 節月
         [Note, 0x3800, "label:[天福=]",      'position:仮名暦'],                             # 95: 支 節月
@@ -277,7 +277,7 @@ class When::CalendarNote
         [Note, 0xB800, "label:[三隣亡]",     'position:仮名暦'],                             # 98: 支 節月
         [Note, 0xF800, "label:[不成就=ja:%%<不成就日>]",
                                              'position:仮名暦', 'suffix:日'],                # 99: 暦月 暦日/晦日
-        [Note, 0x3800, "label:[鬼宿]",       'position:仮名暦'],                             #100: 廿八宿
+        [Note, 0x3C00, "label:[鬼宿]",       'position:仮名暦'],                             #100: 廿八宿
         [Note, 0x3800, "label:[金性=]",      'position:仮名暦'],                             #101: 支 節月 支 節年
         [Note, 0x3FFF, "label:[三寶吉=http://kotobank.jp/word/%%<三宝吉日>]",
                                              'position:上段 上段 上段 上段'],                #102: 干支 節月
