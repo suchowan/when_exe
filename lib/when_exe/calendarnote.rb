@@ -431,7 +431,7 @@ module When
         nobj = note_objects[note]
         case notes[note]
         when nil, false ; {}
-        when Hash       ; {:note=>nobj.label}.merge(notes[note])
+        when Hash       ; {:note=>nobj}.merge(notes[note])
         else
           if nobj.respond_to?(:to_note_hash)
             nobj.to_note_hash(notes[note], dates)

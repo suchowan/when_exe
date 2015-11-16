@@ -232,9 +232,6 @@ module When
       calendars[0] ||= When::Gregorian
       result = dates.map {|date|
         date = When.when?(date)
-        opts = {}
-        opts[:location] = date.location if date.location
-        opts[:clock   ] = date.clock    if date.respond_to?(:clock) && date.clock
         list = calendars.dup
         (0...calendars.size).to_a.reverse.each do |i|
           case list[i]
@@ -257,21 +254,30 @@ module When
 
         if methods.size == 0
           list.map {|calendar|
-             calendar.kind_of?(Class) ?
-             yield(calendar.new(date, opts.dup)) :
-             yield(calendar.^(calendar.rate_of_clock == date.time_standard.rate_of_clock ? date.to_i : date, opts))
+            yield(date_for_calendar(calendar, date, options))
           }
         else
           list.map {|calendar|
-            date_for_calendar = calendar.^(calendar.rate_of_clock == date.time_standard.rate_of_clock ? date.to_i : date, opts)
+            date_for_cal = date_for_calendar(calendar, date, options)
             methods.map {|method|
-              date_for_calendar.send(method[0].to_sym, method[1], &block)
+              date_for_cal.send(method[0].to_sym, method[1], &block)
             }
           }
         end
       }
       result = result[0] while result.kind_of?(Array) && result.size == 1
       return result
+    end
+
+    # 当該 Calendar or CalendarEra の TemporalPosition を生成
+    def date_for_calendar(calendar, date, options)
+      is_same_rate    = calendar.rate_of_clock == date.time_standard.rate_of_clock
+      opts            = {}
+      opts[:location] = date.location if date.location
+      opts[:clock   ] = is_same_rate ? date.clock : options[:clock] if date.respond_to?(:clock)
+      calendar.kind_of?(Class) ?
+        calendar.new(date, opts) :
+        calendar.^(is_same_rate ? date.to_i : date, opts)
     end
 
     # JSONで通信するために Symbol を String に変換する

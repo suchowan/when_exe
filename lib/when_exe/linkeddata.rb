@@ -463,7 +463,7 @@ module When
     #
     def to_uri_linkeddata(*args)
       date, frame = _to_uri(to_s(*args)).split('^^', 2)
-      frame += '_' if frame =~ /\d\z/
+      frame += '_' if /\d\z/ =~ frame
       date = "#{frame}(#{date})" if frame
       When::Parts::Resource.base_uri.sub(/When\/$/, 'tp/') + date
     end

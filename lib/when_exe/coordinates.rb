@@ -121,13 +121,14 @@ module When::Coordinates
         else            ; return nil
         end
 
-        day, shift = day.split(':', 2)
+        day, shift = day =~ /\A([-+\d]+)(.+)/ ? [$2, $1] : day.split(':', 2)
         residue = day.split('&').inject(nil) {|res,d|
           r = _day_of_week(d.strip, dow)
           return nil unless r
           res ? res & r : r
         }
         return residue unless shift
+        shift << '1' unless shift =~ /\d/
         shift  = shift.to_i
         shift -= 1 if shift > 0
         residue >> shift
