@@ -271,13 +271,13 @@ module When
 
     # 当該 Calendar or CalendarEra の TemporalPosition を生成
     def date_for_calendar(calendar, date, options)
-      is_same_rate    = calendar.rate_of_clock == date.time_standard.rate_of_clock
       opts            = {}
       opts[:location] = date.location if date.location
-      opts[:clock   ] = is_same_rate ? date.clock : options[:clock] if date.respond_to?(:clock)
+      opts[:clock   ] = calendar.rate_of_clock == 1.0 ? options[:clock] :
+                                                        calendar.time_basis if date.respond_to?(:clock)
       calendar.kind_of?(Class) ?
         calendar.new(date, opts) :
-        calendar.^(is_same_rate ? date.to_i : date, opts)
+        calendar.^([calendar.rate_of_clock,date.time_standard.rate_of_clock].uniq == [1.0] ? date.to_i : date, opts)
     end
 
     # JSONで通信するために Symbol を String に変換する
