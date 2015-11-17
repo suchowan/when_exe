@@ -1341,8 +1341,9 @@ module When::TM
         num, *calendars = specification.split(/\^{1,2}/)
         jdn   = num.sub!(/[.@]/, '.') ? num.to_f : num.to_i
         case num
-        when/MJD/i ; jdn += JDN_of_MJD
-        when/CEP/i ; jdn += JDN_of_CEP
+        when /MJD/i ; jdn += JDN_of_MJD
+        when /CEP/i ; jdn += JDN_of_CEP
+        when /DTB/i ; jdn  = When.Resource('_t:UniversalTime').from_dynamical_date(jdn)
         end
         frame = calendars.shift || options[:frame]
         return self.new(jdn, options) unless frame

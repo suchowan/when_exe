@@ -528,7 +528,7 @@ module When
     when Array        ; begin options = TM::TemporalPosition._options(options) ; specification.map {|e| when?(e, options)} end
     when /\Atoday((\^|%5E){1,2}(.+))?\z/i ; today($3 ? {:frame=>$3}.update(options) : options)
     when /\Anow((\^|%5E){1,2}(.+))?\z/i   ; now(  $3 ? {:frame=>$3}.update(options) : options)
-    when /(JDN|MJD|SDN|CEP)(\z|\^|%5E)/i  ; TM::JulianDate.parse(specification, options)
+    when /(JDN|MJD|SDN|CEP|DTB)(\z|\^|%5E)/i  ; TM::JulianDate.parse(specification, options)
     when /[\n\r]+/    ; when?(specification.split(/[\n\r]+/), options)
     when String       ; TM::TemporalPosition._instance(EncodingConversion.to_internal_encoding(specification), options)
     when Numeric      ; TM::JulianDate.new(+specification, TM::TemporalPosition._options(options))
