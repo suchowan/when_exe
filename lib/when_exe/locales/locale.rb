@@ -63,6 +63,10 @@ module When
     # @private
     Link = /<li class="interlanguage-link interwiki-(.+?)"><a href="\/\/(.+?)\.wikipedia\.org\/wiki\/(.+?)" title="(.+?) – /
 
+    # NUL for Escape
+    # @private
+    NUL = 0.chr
+
     class << self
 
       # Wikipedia の連続的な参照を抑制するための遅延時間/秒

@@ -565,6 +565,99 @@ module When::V
       def default_until
         @default_until ||= 1000*When::TM::Duration::YEAR
       end
+
+      # ISO8601へ埋め込まれた指定に対応する iterator を生成する
+      #
+      # @param [When::TM::TemporalPosition] base            イベントの始点
+      # @param [When::TM::Duration]         duration        イベントの期間
+      # @param [Hash]                       delayed_options 遅延適用するオブジェクト変換オプション
+      #
+      # @return [When::Parts::Enumerator]
+      #
+      def iterator_for_ISO8601(base, duration, delayed_options)
+        duration.to_s =~ /\AP(\d+)([YM])\z/
+        event_options = {'rrule'=>
+          case $2
+          when 'Y' ; {'FREQ'=>'YEARLY',  'INTERVAL'=>$1.to_i}
+          when 'M' ; {'FREQ'=>'MONTHLY', 'INTERVAL'=>$1.to_i}
+          else     ; duration ? {'FREQ'=>duration} : {'FREQ'=>'YEARLY'}
+          end
+        }
+        residue_options = delayed_options[:residue]
+        if residue_options
+          event_options['rrule'].update(_byyear(residue_options)) if residue_options[0]
+          event_options['rrule'].update(_byday(residue_options )) if residue_options[2]
+          delayed_options.delete(:residue)
+        end
+        if base.precision == When::MONTH && event_options['rrule']['FREQ'] == 'YEARLY'
+          event_options['rrule'].update({'BYMONTH'=>base[When::MONTH]})
+          base = base.floor if event_options['rrule']['BYMONTHDAY']
+        end
+        case base
+        when When::TM::TemporalPosition ; event_options.update({'dtstart'  =>base})
+        else                            ; event_options.update({'dtstart'  =>base.first,
+                                                                'duration' =>base.last-base.first})
+        end
+        event_options['duration']  = delayed_options.delete(:duration) if delayed_options[:duration]
+        behavior_options           = {'1st'=>"don't care"}
+        behavior_options[:delayed] = delayed_options unless delayed_options.empty?
+        return new(event_options).enum_for(event_options['dtstart'], behavior_options)
+      end
+
+      private
+
+      # オブジェクト変換オプションの遅延適用のBYYEAR要素
+      #
+      def _byyear(options)
+        {'BYYEAR'=>_to_ical_hash(When.Residue(options.delete(0)), 'year', 4)}
+      end
+
+      # オブジェクト変換オプションの遅延適用のBYDAY要素
+      #
+      def _byday(options)
+        operation = options.delete(2)
+        return {'BYDAY'=>_to_ical_hash(operation, 'day', 11)} if operation.kind_of?(When::Coordinates::Residue)
+
+        residues = []
+        result   = {}
+        byday    = {}
+
+        # イベント、日付
+        operation.split('&').each do |element|
+          element.strip!
+          case element
+          when /\A(.+?)#(.+)\z/ ; byday.update({$1=>$2})
+          when /\A[-+,\d]+\z/   ; result['BYMONTHDAY'] = element
+          else                  ; residues << element
+          end
+        end
+ 
+        # 剰余類
+        unless residues.empty?
+          residue = residues.join('&')
+          if residue =~ /\A[-+]?\d*(MO|TU|WE|TH|FR|SA|SU)\z/
+            result['BYWEEKDAY'] = residue
+          else
+            resource = When.Residue(residue)
+            if resource
+              byday.update(_to_ical_hash(resource, 'day', 11))
+            else
+              result['BYWEEKDAY'] = residue
+            end
+          end
+        end
+
+        result['BYDAY'] = byday unless byday.empty?
+        return result
+      end
+
+      # 剰余のハッシュ化
+      def _to_ical_hash(residue, unit, offset)
+        operation = ''
+        operation << "#{residue.carry < 0 ? residue.carry : residue.carry+1}*" if residue.shifted
+        operation << "#{(residue.remainder-offset+residue.units[unit]) % residue.divisor}"
+        {residue.divisor=>operation}
+      end
     end
 
     # SUMMARY Property
@@ -1065,6 +1158,7 @@ module When::V
         @options = When::Parts::Enumerator._options(args)
         @exdate  = @options.delete(:exdate)
         @exevent = @options.delete(:exevent)
+        @delayed = @options.delete(:delayed)
         @parent, @rule, @dtstart, @duration, *rest = args
         @dtstart = When.when?(@dtstart)
         @rule    = self.class._decode_rule(@rule, @dtstart) if (@rule.kind_of?(String))

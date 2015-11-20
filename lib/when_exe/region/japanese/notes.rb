@@ -538,8 +538,8 @@ class When::CalendarNote
       patch  = SolarTerms::Patch[result.to_i]
       return result unless patch
       num, den  = parameter.kind_of?(String) ? parameter.split('/', 2) : parameter
-      num  = (num ||   0).to_f
-      den  = (den || 360).to_f
+      num  = (num || @num ||   0).to_f
+      den  = (den || @den || 360).to_f
       diff = (num - patch[0] + 1) % den - 1
       return result if diff == 0
       patched = result + When::P1D * diff

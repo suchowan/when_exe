@@ -170,6 +170,7 @@ module When
   require 'when_exe/tmobjects'
   require 'when_exe/timestandard'
   require 'when_exe/tmposition'
+  require 'when_exe/tmptypes'
   require 'when_exe/tmreference'
   require 'when_exe/calendartypes'
   require 'when_exe/calendarnote'

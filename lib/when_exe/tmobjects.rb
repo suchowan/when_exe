@@ -556,6 +556,19 @@ module When::TM
       When::TM::PeriodDuration.new(duration / SECOND, When::SECOND)
     end
 
+    # オブジェクト変換オプションの遅延適用(ダミー)
+    #
+    # @param [Hash] options 以下の通り
+    # @option options [Hash<Integrt=>When::Coordinates::Residue>] :residue
+    # @option options [When::TM::Clock]                           :clock
+    # @option options [Array <When::TM::Calendar>]                :frame
+    #
+    # @return [When::TM::Duration]
+    #
+    def apply_delayed_options(options)
+      self
+    end
+
     #
     # Duration 用の Enumerator
     #

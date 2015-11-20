@@ -224,6 +224,56 @@ module When::Parts
       end
     end
 
+    # オブジェクト変換オプションの遅延適用
+    #
+    # @param [Hash] options 以下の通り
+    # @option options [Hash<Integrt=>When::Coordinates::Residue>] :residue
+    # @option options [When::TM::Clock]                           :clock
+    # @option options [Array <When::TM::Calendar>]                :frame
+    #
+    # @return [When::Parts::GeometricComplex]
+    #
+    def apply_delayed_options(options)
+      last_node = nil
+      self.class.new(@node.map {|node|
+        point, flag, range = node
+        if range && last_node
+          [last_node + range, flag, range]
+        else
+           last_node = point.apply_delayed_options(options)
+          [last_node, flag]
+        end
+      }, @reverse)
+    end
+
+    # 平行移動(加算)
+    #
+    # @param [When::TM::Duration] duration
+    #
+    # @return [When::Parts::GeometricComplex]
+    #
+    def +(duration)
+      self.class.new(@node.map {|node|
+        new_node     = node.dup
+        new_node[0] += duration
+        new_node
+      }, @reverse)
+    end
+
+    # 平行移動(減算)
+    #
+    # @param [When::TM::Duration] duration
+    #
+    # @return [When::Parts::GeometricComplex]
+    #
+    def +(duration)
+      self.class.new(@node.map {|node|
+        new_node     = node.dup
+        new_node[0] -= duration
+        new_node
+      }, @reverse)
+    end
+
     # オブジェクトの生成
     #
     # @overload initialize(range, reverse=false)
@@ -288,7 +338,7 @@ module When::Parts
         first = [first, true]
         case last
         when Comparable         ; last = [last, false]
-        when When::TM::Duration ; last = [first[0] + last, false]
+        when When::TM::Duration ; last = [first[0] + last, false, last]
         when nil                ; last = first
         else ; raise TypeError, "Irregal GeometricComplex Type for last element: #{last.class}"
         end

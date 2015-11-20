@@ -188,7 +188,7 @@ module When::Parts
     #   [ false - ない ]
     #
     def has_next?
-      return (@count_limit != 0) && (@current != nil)
+      return (@count_limit != 0) && !@current.nil?
     end
 
     #
@@ -238,7 +238,9 @@ module When::Parts
         @count += 1
         _exclude(@current) if @current
       end
-      return value
+      @delayed && value.respond_to?(:apply_delayed_options) ?
+        value.apply_delayed_options(@delayed)               :
+        value
     end
 
     # オブジェクトの生成
@@ -262,6 +264,7 @@ module When::Parts
       @options = self.class._options(args)
       @exdate  = @options.delete(:exdate)
       @exevent = @options.delete(:exevent)
+      @delayed = @options.delete(:delayed)
       @parent, *rest = args
       _range(rest)
       _rewind

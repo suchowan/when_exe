@@ -126,19 +126,21 @@ module When
 
         # 剰余類の指定を置き換える
         def _split_residue(d, abbr)
-          abbr,    = abbr
-          residue = {}
+          abbr,   = abbr
+          options = {}
           count   = 0
           sign, d = d =~ /^-/ ? ['-', d[1..-1]] : ['', d]
           [sign + d.gsub(/[-+*&%@!>=<?.]|(\d)?\{(.+?)\}/) {|s|
             if $2
-              residue[count] = $2
+              operation = $2.strip
+              residue   = When.Residue(operation) unless operation =~ /[#,]|[^:][-+]/
+              options[count] = residue && residue.shifted ? residue : operation
               count == 0 ? ($1 || abbr || 1) : $1
             else
               count += 1
               s
             end
-          }, residue]
+          }, options]
         end
       end
     end

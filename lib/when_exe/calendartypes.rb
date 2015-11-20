@@ -1424,7 +1424,7 @@ module When::CalendarTypes
       if m
         #  指定した月に含まれる日の数を返します。
         m += _new_year_month(+y)
-        _new_month(m+1) - _new_month(m)
+        _new_month(+m+1) - _new_month(+m)
       else
         #  指定した年に含まれる月の数を返します。
         _ids([y]).length

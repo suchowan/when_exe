@@ -239,6 +239,13 @@ module When::Coordinates
     attr_accessor :carry
     protected :carry=
 
+    # 周期分の補正の有無
+    #
+    # @return [Boolean]
+    #
+    attr_accessor :shifted
+    protected :shifted=
+
     # 単位
     #
     # @return [Hash] { String=>Numeric }
@@ -347,7 +354,9 @@ module When::Coordinates
     # @return [When::Coordinates::Residue]
     #
     def >>(other)
-      return self.class.new(@remainder, @divisor, @carry+other, @units)
+      result = self.class.new(@remainder, @divisor, @carry+other, @units)
+      result.shifted = true
+      result
     end
 
     # carryの減算
@@ -357,7 +366,9 @@ module When::Coordinates
     # @return [When::Coordinates::Residue]
     #
     def <<(other)
-      return self.class.new(@remainder, @divisor, @carry-other, @units)
+      result = self.class.new(@remainder, @divisor, @carry-other, @units)
+      result.shifted = true
+      result
     end
 
     # 剰余類の共通集合
@@ -489,6 +500,7 @@ module When::Coordinates
       raise RangeError, "Divisor shoud be Positive Numeric" if (@divisor <= 0)
       carry, @remainder = @remainder.divmod(@divisor)
       @carry += carry
+      @shifted   = @carry != 0
     end
 
     private
