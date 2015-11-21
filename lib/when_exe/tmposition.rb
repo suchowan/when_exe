@@ -397,10 +397,13 @@ module When::TM
 
         else
 
+          return duration.set_repeat(true) unless base
+
           # iCalendar の機能を使用する
+          should_limit = base.precision == When::MONTH && !(delayed_options[:residue] && delayed_options[:residue][0])
           iterator = When::V::Event.iterator_for_ISO8601(base, duration, delayed_options)
           case repeat
-          when nil     ; iterator.succ
+          when nil     ; (result=iterator.succ).precision > base.precision && should_limit && base != result ? nil : result
           when Integer ; (0...repeat).to_a.map {iterator.succ}
           else         ; iterator
           end
@@ -612,7 +615,11 @@ module When::TM
           when self       ; return  element[1] - element[0]
           else            ; return  element[1] - element[0].first
           end
-        when nil          ; return nil
+        when nil
+          case element[0]
+          when Duration   ; return element[0]
+          else            ; nil
+          end
         else
           case element[0]
           when Duration   ; return -element[0]
@@ -811,13 +818,15 @@ module When::TM
     #
     def +(other)
       case other
-      when Integer        ; self + PeriodDuration.new(other, When::DAY)
-      when Numeric        ; self + IntervalLength.new(other, 'day')
-      when PeriodDuration ; _plus(other)
-      when Duration       ; @frame.kind_of?(Calendar) ? @frame.jul_trans(JulianDate.dynamical_time(dynamical_time + other.duration), self._attr) :
-                                                                         JulianDate.dynamical_time(dynamical_time + other.duration,  self._attr)
-      else                ; raise TypeError, "The right operand should be Numeric or Duration"
+      when Integer  ; return self + PeriodDuration.new(other, When::DAY)
+      when Numeric  ; return self + IntervalLength.new(other, 'day')
+      when Duration ; begin other = other.set_repeat(false); return other.enum_for(self+other, :forward) end if other.repeat
+      when Array    ; return other.map {|o| self + o}
+      else          ; raise TypeError, "The right operand should be Numeric or Duration"
       end
+      return _plus(other) if other.kind_of?(PeriodDuration)
+      @frame.kind_of?(Calendar) ? @frame.jul_trans(JulianDate.dynamical_time(dynamical_time + other.duration), self._attr) :
+                                                   JulianDate.dynamical_time(dynamical_time + other.duration,  self._attr)
     rescue RangeError
       (@frame ^ self) + other
     end
@@ -831,16 +840,18 @@ module When::TM
     #
     def -(other)
       case other
-      when TimeValue      ; self.time_standard.rate_of_clock == other.time_standard.rate_of_clock && [@precision, other.precision].min <= When::DAY ?
-                              PeriodDuration.new(self.to_i - other.to_i, When::DAY) :
-                              IntervalLength.new((self.dynamical_time - other.dynamical_time) / Duration::SECOND, 'second')
-      when Integer        ; self - PeriodDuration.new(other, When::DAY)
-      when Numeric        ; self - IntervalLength.new(other, 'day')
-      when PeriodDuration ; _plus(-other)
-      when Duration       ; @frame.kind_of?(Calendar) ? @frame.jul_trans(JulianDate.dynamical_time(dynamical_time - other.duration), self._attr) :
-                                                                         JulianDate.dynamical_time(dynamical_time - other.duration,  self._attr)
-      else                ; raise TypeError, "The right operand should be Numeric, Duration or TemporalPosition"
+      when TimeValue; return self.time_standard.rate_of_clock == other.time_standard.rate_of_clock && [@precision, other.precision].min <= When::DAY ?
+                        PeriodDuration.new(self.to_i - other.to_i, When::DAY) :
+                        IntervalLength.new((self.dynamical_time - other.dynamical_time) / Duration::SECOND, 'second')
+      when Integer  ; return self - PeriodDuration.new(other, When::DAY)
+      when Numeric  ; return self - IntervalLength.new(other, 'day')
+      when Duration ; begin other = other.set_repeat(false); return other.enum_for(self-other, :reverse) end if other.repeat
+      when Array    ; return other.map {|o| self - o}
+      else          ; raise TypeError, "The right operand should be Numeric, Duration or TemporalPosition"
       end
+      return _plus(-other) if other.kind_of?(PeriodDuration)
+      @frame.kind_of?(Calendar) ? @frame.jul_trans(JulianDate.dynamical_time(dynamical_time - other.duration), self._attr) :
+                                                   JulianDate.dynamical_time(dynamical_time - other.duration,  self._attr)
     rescue RangeError
       (@frame ^ self) - other
     end

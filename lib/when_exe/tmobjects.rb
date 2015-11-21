@@ -530,6 +530,13 @@ module When::TM
   #
   class Duration
 
+    # 繰り返し有無
+    #
+    # @return [Boolean]
+    #
+    attr_accessor :repeat
+    protected :repeat=
+
     #
     # When::TM::IntervalLength への変換
     #
@@ -567,6 +574,18 @@ module When::TM
     #
     def apply_delayed_options(options)
       self
+    end
+
+    # 繰り返し設定
+    #
+    # @param [Boolean] repeat 設定
+    #
+    # @return [When::TM::Duration]
+    #
+    def set_repeat(repeat)
+      repeated = dup
+      repeated.repeat = repeat
+      repeated
     end
 
     #

@@ -575,12 +575,12 @@ module When::V
       # @return [When::Parts::Enumerator]
       #
       def iterator_for_ISO8601(base, duration, delayed_options)
-        duration.to_s =~ /\AP(\d+)([YM])\z/
+        duration.to_s =~ /\A-?P(\d+)([YM])\z/
         event_options = {'rrule'=>
           case $2
           when 'Y' ; {'FREQ'=>'YEARLY',  'INTERVAL'=>$1.to_i}
           when 'M' ; {'FREQ'=>'MONTHLY', 'INTERVAL'=>$1.to_i}
-          else     ; duration ? {'FREQ'=>duration} : {'FREQ'=>'YEARLY'}
+          else     ; duration ? {'FREQ'=>duration.set_repeat(false).abs} : {'FREQ'=>'YEARLY'}
           end
         }
         residue_options = delayed_options[:residue]
@@ -599,8 +599,9 @@ module When::V
                                                                 'duration' =>base.last-base.first})
         end
         event_options['duration']  = delayed_options.delete(:duration) if delayed_options[:duration]
-        behavior_options           = {'1st'=>"don't care"}
+        behavior_options           = {'1st'=>delayed_options.delete(:first) || "don't care"}
         behavior_options[:delayed] = delayed_options unless delayed_options.empty?
+        behavior_options[:direction] = :reverse if duration && duration.sign < 0
         return new(event_options).enum_for(event_options['dtstart'], behavior_options)
       end
 

@@ -140,19 +140,6 @@ LIST
       assert_equal('2014-08-21', When.when?('{甲午}.8.{甲子}', :abbr=>2000).to_s)
       assert_equal('平成26(2014).08.21', When.when?('平成{甲午}.8.{甲子}').to_s)
 
-      assert_equal(%w(2015-03-06T06:55+09:00 2015-03-21T07:44+09:00 2015-04-05T11:39+09:00 2015-04-20T18:41+09:00
-                      2015-05-06T04:53+09:00 2015-05-21T17:45+09:00 2015-06-06T08:59+09:00 2015-06-22T01:38+09:00
-                      2015-07-07T19:13+09:00 2015-07-23T12:31+09:00 2015-08-08T05:01+09:00 2015-08-23T19:37+09:00
-                      2015-09-08T07:59+09:00 2015-09-23T17:20+09:00 2015-10-08T23:42+09:00 2015-10-24T02:47+09:00
-                      2015-11-08T02:59+09:00 2015-11-23T00:26+09:00 2015-12-07T19:54+09:00 2015-12-22T13:48+09:00
-                      2016-01-06T07:09+09:00 2016-01-21T00:27+09:00 2016-02-04T18:46+09:00 2016-02-19T14:33+09:00),
-        When.when?('R24/2015-03-01{SolarTerms#term0/15}T00:00+09:00').map {|d| d.to_s})
-
-      assert_equal(['2009-09-22T00:00:00+09:00',
-                    '2015-09-22T00:00:00+09:00',
-                    '2026-09-22T00:00:00+09:00'],
-        When.when?('R3/2000-09-01{TU & SolarTerms#term180-1}T00:00:00+09:00').map {|d| d.to_s})
-
       assert_equal('2014-08-02', When.tm_pos(2014, 8, When.Residue('SA')).to_s)
       assert_equal('2014-08-30', When.tm_pos(2014, 8, When.Residue('SA:-1')).to_s)
       assert_equal('2014-08-21', When.tm_pos(2014, When.Residue('甲子&TH')).to_s)
@@ -163,6 +150,60 @@ LIST
       assert_equal('2014-09-06', When.tm_pos(2014, 8, When.Residue('SA:6')).to_s)
       assert_equal(nil, When.tm_pos(2014, 8, When.Residue('SA:6'), :invalid=>:check))
       assert_raises(ArgumentError) {When.tm_pos(2014, 8, When.Residue('SA:6'), :invalid=>:raise)}
+    end
+
+    def test__residue_and_repeat
+
+      assert_equal('1924-01-01', When.when?('1900{甲子}-01-01').to_s)
+      assert_equal('1924-01-01', When.when?('{甲子}-01-01', :abbr=>1900).to_s)
+      assert_equal('昭和59(1984).01.01', When.when?('昭和{甲子}-01-01').to_s)
+
+      assert_equal('2015-02-01', When.when?('2015-02-{SU}').to_s)
+      assert_equal('2015-02-22', When.when?('2015-02-{4SU}').to_s)
+      assert_equal('2015-09-23T17+09:00', When.when?('2015-09-01{SolarTerms#term180}T00+09:00').to_s)
+      assert_equal('2015-04-05', When.when?('2015-01-01{Christian#easter}').to_s)
+      assert_equal('2015-12-25', When.when?('2015-01-01{Christian#christmas}').to_s)
+      assert_equal('2015-09-22T00:00+09:00', When.when?('2015-09-01{SolarTerms#term180-1&TU}T00:00+09:00').to_s)
+      assert_equal('2015-05-06', When.when?('2015-05-{06&MO,TU,WE}').to_s)
+      assert_equal(nil, When.when?('2016-05-{06&MO,TU,WE}'))
+
+      assert_equal('2015-03-01', When.when?('2015-02-01{5SU}').to_s)
+      assert_equal(nil, When.when?('2015-02-{5SU}'))
+      assert_equal('2015-02-22', When.when?('2015-02-{-SU}').to_s)
+
+      it = When.when?('R/2015-09-01{SolarTerms#term180-1&TU}T00:00+09:00')
+      assert_equal('2015-09-22T00:00+09:00', it.succ.to_s)
+      assert_equal('2026-09-22T00:00+09:00', it.succ.to_s)
+      assert_equal('2032-09-21T00:00+09:00', it.succ.to_s)
+
+      assert_equal(
+         %w(2015-02-02 2015-02-09 2015-02-16 2015-02-23
+            2016-02-01 2016-02-08 2016-02-15 2016-02-22
+            2016-02-29 2017-02-06),
+        When.when?('R10/2015-02-{MO}').map {|d| d.to_s})
+
+      assert_equal(%w(2015-05-15 2017-05-15 2019-05-15),
+        When.when?('R3/2015-05-15/P2Y').map {|d| d.to_s})
+
+      assert_equal(%w(2015-09-22T00:00+09:00 2026-09-22T00:00+09:00 2032-09-21T00:00+09:00),
+        When.when?('R3/2015-09-01{SolarTerms#term180-1&TU}T00:00+09:00').map {|d| d.to_s})
+
+      assert_equal(%w(安政02(1855).02.10 慶応03(1867).02.07),
+        When.when?('R2/弘化{卯}-02-{1卯}').map {|d| d.to_s})
+
+      assert_equal(
+        %w(2016-01-06T07+09:00 2016-01-21T00+09:00 2016-02-04T18+09:00 2016-02-19T14+09:00
+           2016-03-05T12+09:00 2016-03-20T13+09:00 2016-04-04T17+09:00 2016-04-20T00+09:00
+           2016-05-05T10+09:00 2016-05-20T23+09:00 2016-06-05T14+09:00 2016-06-21T07+09:00
+           2016-07-07T01+09:00 2016-07-22T18+09:00 2016-08-07T10+09:00 2016-08-23T01+09:00
+           2016-09-07T13+09:00 2016-09-22T23+09:00 2016-10-08T05+09:00 2016-10-23T08+09:00
+           2016-11-07T08+09:00 2016-11-22T06+09:00 2016-12-07T01+09:00 2016-12-21T19+09:00),
+        When.when?('R24/2016-01-01{SolarTerms#term0/15}T00+09:00').map {|d| d.to_s})
+ 
+      assert_equal(
+        %w(2011-03-05...2011-03-08   2012-02-18...2012-02-21
+           2013-02-09...2013-02-12   2014-03-01...2014-03-04),
+        When.when?('R4P3D/2011-01-01{Christian#easter-50}').map {|d| d.to_s})
     end
 
     def test__prefixed_calendar
