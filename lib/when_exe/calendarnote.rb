@@ -600,6 +600,20 @@ module When
     end
 
     #
+    # イベントの標準的な間隔を返す
+    #
+    # @param [String] parameter 座標の分子と分母("#{ num }/#{ den }" の形式)
+    #
+    # @return [When::TM::IntervalLength]
+    #
+    # @private
+    def event_delta(parameter=nil)
+      return @delta unless parameter
+      num, den = parameter.kind_of?(String) ? parameter.split(/\//, 2) : parameter
+      When::TM::IntervalLength.new([(den || @den).to_f,1].max*0.9, 'day')
+    end
+
+    #
     # イベントを取得する Enumerator
     #
     class Enumerator < When::Parts::Enumerator

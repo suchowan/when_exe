@@ -548,6 +548,9 @@ class When::CalendarNote
       result
     end
 
+    # 二十四節気のための event_delta の別名
+    alias :term_delta :event_delta
+
     # 月の位相 => 日時
     #
     # @param [When::TM::TemporalPosition] date 探す基準とする日時
@@ -587,6 +590,9 @@ class When::CalendarNote
       result.cal_date[-1]    = When::Coordinates::Pair.new(patched.cal_date[-1], -diff)
       result
     end
+
+    # 月の位相のための event_delta の別名
+    alias :phase_delta :event_delta
 
     private
 

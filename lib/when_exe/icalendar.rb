@@ -528,6 +528,15 @@ module When::V
                   'resources', 'rdate']]
     # Classes   = [V::Root, V::Alarm]
 
+    RegisteredNotes = {
+      'term'      => 'SolarTerms',
+      'phase'     => 'LunarPhases',
+      'easter'    => 'Christian',
+      'christmas' => 'Christian'
+    }
+
+    RegisteredNoteMethods = /\A(#{RegisteredNotes.keys.sort.reverse.join('|')})/
+
     class << self
       include When::Parts::Resource::Pool
 
@@ -627,9 +636,10 @@ module When::V
         operation.split('&').each do |element|
           element.strip!
           case element
-          when /\A(.+?)#(.+)\z/ ; byday.update({$1=>$2})
-          when /\A[-+,\d]+\z/   ; result['BYMONTHDAY'] = element
-          else                  ; residues << element
+          when RegisteredNoteMethods ; byday.update({nil=>element})
+          when /\A(.+?)#(.+)\z/      ; byday.update({$1=>$2})
+          when /\A[-+,\d]+\z/        ; result['BYMONTHDAY'] = element
+          else                       ; residues << element
           end
         end
  
@@ -1362,7 +1372,7 @@ module When::V
               position = rule[(by_part == 'BYYEAR') ? 'YEARPOS' : 'DAYPOS'][ref]
               start    = rule[(by_part == 'BYYEAR') ? 'YEARST'  : 'DAYST' ][ref]
               rule[by_part][ref] = ((ref.to_i==0) ? Logic::Enumerator :
-                                                    Logic::Residue).new(by_part, list, position, ref, start)
+                                                    Logic::Residue).new(by_part, list, position, ref, start, dtstart)
             end
           end
         end
@@ -1552,7 +1562,7 @@ module When::V
           end
 
           # @private
-          def initialize(by_part, list, position, ref, start)
+          def initialize(by_part, list, position, ref, start, dtstart)
             @by_part = by_part
             divisor  = When::Coordinates::Pair._en_number(ref)
             @list    = list.split(/,/).map {|w|
@@ -1614,9 +1624,19 @@ module When::V
           end
 
           # @private
-          def initialize(by_part, list, position, ref, start)
+          def initialize(by_part, list, position, ref, start, dtstart)
             @by_part = by_part
-            @ref     = When.Resource(ref, '_n:')
+            @ref =
+              if ref
+                When.Resource(ref, '_n:')
+              else
+                method = list[/\A[^-+\d]+/]
+                if dtstart.frame.note.respond_to?(method)
+                  dtstart.frame.note
+                else
+                  When.Resource(When::V::Event::RegisteredNotes[method], '_n:')
+                end
+              end
             @start   = start
             @list    = list.split(/,/).map {|w|
               raise ArgumentError, "The #{by_part} rule format error" unless w =~ /\A(([-+]?\d+)\*)?(.+?)([-+]\d+)?\z/
