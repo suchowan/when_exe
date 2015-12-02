@@ -147,6 +147,31 @@ module When
     # @private
     IAST_K_keys = transliteration_keys(IAST_K)
 
+    # @private
+    NumAlter = [[/[壱壹]/,'一'], [/[弐貳]/,'二'], [/[弎参參]/,'三'], ['肆','四'], ['伍','五'],
+                ['陸','六'], ['柒','七'], ['捌','八'], ['玖','九'], ['拾','十'],
+                ['廿', '二十'], [/[卅丗]/, '三十'], ['卌', '四十'],
+                ['佰', '百'], ['仟', '千'], ['萬', '万'], ['秭', '𥝱']]
+
+    # @private
+    Numbers  = %w(一 二 三 四 五 六 七 八 九 十 百 千 万 億 兆 京 垓 𥝱
+                  穣 溝 澗 正 載 極 恒河沙 阿僧祇 那由他 不可思議 無量大数)
+
+    # @private
+    NumRExp1 = /#{Numbers[ 9..11].reverse.map {|num| "(?:(.*)#{num})"}.join('?')}?(.*)/
+
+    # public
+    NumRExp3 = /([#{Numbers[0..11].join('')}廿卅丗卌]+)/
+
+    # @private
+    NumRExp4 = /#{Numbers[12..-1].reverse.map {|num| "(?:(.*)#{num})"}.join('?')}?(.*)/
+
+    # @private
+    NumMap   = Hash[*(Numbers[0..8].zip((1..9).to_a)).flatten]
+
+    # @private
+    DigitMap = [1,1,1,0]
+
     #
     # Convert AKT string to katakana scripts
     #
@@ -172,6 +197,27 @@ module When
         }.
         gsub(/([rm])y/, '\1uy'),
         locale)
+    end
+ 
+    #
+    # Convert kanji scripts to numeric
+    #
+    def self.k2a_digits(figures)
+      figures = figures.dup
+      NumAlter.each {|alter| figures.gsub!(alter.first, alter.last)}
+      sum = 0
+      NumRExp4 =~ figures
+      $~.to_a[1..-1].each do |wide_match|
+        if NumRExp1 =~ wide_match
+          $~.to_a[1..-1].each_with_index do |match,digit|
+            sum *= 10
+            sum += (NumMap[match] || DigitMap[digit]) if match
+          end
+        else
+          sum *= 10000
+        end
+      end
+      sum
     end
   end
 end
