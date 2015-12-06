@@ -31,6 +31,11 @@ class MiniTest::TestCase
   end
 end
 
+if self.class.const_defined?(:Encoding)
+  Encoding.default_external = 'UTF-8'
+  Encoding.default_internal = 'UTF-8'
+end
+
 require 'when_exe'
 require 'when_exe/mini_application'
 #include When
@@ -49,6 +54,7 @@ require './test/calendarnote'
 require './test/inspect'
 require './test/linkeddata'
 require './test/google_api'
+require './test/events'
 require './test/region/m17n'
 require './test/region/residue'
 require './test/region/christian'
