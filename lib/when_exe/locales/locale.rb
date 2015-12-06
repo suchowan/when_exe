@@ -138,6 +138,29 @@ module When
         source
       end
 
+      # 暦要素を含む文字列を Hash に分解する
+      #
+      # @param [String] date_time 暦要素を含む文字列
+      # @param [String or Hash] format 分解する書式
+      # @param [String] locale 言語指定
+      #
+      # @return [Hash] 暦要素を分解格納した Hash
+      #
+      def _to_date_time_hash(date_time, format, locale=nil)
+        if locale
+          format    = format.kind_of?(String) ?
+                        translate(format, locale) :
+                        _hash_value(format, locale)
+          unless locale == 'en'
+            regexp, hash = _trans_table(locale)
+            date_time    = date_time.gsub(regexp) {|match| hash[match]}
+          end
+        end
+        ::DateTime._strptime(date_time, format)
+      rescue NameError
+        raise "Please require standard library 'Date' or 'DateTime'"
+      end
+
       # 包摂リストに登録されている文字を包摂する
       #
       # @param [When::Locale] source 文字を包摂しようとする国際化文字列
@@ -247,18 +270,25 @@ module When
         }
       end
 
+      # locale 指定を解析して key の値を取り出す
+      # @private
+      def _hash_key(hash, locale, defaults=['', 'en'])
+        locale = locale.sub(/\..*/, '')
+        return locale if hash[locale]
+        return _hash_key(hash, _alias[locale], defaults) if _alias[locale]
+        language = locale.sub(/[-_].*/, '')
+        return language if hash[language]
+        defaults.each do |default|
+          return default if hash[default]
+        end
+        return nil
+      end
+
       # locale 指定を解析して Hash の値を取り出す
       # @private
       def _hash_value(hash, locale, defaults=['', 'en'])
-        locale = locale.sub(/\..*/, '')
-        return hash[locale] if hash[locale]
-        return _hash_value(hash, _alias[locale], defaults) if _alias[locale]
-        language = locale.sub(/-.*/, '')
-        return hash[language] if hash[language]
-        defaults.each do |default|
-          return hash[default] if hash[default]
-        end
-        return nil
+        key = _hash_key(hash, locale, defaults)
+        key ? hash[key] : nil
       end
 
       # 漢字の包摂パターン
@@ -394,6 +424,21 @@ module When
         object._pool['..']  = path
         object._pool['..'] += '?' + query if query
         object
+      end
+
+      # 月名と週名の翻訳テーブル
+      def _trans_table(locale)
+        return @trans_table[locale] if @trans_table && @trans_table[locale]
+        hash = Hash[*(%w(_m:Calendar::Month::* _m:Calendar::Abbr_Month::*
+                         _co:Common::Week::* _co:Common::Abbr_Day::*).inject([]) {|list, iri|
+          list.concat(When.Resource(iri).map {|resource|
+            label = resource.kind_of?(When::BasicTypes::M17n) ? resource : resource.label
+            [label.translate(locale), label.translate('en')]
+          })
+        }.sort_by {|pair| -(pair.first.length*100+pair.last.length)}).flatten]
+        regexp = /#{hash.keys.sort_by {|key| -key.length}.join('|')}/
+        @trans_table       ||= {}
+        @trans_table[locale] = [regexp, hash]
       end
     end
 

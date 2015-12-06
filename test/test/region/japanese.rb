@@ -241,6 +241,25 @@ module MiniTest
       assert_equal('日本?V=0764::奈良時代::神護景雲02(0768).09.01', (date ^ When.CalendarEra('Japanese?V=0764'))[0].to_s)
       assert_equal('日本::奈良時代::神護景雲02(0768).09.02',        (date ^ When.CalendarEra('Japanese'))[0].to_s)
     end
+
+    def test__japanese_parser
+      assert_equal('1945-08-15', When.when?('1945 Aug 15', :parse=>'%Y %B %d').to_s)
+      assert_equal('2022-01-06T09:18:24+09:00', When.when?('Thu Jan 6  9:18:24 JST', {:abbr=>2015, :parse=>'%A %B %d %H:%M:%S %z'}).to_s)
+      assert_equal('2022-01-06T09:18:24+09:00', When.when?('木 1月 6  9:18:24 JST', {:abbr=>2015, :parse=>['%A %B %d %H:%M:%S %z', 'ja']}).to_s)
+      assert_equal('昭和15(1940).11.20', When.when?('昭和十五年十一月廿日', {:parse=>When::Locale::JapaneseParser}).to_s)
+      assert_equal('昭和59(1984).11.26', When.when?('昭和甲子年11月甲子', {:parse=>When::Locale::JapaneseParser}).to_s)
+      assert_equal('明治01(1868).04=07T12:06:03+09:00', When.when?('明治元年閏4月甲寅12時6分3秒+09:00',
+                                                       {:parse=>When::Locale::JapaneseParser}).to_s)
+    end
+
+    def test__japanese_digits
+      When::Locale::NumRExp3
+      assert_equal([512100060, 1200000000, 230000000, 34000000, 4500000, 560000, 67000, 7800, 890, 90, 0],
+      %w(伍億仟弐佰拾萬陸拾 十二億 二億三千万 三千四百万 四百五十万 五十六万 六万七千 七千八百 八百九十 九十零 零).map {|fig|
+        When::Locale.k2a_digits(fig, true)
+      })
+    end
+
 =begin
     def test_japanese_date
       jc   = When.Resource('_c:Japanese')

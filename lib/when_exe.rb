@@ -24,7 +24,12 @@ autoload :OpenURI,   'open-uri'
 autoload :OpenSSL,   'openssl'
 autoload :FileUtils, 'fileutils'
 autoload :REXML,     'rexml/document'
-autoload :Mutex,     'thread' unless Object.const_defined?(:Mutex)
+if Object.const_defined?(:Mutex)
+  autoload :CSV,       'csv'
+else
+  autoload :FastCSV, 'fastcsv'
+  autoload :Mutex,   'thread'
+end
 
 #
 # A multicultural and multilingualized calendar library based on ISO 8601, ISO 19108 and RFC 5545
@@ -179,6 +184,7 @@ module When
   require 'when_exe/inspect'
   require 'when_exe/version'
   require 'when_exe/linkeddata'
+  require 'when_exe/events'
 
   #
   # Module Constants
@@ -273,6 +279,20 @@ module When
     autoload :IAST,                    'when_exe/locales/iast'
     autoload :IASTR,                   'when_exe/locales/iast'
     autoload :AKT,                     'when_exe/locales/akt'
+    autoload :NumRExp3,                'when_exe/locales/akt'
+
+    sb = (When::Parts::Resource._instance('_co:Common::干支::*') +
+          When::Parts::Resource._instance('_co:Common::干::*')   +
+          When::Parts::Resource._instance('_co:Common::支::*')).map {|r| r.label.to_s}.join('|')
+    DigitParser    = [[:NumRExp3]]
+    TimeParser     = [[/閏(\d+)時/, 'T\1='], [/(\d+)時/, 'T\1:'], [/(\d+)分/, '\1:'], [/(\d+)秒/, '\1']]
+    DateParser     = [[/(#{sb})/, '{1\1}', true], [/([^\d])\{/, '\11{', true],
+                      [/元年/, '1-'], [/(\d+|\})年/, '\1-'], [/閏(\d+)月/, '\1='], [/(\d+)月/, '\1-'],
+                      [/(\d+)日/, '\1']]
+    EasternParser  = DigitParser + DateParser + TimeParser
+    JapaneseParser = [[/\A(\d+)/, '日本\1']] + EasternParser
+    KoreanParser   = [[/\A(\d+)/, '朝鮮\1']] + EasternParser
+    ChineseParser  = [[/\A(\d+)/, '中国\1']] + EasternParser
   end
 
   module CalendarTypes
@@ -561,6 +581,40 @@ module When
 
   alias :tm_pos :TemporalPosition
   module_function :tm_pos
+
+  # 書式文字列に従った When::TM::TemporalPosition の生成
+  #
+  # @param [String] date_time 日時を表す文字列
+  # @param [String] format    その書式
+  # @param [Hash] options     暦法や時法などの指定
+  # @option options [String]       :locale   言語指定
+  # @option options [Object]       :その他   When::TM::TemporalPosition._instance に渡す
+  # @see When::TM::TemporalPosition._instance
+  #
+  # @return [When::TM::TemporalPosition]
+  # @raise [ArgumentError]
+  #   options[ :invalid ] が :raise で、日時が存在しない場合
+  #
+  # see {strptime}[link:http://docs.ruby-lang.org/ja/search/query:strptime/]
+  #
+  def strptime(date_time, format, options={})
+    h = When::Locale._to_date_time_hash(date_time, format, options[:locale])
+    abbr_y, abbr_m, abbr_d, =
+      options[:abbr].kind_of?(When::TimeValue) ?
+        ((options[:frame]||When::Gregorian) ^ options[:abbr]).cal_date : options[:abbr]
+    args =  [h[:year] || abbr_y || ::Date.today.year]
+    args << (h[:mon]  || abbr_m || 1) if h[:hour] ||  h[:mon]
+    args << (h[:mday] || abbr_d || 1) if h[:hour] || (h[:mon] && h[:mday])
+    args <<  h[:hour] if h[:hour]
+    args <<  h[:min]  if h[:hour] && h[:min]
+    args <<  h[:sec]  if h[:hour] && h[:min] && h[:sec]
+    args << options.dup
+    args[-1].delete(:locale)
+    args[-1].delete(:abbr)
+    args[-1].update({:parse=>{:residue=>{2=>When.Residue((h[:wday]-1)%7)}}}) if h[:wday]
+    args[-1].update({:clock=>When::TM::Clock.to_hms(h[:offset])})            if h[:offset]
+    TM::TemporalPosition._temporal_position(*args)
+  end
 
   # 指定日時に対応する When::TM::TemporalPosition の生成
   # (When::TM::DateAndTime of specified Time)

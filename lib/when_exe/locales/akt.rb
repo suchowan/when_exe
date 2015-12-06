@@ -148,26 +148,30 @@ module When
     IAST_K_keys = transliteration_keys(IAST_K)
 
     # @private
-    NumAlter = [[/[壱壹]/,'一'], [/[弐貳]/,'二'], [/[弎参參]/,'三'], ['肆','四'], ['伍','五'],
-                ['陸','六'], ['柒','七'], ['捌','八'], ['玖','九'], ['拾','十'],
-                ['廿', '二十'], [/[卅丗]/, '三十'], ['卌', '四十'],
-                ['佰', '百'], ['仟', '千'], ['萬', '万'], ['秭', '𥝱']]
+    NumAlter1 = [['〇','零'], [/[壱壹]/,'一'], [/[弐貳]/,'二'], [/[弎参參]/,'三'], ['肆','四'],
+                 ['伍','五'], ['陸','六'], ['柒','七'], ['捌','八'], ['玖','九'], ['拾','十'],
+                 ['廿', '二十'], [/[卅丗]/, '三十'], ['卌', '四十'],
+                 ['佰', '百'], ['仟', '千'], ['萬', '万'], ['秭', '𥝱']]
 
     # @private
-    Numbers  = %w(一 二 三 四 五 六 七 八 九 十 百 千 万 億 兆 京 垓 𥝱
+    NumAlter2 = [['零〇','０'], ['一壱壹','１'], ['二弐貳','２'], ['三弎参參','３'], ['四肆','４'],
+                 ['五伍','５'], ['六陸','６'], ['七柒','７'], ['八捌','８'], ['九玖','９']]
+
+    # @private
+    Numbers  = %w(零 一 二 三 四 五 六 七 八 九 十 百 千 万 億 兆 京 垓 𥝱
                   穣 溝 澗 正 載 極 恒河沙 阿僧祇 那由他 不可思議 無量大数)
 
     # @private
-    NumRExp1 = /#{Numbers[ 9..11].reverse.map {|num| "(?:(.*)#{num})"}.join('?')}?(.*)/
+    NumRExp1 = /#{Numbers[10..12].reverse.map {|num| "(?:(.*)#{num})"}.join('?')}?(.*)/
 
     # public
-    NumRExp3 = /([#{Numbers[0..11].join('')}廿卅丗卌]+)/
+    NumRExp3 = /([#{Numbers[0..12].join('')}廿卅丗卌]+)/
 
     # @private
-    NumRExp4 = /#{Numbers[12..-1].reverse.map {|num| "(?:(.*)#{num})"}.join('?')}?(.*)/
+    NumRExp4 = /#{Numbers[13..-1].reverse.map {|num| "(?:(.*)#{num})"}.join('?')}?(.*)/
 
     # @private
-    NumMap   = Hash[*(Numbers[0..8].zip((1..9).to_a)).flatten]
+    NumMap   = Hash[*(Numbers[0..9].zip((0..9).to_a)).flatten]
 
     # @private
     DigitMap = [1,1,1,0]
@@ -202,9 +206,11 @@ module When
     #
     # Convert kanji scripts to numeric
     #
-    def self.k2a_digits(figures)
-      figures = figures.dup
-      NumAlter.each {|alter| figures.gsub!(alter.first, alter.last)}
+    def self.k2a_digits(figures, force_alter=false)
+      if force_alter
+        figures = figures.dup
+        NumAlter1.each {|alter| figures.gsub!(*alter)}
+      end
       sum = 0
       NumRExp4 =~ figures
       $~.to_a[1..-1].each do |wide_match|
@@ -218,6 +224,17 @@ module When
         end
       end
       sum
+    end
+
+    #
+    # Convert zenkaku figures to numeric
+    #
+    def self.z2h_digits(figures, force_alter=false)
+      if force_alter
+        figures = figures.dup
+        NumAlter2.each {|alter| figures.tr!(*alter)}
+      end
+      figures.tr('０１２３４５６７８９', '0123456789').to_i
     end
   end
 end

@@ -537,6 +537,8 @@ module When::V
 
     RegisteredNoteMethods = /\A(#{RegisteredNotes.keys.sort.reverse.join('|')})/
 
+    DayOfWeek =  %w(SU MO TU WE TH FR SA)
+
     class << self
       include When::Parts::Resource::Pool
 

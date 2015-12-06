@@ -243,6 +243,14 @@ module When::Parts
         value
     end
 
+    # 終端要素は含む
+    #
+    # @return [Boolean]
+    #
+    def exclude_end
+      false
+    end
+
     # オブジェクトの生成
     #
     # @overload initialize(parent, range, count_limit=nil)

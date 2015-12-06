@@ -50,6 +50,7 @@ module When
           if options[:abbr].kind_of?(When::TimeValue)
             options[:abbr] = ((options[:frame]||When::Gregorian) ^ options[:abbr]).cal_date
           end
+          date_time = _parse(date_time, options.delete(:parse), options[:abbr]||[]) if options[:parse]
           date_time = date_time.gsub(/[_\s]+([\d])/, '\1')
           begin
             return _to_array_basic(date_time, options)
@@ -132,15 +133,44 @@ module When
           sign, d = d =~ /^-/ ? ['-', d[1..-1]] : ['', d]
           [sign + d.gsub(/[-+*&%@!>=<?.]|(\d)?\{(.+?)\}/) {|s|
             if $2
+              digit     = $1
               operation = $2.strip
               residue   = When.Residue(operation) unless operation =~ /[#,]|[^:][-+]/
               options[count] = residue && residue.shifted ? residue : operation
-              count == 0 ? ($1 || abbr || 1) : $1
+              count == 0 ? (digit || abbr || 1) : digit
             else
               count += 1
               s
             end
           }, options]
+        end
+
+        # 日付文字列を事前に変換する
+        def _parse(date_time, parse, abbr)
+          format, locale = parse
+          case format
+          when String, Hash
+            h = When::Locale._to_date_time_hash(date_time, format, locale)
+            date_time  = (h[:wday] ? "%4d-%02d-01{%d&%s}" : "%4d-%02d-%02d") % [
+              h[:year] || abbr[0] ||    ::Date.today.year,
+              h[:mon]  || abbr[1] ||    1,
+              h[:mday] || abbr[2] ||    1,
+              When::V::Event::DayOfWeek[h[:wday]||0]]
+            date_time << "T%02d:%02d:%02d" % [
+              h[:hour] || abbr[3] ||    0,
+              h[:min]  || abbr[4] ||    0,
+              h[:sec]  || abbr[5] ||    0] if h[:hour]
+            date_time << When::TM::Clock.to_hms(h[:offset]) if h[:offset]
+          when Array
+            parse.each do |item|
+              item[2] ? date_time.gsub!(item[0], item[1]) :
+              item[1] ? date_time.sub!( item[0], item[1]) :
+                        date_time.gsub!(When::Locale::NumRExp3) {|digit| When::Locale.k2a_digits(digit, true)}
+           end
+          end
+          date_time
+        rescue NameError
+          raise "Please require standard library 'Date' or 'DateTime'"
         end
       end
     end
@@ -356,12 +386,12 @@ module When
           else
             tt = [0]
           end
-          while time =~ /\A(\d{2}(?:\.\d+)?|-)([:*=])(.+)/
+          while time =~ /\A(\d{1,2}(?:\.\d+)?|-)([:*=])(.+)/
             time = $3
             tt << Coordinates::Pair._en_pair($1=='-' ? abbr.shift : $1, $2)
           end
           case time
-          when /\A(\d{2}(\.\d+)?)\z/
+          when /\A(\d{1,2}(\.\d+)?)\z/
             tt << Coordinates::Pair._en_number($1, nil)
           when ''
           else

@@ -525,6 +525,9 @@ module When::Parts
             when '<?XML '
               options['.'] = _xml(REXML::Document.new(_replace_tags(resource, replace)).root)
               options['.'][0].new(options)
+            when '# WHEN'
+              klass, rows = _csv(resource)
+              klass.new(path, rows)
             else
               raise NoMethodError, 'JSON not supported' unless Object.const_defined?(:JSON)
               _internal(_json([JSON.parse(resource)]), replace, options)
@@ -682,6 +685,13 @@ module When::Parts
         else
           json
         end
+      end
+
+      # .csv フォーマットの読み込み
+      def _csv(csv)
+        rows  = CSV.parse(csv)
+        klass = rows.shift.first[2..-1].strip.split('::').inject(Object) {|ns, sym| ns.const_get(sym)}
+        [klass, rows]
       end
     end
 

@@ -328,6 +328,14 @@ module When::TM
         # add frame to options
         options = options.merge({:frame=>When.Resource(frame, '_c:')}) if frame
 
+        return _instance_element(iso8601form, options, delayed_options) unless iso8601form =~ /\A(.+?)(\.{2,3})(.+)\z/
+        first, separater, last = $1, $2, $3
+        When::Events::Range.new(_instance_element(first, options.dup, delayed_options.dup),
+                                _instance_element(last,  options.dup, delayed_options.dup), separater == '...')
+      end
+
+      def _instance_element(iso8601form, options, delayed_options)
+
         # indeterminateValue
         if (iso8601form.sub!(/\/After\z|\ABefore\/|\ANow\z|\AUnknown\z|\A[-+]Infinity\z/i, ''))
           options[:indeterminated_position] = When::TimeValue::S[$&.sub('/','')]
@@ -409,6 +417,7 @@ module When::TM
           end
         end
       end
+      private :_instance_element
 
       # When::TM::TemporalPosition の生成
       #
@@ -448,6 +457,10 @@ module When::TM
           else         ; nil
           end
         }
+        parse = options.delete(:parse)
+        if parse && parse[:residue] && parse[:residue][2]
+          res << parse[:residue][2]
+        end
         if args.length > 0
           options[:clock] ||= Clock.local_time
           options[:clock]   = When.Clock(options[:clock])
@@ -488,7 +501,7 @@ module When::TM
         main  = {}
         clock = Clock.get_clock_option(query)
         main[:clock] = clock if clock
-        [:indeterminated_position, :frame, :events, :precision,
+        [:indeterminated_position, :frame, :events, :precision, :parse,
          :era_name, :era, :abbr, :extra_year_digits, :ordinal_date_digits, :wkst, :time_standard, :location].each do |key|
           main[key] = query.delete(key) if query.key?(key)
         end

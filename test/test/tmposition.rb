@@ -61,6 +61,14 @@ LIST
       assert_raises(ArgumentError) { When.TemporalPosition(2011,2,29, {:invalid=>:raise}) }
     end
 
+    def test__strptime
+      assert_equal('1950-08', When.strptime('1950 Aug', '%Y %B').to_s)
+      assert_equal('1950-08-31', When.strptime('1950 Aug 31', '%Y %B %d').to_s)
+      assert_equal('2015-01-06T09:18:24+09:00', When.strptime('Tue Jan 6  9:18:24 +09:00 2015', "%A %B %d %H:%M:%S %z %Y").to_s)
+      assert_equal('2015-01-08T09:18:24+09:00', When.strptime("木 1月 6  9:18:24 JST", "%A %B %d %H:%M:%S %z", {:locale=>'ja'}).to_s)
+      assert_raises(ArgumentError) {When.strptime("Thu Jan 6  9:18:24 +09:00 2015", "%A %B %d %H:%M:%S %z %Y", {:invalid=>:raise})}
+    end
+
     def test__to_date
       if ::Object.const_defined?(:Date) && Date.respond_to?(:civil)
         assert(/\ATue Jun  7 00:00:00 (\+00:00|Z) 2011\z/ =~  When.when?("2011-06-07").to_date.strftime('%+'))

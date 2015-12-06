@@ -1271,6 +1271,38 @@ module When::TM
       _typical_epoch.time_standard.rate_of_clock
     end
 
+    # 暦年代の始め
+    #
+    # @return [When::TM::TemporalPosition]
+    #
+    def first
+      @epoch.first
+    end
+
+    # 暦年代の終わり
+    #
+    # @return [When::TM::TemporalPosition]
+    #
+    def last
+      @epoch.last
+    end
+
+    # 暦年代の終わりは含まない
+    #
+    # @return [Boolean]
+    #
+    def exclude_end
+      true
+    end
+
+    # 暦年代に含まれるか否か?
+    #
+    # @return [Boolean]
+    #
+    def include?(date)
+      first <= date && last > date
+    end
+
     # 当該の暦年代の日付に変換する
     #
     # @param [When::TM::TemporalPosition] date
