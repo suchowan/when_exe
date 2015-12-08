@@ -1,0 +1,2 @@
+shogun-dataset.csv   徳川将軍一覧
+history-dataset.csv  中西版歴史データ大型版
