@@ -1,3 +1,3 @@
-shogun-dataset.csv        徳川将軍一覧
+https://raw.githubusercontent.com/suchowan/when_exe/master/test/examples/shogun-dataset.csv 徳川将軍一覧
 primeminister-dataset.csv 日本国首相一覧
 history-dataset.csv       中西版歴史データ大型版

@@ -1,0 +1,15 @@
+# When::Events::DataSets
+rdfs:,             http://www.w3.org/2000/01/rdf-schema#
+dc:,               http://purl.org/dc/elements/1.1/
+dct:,              http://purl.org/dc/terms/
+ts:,               http://hosi.org/ts#
+wikipedia:,        https://ja.wikipedia.org/wiki/, Wikipedia
+wikipedia:@ja,     https://ja.wikipedia.org/wiki/, ウィキペディア
+{rdfs:label},      List of Tokugawa Shoguns
+{rdfs:label}@ja,   徳川将軍一覧
+{ts:reference},    https://ja.wikipedia.org/wiki/%E5%BE%B3%E5%B7%9D%E5%B0%86%E8%BB%8D%E4%B8%80%E8%A6%A7,"/<th>(\d+)<\/th><td.*?>.+?href=\""\/wiki\/(.+?)\"".*?([^>]+?)<\/a>.*?<\/td><td.*?>.+?<\/td><td.*?>.+?<\/td><td.*?>.+?<\/td><td.*?>.*?年.*?((?:\d+?)年).*?((?:閏?\d+?)月).*?((?:\d+?)日).*?年.*?((?:\d+?)年).*?((?:閏?\d+?)月).*?((?:\d+?)日).*?<\/td>/"
+{dct:valid},       [4][5][6]..[7][8][9]^^Japanese, .when?
+{dct:abstract},    [3]
+{dc:source},       wikipedia:[2]
+{ts:start},        {dct:valid},    <>#first.to_i
+{ts:until},        {dct:valid},    <>#last.to_i
