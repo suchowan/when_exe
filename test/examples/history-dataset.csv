@@ -4,12 +4,11 @@ dc:,               http://purl.org/dc/elements/1.1/
 dct:,              http://purl.org/dc/terms/
 ts:,               http://hosi.org/ts#
 {rdfs:label},      Dr. Midwest's big database of history
-{rdfs:label}@ja,   中西版歴史データベース大型版
-#{ts:reference},   test-events.csv, csv with header
-{ts:reference}@ja, test-events.csv, csv with header(100)
+{rdfs:label}@ja,   中西版「歴史データベース」
+#{ts:reference},   history-events.csv, csv with header
+{ts:reference}@ja, history-events.csv, csv with header(100)
 {dct:valid},       [valid],        .when?
 {dct:abstract},    [abstarct]
-{dc:source},       [contributor]
 {dc:contributor},  [contributor],  ==
 {ts:start},        {dct:valid},    <>#to_i
 {ts:existIn},      {dct:abstract}

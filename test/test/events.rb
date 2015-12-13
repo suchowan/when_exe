@@ -10,7 +10,7 @@ module MiniTest::CalendarTypes
 
   class DataSet < MiniTest::TestCase
     def test__dataset
-      datasets = When.Resource('examples/test-dataset.csv')
+      datasets = When.Resource('examples/history-dataset.csv')
       dataset = datasets.dataset('en')
       assert_equal([5],       dataset.index['ts:whatDay'][[false, 1, 2]])
       assert_equal([5, 1],    dataset.edge_included_i('ts:start', When.when?('-Infinity...1256-11-23^^Japanese')))

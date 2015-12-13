@@ -287,7 +287,7 @@ module When
     DigitParser    = [[:NumRExp3]]
     TimeParser     = [[/閏(\d+)時/, 'T\1='], [/(\d+)時/, 'T\1:'], [/(\d+)分/, '\1:'], [/(\d+)秒/, '\1']]
     DateParser     = [[/(#{sb})/, '{1\1}', true], [/([^\d])\{/, '\11{', true],
-                      [/元年/, '1-'], [/(\d+|\})年/, '\1-'], [/閏(\d+)月/, '\1='], [/(\d+)月/, '\1-'],
+                      [/元年/, '1-'], [/(\d+|\})[年|載|歳]/, '\1-'], [/閏(\d+)月/, '\1='], [/(\d+)月/, '\1-'],
                       [/(\d+)日/, '\1']]
     EasternParser  = DigitParser + DateParser + TimeParser
     JapaneseParser = [[/\A(\d+)/, '日本\1']] + EasternParser

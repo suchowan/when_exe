@@ -248,6 +248,7 @@ module MiniTest
       assert_equal('2022-01-06T09:18:24+09:00', When.when?('木 1月 6  9:18:24 JST', {:abbr=>2015, :parse=>['%A %B %d %H:%M:%S %z', 'ja']}).to_s)
       assert_equal('昭和15(1940).11.20', When.when?('昭和十五年十一月廿日', {:parse=>When::Locale::JapaneseParser}).to_s)
       assert_equal('昭和59(1984).11.26', When.when?('昭和甲子年11月甲子', {:parse=>When::Locale::JapaneseParser}).to_s)
+      assert_equal('昭和59(1984).11.26', When.when?('昭和甲子歳11月甲子', {:parse=>When::Locale::JapaneseParser}).to_s)
       assert_equal('明治01(1868).04=07T12:06:03+09:00', When.when?('明治元年閏4月甲寅12時6分3秒+09:00',
                                                        {:parse=>When::Locale::JapaneseParser}).to_s)
     end
