@@ -1,15 +1,15 @@
 # When::Events::DataSets
 rdfs:,             http://www.w3.org/2000/01/rdf-schema#
 dc:,               http://purl.org/dc/elements/1.1/
-dct:,              http://purl.org/dc/terms/
+dcq:,              http://purl.org/dc/terms/
 ts:,               http://hosi.org/ts#
 {rdfs:label},      Dr. Midwest's big database of history
 {rdfs:label}@ja,   中西版「歴史データベース」
 #{ts:reference},   history-events.csv, csv with header
 {ts:reference}@ja, history-events.csv, csv with header(100)
-{dct:valid},       [valid],        .when?
-{dct:abstract},    [abstarct]
+{dcq:valid},       [valid],        .when?
+{dcq:abstract},    [abstarct]
 {dc:contributor},  [contributor],  ==
-{ts:start},        {dct:valid},    <>#to_i
-{ts:existIn},      {dct:abstract}
-{ts:whatDay},      {dct:valid}
+{ts:start},        {dcq:valid},    <>#to_i
+{dcq:hasPart},     {dcq:abstract}
+{ts:whatDay},      {dcq:valid}
