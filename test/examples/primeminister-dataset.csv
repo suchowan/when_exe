@@ -1,4 +1,5 @@
 # When::Events::DataSets
+xsd:,              http://www.w3.org/2001/XMLSchema
 rdfs:,             http://www.w3.org/2000/01/rdf-schema#
 dc:,               http://purl.org/dc/elements/1.1/
 dcq:,              http://purl.org/dc/terms/
@@ -10,5 +11,5 @@ wikipedia:@*,      https://*.wikipedia.org/wiki/, Wikipedia
 {dcq:valid},       <dcq:valid>
 {dcq:abstract},    <rdfs:label>
 {dc:source},       <ts:reference>
-{ts:start},        {dcq:valid},    <>#first.to_i
-{ts:until},        {dcq:valid},    <>#last.to_i
+{ts:start},        {dcq:valid}, xsd:integer
+{ts:until},        {dcq:valid}, xsd:integer

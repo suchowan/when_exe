@@ -1,4 +1,5 @@
 # When::Events::DataSets
+xsd:,              http://www.w3.org/2001/XMLSchema
 rdfs:,             http://www.w3.org/2000/01/rdf-schema#
 dc:,               http://purl.org/dc/elements/1.1/
 dcq:,              http://purl.org/dc/terms/
@@ -7,9 +8,9 @@ ts:,               http://hosi.org/ts#
 {rdfs:label}@ja,   中西版「歴史データベース」
 #{ts:reference},   history-events.csv, csv with header
 {ts:reference}@ja, history-events.csv, csv with header(100)
-{dcq:valid},       [valid],        .when?
+{dcq:valid},       [valid]
 {dcq:abstract},    [abstarct]
-{dc:contributor},  [contributor],  ==
-{ts:start},        {dcq:valid},    <>#to_i
+{dc:contributor},  [contributor]
+{ts:start},        {dcq:valid},    xsd:integer
 {dcq:hasPart},     {dcq:abstract}
 {ts:whatDay},      {dcq:valid}
