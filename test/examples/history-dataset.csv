@@ -1,13 +1,16 @@
 # When::Events::DataSets
-xsd:,              http://www.w3.org/2001/XMLSchema
+xsd:,              http://www.w3.org/2001/XMLSchema#
+rdf:,              http://www.w3.org/1999/02/22-rdf-syntax-ns#
 rdfs:,             http://www.w3.org/2000/01/rdf-schema#
 dc:,               http://purl.org/dc/elements/1.1/
 dcq:,              http://purl.org/dc/terms/
 ts:,               http://hosi.org/ts#
+ex:,               http://example.com/
 {rdfs:label},      Dr. Midwest's big database of history
 {rdfs:label}@ja,   中西版「歴史データベース」
 #{ts:reference},   history-events.csv, csv with header
 {ts:reference}@ja, history-events.csv, csv with header(100)
+{rdf:subject},     ex:{ts:id},     dcq:URI
 {dcq:valid},       [valid]
 {dcq:abstract},    [abstarct]
 {dc:contributor},  [contributor]
