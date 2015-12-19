@@ -1,28 +1,42 @@
 # When::Events::DataSets
-xsd:,   http://www.w3.org/2001/XMLSchema
-rdfs:,  http://www.w3.org/2000/01/rdf-schema#
-dc:,    http://purl.org/dc/elements/1.1/
-dcq:,   http://purl.org/dc/terms/
-ts:,    http://hosi.org/ts#
-ndl:,   http://dl.ndl.go.jp/info:ndljp/pid/
-ndl_01:,http://dl.ndl.go.jp/info:ndljp/pid/2535420/,假名暦集覽. 第2冊
-ndl_02:,http://dl.ndl.go.jp/info:ndljp/pid/2535422/,假名暦集覽. 第4冊
-ndl_03:,http://dl.ndl.go.jp/info:ndljp/pid/2535427/,假名暦集覽. 第8冊
-ndl_04:,http://dl.ndl.go.jp/info:ndljp/pid/2535429/,假名暦集覽. 第10冊
-ndl_05:,http://dl.ndl.go.jp/info:ndljp/pid/2541224/,[伊勢度会暦]. 寛文6
-ndl_06:,http://dl.ndl.go.jp/info:ndljp/pid/2546782/,[古暦帖]. [1]
-ndl_07:,http://dl.ndl.go.jp/info:ndljp/pid/2546783/,[古暦帖]. [2]
-ndl_08:,http://dl.ndl.go.jp/info:ndljp/pid/2546784/,[古暦帖]. [3]
-ndl_09:,http://dl.ndl.go.jp/info:ndljp/pid/2546785/,[古暦帖]. [4]
-ndl_10:,http://dl.ndl.go.jp/info:ndljp/pid/2546786/,[古暦帖]. [5]
-ndl_11:,http://dl.ndl.go.jp/info:ndljp/pid/2546787/,[古暦帖]. [6]
-ndl_12:,http://dl.ndl.go.jp/info:ndljp/pid/2546827/,[伊勢暦]. [1]
+xsd:,        http://www.w3.org/2001/XMLSchema
+rdfs:,       http://www.w3.org/2000/01/rdf-schema#
+dc:,         http://purl.org/dc/elements/1.1/
+dcq:,        http://purl.org/dc/terms/
+ts:,         http://hosi.org/ts#
+github:,     https://raw.githubusercontent.com/suchowan/when_exe/master/test/examples/
+ndl:,        http://dl.ndl.go.jp/info:ndljp/pid/
+ndl_2535420:,http://dl.ndl.go.jp/info:ndljp/pid/2535420/,假名暦集覽. 第2冊
+ndl_2535422:,http://dl.ndl.go.jp/info:ndljp/pid/2535422/,假名暦集覽. 第4冊
+ndl_2535427:,http://dl.ndl.go.jp/info:ndljp/pid/2535427/,假名暦集覽. 第8冊
+ndl_2535429:,http://dl.ndl.go.jp/info:ndljp/pid/2535429/,假名暦集覽. 第10冊
+ndl_2541224:,http://dl.ndl.go.jp/info:ndljp/pid/2541224/,[伊勢度会暦]. 寛文6
+ndl_2546782:,http://dl.ndl.go.jp/info:ndljp/pid/2546782/,[古暦帖]. [1]
+ndl_2546783:,http://dl.ndl.go.jp/info:ndljp/pid/2546783/,[古暦帖]. [2]
+ndl_2546784:,http://dl.ndl.go.jp/info:ndljp/pid/2546784/,[古暦帖]. [3]
+ndl_2546785:,http://dl.ndl.go.jp/info:ndljp/pid/2546785/,[古暦帖]. [4]
+ndl_2546786:,http://dl.ndl.go.jp/info:ndljp/pid/2546786/,[古暦帖]. [5]
+ndl_2546787:,http://dl.ndl.go.jp/info:ndljp/pid/2546787/,[古暦帖]. [6]
+ndl_2546827:,http://dl.ndl.go.jp/info:ndljp/pid/2546827/,[伊勢暦]. [1]
+ndl_2591248:,http://dl.ndl.go.jp/info:ndljp/pid/2591248/,長徳四年下
+ndl_2591250:,http://dl.ndl.go.jp/info:ndljp/pid/2591250/,長保二年上
+ndl_2591251:,http://dl.ndl.go.jp/info:ndljp/pid/2591251/,寛弘元年上
+ndl_2591252:,http://dl.ndl.go.jp/info:ndljp/pid/2591252/,寛弘二年上
+ndl_2591253:,http://dl.ndl.go.jp/info:ndljp/pid/2591253/,寛弘四年下
+ndl_2591254:,http://dl.ndl.go.jp/info:ndljp/pid/2591254/,寛弘五年下
+ndl_2591255:,http://dl.ndl.go.jp/info:ndljp/pid/2591255/,寛弘六年下
+ndl_2591256:,http://dl.ndl.go.jp/info:ndljp/pid/2591256/,寛弘七年上
+ndl_2591257:,http://dl.ndl.go.jp/info:ndljp/pid/2591257/,寛弘八年上
+ndl_2591258:,http://dl.ndl.go.jp/info:ndljp/pid/2591258/,長和二年上
+ndl_2591259:,http://dl.ndl.go.jp/info:ndljp/pid/2591259/,寛仁二年上
+ndl_2591260:,http://dl.ndl.go.jp/info:ndljp/pid/2591260/,寛仁三年下
+ndl_2591261:,http://dl.ndl.go.jp/info:ndljp/pid/2591261/,寛仁四年上
 {rdfs:label},      NDL Digital Collections
 {rdfs:label}@ja,   国会図書館デジタルコレクション
-{ts:reference}@ja, https://raw.githubusercontent.com/suchowan/when_exe/master/test/examples/ndl_kanagoyomi.csv, csv without header
+{ts:reference}@ja, github:ndl_koyomi.csv, csv without header
 {dcq:valid},       [1]^^Japanese
 {dcq:abstract},    Kanagoyomi Digital Image
-{dcq:abstract}@ja, 仮名暦デジタルイメージ
+{dcq:abstract},    [3]
 {dc:source},       ndl:[2],     dcq:URI
 {ts:start},        {dcq:valid}, xsd:integer
 {ts:until},        {dcq:valid}, xsd:integer
