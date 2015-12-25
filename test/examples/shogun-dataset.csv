@@ -1,13 +1,17 @@
 # When::Events::DataSets
 xsd:,              http://www.w3.org/2001/XMLSchema
+rdf:,              http://www.w3.org/1999/02/22-rdf-syntax-ns#
 rdfs:,             http://www.w3.org/2000/01/rdf-schema#
 dc:,               http://purl.org/dc/elements/1.1/
 dcq:,              http://purl.org/dc/terms/
 ts:,               http://hosi.org/ts#
+shogun:,           http://hosi.org/public/data/events/shogun/
+wikipedia:,        https://en.wikipedia.org/wiki/, Wikipedia
 wikipedia:@*,      https://*.wikipedia.org/wiki/, Wikipedia
 {rdfs:label},      List of Tokugawa Shoguns
 {rdfs:label}@ja,   徳川将軍一覧
 {ts:reference},    https://ja.wikipedia.org/wiki/%E5%BE%B3%E5%B7%9D%E5%B0%86%E8%BB%8D%E4%B8%80%E8%A6%A7,"/<th>(\d+)<\/th><td.*?>.+?href=\""\/wiki\/(.+?)\"".*?([^>]+?)<\/a>.*?<\/td><td.*?>.+?<\/td><td.*?>.+?<\/td><td.*?>.+?<\/td><td.*?>.*?年.*?((?:\d+?)年).*?((?:閏?\d+?)月).*?((?:\d+?)日).*?年.*?((?:\d+?)年).*?((?:閏?\d+?)月).*?((?:\d+?)日).*?<\/td>/"
+{rdf:subject},     shogun:{ts:id}, dcq:URI
 {dcq:valid},       [4][5][6]..[7][8][9]^^Japanese
 {dcq:abstract},    [3]
 {dc:source},       wikipedia_ja:[2], dcq:URI
