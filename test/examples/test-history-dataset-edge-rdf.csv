@@ -16,5 +16,9 @@ ex:,               http://example.com/
 {dcq:abstract},    [abstarct]
 {dc:contributor},  [contributor]
 {ts:start},        {dcq:valid},    xsd:integer
+{ts:east},         {dcq:spatial},  xsd:float
+{ts:west},         {dcq:spatial},  xsd:float
+{ts:north},        {dcq:spatial},  xsd:float
+{ts:south},        {dcq:spatial},  xsd:float
 {dcq:hasPart},     {dcq:abstract}
 {ts:whatDay},      {dcq:valid}
