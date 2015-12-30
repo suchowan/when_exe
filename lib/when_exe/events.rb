@@ -268,7 +268,7 @@ module When
         def initialize(uri, rows, &block)
 
           # 定義行を言語ごとに仕分けする
-          definitions = []
+          definitions = {}
           @prefixes   = {}
           labels   = nil
           datasets = nil
@@ -286,16 +286,22 @@ module When
             name, language= row.shift.split('@', 2)
             language    ||= ''
             language.sub!('_', '-')
-            if definitions.last && name == definitions.last.first
-              definitions.last.last[language] = row
+            if definitions.key?(name)
+              if language == ''
+                definitions[name].values.each do |definition|
+                  definition << row
+                end
+              else
+                definitions[name][language] << row
+              end
             else
-              definitions << [name, {language=>row}]
-              definitions.last.last[''] ||= row
+              definitions[name] = Hash.new {|hash,key| hash[key]=[]}.merge({''=>[row]})
+              definitions[name][language] << row unless language == ''
             end
-            case extract(definitions.last.first)
-            when When::Events::LABEL     ; labels        = definitions.last.last
-            when When::Events::REFERENCE ; datasets      = definitions.last.last
-            when /\A(.+?):\z/            ; @prefixes[$1] = definitions.last.last
+            case extract(name)
+            when When::Events::LABEL     ; labels        = filter_for_dataset(definitions[name])
+            when When::Events::REFERENCE ; datasets      = filter_for_dataset(definitions[name])
+            when /\A(.+?):\z/            ; @prefixes[$1] = filter_for_dataset(definitions[name], true)
             end
           end
 
@@ -330,9 +336,13 @@ module When
         # 言語ごとのデータセットを登録する
         def create_datasets(datasets, uri, definitions, &block)
           Hash[*(datasets.keys.map {|language|
-            [language, DataSet.new(definitions.map {|definition|
-              [definition.first] + When::Locale._hash_value(definition.last, language)
-            }, language, uri, self, &block)]
+            lines = []
+            definitions.each_pair do |name, definition|
+              (When::Locale._hash_value(definition, language)||[]).each do |defs|
+                lines << ([name] + defs)
+              end
+            end
+            [language, DataSet.new(lines, language, uri, self, &block)]
           }).flatten]
         end
 
@@ -343,6 +353,20 @@ module When
             next nil unless /./ =~ loc
             ["#{prefix}_#{loc}:@#{loc}", namespace.sub('*',loc), hash[:names][loc]]
           }.compact
+        end
+
+        # データセット用の設定を選択する
+        def filter_for_dataset(target, filter=false)
+          hash = {}
+          target.each_pair do |language, definitions|
+            definitions.each do |definition|
+              if filter || When::Events::DataSet.for_dataset?(definition.first)
+                hash[language] = definition
+                break
+              end
+            end
+          end
+          hash
         end
 
         # プレフィクスを名前空間に展開する
@@ -1188,14 +1212,22 @@ module When
         @csv      = {}
         @l_to_i   = {}
         @i_to_l   = {}
+        @role_for_dataset = {}
         @definitions = definitions
         @definitions.each do |definition|
           parameters = definition[1..2].map {|item| item.strip}
           case definition.first
-          when /\A(.+):\z/    ; @prefix[$1] = parameters
-          when /\A<(.+)>\z/   ; begin key=extract($1); @rdf[key ] = operation(key, parameters) end
-          when /\A\{(.+)\}\z/ ; begin key=extract($1); @role[key] = operation(key, parameters) end
-          when /\A\[(.+)\]\z/ ; begin key=extract($1); @csv[key ] = operation(key, parameters) end
+          when /\A(.+):\z/
+            @prefix[$1] = parameters
+          when /\A\[(.+)\]\z/
+            key=extract($1)
+            @csv[key ] = operation(key, parameters)
+          when /\A<(.+)>\z/
+            key=extract($1)
+            @rdf[key ] = operation(key, parameters)
+          when /\A\{(.+)\}\z/
+            key=extract($1)
+            (DataSet.for_dataset?(parameters.first, key) ? @role_for_dataset : @role)[key] = operation(key, parameters)
           end
         end
         @prefix_description  = @prefix.values.reject {|value| value.size < 2}.sort_by {|value| -value.first.length}
@@ -1215,13 +1247,13 @@ module When
         @events = []
         @index  = {}
         (@role.keys + @rdf.keys + @csv.keys).each {|item| @index[item] = Hash.new {|hash,key| hash[key]=[]}}
-        target = @role[When::Events::REFERENCE][:target]
+        target = @role_for_dataset[When::Events::REFERENCE][:target]
         unless target =~ /:/ # Relative path
           path     = uri.split('/')
           path[-1] = target
           target   = path.join('/')
         end
-        operation = @role[When::Events::REFERENCE][:original]
+        operation = @role_for_dataset[When::Events::REFERENCE][:original]
         source    = extract(target)
         source    = yield(source) if block_given? && operation !~ /SPARQL|CalendarEra/i
         raise IOError, target + ': not ready' unless source
@@ -1315,6 +1347,12 @@ module When
          :operation => operation,
          :copied    => /\A<[^>]+>\z/ =~ definition[0] && operation.equal?(Operations.default)
         }
+      end
+
+      # データセット用の定義かイベント用の定義かの判断
+      def self.for_dataset?(target, key=nil)
+        return false if key && ![When::Events::LABEL, When::Events::REFERENCE].include?(key)
+        /\[.+?\]|<.+?>|\{.+?\}/ !~ target
       end
 
       # イベントを生成・登録

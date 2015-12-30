@@ -274,12 +274,12 @@ module When
       # @private
       def _hash_key(hash, locale, defaults=['', 'en'])
         locale = locale.sub(/\..*/, '')
-        return locale if hash[locale]
-        return _hash_key(hash, _alias[locale], defaults) if _alias[locale]
+        return locale if hash.key?(locale)
+        return _hash_key(hash, _alias[locale], defaults) if _alias.key?(locale)
         language = locale.sub(/[-_].*/, '')
-        return language if hash[language]
+        return language if hash.key?(language)
         defaults.each do |default|
-          return default if hash[default]
+          return default if hash.key?(default)
         end
         return nil
       end

@@ -4,10 +4,9 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix ts: <http://hosi.org/ts#> .
 
-ex:1 rdfs:label "中西版「歴史データベース」";
+ex:1 rdfs:label "{康元元}:{第5代}{執権}の{北条時頼}、{執権}{辞任}、{翌日}{出家}。";
    ts:east 1.39581758e2;
    ts:north 3.5361604e1;
-   ts:reference "test-history-events.csv";
    ts:south 3.5304314e1;
    ts:start 2180156;
    ts:west 1.39490658e2;
@@ -23,10 +22,9 @@ ex:1 rdfs:label "中西版「歴史データベース」";
    dcq:spatial "神奈川県鎌倉市";
    dcq:valid "1256-11-22^^Japanese" .
 
-ex:2 rdfs:label "中西版「歴史データベース」";
+ex:2 rdfs:label "{康元元}:{前日}{執権}を{辞任}した{北条時頼}、{出家}。";
    ts:east 1.39581758e2;
    ts:north 3.5361604e1;
-   ts:reference "test-history-events.csv";
    ts:south 3.5304314e1;
    ts:start 2180157;
    ts:west 1.39490658e2;
@@ -41,10 +39,9 @@ ex:2 rdfs:label "中西版「歴史データベース」";
    dcq:spatial "神奈川県鎌倉市";
    dcq:valid "1256-11-23^^Japanese" .
 
-ex:3 rdfs:label "中西版「歴史データベース」";
+ex:3 rdfs:label "{天文24}:{厳島}の{合戦}で{毛利元就}が{陶晴賢}を滅ぼす。";
    ts:east 1.3234682e2;
    ts:north 3.4479038e1;
-   ts:reference "test-history-events.csv";
    ts:south 3.4267624e1;
    ts:start 2289310;
    ts:west 1.32083881e2;
@@ -58,10 +55,9 @@ ex:3 rdfs:label "中西版「歴史データベース」";
    dcq:spatial "広島県廿日市市";
    dcq:valid "1555-10-01^^Japanese" .
 
-ex:4 rdfs:label "中西版「歴史データベース」";
+ex:4 rdfs:label "{慶應2}:{将軍}{徳川家茂}が{大坂城}中で{病死}する。{21歳}。{毒殺説}もある。";
    ts:east 1.35595982e2;
    ts:north 3.4766764e1;
-   ts:reference "test-history-events.csv";
    ts:south 3.458949e1;
    ts:start 2402843;
    ts:west 1.35391479e2;
@@ -77,10 +73,9 @@ ex:4 rdfs:label "中西版「歴史データベース」";
    dcq:spatial "大阪市";
    dcq:valid "1866-07-20^^Japanese" .
 
-ex:5 rdfs:label "中西版「歴史データベース」";
+ex:5 rdfs:label "{大同元}:{空海}が用いたとされる{日曜日}の{起点}";
    ts:east 1.35873329e2;
    ts:north 3.528243e1;
-   ts:reference "test-history-events.csv";
    ts:south 3.4886268e1;
    ts:start 2015474;
    ts:west 1.35577055e2;

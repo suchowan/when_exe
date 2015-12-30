@@ -12,6 +12,7 @@ ex:,               http://example.com/
 {rdf:subject},     ex:<ts:id>, dcq:URI
 {dcq:valid},       <dcq:valid>
 {dcq:spatial},     <dcq:spatial>
+{rdfs:label},      <dcq:abstract>
 {dcq:abstract},    <dcq:abstract>
 {dc:contributor},  <dc:contributor>
 {ts:start},        <ts:start>,    xsd:integer

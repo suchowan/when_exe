@@ -8,18 +8,13 @@ ts:,               http://hosi.org/ts#
 ex:,               http://example.com/
 {rdfs:label},      Dr. Midwest's big database of history
 {rdfs:label}@ja,   中西版「歴史データベース」
-#{ts:reference},   test-history-events.csv, csv with header
-{ts:reference}@ja, test-history-events.csv, csv with header(100)
+#{ts:reference},   history-events.csv, csv with header(100)
+{ts:reference}@ja, history-events.csv, csv with header
 {rdf:subject},     ex:{ts:id},     dcq:URI
 {dcq:valid},       [valid]
-{dcq:spatial},     [location]
 {rdfs:label},      [abstarct]
 {dcq:abstract},    [abstarct]
 {dc:contributor},  [contributor]
 {ts:start},        {dcq:valid},    xsd:integer
-{ts:east},         {dcq:spatial},  xsd:float
-{ts:west},         {dcq:spatial},  xsd:float
-{ts:north},        {dcq:spatial},  xsd:float
-{ts:south},        {dcq:spatial},  xsd:float
 {dcq:hasPart},     {dcq:abstract}
 {ts:whatDay},      {dcq:valid}
