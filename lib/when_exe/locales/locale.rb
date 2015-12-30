@@ -303,7 +303,7 @@ module When
         access_key = access_key.split(/\//).map {|key| key =~ /\A[0-9]+\z/ ? key.to_i : key}
         locale = locale.sub(/\..*/, '')
         [locale, locale.sub(/-.*/, '')].each do |loc|
-          symbol = ('Locale_' + loc.sub(/-/,'_')).to_sym
+          symbol = ('Locale_' + loc.gsub(/-/,'_')).to_sym
           return {locale=>access_key.inject(const_get(symbol)) {|hash, key| hash = hash[key]}} if const_defined?(symbol)
         end
         return nil
@@ -317,7 +317,7 @@ module When
       # @private
       def _dbpedia(source)
         return nil unless Ref =~ source
-        return "http://#{$1=='en' ? '' : $1+'.'}dbpedia.org/resource/#{URI.decode($2)}"
+        return "http://#{$1=='en' ? '' : $1+'.'}dbpedia.org/resource/#{CGI.unescape($2)}"
       end
 
       private
@@ -343,7 +343,7 @@ module When
       # wikipedia の読み込み
       def _wikipedia_object(path, locale, file, query, interval, options)
         # 採取済みデータ
-        title = URI.decode(file.gsub('_', ' '))
+        title = CGI.unescape(file.gsub('_', ' '))
         mode  = "".respond_to?(:force_encoding) ? ':utf-8' : ''
         dir   = When::Parts::Resource.root_dir + '/data/wikipedia/' + locale
         FileUtils.mkdir_p(dir) unless FileTest.exist?(dir)
@@ -834,7 +834,7 @@ module When
     # encode URI from patterns %%(...) or %.(...) and replace space to '_'
     def _encode(source)
       source.gsub(' ','_').gsub(/%.<.+?>/) { |match|
-        URI.encode(match[3..-2]).gsub('%', match[1..1])
+        CGI.escape(match[3..-2]).gsub('%', match[1..1])
       }
     end
   end

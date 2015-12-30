@@ -109,7 +109,7 @@ module When
       "[昭和の日,                     Shōwa Day                 ]",
       "[憲法記念日,                   Constitution Memorial Day ]",
       "[こどもの日,                   Children's Day (Japan)    ]",
-      "[七夕節句=ja:%%<七夕>          Qixi Festival             ]",
+      "[七夕節句=ja:%%<七夕>,         Qixi Festival             ]",
       "[お盆,                         Bon Festival              ]",
       "[海の日,                       Marine Day                ]",
       "[山の日,                       Mountain Day=             ]",

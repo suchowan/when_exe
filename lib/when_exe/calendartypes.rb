@@ -419,7 +419,7 @@ module When::CalendarTypes
     #
     def _length(date)
       y, m = date
-      if (m)
+      if m
         #  指定した月に含まれる日の数を返します。
         return @unit[2] if @unit[2]
         rule = _rule(_key([y]))
@@ -443,7 +443,7 @@ module When::CalendarTypes
       # rule_table
       # @rule_table = @rule_table.dup
       @rule_table = {'T' => {'Rule' => @rule_table }} if @rule_table.kind_of?(Array)
-      @_m_cash_          = {}
+      @_m_cash_          = Hash.new {|hash,key| hash[key]={}}
       @_m_cash_["_rule"] = @rule_table
 
       # unit length
@@ -497,8 +497,6 @@ module When::CalendarTypes
       n_sdn = (@_m_cash_["_sdn"][n_key] ||= _sdn_(n_date))
       key   = (n_sdn - c_sdn).to_i
       rule  = (@_m_cash_["_rule"][key]  ||= _rule_(key))
-      @_m_cash_["_key"]        ||= {}
-      @_m_cash_["_ids"]        ||= {}
       @_m_cash_["_key"][c_key] ||= key
       @_m_cash_["_ids"][c_key] ||= rule['IDs']
       return c_sdn
@@ -772,8 +770,6 @@ module When::CalendarTypes
       count, year = c_date[0].divmod(root_rule['Years'])
       key, dd, mm = root_rule['Rule'][year]
       rule = (@_m_cash_["_rule"][key] ||= _rule_(key))
-      @_m_cash_["_key"]        ||= {}
-      @_m_cash_["_ids"]        ||= {}
       @_m_cash_["_key"][c_key] ||= key
       @_m_cash_["_ids"][c_key] ||= rule['IDs']
       @_m_cash_["_sdn"][c_key] ||= @origin_of_LSC + dd + count * root_rule['Days']
@@ -1027,8 +1023,6 @@ module When::CalendarTypes
       sdn, y, key  = _read_period(@entry_key,
                    'Years', value,
                    'Days',  @origin_of_LSC + count * root_rule['Days'])
-      @_m_cash_["_key"]        ||= {}
-      @_m_cash_["_ids"]        ||= {}
       @_m_cash_["_key"][c_key] ||= key
       @_m_cash_["_ids"][c_key] ||= @_m_cash_["_rule"][key]['IDs']
       @_m_cash_["_sdn"][c_key] ||= sdn

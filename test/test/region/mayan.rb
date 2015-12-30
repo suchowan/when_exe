@@ -48,7 +48,7 @@ module MiniTest
       # No offset
       haab = When.Resource("_co:Mayan::Haab'")
       assert_equal("ハアブ", haab.label.translate('ja'))
-      assert_equal("https://en.wikipedia.org/wiki/Haab'", haab.label.reference)
+      assert_equal("https://en.wikipedia.org/wiki/Haab%27", haab.label.reference)
       pop = When.Resource("_co:Mayan::Haab'::Pop")
       assert_equal("Pop", pop.label.translate('en'))
       assert_equal("https://en.wikipedia.org/wiki/File:Maya-Pop.jpg", pop.label.reference)
@@ -68,7 +68,7 @@ module MiniTest
       # offset 0B
       haab = When.Resource("_co:Mayan?Epoch=0D::Haab'")
       assert_equal("ハアブ", haab.label.translate('ja'))
-      assert_equal("https://en.wikipedia.org/wiki/Haab'", haab.label.reference)
+      assert_equal("https://en.wikipedia.org/wiki/Haab%27", haab.label.reference)
       pop = When.Resource("_co:Mayan?Epoch=0D::Haab'::Pop")
       assert_equal("Pop", pop.label.translate('en'))
       assert_equal("https://en.wikipedia.org/wiki/File:Maya-Pop.jpg", pop.label.reference)
@@ -88,7 +88,7 @@ module MiniTest
       # offset 2B
       haab = When.Resource("_co:Mayan?Epoch=2D::Haab'")
       assert_equal("ハアブ", haab.label.translate('ja'))
-      assert_equal("https://en.wikipedia.org/wiki/Haab'", haab.label.reference)
+      assert_equal("https://en.wikipedia.org/wiki/Haab%27", haab.label.reference)
       pop = When.Resource("_co:Mayan?Epoch=2D::Haab'::Pop")
       assert_equal("Pop", pop.label.translate('en'))
       assert_equal("https://en.wikipedia.org/wiki/File:Maya-Pop.jpg", pop.label.reference)
@@ -116,7 +116,7 @@ module MiniTest
 
       tzolkin = When.Resource("_co:Mayan::Tzolk'in")
       assert_equal("ツォルキン", tzolkin.label.translate('ja'))
-      assert_equal("https://en.wikipedia.org/wiki/Tzolk'in", tzolkin.label.reference)
+      assert_equal("https://en.wikipedia.org/wiki/Tzolk%27in", tzolkin.label.reference)
       ajaw = When.Resource("_co:Mayan::Tzolk'in::Ajaw")
       assert_equal("Ajaw", ajaw.label.translate('en'))
       assert_equal("https://en.wikipedia.org/wiki/File:MAYA-g-log-cal-D20-Ajaw-cdxW.png", ajaw.label.reference('alias'))
@@ -144,7 +144,7 @@ module MiniTest
 
       tzolkin = When.Resource("_co:Mayan?Epoch=0D::Tzolk'in")
       assert_equal("ツォルキン", tzolkin.label.translate('ja'))
-      assert_equal("https://en.wikipedia.org/wiki/Tzolk'in", tzolkin.label.reference)
+      assert_equal("https://en.wikipedia.org/wiki/Tzolk%27in", tzolkin.label.reference)
       ajaw = When.Resource("_co:Mayan?Epoch=0D::Tzolk'in::Ajaw")
       assert_equal("Ajaw", ajaw.label.translate('en'))
       assert_equal("https://en.wikipedia.org/wiki/File:MAYA-g-log-cal-D20-Ajaw-cdxW.png", ajaw.label.reference('alias'))
@@ -172,7 +172,7 @@ module MiniTest
 
       tzolkin = When.Resource("_co:Mayan?Epoch=2D::Tzolk'in")
       assert_equal("ツォルキン", tzolkin.label.translate('ja'))
-      assert_equal("https://en.wikipedia.org/wiki/Tzolk'in", tzolkin.label.reference)
+      assert_equal("https://en.wikipedia.org/wiki/Tzolk%27in", tzolkin.label.reference)
       ajaw = When.Resource("_co:Mayan?Epoch=2D::Tzolk'in::Ajaw")
       assert_equal("Ajaw", ajaw.label.translate('en'))
       assert_equal("https://en.wikipedia.org/wiki/File:MAYA-g-log-cal-D20-Ajaw-cdxW.png", ajaw.label.reference('alias'))

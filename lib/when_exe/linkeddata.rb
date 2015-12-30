@@ -43,10 +43,6 @@ module When
       'note'            => "CalendarNote/NoteElement",
     }
 
-    XSD  = 'http://www.w3.org/2001/XMLSchema'
-    RDFS = 'http://www.w3.org/2000/01/rdf-schema#'
-    RDF  = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
-
     #
     # @private
     #
@@ -86,7 +82,7 @@ module When
       def schema(iri=nil)
         ts = base_uri.sub(/When\/$/, 'ts#')
         hash =
-          {'@context'=>{'rdf'=>RDF, 'ts' => ts},
+          {'@context'=>{'rdf'=>When::Namespace::RDF, 'ts' => ts},
            '@graph'  => Schema.keys.map {|id| {'@id'=>'ts:'+id, 'rdf:type'=>{'@id'=>'rdf:Property'},
                                                'ts:reference'=>{'@id'=>DocRoot + Schema[id]}}}
           }
@@ -119,7 +115,7 @@ module When
           JSON.generate(jsonld_hash)
         else
           array = JSON::LD::API.toRdf(jsonld_hash)
-          graph = ::RDF::Graph.new << array
+          graph = RDF::Graph.new << array
           args  = [writer]
           args << {:prefixes=>prefixes} if prefixes
           graph.dump(*args)
@@ -164,13 +160,13 @@ module When
       def namespace_prefixes(*resources)
         base = base_uri.sub(/When\/$/, '')
         resources.inject({
-          'xsd'  => [XSD],
-          'rdf'  => [RDF],
-          'rdfs' => [RDFS],
-          'owl'  => ['http://www.w3.org/2002/07/owl#'],
-          'dc'   => ['http://purl.org/dc/elements/1.1/'],
-          'dcq'  => ['http://purl.org/dc/terms/'],
-          'dct'  => ['http://purl.org/dc/dcmitype/'],
+          'xsd'  => [When::Namespace::XSD ],
+          'rdf'  => [When::Namespace::RDF ],
+          'rdfs' => [When::Namespace::RDFS],
+          'owl'  => [When::Namespace::OWL ],
+          'dc'   => [When::Namespace::DC  ],
+          'dcq'  => [When::Namespace::DCQ ],
+          'dct'  => [When::Namespace::DCT ],
         # 'tp'   => [base + 'tp/'],
           'ts'   => [base + 'ts#']
         }) {|namespace, resource|
@@ -375,9 +371,10 @@ module When
     def compact_namespace_to_prefix(source, prefixes, context=nil)
       return source unless prefixes
       prefixes.each_pair do |key, value|
-        Array(value).each do |prefix|
-          start = source.index(prefix)
-          body  = source[prefix.length..-1]
+        Array(value).each do |namespace|
+          namespace = namespace.sub(/([a-z0-9])\z/i, '\1#')
+          start     = source.index(namespace)
+          body      = source[namespace.length..-1]
           return key + ':' + body if start == 0 && body !~ /[:#\/]/
         end
       end

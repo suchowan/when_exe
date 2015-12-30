@@ -642,7 +642,7 @@ module When::Ephemeris
     # @return [When::Ephemeris::Coords]
     #
     def rh_to_h(t, loc)
-      rotate_y(loc.lat / (360.0*When::Coordinates::Spatial::DEGREE) - 0.25)
+      rotate_y(loc.lat / (360.0*loc.degree) - 0.25)
     end
 
     # 赤道座標 -> 地平座標
@@ -655,7 +655,7 @@ module When::Ephemeris
     #
     def r_to_h(t, loc)
       rotate_z(-loc.local_sidereal_time(t) / 24).
-      rotate_y(loc.lat / (360.0*When::Coordinates::Spatial::DEGREE) - 0.25)
+      rotate_y(loc.lat / (360.0*loc.degree) - 0.25)
     end
 
     # 球面の余弦 spherical law of cosines
@@ -1342,7 +1342,7 @@ module When::Ephemeris
     #
     def day_event(t, event, target=When.Resource('_ep:Sun'), height=nil)
       # 時刻の初期値
-      dl  = @location.long / (360.0 * When::Coordinates::Spatial::DEGREE)
+      dl  = @location.long / (360.0 * @location.degree)
       t0  = (+t + dl).round - dl
       dt  = _coords(t0, When::Coordinates::Spatial::EQUATORIAL, target).phi -
             @location.local_sidereal_time(t0) / 24.0 + 0.25 * (event||0)
@@ -1526,8 +1526,8 @@ module When::Ephemeris
       # difference of ecliptic longitude between zenith and target star 
       # when the event happens
       pos  = _coords(+t, When::Coordinates::Spatial::EQUATORIAL, target)
-      long = @location.long / When::Coordinates::Spatial::DEGREE
-      lat  = @location.lat  / When::Coordinates::Spatial::DEGREE
+      long = @location.long / @location.degree
+      lat  = @location.lat  / @location.degree
       dp   = (sind(hs) - sind(lat) * sinc(pos.theta)) / 
                         (cosd(lat) * cosc(pos.theta))
 
@@ -1595,8 +1595,8 @@ module When::Ephemeris
     #   @sun_1m          =  t = CYCLE_1M日 までの太陽年番号の比例定数
     def _normalize(args=[], options={})
       @location         = When.Resource(@location, '_l:') if @location.kind_of?(String)
-      @long, @lat, @alt = [@location.long / When::Coordinates::Spatial::DEGREE,
-                           @location.lat  / When::Coordinates::Spatial::DEGREE,
+      @long, @lat, @alt = [@location.long / @location.degree,
+                           @location.lat  / @location.degree,
                            @location.alt] if @location
       @formula        ||= '1L'
       @time_standard  ||= 'dynamical'

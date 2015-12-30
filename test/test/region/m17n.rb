@@ -12,8 +12,8 @@ module MiniTest
 
     First = [
       ["Calendar", "Calendar", nil],
-      ["Month",    "月の名前", "https://ja.wikipedia.org/wiki/%E6%9C%88_(%E6%9A%A6)"],
-      ["Month",    "月の名前", "https://ja.wikipedia.org/wiki/%E6%9C%88_(%E6%9A%A6)"],
+      ["Month",    "月の名前", "https://ja.wikipedia.org/wiki/%E6%9C%88_%28%E6%9A%A6%29"],
+      ["Month",    "月の名前", "https://ja.wikipedia.org/wiki/%E6%9C%88_%28%E6%9A%A6%29"],
       ["January",  "1月",      "https://ja.wikipedia.org/wiki/1%E6%9C%88"]
     ]
 

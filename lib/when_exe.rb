@@ -19,7 +19,7 @@ begin
 rescue LoadError, NoMethodError
 end
 
-autoload :URI,       'uri'
+autoload :CGI,       'cgi'
 autoload :OpenURI,   'open-uri'
 autoload :OpenSSL,   'openssl'
 autoload :FileUtils, 'fileutils'
@@ -162,6 +162,7 @@ module When
 
   require 'when_exe/locales/locale'
   require 'when_exe/locales/autoload'
+  require 'when_exe/namespace'
   require 'when_exe/parts/enumerator'
   require 'when_exe/parts/resource'
   require 'when_exe/parts/geometric_complex'
@@ -170,6 +171,7 @@ module When
   require 'when_exe/basictypes'
   require 'when_exe/ephemeris'
   require 'when_exe/coordinates'
+  require 'when_exe/spatial'
   require 'when_exe/icalendar'
   require 'when_exe/google_api'
   require 'when_exe/tmobjects'
@@ -184,7 +186,6 @@ module When
   require 'when_exe/inspect'
   require 'when_exe/version'
   require 'when_exe/linkeddata'
-  require 'when_exe/events'
 
   #
   # Module Constants
@@ -234,6 +235,14 @@ module When
 
   # eucJP encoding
   EUCJP = '.eucJP'
+
+  module Events
+    autoload :TS,                      'when_exe/events'
+    autoload :DataSets,                'when_exe/events'
+    autoload :DataSet,                 'when_exe/events'
+    autoload :Event,                   'when_exe/events'
+    autoload :Range,                   'when_exe/events'
+  end
 
   class BasicTypes::M17n
     autoload :Japanese,                'when_exe/region/japanese'
@@ -425,6 +434,7 @@ module When
     autoload :Russian,                 'when_exe/region/russian'
     autoload :Roman,                   'when_exe/region/roman'
     autoload :Mayan,                   'when_exe/region/mayan'
+    autoload :LocationTable,           'when_exe/region/location'
 
     # default index for day coordinate
     DefaultDayIndex = Index.new
@@ -764,6 +774,20 @@ module When
     TM::CalendarEra._instance(*args)
   end
 
+  # When::TM::TemporalPosition または When::TM::CalendarEraの検索
+  #
+  # @param [Array<Object>] args when? または era にそのまま渡される
+  #
+  # @return [When::TM::TemporalPosition or When::TM::CalendarEra]
+  #
+  def date_or_era(*args)
+    begin
+      when?(*args)
+    rescue
+      era(*args).first
+    end
+  end
+
   # When::TM::Clock の生成/参照
   #
   # @param [When::Parts::Timezone::Base] clock なにもせず clock をそのまま返す
@@ -835,6 +859,17 @@ module When
     iri += "&alt=#{altitude}" if altitude
     iri += "&datum=#{datum}"  if datum
     Parts::Resource._instance(iri)
+  end
+
+
+  # 地名を空間座標化する
+  #
+  # @param [String] name 地名または座標
+  #
+  # @return [When::Coordinates::Spatial or When::Coordinates::Spatial::Range]
+  #
+  def where?(name)
+    When::Coordinates::Spatial::Range[name]
   end
 
   # When::Coordinates::Border の生成/参照

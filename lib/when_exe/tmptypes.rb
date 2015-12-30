@@ -134,6 +134,27 @@ module When::TM
       super(other)
     end
 
+    # 前の時刻
+    #
+    # @return [When::TM::TemporalPosition]
+    #
+    #   分解能に対応する Duration だけ,日時を戻す
+    #
+    def prev
+      self - period
+    end
+
+    # 次の時刻
+    #
+    # @return [When::TM::TemporalPosition]
+    #
+    #   分解能に対応する Duration だけ,日時を進める
+    #
+    def succ
+      self + period
+    end
+    alias :next :succ
+
     # オブジェクトの生成
     #
     # @param [Numeric] universal_time 内部時間による時間座標値
@@ -224,6 +245,18 @@ module When::TM
     def +(other)
       new_date = super
       new_date.frame = new_date.frame._daylight(new_date.universal_time) if new_date.frame && new_date.frame._need_validate
+      return new_date
+    end
+
+    # 減算
+    #
+    # @param [When::TM::TemporalPosition, Numeric, When::TM::IntervalLength] other
+    #
+    # @return [When::TM::TemporalPosition]
+    #
+    def -(other)
+      new_date = super
+      new_date.frame = new_date.frame._daylight(new_date.universal_time) if new_date.kind_of?(TimeValue) && new_date.frame && new_date.frame._need_validate
       return new_date
     end
 
@@ -572,6 +605,31 @@ module When::TM
       @frame.to_julian_date(date)
     end
     private :_to_i
+
+    # 前の日時
+    #
+    # @return [When::TM::TemporalPosition]
+    #
+    #   分解能に対応する Duration だけ,日時を戻す
+    #
+    def prev
+      @precision==When::DAY ? _force_euqal_day(-1) : self-period
+    rescue RangeError
+      (When::Gregorian ^ self) - period
+    end
+
+    # 次の日時
+    #
+    # @return [When::TM::TemporalPosition]
+    #
+    #   分解能に対応する Duration だけ,日時を進める
+    #
+    def succ
+      @precision==When::DAY ? _force_euqal_day(+1) : self+period
+    rescue RangeError
+      (When::Gregorian ^ self) + period
+    end
+    alias :next :succ
 
     # 剰余類化
     #

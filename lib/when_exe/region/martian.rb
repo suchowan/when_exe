@@ -104,7 +104,7 @@ module When
       # オブジェクトの正規化
       def _normalize(args=[], options={})
         @location = When.Resource(@location || '_l:long=0&lat=0&datum=Mars')
-        @mtc0     = MTC0 + @location.long / (360.0 * When::Coordinates::Spatial::DEGREE)
+        @mtc0     = MTC0 + @location.long / (360.0 * @location.degree)
         super
       end
     end

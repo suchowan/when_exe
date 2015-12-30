@@ -377,7 +377,7 @@ module When::TimeStandard
     #
     def _normalize_time_basis
 
-      @_time_basis ||= @time_basis || (@location ? @location.long / When::Coordinates::Spatial::DEGREE * 240 : When::UTC)
+      @_time_basis ||= @time_basis || (@location ? @location.long / @location.degree * 240 : When::UTC)
       @_time_basis   = When::Locale._split(@_time_basis) if @_time_basis.kind_of?(String)
       @_time_basis   = [@_time_basis] unless @_time_basis.kind_of?(Array)
       @_time_basis   = @_time_basis.map {|clock| When.Clock(clock)}
@@ -404,7 +404,7 @@ module When::TimeStandard
     # @return [Numeric] difference / day
     #
     def localdate_difference
-      @localdate_difference ||= @location.long  / (360.0 * When::Coordinates::Spatial::DEGREE)
+      @localdate_difference ||= @location.long  / (360.0 * @location.degree)
     end
 
     # local time と universal time の差 / 128秒

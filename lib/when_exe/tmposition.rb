@@ -880,31 +880,6 @@ module When::TM
       @period = When.Duration(period_name)
     end
 
-    # 前の日時
-    #
-    # @return [When::TM::TemporalPosition]
-    #
-    #   分解能に対応する Duration だけ,日時を戻す
-    #
-    def prev
-      @precision==When::DAY ? _force_euqal_day(-1) : self-period
-    rescue RangeError
-      (When::Gregorian ^ self) - period
-    end
-
-    # 次の日時
-    #
-    # @return [When::TM::TemporalPosition]
-    #
-    #   分解能に対応する Duration だけ,日時を進める
-    #
-    def succ
-      @precision==When::DAY ? _force_euqal_day(+1) : self+period
-    rescue RangeError
-      (When::Gregorian ^ self) + period
-    end
-    alias :next :succ
-
     #
     # 前後の日時を取得可能か?
     #

@@ -141,7 +141,7 @@ module When
         if ((name.to_s =~ /\A(_*)(.+?)_to_(.+)\z/) && respond_to?("#{$1}#{$3}_to_#{$2}_", true))
           prefix, from, to = $~[1..3]
           begin
-            if (@_m_cash_lock_)
+            if @_m_cash_lock_
               return send("#{prefix}#{from}_to_#{to}_", *args, &block) unless @_m_cash_lock_.try_lock
               unlock = "ensure ; @_m_cash_lock_.locked? && @_m_cash_lock_.unlock"
             end
@@ -161,19 +161,21 @@ module When
                     return inv
                   #{unlock}
                   end
+                rescue ThreadError
                 end
               }
             end
             key = _key_simplefy(args)
             inv = send("#{prefix}#{from}_to_#{to}_", *args)
-            @_m_cash_ ||= {}
-            @_m_cash_["#{prefix}#{to}_to_#{from}"]    ||= {}
-            @_m_cash_["#{prefix}#{from}_to_#{to}"]    ||= {}
+            @_m_cash_ ||= Hash.new {|hash,key| hash[key]={}}
             @_m_cash_["#{prefix}#{to}_to_#{from}"][_key_simplefy(inv)] = args
             @_m_cash_["#{prefix}#{from}_to_#{to}"][key] = inv
             return inv
           ensure
-            @_m_cash_lock_ && @_m_cash_lock_.locked? && @_m_cash_lock_.unlock
+            begin
+              @_m_cash_lock_ && @_m_cash_lock_.locked? && @_m_cash_lock_.unlock
+            rescue ThreadError
+            end
           end
 
         else
@@ -181,7 +183,7 @@ module When
             respond = respond_to?("#{name}_setup", true)
             setup   = respond ? "#{name}_setup(key, *args)" :
                                 "(@_m_cash_[\"#{name}\"][key] = #{name}_(*args))"
-            if (@_m_cash_lock_)
+            if @_m_cash_lock_
               return send("#{name}_", *args, &block) unless @_m_cash_lock_.try_lock
               lock   = "  return #{name}_(*args) unless @_m_cash_lock_.try_lock"
               unlock = "ensure ; @_m_cash_lock_.locked? && @_m_cash_lock_.unlock"
@@ -196,18 +198,21 @@ module When
                   return #{setup}
                 #{unlock}
                 end
+              rescue ThreadError
               end
             }
             key = _key_simplefy(args)
-            @_m_cash_ ||= {}
-            @_m_cash_["#{name}"] ||= {}
-            if (respond)
+            @_m_cash_ ||= Hash.new {|hash,key| hash[key]={}}
+            if respond
               return send("#{name}_setup", key, *args)
             else
               return(@_m_cash_["#{name}"][key] ||= send("#{name}_", *args))
             end
           ensure
-            @_m_cash_lock_ && @_m_cash_lock_.locked? && @_m_cash_lock_.unlock
+            begin
+              @_m_cash_lock_ && @_m_cash_lock_.locked? && @_m_cash_lock_.unlock
+            rescue ThreadError
+            end
           end
         end
       end

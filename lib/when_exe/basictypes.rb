@@ -166,11 +166,9 @@ module When
               item[2] ? date_time.gsub!(item[0], item[1]) :
               item[1] ? date_time.sub!( item[0], item[1]) :
                         date_time.gsub!(When::Locale::NumRExp3) {|digit| When::Locale.k2a_digits(digit, true)}
-           end
+            end unless date_time =~ /\{/
           end
           date_time
-        rescue NameError
-          raise "Please require standard library 'Date' or 'DateTime'"
         end
       end
     end

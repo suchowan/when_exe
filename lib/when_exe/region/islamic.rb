@@ -78,7 +78,7 @@ module When
       #
       def _new_month_(m)
         jdn  = (@formula[-1].cn_to_time(m + @cycle_offset) + 0.5 + 
-                @location.long / (When::Coordinates::Spatial::DEGREE * 360)).floor - 1
+                @location.long / (@location.degree * 360)).floor - 1
         jdn += 1 while @formula[-1].moon_visibility(jdn) < 0
         return jdn
       end

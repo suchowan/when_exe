@@ -94,7 +94,7 @@ module  When
       # @return [When::Coordinates::Residue] 六十干支
       #
       def year(date, options={})
-        When.Residue('干支')[(date.most_significant_coordinate-4) % 60]
+        When.Resource('_co:Common::干支')[(date.most_significant_coordinate-4) % 60]
       end
 
       #
@@ -106,7 +106,7 @@ module  When
       # @return [When::Coordinates::Residue] 七曜
       #
       def week(date, options={})
-        When.Residue('Week')[date.to_i % 7]
+        When.Resource('_co:Common::Week')[date.to_i % 7]
       end
 
       #
@@ -118,7 +118,7 @@ module  When
       # @return [When::Coordinates::Residue] 六十干支
       #
       def stembranch(date, options={})
-        When.Residue('干支')[(date.to_i-11) % 60]
+        When.Resource('_co:Common::干支')[(date.to_i-11) % 60]
       end
 
       #

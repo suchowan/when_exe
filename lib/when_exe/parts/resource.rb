@@ -15,6 +15,8 @@ module When::Parts
   #
   module Resource
 
+    include When::Namespace
+
     # @private
     LabelProperty = nil
 
@@ -198,6 +200,31 @@ module When::Parts
       end
     end
 
+    module Navigation
+      # 前のオブジェクト
+      #
+      # @return [When::Parts::Resource]
+      #
+      def prev
+        c = self
+        c = c.child[0] while c.child && c.child.size > 0
+        c = c._pool['.<-']
+        c = c.child[-1] while c && c.child && c.child.size > 0
+        c
+      end
+
+      # 次のオブジェクト
+      #
+      # @return [When::Parts::Resource]
+      #
+      def next
+        c = self
+        c = c.child[0] while c.child && c.child.size > 0
+        c._pool['.->']
+      end
+      alias :succ :next
+    end
+
     class << self
 
       include Pool
@@ -307,7 +334,7 @@ module When::Parts
       #
       # @param [String] iri International Resource Identifier
       # @param [String] namespace (デフォルトの名前空間, 指定がないときは名前空間を省略しない)
-      # @param [Block] block オブジェクトが見つからない場合の代替処理
+      # @param [Block] block オブジェクトやパスが見つからない場合の代替処理
       #
       # @return [When::Parts::Resource]
       #
@@ -515,7 +542,10 @@ module When::Parts
           return object if object
           OpenURI
           args  = [path, "1".respond_to?(:force_encoding) ? 'r:utf-8' : 'r']
-          args << {:ssl_verify_mode=>OpenSSL::SSL::VERIFY_NONE} if path =~ /\Ahttps:/
+          real_path = block_given? ? yield(path) : path
+          raise IOError, path + ': not ready' unless real_path
+          args  = [real_path, "1".respond_to?(:force_encoding) ? 'r:utf-8' : 'r']
+          args << {:ssl_verify_mode=>OpenSSL::SSL::VERIFY_NONE} if real_path =~ /\Ahttps:/
           open(*args) do |file|
             resource = file.read
             case resource[0..5].upcase
@@ -527,7 +557,7 @@ module When::Parts
               options['.'][0].new(options)
             when '# WHEN'
               klass, rows = _csv(resource)
-              klass.new(path, rows)
+              klass.new(path, rows, &block)
             else
               raise NoMethodError, 'JSON not supported' unless Object.const_defined?(:JSON)
               _internal(_json([JSON.parse(resource)]), replace, options)
@@ -835,29 +865,6 @@ module When::Parts
     def included?(other)
       other.include?(self)
     end
-
-    # 前のオブジェクト
-    #
-    # @return [When::Parts::Resource]
-    #
-    def prev
-      c = self
-      c = c.child[0] while c.child && c.child.size > 0
-      c = c._pool['.<-']
-      c = c.child[-1] while c && c.child && c.child.size > 0
-      c
-    end
-
-    # 次のオブジェクト
-    #
-    # @return [When::Parts::Resource]
-    #
-    def next
-      c = self
-      c = c.child[0] while c.child && c.child.size > 0
-      c._pool['.->']
-    end
-    alias :succ :next
 
     # オブジェクト包含階層の末端か?
     #

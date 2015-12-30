@@ -852,6 +852,7 @@ module When::TM
   class OrdinalEra < When::TM::Object
 
     include Separation
+    include Navigation
 
     HashProperty = [:label, :begin, :end]
 
@@ -975,6 +976,8 @@ module When::TM
   # see {http://schemas.opengis.net/gml/3.1.1/base/temporalReferenceSystems.xsd#TimeCalendarEraType gml schema}
   #
   class CalendarEra < When::TM::Object
+
+    include Navigation
 
     class << self
 
@@ -1291,7 +1294,7 @@ module When::TM
     #
     # @return [Boolean]
     #
-    def exclude_end
+    def exclude_end?
       true
     end
 

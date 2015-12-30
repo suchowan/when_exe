@@ -377,8 +377,8 @@ module MiniTest::Coordinates
             [name.label,
              name.translate('ja'),
              name.reference('en'),
-             obj.lat  / When::Coordinates::Spatial::DEGREE,
-             obj.long / When::Coordinates::Spatial::DEGREE,
+             obj.lat  / obj.degree,
+             obj.long / obj.degree,
              obj.iri])
         end
       end
