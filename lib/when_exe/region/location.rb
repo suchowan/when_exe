@@ -9,15 +9,28 @@
 module When::Coordinates
 
   LocationTable = [
+
+    # 0 : Resource Pool
     {},
+
+    # 1 : Fine Area Coordinates
     {},
-    Hash.new {|h1,k1|
-      h1[k1] = {}
+
+    # 2 : Middle Area  Coordinates
+    Hash.new {|h,k|
+      h[k] = {}
     },
+
+    # 3 : Wide Area Coordinates
     Hash.new {|h1,k1|
       h1[k1] = Hash.new {|h2,k2|
         h2[k2] = {}
       }
+    },
+
+    # 4 : Alias Pool
+    Hash.new {|h,k|
+      h[k] = []
     }
   ]
 

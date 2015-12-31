@@ -5,13 +5,11 @@ rdfs:,             http://www.w3.org/2000/01/rdf-schema#
 dc:,               http://purl.org/dc/elements/1.1/
 dcq:,              http://purl.org/dc/terms/
 ts:,               http://hosi.org/ts#
-primeminister:,    http://hosi.org/public/data/events/primeminister/
 wikipedia:,        https://en.wikipedia.org/wiki/, Wikipedia
 wikipedia:@*,      https://*.wikipedia.org/wiki/, Wikipedia
 {rdfs:label},      List of Japanese prime ministers
 {rdfs:label}@ja,   日本国首相一覧
 {ts:reference}@ja, http://hosi.org/When/TM/CalendarEra/JapanesePrimeMinister, CalendarEra
-{rdf:subject},     primeminister:{ts:id}, dcq:URI
 {dcq:valid},       <dcq:valid>
 {dcq:abstract},    <rdfs:label>
 {dc:source},       <ts:reference>, dcq:URI

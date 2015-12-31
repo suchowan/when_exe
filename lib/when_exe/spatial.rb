@@ -446,8 +446,12 @@ module When::Coordinates
 
         private
 
+        Index = {nil=>0, 'N'=>0, 'S'=>-1}
+
         def keys_to_location(keys, t)
           keys.each do |key|
+            /\A(.+?)([\dNS])?\z/ =~ key
+            key = t[4][$1][Index[$2] || ($2.to_i-1)] if t[4].key?($1)
             if t[0].key?(key)
                return t[0][key] 
             elsif t[1].key?(key)
