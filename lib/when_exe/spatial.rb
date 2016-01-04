@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2016 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -172,8 +172,8 @@ module When::Coordinates
     #
     # @return [String] 緯度文字列(DD.MMSSsss[NS])
     #
-    def lat_s
-      When::Coordinates.to_dms(lat / @degree, 'NS', round=6)
+    def lat_s(round=6)
+      When::Coordinates.to_dms(lat / @degree, 'NS', round)
     end
     alias :latitude :lat_s
 
@@ -183,8 +183,8 @@ module When::Coordinates
     #
     # @return [String] 経度文字列(DDD.MMSSsss[EW])
     #
-    def long_s
-      When::Coordinates.to_dms(long / @degree, 'EW', round=6)
+    def long_s(round=6)
+      When::Coordinates.to_dms(long / @degree, 'EW', round)
     end
     alias :longitude :long_s
 
@@ -301,6 +301,8 @@ module When::Coordinates
     #   [ EQUATORIAL    = 赤道座標 ]
     #   [ EQUATORIAL_HA = 赤道座標[時角] ]
     #   [ HORIZONTAL    = 地平座標 ]
+    #
+    # @return [When::Coordinates::Spatial]
     #
     def _coords_diff(t, system=ECLIPTIC)
       return Coords.polar(0,0,0) if alt == :Center
@@ -434,7 +436,7 @@ module When::Coordinates
         # 地名に空間座標を設定する
         #
         # @param [String] name 地名または座標
-        # @param [When::Coordinates::Spatial or When::Coordinates::Spatial::Range] 空間座標
+        # @param [When::Coordinates::Spatial or When::Coordinates::Spatial::Range] locations 空間座標
         #
         def []=(name, locations)
           keys = [source]

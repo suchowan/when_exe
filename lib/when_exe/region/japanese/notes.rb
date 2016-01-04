@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2012-2015 Takashi SUGA
+  Copyright (C) 2012-2016 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -740,7 +740,7 @@ class When::CalendarNote
     #
     # 任意の暦を日本年号付暦日に変換
     #
-    # @param When::TM::CalDate] date 変換元日付
+    # @param [When::TM::CalDate] date 変換元日付
     #
     # @return [When::TM::CalDate] 変換結果
     #
@@ -755,7 +755,7 @@ class When::CalendarNote
     #
     # 日本年号付暦日か?
     #
-    # @param When::TM::CalDate] date 確認する日付
+    # @param [When::TM::CalDate] date 確認する日付
     #
     # @return [Boolean] true YES / false NO
     #

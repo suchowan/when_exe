@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2014 Takashi SUGA
+  Copyright (C) 2014-2016 Takashi SUGA
 
   You may use and/or modify this file according to the license
   described in the LICENSE.txt file included in this archive.
@@ -1178,7 +1178,7 @@ module When::CalendarNote::Japanese::Eclipse
 
   # 日月食の概要を文字列化する
   #
-  # @param [Array<String, Numeric, Array>] 食の情報
+  # @param [Array<String, Numeric, Array>] info 食の情報
   #
   #   [ String  - 食の種類 'T' 皆既食, 'A' 金環食, 'P' 部分食, 'B' 帯食]
   #   [ Numeric - 最大食分                                             ]

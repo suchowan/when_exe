@@ -169,7 +169,7 @@ module When
       #
       # @param [Object] first 小さい方の境界
       # @param [Object] last 大きい方の境界
-      # @param [Boolean] last 大きい方の境界を含まないか？
+      # @param [Boolean] exclude_end 大きい方の境界を含まないか？
       #
       def initialize(first, last, exclude_end=false)
         @start = first
@@ -1205,7 +1205,7 @@ module When
 
       # プレフィクスを名前空間に展開する
       #
-      # @param [String] プレフィクス付きの URI
+      # @param [String] predicate プレフィクス付きの URI
       #
       # @return [String] プレフィクスを名前空間に展開した URI
       #
@@ -1663,9 +1663,6 @@ module When
 
       #
       # 自身を主語とする RDF::Statement の Array を返す
-      #
-      # @param [String] item 返す情報の名称
-      # @param [Symbol] method 返す情報が属するグループ(:role, :rdf, :csv)
       #
       # @return [Array<RDF::Statement>]
       #
