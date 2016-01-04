@@ -1220,7 +1220,7 @@ module When
       #
       # 一言語対応データセットを生成する
       #
-      # @param [Array<String>] definitions 定義行の情報
+      # @param [Array<Array<String>>] definitions 定義行の情報
       # @param [String] language 言語コード
       # @param [String] uri 定義の所在のルート(ts:referenceが相対位置の場合に使用)
       # @param [When::Events::DataSets] parent 所属する多言語対応データセット
