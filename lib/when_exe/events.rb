@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-    Copyright (C) 2015 Takashi SUGA
+    Copyright (C) 2015-2016 Takashi SUGA
 
     You may use and/or modify this file according to the license
     described in the LICENSE.txt file included in this archive.
@@ -257,6 +257,29 @@ module When
         #
         def namespace(prefix, language)
           When::Locale._hash_value(@prefixes[prefix], language)
+        end
+
+        #
+        # 指定の Event を主語とする Statement からなる RDF:Repository を生成する
+        #
+        # @param [Array<When::Events::Event>] events 登録する Event の Array
+        #
+        # @return [Hash<String(GraphURI)=>RDF:Repository>] 生成した Repository の Hash
+        #
+        def repository(events=nil)
+          # 実装予定
+        end
+
+        #
+        # 指定の URI を主語とする Statement からなる RDF:Repository を生成する
+        #
+        # @param [String] uri 主語の URI
+        # @param [String] graph 検索対象のグラフ(ダミー)
+        #
+        # @return [Hash<String(GraphURI)=>RDF:Repository>] 生成した Repository の Hash
+        #
+        def event(uri, graph=nil)
+          # 実装予定
         end
 
         # 多言語対応データセットオブジェクトの生成
