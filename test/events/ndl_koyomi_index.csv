@@ -4,7 +4,7 @@ rdfs:,       http://www.w3.org/2000/01/rdf-schema#
 dc:,         http://purl.org/dc/elements/1.1/
 dcq:,        http://purl.org/dc/terms/
 ts:,         http://hosi.org/ts#
-github:,     https://raw.githubusercontent.com/suchowan/when_exe/master/test/examples/
+github:,     https://raw.githubusercontent.com/suchowan/when_exe/master/test/events/
 ndl:,        http://dl.ndl.go.jp/info:ndljp/pid/
 ndl_2535420:,http://dl.ndl.go.jp/info:ndljp/pid/2535420/,假名暦集覽. 第2冊
 ndl_2535422:,http://dl.ndl.go.jp/info:ndljp/pid/2535422/,假名暦集覽. 第4冊

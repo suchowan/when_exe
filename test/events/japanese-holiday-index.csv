@@ -4,7 +4,7 @@ rdfs:,       http://www.w3.org/2000/01/rdf-schema#
 dc:,         http://purl.org/dc/elements/1.1/
 dcq:,        http://purl.org/dc/terms/
 ts:,         http://hosi.org/ts#
-github:,     https://raw.githubusercontent.com/suchowan/when_exe/master/test/examples/
+github:,     https://raw.githubusercontent.com/suchowan/when_exe/master/test/events/
 wikipedia:,  https://ja.wikipedia.org/wiki/,ウィキペディア
 {rdfs:label},      Japanese Holidays
 {rdfs:label}@ja,   日本の祝祭日
