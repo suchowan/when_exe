@@ -15,7 +15,7 @@ history:,                 http://hosi.org/public/data/events/history/
 {rdfs:label},             [abstarct]
 {dcq:abstract},           [abstarct]
 {ts:group},               [group]
-{rdfc:section-rdf-graph}, history:[group], dcq:URI
+{rdfc:section-rdf-graph}, history:[group], ts:IRI
 {dc:contributor},         [contributor]
 {ts:start},               {dcq:valid}, xsd:integer
 {dcq:hasPart},            {dcq:abstract}

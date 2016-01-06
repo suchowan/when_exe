@@ -416,7 +416,7 @@ module When
     TT          = TS.sub(/#\z/,'/')
     RANGE       = TT + Range.class.to_s.gsub('::','/')
     ID          = TS + 'id'
-    IRI         = TS + 'iri'
+    IRI         = TS + 'IRI'
     REFERENCE   = TS + 'reference'
     GROUP       = TS + 'group'
     CREDIT      = TS + 'credit'
@@ -448,11 +448,15 @@ module When
     # Dublin Core
     SOURCE      = When::Namespace::DC   + 'source'
     CONTRIBUTOR = When::Namespace::DC   + 'contributor'
+    LICENSE     = When::Namespace::DCQ  + 'license'
     VALID       = When::Namespace::DCQ  + 'valid'
     ABSTRACT    = When::Namespace::DCQ  + 'abstract'
     HAS_PART    = When::Namespace::DCQ  + 'hasPart'
     SPATIAL     = When::Namespace::DCQ  + 'spatial'
     URI         = When::Namespace::DCQ  + 'URI'
+
+    # For Dataset
+    ForDataset  = [LABEL, REFERENCE, CONTRIBUTOR, LICENSE]
 
     # Index
     EqualIndex  = [SUBJECT, GRAPH, GROUP, CREDIT, CONTRIBUTOR, SPATIAL]
@@ -607,6 +611,7 @@ module When
       #
       Operations = Hash.new(nooperation).merge({
         When::Events::URI               => to_uri,
+        When::Events::IRI               => to_uri,
         When::Events::INTEGER           => to_i,
         When::Events::FLOAT             => to_f,
         When::Events::DOUBLE            => to_f,
@@ -1374,7 +1379,7 @@ module When
 
       # データセット用の定義かイベント用の定義かの判断
       def self.for_dataset?(target, key=nil)
-        return false if key && ![When::Events::LABEL, When::Events::REFERENCE].include?(key)
+        return false if key && !When::Events::ForDataset.include?(key)
         /\[.+?\]|<.+?>|\{.+?\}/ !~ target
       end
 
@@ -1673,7 +1678,8 @@ module When
           subject = @dataset.resource[@role[When::Events::SUBJECT]]
           @role.each_pair do |predicate, object|
             case predicate
-            when When::Events::SUBJECT, When::Events::ID, When::Events::WHAT_DAY
+            when When::Events::SUBJECT, When::Events::ID, When::Events::GRAPH, When::Events::WHAT_DAY
+              # Do nothing
             when When::Events::HAS_PART
               if @role[When::Events::HAS_PART].kind_of?(Array)
                 words = @role[When::Events::HAS_PART]
