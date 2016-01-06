@@ -1,5 +1,6 @@
-徳川将軍一覧               https://raw.githubusercontent.com/suchowan/when_exe/master/test/events/shogun-dataset.csv
-日本国首相一覧             https://raw.githubusercontent.com/suchowan/when_exe/master/test/events/primeminister-dataset.csv
-国会図書館暦画像           https://raw.githubusercontent.com/suchowan/when_exe/master/test/events/ndl_koyomi_index.csv
-日本の祝祭日               https://raw.githubusercontent.com/suchowan/when_exe/master/test/events/japanese-holiday-index.csv
+GitHub:                    https://raw.githubusercontent.com/suchowan/when_exe/master/test/events/
+徳川将軍一覧               GitHub:shogun-dataset.csv
+日本国首相一覧             GitHub:primeminister-dataset.csv
+国会図書館暦画像           GitHub:ndl_koyomi_index.csv
+日本の祝祭日               GitHub:japanese-holiday-index.csv
 中西版「歴史データベース」 history-dataset.csv
