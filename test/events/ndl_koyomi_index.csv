@@ -34,6 +34,8 @@ ndl_2591261:,http://dl.ndl.go.jp/info:ndljp/pid/2591261/,寛仁四年上
 {rdfs:label},      NDL Digital Collections
 {rdfs:label}@ja,   国会図書館デジタルコレクション
 {ts:reference}@ja, github:ndl_koyomi.csv, csv without header
+{dc:contributor},  http://hosi.org/TakashiSuga.ttl, 須賀隆
+{dcq:license},     http://creativecommons.org/licenses/by-sa/4.0/, CC-BY-SA
 {dcq:valid},       [1]^^Japanese
 {dcq:abstract},    Kanagoyomi Digital Image
 {dcq:abstract},    [3]

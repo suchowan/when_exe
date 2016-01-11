@@ -10,6 +10,8 @@ wikipedia:@*,      https://*.wikipedia.org/wiki/, Wikipedia
 {rdfs:label},      List of Japanese prime ministers
 {rdfs:label}@ja,   日本国首相一覧
 {ts:reference}@ja, http://hosi.org/When/TM/CalendarEra/JapanesePrimeMinister, CalendarEra
+{dc:contributor},  http://hosi.org/TakashiSuga.ttl, 須賀隆
+{dcq:license},     http://creativecommons.org/licenses/by-nd/4.0/, CC-BY-ND
 {dcq:valid},       <dcq:valid>
 {dcq:abstract},    <rdfs:label>
 {dc:source},       <ts:reference>, dcq:URI

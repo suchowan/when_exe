@@ -9,6 +9,8 @@ ex:,               http://example.com/
 {rdfs:label},      Dr. Midwest's big database of history
 {rdfs:label}@ja,   中西版「歴史データベース」
 {ts:reference},    http://hosi.org:3030/test/sparql, SPARQL
+{dc:contributor},  http://hosi.org/TakashiSuga.ttl, 須賀隆
+{dcq:license},     http://creativecommons.org/licenses/by-sa/4.0/, CC-BY-SA
 {rdf:subject},     ex:<ts:id>, dcq:URI
 {dcq:valid},       <dcq:valid>
 {dcq:spatial},     <dcq:spatial>

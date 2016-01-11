@@ -10,6 +10,8 @@ ex:,               http://example.com/
 {rdfs:label}@ja,   中西版「歴史データベース」
 #{ts:reference},   test-history-events.csv, csv with header
 {ts:reference}@ja, test-history-events.csv, csv with header(100)
+{dc:contributor},  http://hosi.org/TakashiSuga.ttl, 須賀隆
+{dcq:license},     http://creativecommons.org/licenses/by-sa/4.0/, CC-BY-SA
 {rdf:subject},     ex:{ts:id},     dcq:URI
 {dcq:valid},       [valid]
 {dcq:spatial},     [location]

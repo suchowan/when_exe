@@ -11,6 +11,9 @@ wikipedia:@*,      https://*.wikipedia.org/wiki/, Wikipedia
 {rdfs:label},      List of Tokugawa Shoguns
 {rdfs:label}@ja,   徳川将軍一覧
 {ts:reference},    https://ja.wikipedia.org/wiki/%E5%BE%B3%E5%B7%9D%E5%B0%86%E8%BB%8D%E4%B8%80%E8%A6%A7,"/<th>(\d+)<\/th><td.*?>.+?href=\""\/wiki\/(.+?)\"".*?([^>]+?)<\/a>.*?<\/td><td.*?>.+?<\/td><td.*?>.+?<\/td><td.*?>.+?<\/td><td.*?>.*?年.*?((?:\d+?)年).*?((?:閏?\d+?)月).*?((?:\d+?)日).*?年.*?((?:\d+?)年).*?((?:閏?\d+?)月).*?((?:\d+?)日).*?<\/td>/"
+{dc:contributor},  https://ja.wikipedia.org/, ウィキペディア
+{dcq:license},     https://ja.wikipedia.org/wiki/Wikipedia:Text_of_GNU_Free_Documentation_License, Wikipedia:Text of GNU Free Documentation License
+{dcq:license},     https://ja.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License, Wikipedia:Text of Creative Commons Attribution-ShareAlike 3.0 Unported License
 {rdf:subject},     shogun:{ts:id}, dcq:URI
 {dcq:valid},       [4][5][6]..[7][8][9]^^Japanese
 {dcq:abstract},    [3]
