@@ -322,9 +322,9 @@ module When
               definitions[name][language] << row unless language == ''
             end
             case extract(name)
-            when When::Events::LABEL     ; labels        = filter_for_dataset(definitions[name])
-            when When::Events::REFERENCE ; datasets      = filter_for_dataset(definitions[name])
-            when /\A(.+?):\z/            ; @prefixes[$1] = filter_for_dataset(definitions[name], true)
+            when LABEL       ; labels        = filter_for_dataset(definitions[name])
+            when REFERENCE   ; datasets      = filter_for_dataset(definitions[name])
+            when /\A(.+?):\z/; @prefixes[$1] = filter_for_dataset(definitions[name], true)
             end
           end
 
@@ -383,7 +383,7 @@ module When
           hash = {}
           target.each_pair do |language, definitions|
             definitions.each do |definition|
-              if filter || When::Events::DataSet.for_dataset?(definition.first)
+              if filter || DataSet.for_dataset?(definition.first)
                 hash[language] = definition
                 break
               end
@@ -419,7 +419,6 @@ module When
     IRI         = TS + 'IRI'
     REFERENCE   = TS + 'reference'
     GROUP       = TS + 'group'
-    CREDIT      = TS + 'credit'
     WHAT_DAY    = TS + 'whatDay'
     START       = TS + 'start'
     UNTIL       = TS + 'until'
@@ -459,7 +458,7 @@ module When
     ForDataset  = [LABEL, REFERENCE, CONTRIBUTOR, LICENSE]
 
     # Index
-    EqualIndex  = [SUBJECT, GRAPH, GROUP, CREDIT, CONTRIBUTOR, SPATIAL]
+    EqualIndex  = [SUBJECT, GRAPH, GROUP, CONTRIBUTOR, SPATIAL]
     FirstEdge   = {'valid'=>START, 'longitude'=>WEST, 'latitude'=>SOUTH, 'altitude'=>BOTTOM}
     LastEdge    = {'valid'=>UNTIL, 'longitude'=>EAST, 'latitude'=>NORTH, 'altitude'=>TOP   }
 
@@ -558,9 +557,9 @@ module When
         !obj.respond_to?(:last) ?
           obj.to_f :
         obj.exclude_end? ?
-          obj.last.to_f - When::Events::Range::Delta :
+          obj.last.to_f - Range::Delta :
         obj.last.respond_to?(:succ) ?
-          obj.last.succ.to_f - When::Events::Range::Delta :
+          obj.last.succ.to_f - Range::Delta :
           obj.last.to_f
       }
 
@@ -568,7 +567,7 @@ module When
       to_range     = proc {|event, date|
         target = When.when?(date, :parse=>When::Locale::EasternParser)
         case target
-        when Array, Enumerator ; When::Events::Range.convert_from(target)
+        when Array, Enumerator ; Range.convert_from(target)
         else                   ; target
         end
       }
@@ -610,28 +609,28 @@ module When
       # オブジェクト操作対応付け
       #
       Operations = Hash.new(nooperation).merge({
-        When::Events::URI               => to_uri,
-        When::Events::IRI               => to_uri,
-        When::Events::INTEGER           => to_i,
-        When::Events::FLOAT             => to_f,
-        When::Events::DOUBLE            => to_f,
-        [:first, When::Events::INTEGER] => first_to_i,
-        [:first, When::Events::FLOAT  ] => first_to_f,
-        [:first, When::Events::DOUBLE ] => first_to_f,
-        [:last,  When::Events::INTEGER] => last_to_i,
-        [:last,  When::Events::FLOAT  ] => last_to_f,
-        [:last,  When::Events::DOUBLE ] => last_to_f,
-        When::Events::RANGE             => to_range,
-        When::Events::DATE              => to_date,
-        When::Events::TIME              => to_time,
-        When::Events::DATETIME          => to_date_time,
+        URI               => to_uri,
+        IRI               => to_uri,
+        INTEGER           => to_i,
+        FLOAT             => to_f,
+        DOUBLE            => to_f,
+        [:first, INTEGER] => first_to_i,
+        [:first, FLOAT  ] => first_to_f,
+        [:first, DOUBLE ] => first_to_f,
+        [:last,  INTEGER] => last_to_i,
+        [:last,  FLOAT  ] => last_to_f,
+        [:last,  DOUBLE ] => last_to_f,
+        RANGE             => to_range,
+        DATE              => to_date,
+        TIME              => to_time,
+        DATETIME          => to_date_time,
 
-        When::Events::WEST              => to_long,
-        When::Events::EAST              => to_long,
-        When::Events::SOUTH             => to_lat,
-        When::Events::NORTH             => to_lat,
-        When::Events::BOTTOM            => to_alt,
-        When::Events::TOP               => to_alt
+        WEST              => to_long,
+        EAST              => to_long,
+        SOUTH             => to_lat,
+        NORTH             => to_lat,
+        BOTTOM            => to_alt,
+        TOP               => to_alt
       })
 
       #
@@ -744,7 +743,7 @@ module When
           rep = Hash.new {|hash,key| hash[key] = ::RDF::Repository.new}
           events.each do |event|
             rep[''].insert(*event.statements)
-            rep[event.role[When::Events::GRAPH]].insert(*event.statements) if @role.key?(When::Events::GRAPH)
+            rep[event.role[GRAPH]].insert(*event.statements) if @role.key?(GRAPH)
           end
           rep
         else
@@ -753,20 +752,21 @@ module When
       end
 
       #
-      # 指定の URI を主語とする Statement からなる RDF:Repository を生成する
+      # 指定の URIまたはイベントの通し番号を主語とする Statement からなる RDF:Repository を生成する
       #
       # @param [String] uri 主語の URI
+      # @param [Integer] uri 主語のイベントの通し番号
       # @param [String] graph 検索対象のグラフ(ダミー)
       #
       # @return [Hash<String(GraphURI)=>RDF:Repository>] 生成した Repository の Hash
       #
       def event(uri, graph=nil)
         rep   = Hash.new {|hash,key| hash[key] = ::RDF::Repository.new}
-        list  = @index[When::Events::SUBJECT][uri]
+        list  = uri.kind_of?(String) ? @index[SUBJECT][uri] : [uri]
         unless list.empty?
           event = @events[list.first-1]
           rep[''].insert(*event.statements)
-          rep[event.role[When::Events::GRAPH]].insert(*event.statements) if @role.key?(When::Events::GRAPH)
+          rep[event.role[GRAPH]].insert(*event.statements) if @role.key?(GRAPH)
         end
         rep
       end
@@ -786,9 +786,9 @@ module When
           if events
             rep = Hash.new {|hash,key| hash[key] = ::RDF::Repository.new}
             events.each do |event|
-              @repository[''].query({:subject=>@resource[event.role[When::Events::SUBJECT]]}) do |statement|
+              @repository[''].query({:subject=>@resource[event.role[SUBJECT]]}) do |statement|
                 rep[''].insert(statement)
-                rep[event.role[When::Events::GRAPH]].insert(statement) if @role.key?(When::Events::GRAPH)
+                rep[event.role[GRAPH]].insert(statement) if @role.key?(GRAPH)
               end
             end
             rep
@@ -809,7 +809,7 @@ module When
           rep = Hash.new {|hash,key| hash[key] = ::RDF::Repository.new}
           @repository[''].query({:subject=>@resource[uri]}) do |statement|
             rep[''].insert(statement)
-            rep[event.role[When::Events::GRAPH]].insert(statement) if @role.key?(When::Events::GRAPH)
+            rep[event.role[GRAPH]].insert(statement) if @role.key?(GRAPH)
           end
           rep
         end
@@ -821,8 +821,8 @@ module When
           @used_predicate = {}
           @repository = Hash.new {|hash,key| hash[key] = ::RDF::Repository.new}
           @repository.update({''=>::RDF::Repository.load(source)})
-          valid = @resource[@role[When::Events::VALID] && /<(.+?)>/ =~ @role[When::Events::VALID][:target] ?
-                    $1 : When::Events::VALID]
+          valid = @resource[@role[VALID] && /<(.+?)>/ =~ @role[VALID][:target] ?
+                    $1 : VALID]
           @repository[''].query({:predicate=>valid}) do |statement|
             yield(rdf_to_hash(statement.subject))
           end
@@ -832,13 +832,13 @@ module When
               @used_predicate.key?(predicate) || @role[predicate][:copied]
             }
             @repository[''].insert(*statements)
-            @repository[event.role[When::Events::GRAPH]].insert(*statements) if @role.key?(When::Events::GRAPH)
+            @repository[event.role[GRAPH]].insert(*statements) if @role.key?(GRAPH)
           end
         end
 
         # 主語 subject を指定してトリプルをハッシュ化する
         def rdf_to_hash(subject)
-          hash = {When::Events::SUBJECT=>subject.to_s}
+          hash = {SUBJECT=>subject.to_s}
           @repository[''].query({:subject=>subject}) do |statement|
             key   = statement.predicate.to_s
             value = statement.object
@@ -907,26 +907,26 @@ module When
 
           # 問い合わせ文字列を準備する
           rdf_keys   = Hash.new {|hash,key| hash[key]=[]}
-          role_keys  = @role.keys - [When::Events::LABEL, When::Events::REFERENCE, When::Events::WHAT_DAY]
+          role_keys  = @role.keys - [LABEL, REFERENCE, WHAT_DAY]
           role_keys.each do |role_key|
             @role[role_key][:target].scan(/<(.+?)>/) {rdf_keys[$1] << role_key}
           end
           keywords   = (/./ =~ options['keyword']) ? options['keyword'].split('*') : []
-          loc_edges  = @order.key?(When::Events::WEST) || @order.key?(When::Events::SOUTH) || @order.key?(When::Events::BOTTOM)
+          loc_edges  = @order.key?(WEST) || @order.key?(SOUTH) || @order.key?(BOTTOM)
           triples    = []
           predicates = {}
           rdf_keys.each_pair do |rdf_key, role_key|
-            if role_key.include?(When::Events::SUBJECT)
+            if role_key.include?(SUBJECT)
               predicates['?s'] = rdf_key
-            elsif role_key.include?(When::Events::HAS_PART)
+            elsif role_key.include?(HAS_PART)
               keywords.each do |keyword|
                 triples << "?s <#{rdf_key}> \"#{keyword}\" . "
               end
-            elsif role_key.include?(When::Events::CONTRIBUTOR) && /\A[^!]/ =~ options['contributor']
+            elsif role_key.include?(CONTRIBUTOR) && /\A[^!]/ =~ options['contributor']
               triples << "?s <#{rdf_key}> \"#{options['contributor']}\" . "
-            elsif role_key.include?(When::Events::GROUP) && /./ =~ options['group']
+            elsif role_key.include?(GROUP) && /./ =~ options['group']
               triples << "?s <#{rdf_key}> \"#{options['group']}\" . "
-            elsif role_key.include?(When::Events::SPATIAL) && /./ =~ options['location'] && !loc_edges
+            elsif role_key.include?(SPATIAL) && /./ =~ options['location'] && !loc_edges
               triples << "?s <#{rdf_key}> \"#{options['location']}\" . "
             else
               object = "?o#{predicates.size}"
@@ -942,16 +942,16 @@ module When
           filters.concat(regex_filter(options['contributor'], predicates, rdf_keys, 'contributor'))
           if /./ =~ options['location'] && loc_edges
             location = When.where?(options['location'])
-            filters.concat(range_filter(location.long, predicates, rdf_keys, 'longitude')) if @order.key?(When::Events::WEST)
-            filters.concat(range_filter(location.lat,  predicates, rdf_keys, 'latitude' )) if @order.key?(When::Events::SOUTH)
-            filters.concat(range_filter(location.alt,  predicates, rdf_keys, 'altitude' )) if @order.key?(When::Events::BOTTOM)
+            filters.concat(range_filter(location.long, predicates, rdf_keys, 'longitude')) if @order.key?(WEST)
+            filters.concat(range_filter(location.lat,  predicates, rdf_keys, 'latitude' )) if @order.key?(SOUTH)
+            filters.concat(range_filter(location.alt,  predicates, rdf_keys, 'altitude' )) if @order.key?(BOTTOM)
           end
           query_string  = "#{select}\n"
-          query_string << "FROM <#{options['graph']}> \n" if @role.key?(When::Events::GRAPH) && /./ =~ options['graph']
+          query_string << "FROM <#{options['graph']}> \n" if @role.key?(GRAPH) && /./ =~ options['graph']
           query_string << "WHERE { \n #{triples.map {|t| t+"\n "}.join('')}"
           query_string << " FILTER ( \n  #{filters.map {|f| ' '+f}.join(" && \n  ")}\n  ) \n" unless filters.empty?
           query_string << "} \n"
-          query_string << "ORDER BY #{attr2var(@order.key?(When::Events::START) ? 'start' : 'valid', predicates, rdf_keys)} \n" unless options['count']
+          query_string << "ORDER BY #{attr2var(@order.key?(START) ? 'start' : 'valid', predicates, rdf_keys)} \n" unless options['count']
           query_string << "LIMIT  #{options['limit']} \n"  if options['limit' ].to_i > 1
           query_string << "OFFSET #{options['offset']} \n" if options['offset'].to_i > 1
           return query_string if options['debug']
@@ -979,19 +979,19 @@ module When
                       }.flatten]
               rdf_keys.each_pair do |rdf_key, role_key|
                 next if event.key?(rdf_key)
-                if role_key.include?(When::Events::HAS_PART)
+                if role_key.include?(HAS_PART)
                   event[rdf_key] = keywords
-                elsif role_key.include?(When::Events::CONTRIBUTOR)
+                elsif role_key.include?(CONTRIBUTOR)
                   event[rdf_key] = options['contributor']
-                elsif role_key.include?(When::Events::GRAPH)
+                elsif role_key.include?(GRAPH)
                   event[rdf_key] = (/./ =~ options['graph'] ? options['graph'] : @default_graph)
-                elsif role_key.include?(When::Events::SPATIAL)
+                elsif role_key.include?(SPATIAL)
                   event[rdf_key] = options['location']
                 end
               end
               uri = event[predicates['?s']]
               id  = uri[@default_graph.length..-1] if @default_graph && uri.index(@default_graph)
-              When::Events::Event.new(self, id || uri, event)
+              Event.new(self, id || uri, event)
             }
           end
         end
@@ -1005,10 +1005,10 @@ module When
 
         def range_filter(target, predicates, rdf_keys, attr, altanative=nil)
           first, last, exclude =
-            case @role[When::Events::FirstEdge[attr]] && @role[When::Events::FirstEdge[attr]][:type]
-            when When::Events::INTEGER
+            case @role[FirstEdge[attr]] && @role[FirstEdge[attr]][:type]
+            when INTEGER
               range_to_args(target, :to_i)
-            when When::Events::DOUBLE, When::Events::FLOAT
+            when DOUBLE, FLOAT
               range_to_args(target, :to_f)
             else
               case altanative
@@ -1018,9 +1018,9 @@ module When
                 [altanative]
               end
             end
-          lower  = @order.key?(When::Events::LastEdge[ attr]) ? When::Events::LastEdge[ attr][/[a-z]+\z/i] :
-                   @order.key?(When::Events::FirstEdge[attr]) ? When::Events::FirstEdge[attr][/[a-z]+\z/i] : attr
-          upper  = @order.key?(When::Events::FirstEdge[attr]) ? When::Events::FirstEdge[attr][/[a-z]+\z/i] : attr
+          lower  = @order.key?(LastEdge[ attr]) ? LastEdge[ attr][/[a-z]+\z/i] :
+                   @order.key?(FirstEdge[attr]) ? FirstEdge[attr][/[a-z]+\z/i] : attr
+          upper  = @order.key?(FirstEdge[attr]) ? FirstEdge[attr][/[a-z]+\z/i] : attr
           last ||= first
           lower_var = attr2var(lower, predicates, rdf_keys)
           upper_var = attr2var(upper, predicates, rdf_keys)
@@ -1073,41 +1073,41 @@ module When
         list = []
 
         # 日付範囲
-        if @order.key?(When::Events::START) && /./ =~ options['date']
-          range = When::Events::Range.convert_from(When.date_or_era(options['date']))
-          list << (@order.key?(When::Events::UNTIL) ?
-                     range_overlaped(When::Events::START, When::Events::UNTIL, range) :
-                     edge_included(When::Events::START, range))
+        if @order.key?(START) && /./ =~ options['date']
+          range = Range.convert_from(When.date_or_era(options['date']))
+          list << (@order.key?(UNTIL) ?
+                     range_overlaped(START, UNTIL, range) :
+                     edge_included(START, range))
         end
 
         # キーワード
-        if @index.key?(When::Events::HAS_PART) && /./ =~ options['keyword']
-          options['keyword'].split('*').each {|key| list << @index[When::Events::HAS_PART][key]}
+        if @index.key?(HAS_PART) && /./ =~ options['keyword']
+          options['keyword'].split('*').each {|key| list << @index[HAS_PART][key]}
         end
 
         # 情報提供者
-        if @index.key?(When::Events::CONTRIBUTOR) && /\A(!)?(.+)/ =~ options['contributor']
+        if @index.key?(CONTRIBUTOR) && /\A(!)?(.+)/ =~ options['contributor']
           reverse, contributor = $1, $2
-          sublist = @index[When::Events::CONTRIBUTOR][contributor]
+          sublist = @index[CONTRIBUTOR][contributor]
           if sublist
-            sublist = (@order[When::Events::START] || (1..@events.size).to_a) - sublist if reverse
+            sublist = (@order[START] || (1..@events.size).to_a) - sublist if reverse
             list << sublist
           end
         end
 
         # グループ
-        if @index.key?(When::Events::GROUP) && /./ =~ options['group']
-          list << @index[When::Events::GROUP][options['group']]
+        if @index.key?(GROUP) && /./ =~ options['group']
+          list << @index[GROUP][options['group']]
         end
 
         # 空間位置
         if /./ =~ options['location']
-          if @order.key?(When::Events::WEST) || @order.key?(When::Events::SOUTH) || @order.key?(When::Events::BOTTOM)
+          if @order.key?(WEST) || @order.key?(SOUTH) || @order.key?(BOTTOM)
             range = When.where?(options['location'])
             range = When::Coordinates::Spatial::Range.new(range,range) unless range.kind_of?(When::Coordinates::Spatial::Range)
-            [[When::Events::WEST,   When::Events::EAST,  :long],
-             [When::Events::SOUTH,  When::Events::NORTH, :lat ],
-             [When::Events::BOTTOM, When::Events::TOP,   :alt ]].each do |pattern|
+            [[WEST,   EAST,  :long],
+             [SOUTH,  NORTH, :lat ],
+             [BOTTOM, TOP,   :alt ]].each do |pattern|
                first, last, method = pattern
                if @order.key?(first)
                  list << (@order.key?(last) ?
@@ -1115,20 +1115,20 @@ module When
                             edge_included(first, range.send(method), :to_f))
                end
              end
-           elsif @index.key?(When::Events::SPATIAL)
-             list << @index[When::Events::SPATIAL][options['location']]
+           elsif @index.key?(SPATIAL)
+             list << @index[SPATIAL][options['location']]
            end
         end
 
         # グラフ
-        if @index.key?(When::Events::GRAPH) && /./ =~ options['graph']
-          list << @index[When::Events::GRAPH][options['graph']]
+        if @index.key?(GRAPH) && /./ =~ options['graph']
+          list << @index[GRAPH][options['graph']]
         end
 
         # 今日は何の日
-        if @index.key?(When::Events::WHAT_DAY)
-          list << @index[When::Events::WHAT_DAY][[true,  $1.to_i,$2.to_i]] if /\A(\d{1,2})[-\/]?(\d{1,2})\z/ =~ options['day']
-          list << @index[When::Events::WHAT_DAY][[false, $1.to_i,$2.to_i]] if /\A(\d{1,2})[-\/]?(\d{1,2})\z/ =~ options['lsday']
+        if @index.key?(WHAT_DAY)
+          list << @index[WHAT_DAY][[true,  $1.to_i,$2.to_i]] if /\A(\d{1,2})[-\/]?(\d{1,2})\z/ =~ options['day']
+          list << @index[WHAT_DAY][[false, $1.to_i,$2.to_i]] if /\A(\d{1,2})[-\/]?(\d{1,2})\z/ =~ options['lsday']
         end
 
         # 共通集合
@@ -1143,19 +1143,19 @@ module When
         narrowed_events = []
         sort_required = false
         events.each do |event|
-          event_range = event.role[When::Events::VALID]
-          if event_range.kind_of?(When::Events::Range) && event_range.is_complex?
+          event_range = event.role[VALID]
+          if event_range.kind_of?(Range) && event_range.is_complex?
             event_range.overlaped(range).each do |focused_date|
               sort_required = true
               focused_event = event.deep_copy(event)
-              focused_event.role[When::Events::VALID] = focused_date
+              focused_event.role[VALID] = focused_date
               narrowed_events << focused_event
             end
           else
             narrowed_events << event
           end
         end
-        narrowed_events.sort_by! {|event| event.role[When::Events::VALID]} if sort_required
+        narrowed_events.sort_by! {|event| event.role[VALID]} if sort_required
         narrowed_events
       end
 
@@ -1275,13 +1275,13 @@ module When
         @events = []
         @index  = {}
         (@role.keys + @rdf.keys + @csv.keys).each {|item| @index[item] = Hash.new {|hash,key| hash[key]=[]}}
-        target = @role_for_dataset[When::Events::REFERENCE][:target]
+        target = @role_for_dataset[REFERENCE][:target]
         unless target =~ /:/ # Relative path
           path     = uri.split('/')
           path[-1] = target
           target   = path.join('/')
         end
-        operation = @role_for_dataset[When::Events::REFERENCE][:original]
+        operation = @role_for_dataset[REFERENCE][:original]
         source    = extract(target)
         source    = yield(source) if block_given? && operation !~ /SPARQL|CalendarEra/i
         raise IOError, target + ': not ready' unless source
@@ -1291,23 +1291,23 @@ module When
 
           @role.keys.each do |item|
             case item
-            when When::Events::LABEL, When::Events::REFERENCE, When::Events::CREDIT
-            when When::Events::HAS_PART
-              if event.role[When::Events::HAS_PART].kind_of?(Array)
-                event.role[When::Events::HAS_PART].each do |word|
-                  @index[When::Events::HAS_PART][word] << @events.size
+            when LABEL, REFERENCE
+            when HAS_PART
+              if event.role[HAS_PART].kind_of?(Array)
+                event.role[HAS_PART].each do |word|
+                  @index[HAS_PART][word] << @events.size
                 end
               else
                 event.each_word do |word|
-                  @index[When::Events::HAS_PART][word] << @events.size
+                  @index[HAS_PART][word] << @events.size
                 end
               end
-            when When::Events::WHAT_DAY
-              date = event.role[When::Events::WHAT_DAY]
+            when WHAT_DAY
+              date = event.role[WHAT_DAY]
               key = [date.class.to_s !~ /\AWhen/ ||
                      date.frame.kind_of?(When::CalendarTypes::Christian),
                      date.month * 1, date.day]
-              @index[When::Events::WHAT_DAY][key] << @events.size
+              @index[WHAT_DAY][key] << @events.size
             else
               add_index(:role, item)
             end
@@ -1333,11 +1333,11 @@ module When
         @index.each_value do |hash|
           hash.each_value do |value|
             value.uniq!
-            value.sort_by! {|id| @events[id-1].order[When::Events::START]} if @order.key?(When::Events::START)
+            value.sort_by! {|id| @events[id-1].order[START]} if @order.key?(START)
           end
         end
 
-        @default_graph   = $1 if @role.key?(When::Events::SUBJECT) && /\A(.+)<(.+)>\z/ =~ extract(@role[When::Events::SUBJECT][:target])
+        @default_graph   = $1 if @role.key?(SUBJECT) && /\A(.+)<(.+)>\z/ =~ extract(@role[SUBJECT][:target])
         @default_graph ||= parent.iri if parent
       end
 
@@ -1358,10 +1358,10 @@ module When
             break
           end
         end
-        type      ||= (When.const_defined?(:Parts) ? When::Events::RANGE : ::Date) if key == When::Events::VALID
+        type      ||= (When.const_defined?(:Parts) ? RANGE : ::Date) if key == VALID
         operation   = if /\A\s*strptime\((.+)\)\s*\z/ =~ definition[1]
                         fmt = $1
-                        proc {|date| Date.strptime(date, fmt)}
+                        proc {|date| When.strptime(date, fmt)}
                       else
                         Operations[edge ? [edge, type] : type]
                       end
@@ -1379,7 +1379,7 @@ module When
 
       # データセット用の定義かイベント用の定義かの判断
       def self.for_dataset?(target, key=nil)
-        return false if key && !When::Events::ForDataset.include?(key)
+        return false if key && !ForDataset.include?(key)
         /\[.+?\]|<.+?>|\{.+?\}/ !~ target
       end
 
@@ -1417,10 +1417,10 @@ module When
           era = When.Resource(source)
           era = era.child.first unless era.child.empty?
           while (era)
-            yield({When::Events::VALID     => When::Parts::GeometricComplex.new(era.first, era.last.indeterminated_position ?
-                                                                                            When.today+When::P6W : era.last),
-                   When::Events::LABEL     => era.label.translate(@language),
-                   When::Events::REFERENCE => era.label.reference(@language)})
+            yield({VALID     => When::Parts::GeometricComplex.new(era.first, era.last.indeterminated_position ?
+                                                                   When.today+When::P6W : era.last),
+                   LABEL     => era.label.translate(@language),
+                   REFERENCE => era.label.reference(@language)})
             era = era.succ
           end
         when /\A\/(.+)\/(\((\d+)\))?\z/
@@ -1624,7 +1624,7 @@ module When
       # HAS_PART対象の文字列中の{}で囲まれた語に対して yield で指定された処理を行う
       #
       def each_word
-        @role[When::Events::HAS_PART].scan(/(\{+)(.*?)(\}+)/) do
+        @role[HAS_PART].scan(/(\{+)(.*?)(\}+)/) do
           bra, word, cket = $~[1..3]
           next unless bra.length.odd? && cket.length.odd?
           yield(word)
@@ -1641,7 +1641,7 @@ module When
       #
       # @note ブロックを渡された場合、そのブロックに{}部分のマークアップを依頼する
       #
-      def abstract(item=When::Events::ABSTRACT, method=:role)
+      def abstract(item=ABSTRACT, method=:role)
           send(method)[item].gsub(/(\{+)(.*?)(\}+)/) {
             bra, word, cket = $~[1..3]
             '{'*(bra.length/2) + (block_given? ? yield(word) : word) + '}'*(cket.length/2)
@@ -1656,7 +1656,7 @@ module When
       #
       # @return [Array<String(IRI), String(説明)>]
       #
-      def source(item=When::Events::SOURCE, method=:role)
+      def source(item=SOURCE, method=:role)
         iri = send(method)[item]
         return [nil, iri] unless /:\/\// =~ iri
         @dataset.prefix_description.each do |description|
@@ -1674,15 +1674,15 @@ module When
       def statements
         unless @statements
           @statements = []
-          raise ArgumentError, 'Role for rdf:subject not defined' unless @role.key?(When::Events::SUBJECT)
-          subject = @dataset.resource[@role[When::Events::SUBJECT]]
+          raise ArgumentError, 'Role for rdf:subject not defined' unless @role.key?(SUBJECT)
+          subject = @dataset.resource[@role[SUBJECT]]
           @role.each_pair do |predicate, object|
             case predicate
-            when When::Events::SUBJECT, When::Events::ID, When::Events::GRAPH, When::Events::WHAT_DAY
+            when SUBJECT, ID, GRAPH, WHAT_DAY
               # Do nothing
-            when When::Events::HAS_PART
-              if @role[When::Events::HAS_PART].kind_of?(Array)
-                words = @role[When::Events::HAS_PART]
+            when HAS_PART
+              if @role[HAS_PART].kind_of?(Array)
+                words = @role[HAS_PART]
               else
                 words = []
                 each_word do |word|
@@ -1693,10 +1693,10 @@ module When
               words.each do |word|
                 @statements << ::RDF::Statement(subject, @dataset.resource[predicate], word)
               end
-          # when When::Events::ABSTRACT
+          # when ABSTRACT
           #   @statements << ::RDF::Statement(subject, @dataset.resource[predicate], abstract)
             else
-              if @dataset.role[predicate][:type] == When::Events::URI
+              if [URI, IRI].include?(@dataset.role[predicate][:type])
                 object = @dataset.resource[object]
               elsif object.respond_to?(:to_uri)
                 object = object.to_uri
@@ -1760,7 +1760,7 @@ module When
           end
         end
 
-        @role[When::Events::ID] = @rdf[When::Events::ID] = id
+        @role[ID] = @rdf[ID] = id
         dataset.role.each_pair do |item, definition|
           fields = []
           format = definition[:target].gsub('%','%%').gsub(/\[(\d+)\]|<(.+?)>|\{(.+?)\}/) {|match|
@@ -1774,7 +1774,7 @@ module When
             fields << field
             '%s'
           }
-          pre_operation = When::Events::DataSet::Operations[item]
+          pre_operation = DataSet::Operations[item]
           @role[item] = 
             if pre_operation
               definition[:operation].call(self, pre_operation.call(self, format == '%s' ? fields.first : format % fields))
@@ -1792,8 +1792,8 @@ module When
         part = part.strip
         return part if /:\/\/|%/ =~ part
         case type
-        when When::Events::URI; CGI.escape(part.gsub(' ', '_')).gsub(/%2F/i,'/')
-        when When::Events::IRI; part.gsub(' ', '_')
+        when URI; CGI.escape(part.gsub(' ', '_')).gsub(/%2F/i,'/')
+        when IRI; part.gsub(' ', '_')
         else part
         end
       end

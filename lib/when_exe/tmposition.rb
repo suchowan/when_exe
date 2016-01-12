@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2016 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -978,6 +978,10 @@ module When::TM
           return result unless result == 0
         end
         @cal_date[prec - 1] <=> other.cal_date[prec - 1]
+      elsif prec < DAY && precision < other.precision
+        return +1 if other.to_i <  self.to_i
+        return -1 if other.to_i >= succ.to_i
+        return  0
       else
         source = (prec >= self.precision ) ? self  : self.floor(prec)
         target = (prec >= other.precision) ? other : other.floor(prec)
