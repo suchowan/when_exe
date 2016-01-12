@@ -8,7 +8,7 @@ ts:,         http://hosi.org/ts#
 github:,     https://raw.githubusercontent.com/suchowan/when_exe/master/test/events/
 wikipedia:,  https://ja.wikipedia.org/wiki/,ウィキペディア
 dbpedia:,    http://ja.dbpedia.org/resource/,DBpedia Japanese
-server:,     http://hosi.org/Event.ttl?dataset=https://raw.githubusercontent.com/suchowan/when_exe/master/test/events/japanese-holiday.csv&id=
+server:,     http://hosi.org/Event.ttl?dataset=https://raw.githubusercontent.com/suchowan/when_exe/master/test/events/japanese-holiday-index.csv&id=
 {rdfs:label},      Japanese Holidays
 {rdfs:label}@ja,   日本の祝祭日
 {ts:reference},    github:japanese-holiday.csv, csv without header
