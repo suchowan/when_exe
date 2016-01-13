@@ -267,20 +267,58 @@ module When
         # @return [Hash<String(GraphURI)=>RDF:Repository>] 生成した Repository の Hash
         #
         def repository(events=nil)
-          # 実装予定
+          repositories = {}
+          @datasets.each_pair do |language, dataset|
+            repositories[language] = dataset.repository(events)
+          end
+          _merge_each_graph(repositories)
         end
 
         #
         # 指定の URI を主語とする Statement からなる RDF:Repository を生成する
         #
         # @param [String] uri 主語の URI
+        # @param [Integer] uri 主語のイベントの通し番号
         # @param [String] graph 検索対象のグラフ(ダミー)
         #
         # @return [Hash<String(GraphURI)=>RDF:Repository>] 生成した Repository の Hash
         #
         def event(uri, graph=nil)
-          # 実装予定
+          repositories = {}
+          @datasets.each_pair do |language, dataset|
+            repositories[language] = dataset.event(uri, graph)
+          end
+          _merge_each_graph(repositories)
         end
+
+        #
+        # RDF::URI リソースで使用された prefix - namespace 対
+        #
+        # @return [Hash<String(prefix)=>String(namespace)>]
+        #
+        def used_ns
+          pair = {}
+          @datasets.each_value do |dataset|
+            pair.update(dataset.used_ns)
+          end
+          pair
+        end
+
+        #
+        # graph ごとに repository を merge する
+        #
+        def _merge_each_graph(repositories)
+          merged = {}
+          repositories.keys.inject([]) {|graphs,language| (graphs | repositories[language].keys) }.each do |graph|
+            repository_for_graph = ::RDF::Repository.new
+            repositories.each_value do |repository|
+              repository_for_graph << repository[graph] if repository.key?(graph)
+            end
+            merged[graph] = repository_for_graph
+          end
+          merged
+        end
+        private :_merge_each_graph
 
         # 多言語対応データセットオブジェクトの生成
         #
@@ -1666,6 +1704,15 @@ module When
           return [iri, description[1]] if index && index == 0
         end
         [iri]
+      end
+
+      #
+      # イベントが属するグループ(@role[When::Events::GROUP])を返す
+      #
+      # @return [String]
+      #
+      def group
+        @role[GROUP]
       end
 
       #

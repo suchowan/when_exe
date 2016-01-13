@@ -41,6 +41,16 @@ module When
       'altitide'        => "Coordinates/Spatial#latitude-instance_method",
       'event'           => "CalendarNote#event-instance_method",
       'note'            => "CalendarNote/NoteElement",
+      'id'              => "Events/Event#id-instance_method",
+      'group'           => "Events/Event#group-instance_method",
+      'start'           => "Events/Range#start-instance_method",
+      'until'           => "Events/Range#until-instance_method",
+      'west'            => "Coordinates/Spatial/Range#west-instance_method",
+      'east'            => "Coordinates/Spatial/Range#east-instance_method",
+      'south'           => "Coordinates/Spatial/Range#south-instance_method",
+      'north'           => "Coordinates/Spatial/Range#north-instance_method",
+      'bottom'          => "Coordinates/Spatial/Range#bottom-instance_method",
+      'top'             => "Coordinates/Spatial/Range#top-instance_method"
     }
 
     #
