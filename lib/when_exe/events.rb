@@ -361,8 +361,9 @@ module When
           Hash[*(datasets.keys.map {|language|
             lines = []
             definitions.each_pair do |name, definition|
-              (When::Locale._hash_value(definition, language)||[]).each do |defs|
-                lines << ([name] + defs)
+              lang = When::Locale._hash_key(definition, language)
+              definition[lang].each do |defs|
+                lines << [[name] + defs, lang]
               end
             end
             [language, DataSet.new(lines, language, uri, self, &block)]
@@ -430,29 +431,29 @@ module When
     TOP         = TS + 'top'
 
     # XML Schema Definition
-    INTEGER     = When::Namespace::XSD  + '#integer'
-    FLOAT       = When::Namespace::XSD  + '#float'
-    DOUBLE      = When::Namespace::XSD  + '#double'
-    STRING      = When::Namespace::XSD  + '#string'
-    DATE        = When::Namespace::XSD  + '#date'
-    TIME        = When::Namespace::XSD  + '#time'
-    DATETIME    = When::Namespace::XSD  + '#dateTime'
+    INTEGER     = Namespace::XSD  + '#integer'
+    FLOAT       = Namespace::XSD  + '#float'
+    DOUBLE      = Namespace::XSD  + '#double'
+    STRING      = Namespace::XSD  + '#string'
+    DATE        = Namespace::XSD  + '#date'
+    TIME        = Namespace::XSD  + '#time'
+    DATETIME    = Namespace::XSD  + '#dateTime'
 
     # Resource Description Framework
-    TYPE        = When::Namespace::RDF  + 'type'
-    SUBJECT     = When::Namespace::RDF  + 'subject'
-    LABEL       = When::Namespace::RDFS + 'label'
-    GRAPH       = When::Namespace::RDFC + 'section-rdf-graph'
+    TYPE        = Namespace::RDF  + 'type'
+    SUBJECT     = Namespace::RDF  + 'subject'
+    LABEL       = Namespace::RDFS + 'label'
+    GRAPH       = Namespace::RDFC + 'section-rdf-graph'
 
     # Dublin Core
-    SOURCE      = When::Namespace::DC   + 'source'
-    CONTRIBUTOR = When::Namespace::DC   + 'contributor'
-    LICENSE     = When::Namespace::DCQ  + 'license'
-    VALID       = When::Namespace::DCQ  + 'valid'
-    ABSTRACT    = When::Namespace::DCQ  + 'abstract'
-    HAS_PART    = When::Namespace::DCQ  + 'hasPart'
-    SPATIAL     = When::Namespace::DCQ  + 'spatial'
-    URI         = When::Namespace::DCQ  + 'URI'
+    SOURCE      = Namespace::DC   + 'source'
+    CONTRIBUTOR = Namespace::DC   + 'contributor'
+    LICENSE     = Namespace::DCQ  + 'license'
+    VALID       = Namespace::DCQ  + 'valid'
+    ABSTRACT    = Namespace::DCQ  + 'abstract'
+    HAS_PART    = Namespace::DCQ  + 'hasPart'
+    SPATIAL     = Namespace::DCQ  + 'spatial'
+    URI         = Namespace::DCQ  + 'URI'
 
     # For Dataset
     ForDataset  = [LABEL, REFERENCE, CONTRIBUTOR, LICENSE]
@@ -1225,7 +1226,7 @@ module When
       #
       # 一言語対応データセットを生成する
       #
-      # @param [Array<Array<String>>] definitions 定義行の情報
+      # @param [Array<Array<Array<String>, String>>] definitions 定義行の情報
       # @param [String] language 言語コード
       # @param [String] uri 定義の所在のルート(ts:referenceが相対位置の場合に使用)
       # @param [When::Events::DataSets] parent 所属する多言語対応データセット
@@ -1242,20 +1243,20 @@ module When
         @i_to_l   = {}
         @role_for_dataset = {}
         @definitions = definitions
-        @definitions.each do |definition|
+        @definitions.each do |definition, lang|
           parameters = definition[1..2].map {|item| item.strip}
           case definition.first
           when /\A(.+):\z/
             @prefix[$1] = parameters
           when /\A\[(.+)\]\z/
             key=extract($1)
-            @csv[key ] = operation(key, parameters)
+            @csv[key ] = operation(key, parameters, lang)
           when /\A<(.+)>\z/
             key=extract($1)
-            @rdf[key ] = operation(key, parameters)
+            @rdf[key ] = operation(key, parameters, lang)
           when /\A\{(.+)\}\z/
             key=extract($1)
-            (DataSet.for_dataset?(parameters.first, key) ? @role_for_dataset : @role)[key] = operation(key, parameters)
+            (DataSet.for_dataset?(parameters.first, key) ? @role_for_dataset : @role)[key] = operation(key, parameters, lang)
           end
         end
         @prefix_description  = @prefix.values.reject {|value| value.size < 2}.sort_by {|value| -value.first.length}
@@ -1344,7 +1345,7 @@ module When
       private
 
       # 定義行一行を解釈する
-      def operation(key, definition)
+      def operation(key, definition, lang='')
         edge  = When::Events.edge(key)
         if definition[1]
           type = nil
@@ -1373,7 +1374,8 @@ module When
          :index     => When::Events.equal(key) || (edge ? :order : ''),
          :type      => type,
          :operation => operation,
-         :copied    => /\A<[^>]+>\z/ =~ definition[0] && operation.equal?(Operations.default)
+         :copied    => /\A<[^>]+>\z/ =~ definition[0] && operation.equal?(Operations.default),
+         :lang      => lang
         }
       end
 
@@ -1700,6 +1702,8 @@ module When
                 object = @dataset.resource[object]
               elsif object.respond_to?(:to_uri)
                 object = object.to_uri
+              elsif @dataset.role[predicate][:lang] != '' && object.kind_of?(String)
+                object = ::RDF::Literal.new(object, {:language=>@dataset.role[predicate][:lang]})
               end
               @statements << ::RDF::Statement(subject, @dataset.resource[predicate], object)
             end

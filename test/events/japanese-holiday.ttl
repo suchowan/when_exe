@@ -9,537 +9,537 @@ server:1 ts:dbpedia dbpedia:Œ³’U;
    ts:start 2403357;
    ts:until 2405187;
    dc:source wikipedia:%E5%85%83%E6%97%A6;
-   dcq:abstract "Œ³’U";
+   dcq:abstract "Œ³’U"@ja;
    dcq:valid "1868-01-01...1873" .
 
 server:10 ts:dbpedia dbpedia:U‘Ö‹x“ú;
    ts:start 2441684;
    ts:until 2451544;
    dc:source wikipedia:%E6%8C%AF%E6%9B%BF%E4%BC%91%E6%97%A5;
-   dcq:abstract "U‘Ö‹x“ú";
+   dcq:abstract "U‘Ö‹x“ú"@ja;
    dcq:valid "1973-01-01...2000" .
 
 server:11 ts:dbpedia dbpedia:‹IŒ³ß;
    ts:start 2405188;
    ts:until 2405524;
    dc:source wikipedia:%E7%B4%80%E5%85%83%E7%AF%80;
-   dcq:abstract "_•“Vc‘¦ˆÊ“ú";
+   dcq:abstract "_•“Vc‘¦ˆÊ“ú"@ja;
    dcq:valid "1873-01-29...1874" .
 
 server:12 ts:dbpedia dbpedia:æ’éÕ;
    ts:start 2405554;
    ts:until 2419768;
    dc:source wikipedia:%E5%85%88%E5%B8%9D%E7%A5%AD;
-   dcq:abstract "F–¾“VcÕ";
+   dcq:abstract "F–¾“VcÕ"@ja;
    dcq:valid "1874-01-30...1913" .
 
 server:13 ts:dbpedia dbpedia:‹IŒ³ß;
    ts:start 2405566;
    ts:until 2432917;
    dc:source wikipedia:%E7%B4%80%E5%85%83%E7%AF%80;
-   dcq:abstract "‹IŒ³ß";
+   dcq:abstract "‹IŒ³ß"@ja;
    dcq:valid "1874-02-11...1949" .
 
 server:14 ts:dbpedia dbpedia:Œš‘‹L”O‚Ì“ú;
    ts:start 2439533;
    ts:until 2488069;
    dc:source wikipedia:%E5%BB%BA%E5%9B%BD%E8%A8%98%E5%BF%B5%E3%81%AE%E6%97%A5;
-   dcq:abstract "Œš‘‹L”O‚Ì“ú";
+   dcq:abstract "Œš‘‹L”O‚Ì“ú"@ja;
    dcq:valid "1967-02-11...2100" .
 
 server:15 ts:dbpedia dbpedia:U‘Ö‹x“ú;
    ts:start 2441715;
    ts:until 2488069;
    dc:source wikipedia:%E6%8C%AF%E6%9B%BF%E4%BC%91%E6%97%A5;
-   dcq:abstract "U‘Ö‹x“ú";
+   dcq:abstract "U‘Ö‹x“ú"@ja;
    dcq:valid "1973-02-01...2100" .
 
 server:16 ts:dbpedia dbpedia:‘å‘r‚Ì—ç;
    ts:start 2447582;
    ts:until 2447582;
    dc:source wikipedia:%E5%A4%A7%E5%96%AA%E3%81%AE%E7%A4%BC;
-   dcq:abstract "º˜a“Vc‚Ì‘å‘r‚Ì—ç";
+   dcq:abstract "º˜a“Vc‚Ì‘å‘r‚Ì—ç"@ja;
    dcq:valid "1989-02-24" .
 
 server:17 ts:dbpedia dbpedia:ã–¤;
    ts:start 2403418;
    ts:until 2405187;
    dc:source wikipedia:%E4%B8%8A%E5%B7%B3;
-   dcq:abstract "–í¶ß‹å";
+   dcq:abstract "–í¶ß‹å"@ja;
    dcq:valid "1868-03-03...1873" .
 
 server:18 ts:dbpedia dbpedia:t‹Gc—ìÕ;
    ts:start 2407410;
    ts:until 2432917;
    dc:source wikipedia:%E6%98%A5%E5%AD%A3%E7%9A%87%E9%9C%8A%E7%A5%AD;
-   dcq:abstract "t‹Gc—ìÕ";
+   dcq:abstract "t‹Gc—ìÕ"@ja;
    dcq:valid "1879-03-01T00+09:00...1949" .
 
 server:19 ts:dbpedia dbpedia:t•ª‚Ì“ú;
    ts:start 2432977;
    ts:until 2488069;
    dc:source wikipedia:%E6%98%A5%E5%88%86%E3%81%AE%E6%97%A5;
-   dcq:abstract "t•ª‚Ì“ú";
+   dcq:abstract "t•ª‚Ì“ú"@ja;
    dcq:valid "1949-03-01T00+09:00...2100" .
 
 server:2 ts:dbpedia dbpedia:l•û”q;
    ts:start 2405525;
    ts:until 2432917;
    dc:source wikipedia:%E5%9B%9B%E6%96%B9%E6%8B%9D;
-   dcq:abstract "l•û”q";
+   dcq:abstract "l•û”q"@ja;
    dcq:valid "1874-01-01...1949" .
 
 server:20 ts:dbpedia dbpedia:U‘Ö‹x“ú;
    ts:start 2441743;
    ts:until 2488069;
    dc:source wikipedia:%E6%8C%AF%E6%9B%BF%E4%BC%91%E6%97%A5;
-   dcq:abstract "U‘Ö‹x“ú";
+   dcq:abstract "U‘Ö‹x“ú"@ja;
    dcq:valid "1973-03-01T00+09:00...2100" .
 
 server:21 ts:dbpedia dbpedia:_•“VcÕ;
    ts:start 2405617;
    ts:until 2432917;
    dc:source wikipedia:%E7%A5%9E%E6%AD%A6%E5%A4%A9%E7%9A%87%E7%A5%AD;
-   dcq:abstract "_•“VcÕ";
+   dcq:abstract "_•“VcÕ"@ja;
    dcq:valid "1874-04-03...1949" .
 
 server:22 ts:dbpedia dbpedia:Œ‹¥‚Ì‹V;
    ts:start 2436669;
    ts:until 2436669;
    dc:source wikipedia:%E7%B5%90%E5%A9%9A%E3%81%AE%E5%84%80;
-   dcq:abstract "c‘¾q–¾me‰¤‚ÌŒ‹¥‚Ì‹V";
+   dcq:abstract "c‘¾q–¾me‰¤‚ÌŒ‹¥‚Ì‹V"@ja;
    dcq:valid "1959-04-10" .
 
 server:23 ts:dbpedia dbpedia:“V’·ß;
    ts:start 2425000;
    ts:until 2432917;
    dc:source wikipedia:%E5%A4%A9%E9%95%B7%E7%AF%80;
-   dcq:abstract "“V’·ß";
+   dcq:abstract "“V’·ß"@ja;
    dcq:valid "1927-04-29...1949" .
 
 server:24 ts:dbpedia dbpedia:“Vc’a¶“ú;
    ts:start 2433036;
    ts:until 2447527;
    dc:source wikipedia:%E5%A4%A9%E7%9A%87%E8%AA%95%E7%94%9F%E6%97%A5;
-   dcq:abstract "“Vc’a¶“ú";
+   dcq:abstract "“Vc’a¶“ú"@ja;
    dcq:valid "1949-04-29...1989" .
 
 server:25 ts:dbpedia dbpedia:‚İ‚Ç‚è‚Ì“ú;
    ts:start 2447646;
    ts:until 2454101;
    dc:source wikipedia:%E3%81%BF%E3%81%A9%E3%82%8A%E3%81%AE%E6%97%A5;
-   dcq:abstract "‚İ‚Ç‚è‚Ì“ú";
+   dcq:abstract "‚İ‚Ç‚è‚Ì“ú"@ja;
    dcq:valid "1989-04-29...2007" .
 
 server:26 ts:dbpedia dbpedia:º˜a‚Ì“ú;
    ts:start 2454220;
    ts:until 2488069;
    dc:source wikipedia:%E6%98%AD%E5%92%8C%E3%81%AE%E6%97%A5;
-   dcq:abstract "º˜a‚Ì“ú";
+   dcq:abstract "º˜a‚Ì“ú"@ja;
    dcq:valid "2007-04-29...2100" .
 
 server:27 ts:dbpedia dbpedia:U‘Ö‹x“ú;
    ts:start 2441774;
    ts:until 2488069;
    dc:source wikipedia:%E6%8C%AF%E6%9B%BF%E4%BC%91%E6%97%A5;
-   dcq:abstract "U‘Ö‹x“ú";
+   dcq:abstract "U‘Ö‹x“ú"@ja;
    dcq:valid "1973-04-01...2100" .
 
 server:28 ts:dbpedia dbpedia:Œ›–@‹L”O“ú;
    ts:start 2433040;
    ts:until 2488069;
    dc:source wikipedia:%E6%86%B2%E6%B3%95%E8%A8%98%E5%BF%B5%E6%97%A5;
-   dcq:abstract "Œ›–@‹L”O“ú";
+   dcq:abstract "Œ›–@‹L”O“ú"@ja;
    dcq:valid "1949-05-03...2100" .
 
 server:29 ts:dbpedia dbpedia:U‘Ö‹x“ú;
    ts:start 2441804;
    ts:until 2447161;
    dc:source wikipedia:%E6%8C%AF%E6%9B%BF%E4%BC%91%E6%97%A5;
-   dcq:abstract "U‘Ö‹x“ú";
+   dcq:abstract "U‘Ö‹x“ú"@ja;
    dcq:valid "1973-05-01...1988" .
 
 server:3 ts:dbpedia dbpedia:Œ³“ú;
    ts:start 2432918;
    ts:until 2488069;
    dc:source wikipedia:%E5%85%83%E6%97%A5;
-   dcq:abstract "Œ³“ú";
+   dcq:abstract "Œ³“ú"@ja;
    dcq:valid "1949-01-01...2100" .
 
 server:30 ts:dbpedia dbpedia:‘–¯‚Ì‹x“ú;
    ts:start 2447286;
    ts:until 2454101;
    dc:source wikipedia:%E5%9B%BD%E6%B0%91%E3%81%AE%E4%BC%91%E6%97%A5;
-   dcq:abstract "‘–¯‚Ì‹x“ú";
+   dcq:abstract "‘–¯‚Ì‹x“ú"@ja;
    dcq:valid "1988-05-04...2007" .
 
 server:31 ts:dbpedia dbpedia:‚İ‚Ç‚è‚Ì“ú;
    ts:start 2454225;
    ts:until 2488069;
    dc:source wikipedia:%E3%81%BF%E3%81%A9%E3%82%8A%E3%81%AE%E6%97%A5;
-   dcq:abstract "‚İ‚Ç‚è‚Ì“ú";
+   dcq:abstract "‚İ‚Ç‚è‚Ì“ú"@ja;
    dcq:valid "2007-05-04...2100" .
 
 server:32 ts:dbpedia dbpedia:’[Œß;
    ts:start 2403508;
    ts:until 2405187;
    dc:source wikipedia:%E7%AB%AF%E5%8D%88;
-   dcq:abstract "’[Œßß‹å";
+   dcq:abstract "’[Œßß‹å"@ja;
    dcq:valid "1868-05-05...1873" .
 
 server:33 ts:dbpedia dbpedia:‚±‚Ç‚à‚Ì“ú;
    ts:start 2433042;
    ts:until 2488069;
    dc:source wikipedia:%E3%81%93%E3%81%A9%E3%82%82%E3%81%AE%E6%97%A5;
-   dcq:abstract "‚±‚Ç‚à‚Ì“ú";
+   dcq:abstract "‚±‚Ç‚à‚Ì“ú"@ja;
    dcq:valid "1949-05-05...2100" .
 
 server:34 ts:dbpedia dbpedia:U‘Ö‹x“ú;
    ts:start 2441804;
    ts:until 2454101;
    dc:source wikipedia:%E6%8C%AF%E6%9B%BF%E4%BC%91%E6%97%A5;
-   dcq:abstract "U‘Ö‹x“ú";
+   dcq:abstract "U‘Ö‹x“ú"@ja;
    dcq:valid "1973-05-01...2007" .
 
 server:35 ts:dbpedia dbpedia:U‘Ö‹x“ú;
    ts:start 2454222;
    ts:until 2488069;
    dc:source wikipedia:%E6%8C%AF%E6%9B%BF%E4%BC%91%E6%97%A5;
-   dcq:abstract "U‘Ö‹x“ú";
+   dcq:abstract "U‘Ö‹x“ú"@ja;
    dcq:valid "2007-05-01...2100" .
 
 server:36 ts:dbpedia dbpedia:Œ‹¥‚Ì‹V;
    ts:start 2449148;
    ts:until 2449148;
    dc:source wikipedia:%E7%B5%90%E5%A9%9A%E3%81%AE%E5%84%80;
-   dcq:abstract "c‘¾q“¿me‰¤‚ÌŒ‹¥‚Ì‹V";
+   dcq:abstract "c‘¾q“¿me‰¤‚ÌŒ‹¥‚Ì‹V"@ja;
    dcq:valid "1993-06-09" .
 
 server:37 ts:dbpedia dbpedia:µ—[;
    ts:start 2403569;
    ts:until 2405187;
    dc:source wikipedia:%E4%B8%83%E5%A4%95;
-   dcq:abstract "µ—[ß‹å";
+   dcq:abstract "µ—[ß‹å"@ja;
    dcq:valid "1868-07-07...1873" .
 
 server:38 ts:dbpedia dbpedia:‚¨–~;
    ts:start 2403577;
    ts:until 2405187;
    dc:source wikipedia:%E3%81%8A%E7%9B%86;
-   dcq:abstract "‚¨–~";
+   dcq:abstract "‚¨–~"@ja;
    dcq:valid "1868-07-15...1873" .
 
 server:39 ts:dbpedia dbpedia:ŠC‚Ì“ú;
    ts:start 2450285;
    ts:until 2452640;
    dc:source wikipedia:%E6%B5%B7%E3%81%AE%E6%97%A5;
-   dcq:abstract "ŠC‚Ì“ú";
+   dcq:abstract "ŠC‚Ì“ú"@ja;
    dcq:valid "1996-07-20...2003" .
 
 server:4 ts:dbpedia dbpedia:U‘Ö‹x“ú;
    ts:start 2441684;
    ts:until 2488069;
    dc:source wikipedia:%E6%8C%AF%E6%9B%BF%E4%BC%91%E6%97%A5;
-   dcq:abstract "U‘Ö‹x“ú";
+   dcq:abstract "U‘Ö‹x“ú"@ja;
    dcq:valid "1973-01-01...2100" .
 
 server:40 ts:dbpedia dbpedia:U‘Ö‹x“ú;
    ts:start 2450266;
    ts:until 2452640;
    dc:source wikipedia:%E6%8C%AF%E6%9B%BF%E4%BC%91%E6%97%A5;
-   dcq:abstract "U‘Ö‹x“ú";
+   dcq:abstract "U‘Ö‹x“ú"@ja;
    dcq:valid "1996-07-01...2003" .
 
 server:41 ts:dbpedia dbpedia:ŠC‚Ì“ú;
    ts:start 2452822;
    ts:until 2488069;
    dc:source wikipedia:%E6%B5%B7%E3%81%AE%E6%97%A5;
-   dcq:abstract "ŠC‚Ì“ú";
+   dcq:abstract "ŠC‚Ì“ú"@ja;
    dcq:valid "2003-07...2100" .
 
 server:42 ts:dbpedia dbpedia:æ’éÕ;
    ts:start 2419979;
    ts:until 2424881;
    dc:source wikipedia:%E5%85%88%E5%B8%9D%E7%A5%AD;
-   dcq:abstract "–¾¡“VcÕ";
+   dcq:abstract "–¾¡“VcÕ"@ja;
    dcq:valid "1913-07-30...1927" .
 
 server:43 ts:dbpedia dbpedia:”ªñ;
    ts:start 2403592;
    ts:until 2405187;
    dc:source wikipedia:%E5%85%AB%E6%9C%94;
-   dcq:abstract "“cÀß‹å";
+   dcq:abstract "“cÀß‹å"@ja;
    dcq:valid "1868-08-01...1873" .
 
 server:44 ts:dbpedia dbpedia:R‚Ì“ú;
    ts:start 2457612;
    ts:until 2488069;
    dc:source wikipedia:%E5%B1%B1%E3%81%AE%E6%97%A5;
-   dcq:abstract "R‚Ì“ú";
+   dcq:abstract "R‚Ì“ú"@ja;
    dcq:valid "2016-08-11...2100" .
 
 server:45 ts:dbpedia dbpedia:U‘Ö‹x“ú;
    ts:start 2457602;
    ts:until 2488069;
    dc:source wikipedia:%E6%8C%AF%E6%9B%BF%E4%BC%91%E6%97%A5;
-   dcq:abstract "U‘Ö‹x“ú";
+   dcq:abstract "U‘Ö‹x“ú"@ja;
    dcq:valid "2016-08-01...2100" .
 
 server:46 ts:dbpedia dbpedia:“V’·ß;
    ts:start 2420011;
    ts:until 2424881;
    dc:source wikipedia:%E5%A4%A9%E9%95%B7%E7%AF%80;
-   dcq:abstract "“V’·ß";
+   dcq:abstract "“V’·ß"@ja;
    dcq:valid "1913-08-31...1927" .
 
 server:47 ts:dbpedia dbpedia:d—zß‹å;
    ts:start 2403630;
    ts:until 2405187;
    dc:source wikipedia:%E9%87%8D%E9%99%BD%E7%AF%80%E5%8F%A5;
-   dcq:abstract "d—zß‹å";
+   dcq:abstract "d—zß‹å"@ja;
    dcq:valid "1868-09-09...1873" .
 
 server:48 ts:dbpedia dbpedia:Œh˜V‚Ì“ú;
    ts:start 2439384;
    ts:until 2452640;
    dc:source wikipedia:%E6%95%AC%E8%80%81%E3%81%AE%E6%97%A5;
-   dcq:abstract "Œh˜V‚Ì“ú";
+   dcq:abstract "Œh˜V‚Ì“ú"@ja;
    dcq:valid "1966-09-15...2003" .
 
 server:49 ts:dbpedia dbpedia:U‘Ö‹x“ú;
    ts:start 2441927;
    ts:until 2452640;
    dc:source wikipedia:%E6%8C%AF%E6%9B%BF%E4%BC%91%E6%97%A5;
-   dcq:abstract "U‘Ö‹x“ú";
+   dcq:abstract "U‘Ö‹x“ú"@ja;
    dcq:valid "1973-09-01...2003" .
 
 server:5 ts:dbpedia dbpedia:Œ³nÕ;
    ts:start 2405527;
    ts:until 2432917;
    dc:source wikipedia:%E5%85%83%E5%A7%8B%E7%A5%AD;
-   dcq:abstract "Œ³nÕ";
+   dcq:abstract "Œ³nÕ"@ja;
    dcq:valid "1874-01-03...1949" .
 
 server:50 ts:dbpedia dbpedia:Œh˜V‚Ì“ú;
    ts:start 2452884;
    ts:until 2488069;
    dc:source wikipedia:%E6%95%AC%E8%80%81%E3%81%AE%E6%97%A5;
-   dcq:abstract "Œh˜V‚Ì“ú";
+   dcq:abstract "Œh˜V‚Ì“ú"@ja;
    dcq:valid "2003-09...2100" .
 
 server:51 ts:dbpedia dbpedia:_¦Õ;
    ts:start 2405784;
    ts:until 2407350;
    dc:source wikipedia:%E7%A5%9E%E5%98%97%E7%A5%AD;
-   dcq:abstract "_¦Õ";
+   dcq:abstract "_¦Õ"@ja;
    dcq:valid "1874-09-17...1879" .
 
 server:52 ts:dbpedia dbpedia:‘–¯‚Ì‹x“ú;
    ts:start 2452884;
    ts:until 2488069;
    dc:source wikipedia:%E5%9B%BD%E6%B0%91%E3%81%AE%E4%BC%91%E6%97%A5;
-   dcq:abstract "‘–¯‚Ì‹x“ú";
+   dcq:abstract "‘–¯‚Ì‹x“ú"@ja;
    dcq:valid "2003-09-01T00+09:00...2100" .
 
 server:53 ts:dbpedia dbpedia:H‹Gc—ìÕ;
    ts:start 2407229;
    ts:until 2432551;
    dc:source wikipedia:%E7%A7%8B%E5%AD%A3%E7%9A%87%E9%9C%8A%E7%A5%AD;
-   dcq:abstract "H‹Gc—ìÕ";
+   dcq:abstract "H‹Gc—ìÕ"@ja;
    dcq:valid "1878-09-01T00+09:00...1948" .
 
 server:54 ts:dbpedia dbpedia:H•ª‚Ì“ú;
    ts:start 2432796;
    ts:until 2488069;
    dc:source wikipedia:%E7%A7%8B%E5%88%86%E3%81%AE%E6%97%A5;
-   dcq:abstract "H•ª‚Ì“ú";
+   dcq:abstract "H•ª‚Ì“ú"@ja;
    dcq:valid "1948-09-01T00+09:00...2100" .
 
 server:55 ts:dbpedia dbpedia:U‘Ö‹x“ú;
    ts:start 2441927;
    ts:until 2488069;
    dc:source wikipedia:%E6%8C%AF%E6%9B%BF%E4%BC%91%E6%97%A5;
-   dcq:abstract "U‘Ö‹x“ú";
+   dcq:abstract "U‘Ö‹x“ú"@ja;
    dcq:valid "1973-09-01T00+09:00...2100" .
 
 server:56 ts:dbpedia dbpedia:‘Ìˆç‚Ì“ú;
    ts:start 2439409;
    ts:until 2451544;
    dc:source wikipedia:%E4%BD%93%E8%82%B2%E3%81%AE%E6%97%A5;
-   dcq:abstract "‘Ìˆç‚Ì“ú";
+   dcq:abstract "‘Ìˆç‚Ì“ú"@ja;
    dcq:valid "1966-10-10...2000" .
 
 server:57 ts:dbpedia dbpedia:U‘Ö‹x“ú;
    ts:start 2441957;
    ts:until 2451544;
    dc:source wikipedia:%E6%8C%AF%E6%9B%BF%E4%BC%91%E6%97%A5;
-   dcq:abstract "U‘Ö‹x“ú";
+   dcq:abstract "U‘Ö‹x“ú"@ja;
    dcq:valid "1973-10-01...2000" .
 
 server:58 ts:dbpedia dbpedia:‘Ìˆç‚Ì“ú;
    ts:start 2451819;
    ts:until 2488069;
    dc:source wikipedia:%E4%BD%93%E8%82%B2%E3%81%AE%E6%97%A5;
-   dcq:abstract "‘Ìˆç‚Ì“ú";
+   dcq:abstract "‘Ìˆç‚Ì“ú"@ja;
    dcq:valid "2000-10...2100" .
 
 server:59 ts:dbpedia dbpedia:_¦Õ;
    ts:start 2407640;
    ts:until 2432551;
    dc:source wikipedia:%E7%A5%9E%E5%98%97%E7%A5%AD;
-   dcq:abstract "_¦Õ";
+   dcq:abstract "_¦Õ"@ja;
    dcq:valid "1879-10-17...1948" .
 
 server:6 ts:dbpedia dbpedia:V”N‰ƒ‰ï;
    ts:start 2405529;
    ts:until 2432917;
    dc:source wikipedia:%E6%96%B0%E5%B9%B4%E5%AE%B4%E4%BC%9A;
-   dcq:abstract "V”N‰ƒ‰ï";
+   dcq:abstract "V”N‰ƒ‰ï"@ja;
    dcq:valid "1874-01-05...1949" .
 
 server:60 ts:dbpedia dbpedia:“Vc’a¶“ú;
    ts:start 2420072;
    ts:until 2424881;
    dc:source wikipedia:%E5%A4%A9%E7%9A%87%E8%AA%95%E7%94%9F%E6%97%A5;
-   dcq:abstract "“V’·ßj“ú";
+   dcq:abstract "“V’·ßj“ú"@ja;
    dcq:valid "1913-10-31...1927" .
 
 server:61 ts:dbpedia dbpedia:“V’·ß;
    ts:start 2405466;
    ts:until 2419402;
    dc:source wikipedia:%E5%A4%A9%E9%95%B7%E7%AF%80;
-   dcq:abstract "“V’·ß";
+   dcq:abstract "“V’·ß"@ja;
    dcq:valid "1873-11-03...1912" .
 
 server:62 ts:dbpedia dbpedia:–¾¡ß;
    ts:start 2425188;
    ts:until 2432551;
    dc:source wikipedia:%E6%98%8E%E6%B2%BB%E7%AF%80;
-   dcq:abstract "–¾¡ß";
+   dcq:abstract "–¾¡ß"@ja;
    dcq:valid "1927-11-03...1948" .
 
 server:63 ts:dbpedia dbpedia:•¶‰»‚Ì“ú;
    ts:start 2432859;
    ts:until 2488069;
    dc:source wikipedia:%E6%96%87%E5%8C%96%E3%81%AE%E6%97%A5;
-   dcq:abstract "•¶‰»‚Ì“ú";
+   dcq:abstract "•¶‰»‚Ì“ú"@ja;
    dcq:valid "1948-11-03...2100" .
 
 server:64 ts:dbpedia dbpedia:U‘Ö‹x“ú;
    ts:start 2441988;
    ts:until 2488069;
    dc:source wikipedia:%E6%8C%AF%E6%9B%BF%E4%BC%91%E6%97%A5;
-   dcq:abstract "U‘Ö‹x“ú";
+   dcq:abstract "U‘Ö‹x“ú"@ja;
    dcq:valid "1973-11-01...2100" .
 
 server:65 ts:dbpedia dbpedia:‘¦ˆÊ‚Ì—ç;
    ts:start 2420812;
    ts:until 2420812;
    dc:source wikipedia:%E5%8D%B3%E4%BD%8D%E3%81%AE%E7%A4%BC;
-   dcq:abstract "‘¦ˆÊ‚Ì—ç";
+   dcq:abstract "‘¦ˆÊ‚Ì—ç"@ja;
    dcq:valid "1915-11-10" .
 
 server:66 ts:dbpedia dbpedia:‘¦ˆÊ‚Ì—ç;
    ts:start 2425561;
    ts:until 2425561;
    dc:source wikipedia:%E5%8D%B3%E4%BD%8D%E3%81%AE%E7%A4%BC;
-   dcq:abstract "‘¦ˆÊ‚Ì—ç";
+   dcq:abstract "‘¦ˆÊ‚Ì—ç"@ja;
    dcq:valid "1928-11-10" .
 
 server:67 ts:dbpedia dbpedia:‘¦ˆÊ‚Ì—ç;
    ts:start 2448208;
    ts:until 2448208;
    dc:source wikipedia:%E5%8D%B3%E4%BD%8D%E3%81%AE%E7%A4%BC;
-   dcq:abstract "‘¦ˆÊ‚Ì—ç³“a‚Ì‹V";
+   dcq:abstract "‘¦ˆÊ‚Ì—ç³“a‚Ì‹V"@ja;
    dcq:valid "1990-11-12" .
 
 server:68 ts:dbpedia dbpedia:‘å¦Õ;
    ts:start 2420816;
    ts:until 2420816;
    dc:source wikipedia:%E5%A4%A7%E5%98%97%E7%A5%AD;
-   dcq:abstract "‘å¦Õ";
+   dcq:abstract "‘å¦Õ"@ja;
    dcq:valid "1915-11-14" .
 
 server:69 ts:dbpedia dbpedia:‘å¦Õ;
    ts:start 2425565;
    ts:until 2425565;
    dc:source wikipedia:%E5%A4%A7%E5%98%97%E7%A5%AD;
-   dcq:abstract "‘å¦Õ";
+   dcq:abstract "‘å¦Õ"@ja;
    dcq:valid "1928-11-14" .
 
 server:7 ts:dbpedia dbpedia:¬l‚Ì“ú;
    ts:start 2451545;
    ts:until 2488069;
    dc:source wikipedia:%E6%88%90%E4%BA%BA%E3%81%AE%E6%97%A5;
-   dcq:abstract "¬l‚Ì“ú";
+   dcq:abstract "¬l‚Ì“ú"@ja;
    dcq:valid "2000-01...2100" .
 
 server:70 ts:dbpedia dbpedia:‘å‹À;
    ts:start 2420818;
    ts:until 2420818;
    dc:source wikipedia:%E5%A4%A7%E9%A5%97;
-   dcq:abstract "‘å‹À‘æ1“ú";
+   dcq:abstract "‘å‹À‘æ1“ú"@ja;
    dcq:valid "1915-11-16" .
 
 server:71 ts:dbpedia dbpedia:‘å‹À;
    ts:start 2425567;
    ts:until 2425567;
    dc:source wikipedia:%E5%A4%A7%E9%A5%97;
-   dcq:abstract "‘å‹À‘æ1“ú";
+   dcq:abstract "‘å‹À‘æ1“ú"@ja;
    dcq:valid "1928-11-16" .
 
 server:72 ts:dbpedia dbpedia:V¦Õ;
    ts:start 2405486;
    ts:until 2432551;
    dc:source wikipedia:%E6%96%B0%E5%98%97%E7%A5%AD;
-   dcq:abstract "V¦Õ";
+   dcq:abstract "V¦Õ"@ja;
    dcq:valid "1873-11-23...1948" .
 
 server:73 ts:dbpedia dbpedia:‹Î˜JŠ´Ó‚Ì“ú;
    ts:start 2432879;
    ts:until 2488069;
    dc:source wikipedia:%E5%8B%A4%E5%8A%B4%E6%84%9F%E8%AC%9D%E3%81%AE%E6%97%A5;
-   dcq:abstract "‹Î˜JŠ´Ó‚Ì“ú";
+   dcq:abstract "‹Î˜JŠ´Ó‚Ì“ú"@ja;
    dcq:valid "1948-11-23...2100" .
 
 server:74 ts:dbpedia dbpedia:U‘Ö‹x“ú;
    ts:start 2441988;
    ts:until 2488069;
    dc:source wikipedia:%E6%8C%AF%E6%9B%BF%E4%BC%91%E6%97%A5;
-   dcq:abstract "U‘Ö‹x“ú";
+   dcq:abstract "U‘Ö‹x“ú"@ja;
    dcq:valid "1973-11-01...2100" .
 
 server:75 ts:dbpedia dbpedia:“Vc’a¶“ú;
    ts:start 2447884;
    ts:until 2488069;
    dc:source wikipedia:%E5%A4%A9%E7%9A%87%E8%AA%95%E7%94%9F%E6%97%A5;
-   dcq:abstract "“Vc’a¶“ú";
+   dcq:abstract "“Vc’a¶“ú"@ja;
    dcq:valid "1989-12-23...2100" .
 
 server:76 ts:dbpedia dbpedia:U‘Ö‹x“ú;
    ts:start 2447862;
    ts:until 2488069;
    dc:source wikipedia:%E6%8C%AF%E6%9B%BF%E4%BC%91%E6%97%A5;
-   dcq:abstract "U‘Ö‹x“ú";
+   dcq:abstract "U‘Ö‹x“ú"@ja;
    dcq:valid "1989-12-01...2100" .
 
 server:77 ts:dbpedia dbpedia:æ’éÕ;
    ts:start 2425240;
    ts:until 2432551;
    dc:source wikipedia:%E5%85%88%E5%B8%9D%E7%A5%AD;
-   dcq:abstract "‘å³“VcÕ";
+   dcq:abstract "‘å³“VcÕ"@ja;
    dcq:valid "1927-12-25...1948" .
 
 server:8 ts:dbpedia dbpedia:¬³Œ;
    ts:start 2403371;
    ts:until 2405187;
    dc:source wikipedia:%E5%B0%8F%E6%AD%A3%E6%9C%88;
-   dcq:abstract "¬³Œ";
+   dcq:abstract "¬³Œ"@ja;
    dcq:valid "1868-01-15...1873" .
 
 server:9 ts:dbpedia dbpedia:¬l‚Ì“ú;
    ts:start 2432932;
    ts:until 2451544;
    dc:source wikipedia:%E6%88%90%E4%BA%BA%E3%81%AE%E6%97%A5;
-   dcq:abstract "¬l‚Ì“ú";
+   dcq:abstract "¬l‚Ì“ú"@ja;
    dcq:valid "1949-01-15...2000" .

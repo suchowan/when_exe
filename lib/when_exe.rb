@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2016 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -24,12 +24,8 @@ autoload :OpenURI,   'open-uri'
 autoload :OpenSSL,   'openssl'
 autoload :FileUtils, 'fileutils'
 autoload :REXML,     'rexml/document'
-if Object.const_defined?(:Mutex)
-  autoload :CSV,       'csv'
-else
-  autoload :FastCSV, 'fastcsv'
-  autoload :Mutex,   'thread'
-end
+autoload :CSV,       'csv'
+autoload :Mutex,     'thread' unless Object.const_defined?(:Mutex)
 
 #
 # A multicultural and multilingualized calendar library based on ISO 8601, ISO 19108 and RFC 5545

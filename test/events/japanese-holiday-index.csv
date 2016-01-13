@@ -11,12 +11,12 @@ dbpedia:,    http://ja.dbpedia.org/resource/,DBpedia Japanese
 server:,     http://hosi.org/Event.ttl?dataset=https://raw.githubusercontent.com/suchowan/when_exe/master/test/events/japanese-holiday-index.csv&id=
 {rdfs:label},      Japanese Holidays
 {rdfs:label}@ja,   日本の祝祭日
-{ts:reference},    github:japanese-holiday.csv, csv without header
+{ts:reference}@ja, github:japanese-holiday.csv, csv without header
 {dc:contributor},  http://hosi.org/TakashiSuga.ttl, 須賀隆
 {dcq:license},     http://creativecommons.org/licenses/by-sa/4.0/, CC-BY-SA
 {rdf:subject},     server:<ts:id>, dcq:URI
 {dcq:valid},       [1]
-{dcq:abstract},    [2]
+{dcq:abstract}@ja, [2]
 {dc:source},       wikipedia:[3], dcq:URI
 {ts:dbpedia},      dbpedia:[3],   ts:IRI
 {ts:start},        {dcq:valid}, xsd:integer
