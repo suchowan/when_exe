@@ -234,7 +234,7 @@ module When
         #
         # @return [When::Events::DataSet]
         #
-        def dataset(language, limit=true)
+        def dataset(language='', limit=true)
           if When.multi_thread
             joined =
               case limit
