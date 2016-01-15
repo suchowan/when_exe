@@ -1186,7 +1186,7 @@ module When
           if event_range.kind_of?(Range) && event_range.is_complex?
             event_range.overlaped(range).each do |focused_date|
               sort_required = true
-              focused_event = event.deep_copy(event)
+              focused_event = event.deep_copy
               focused_event.role[VALID] = focused_date
               narrowed_events << focused_event
             end
@@ -1682,10 +1682,10 @@ module When
       # @note ブロックを渡された場合、そのブロックに{}部分のマークアップを依頼する
       #
       def abstract(item=ABSTRACT, method=:role)
-          send(method)[item].gsub(/(\{+)(.*?)(\}+)/) {
-            bra, word, cket = $~[1..3]
-            '{'*(bra.length/2) + (block_given? ? yield(word) : word) + '}'*(cket.length/2)
-          }
+        send(method)[item].gsub(/(\{+)(.*?)(\}+)/) {
+          bra, word, cket = $~[1..3]
+          '{'*(bra.length/2) + (block_given? ? yield(word) : word) + '}'*(cket.length/2)
+        }
       end
 
       #
@@ -1762,15 +1762,13 @@ module When
       #
       # イベントの複製
       #
-      # @param [When::Events::Event] source コピー元
-      #
       # @return [When::Events::Event] コピー結果
       #
-      def deep_copy(source)
-        result = source.dup
-        result.csv  = source.csv.dup
-        result.rdf  = source.rdf.dup
-        result.role = source.role.dup
+      def deep_copy
+        result = self.dup
+        result.csv  = @csv.dup
+        result.rdf  = @rdf.dup
+        result.role = @role.dup
         result
       end
 

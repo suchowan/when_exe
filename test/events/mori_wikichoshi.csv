@@ -1,0 +1,14 @@
+# When::Events::DataSets
+xsd:,              http://www.w3.org/2001/XMLSchema
+rdfs:,             http://www.w3.org/2000/01/rdf-schema#
+dc:,               http://purl.org/dc/elements/1.1/
+dcq:,              http://purl.org/dc/terms/
+ts:,               http://hosi.org/ts#
+{rdfs:label},      HOWMLが作成した森町のウィキ町史データ
+{ts:reference},    https://www.dropbox.com/s/f7d3141gc6suwnn/mori_wikichoshi.rdf?dl=1,"/<date>(\d+)<\/date>.*?<i:description>(.+?)<\/i:description>/"
+{dc:contributor},  http://howml.org/wikichoshi-project, ウィキ町史プロジェクト
+{dcq:license},     https://creativecommons.org/licenses/by/4.0/legalcode, CC-BY
+{dcq:valid},       [1]
+{dcq:abstract},    [2]
+{ts:start},        {dcq:valid}, xsd:integer
+{ts:until},        {dcq:valid}, xsd:integer
