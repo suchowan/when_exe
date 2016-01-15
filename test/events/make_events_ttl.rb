@@ -9,8 +9,10 @@
 require 'linkeddata'
 require 'when_exe'
 
+Encoding.default_external = 'UTF-8'
+Encoding.default_internal = 'UTF-8'
+
 path       = ARGV[0] || 'https://raw.githubusercontent.com/suchowan/when_exe/master/test/events/japanese-holiday-index.csv'
 datasets   = When.Resource(path)
-dataset    = datasets.dataset('ja')
-repository = dataset.repository
-puts repository[''].dump(:ttl, :prefixes=>dataset.used_ns)
+repository = datasets.repository
+puts repository[''].dump(:ttl, :prefixes=>datasets.used_ns)
