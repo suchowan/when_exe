@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2016 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -127,12 +127,12 @@ module When
       "[大饗第1日,                    Enthronement of the Japanese Emperor       ]",
       "[新嘗祭,                       Labor Thanksgiving Day                     ]",
       "[勤労感謝の日,                 Labor Thanksgiving Day                     ]",
-      "[振替休日,                     Transfer Holiday=                          ]",
+      "[振替休日,                     Substitute holiday                         ]",
       "[国民の休日,                   National Day Off=                          ]",
       "[即位の礼,                     Enthronement of the Japanese Emperor       ]",
       "[即位の礼正殿の儀,             Enthronement of the Japanese Emperor       ]",
       "[神武天皇祭,                   EmperorJimmu's Death anniversary=          ]",
-      "[孝明天皇祭=ja:%%<先帝祭>,     Emperor Kōmei's Birth holiday=             ]",
+      "[孝明天皇祭=ja:%%<先帝祭>,     Emperor Kōmei's Death anniversary=         ]",
       "[明治天皇祭=ja:%%<先帝祭>,     Emperor Meiji's Death anniversary=         ]",
       "[大正天皇祭=ja:%%<先帝祭>,     Emperor Taishō's Death anniversary=        ]",
       "[神武天皇即位日=ja:%%<紀元節>, National Foundation Day                    ]",

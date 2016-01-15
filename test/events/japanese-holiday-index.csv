@@ -1,14 +1,16 @@
 # When::Events::DataSets
-xsd:,        http://www.w3.org/2001/XMLSchema
-rdf:,        http://www.w3.org/1999/02/22-rdf-syntax-ns#
-rdfs:,       http://www.w3.org/2000/01/rdf-schema#
-dc:,         http://purl.org/dc/elements/1.1/
-dcq:,        http://purl.org/dc/terms/
-ts:,         http://hosi.org/ts#
-github:,     https://raw.githubusercontent.com/suchowan/when_exe/master/test/events/
-wikipedia:,  https://ja.wikipedia.org/wiki/,ウィキペディア
-dbpedia:,    http://ja.dbpedia.org/resource/,DBpedia Japanese
-server:,     http://hosi.org/Event.ttl?dataset=https://raw.githubusercontent.com/suchowan/when_exe/master/test/events/japanese-holiday-index.csv&id=
+xsd:,          http://www.w3.org/2001/XMLSchema
+rdf:,          http://www.w3.org/1999/02/22-rdf-syntax-ns#
+rdfs:,         http://www.w3.org/2000/01/rdf-schema#
+dc:,           http://purl.org/dc/elements/1.1/
+dcq:,          http://purl.org/dc/terms/
+ts:,           http://hosi.org/ts#
+github:,       https://raw.githubusercontent.com/suchowan/when_exe/master/test/events/
+wikipedia:,    https://en.wikipedia.org/wiki/,Wikipedia
+wikipedia_ja:, https://ja.wikipedia.org/wiki/,ウィキペディア
+dbpedia:,      http://dbpedia.org/resource/,DBpedia
+dbpedia_ja:,   http://ja.dbpedia.org/resource/,DBpedia Japanese
+server:,       http://hosi.org/Event.ttl?dataset=https://raw.githubusercontent.com/suchowan/when_exe/master/test/events/japanese-holiday-index.csv&id=
 {rdfs:label},      Japanese Holidays
 {rdfs:label}@ja,   日本の祝祭日
 {ts:reference}@ja, github:japanese-holiday.csv, csv without header
@@ -16,8 +18,11 @@ server:,     http://hosi.org/Event.ttl?dataset=https://raw.githubusercontent.com
 {dcq:license},     http://creativecommons.org/licenses/by-sa/4.0/, CC-BY-SA
 {rdf:subject},     server:<ts:id>, dcq:URI
 {dcq:valid},       [1]
+{dcq:abstract},    [4]
 {dcq:abstract}@ja, [2]
-{dc:source},       wikipedia:[3], dcq:URI
-{ts:dbpedia},      dbpedia:[3],   ts:IRI
+{dc:source},       wikipedia:[5],    dcq:URI
+{dc:source}@ja,    wikipedia_ja:[3], dcq:URI
+{ts:dbpedia},      dbpedia:[5],      dcq:URI
+{ts:dbpedia}@ja,   dbpedia_ja:[3],   ts:IRI
 {ts:start},        {dcq:valid}, xsd:integer
 {ts:until},        {dcq:valid}, xsd:integer
