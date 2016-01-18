@@ -37,6 +37,13 @@ module When
       #
       attr_reader :until
 
+      # オリジナル文字列
+      #
+      # @return [String]
+      #
+      attr_accessor :original
+      private :original=
+
       # オブジェクトを When::Events::Range 型に変換する
       #
       # @param [Object] source 変換元のオブジェクト
@@ -605,10 +612,9 @@ module When
       # 日時範囲化
       to_range     = proc {|event, date|
         target = When.when?(date, :parse=>When::Locale::EasternParser)
-        case target
-        when Array, Enumerator ; Range.convert_from(target)
-        else                   ; target
-        end
+        target = Range.convert_from(target) if target.kind_of?(Array) || target.kind_of?(Enumerator)
+        target.send(:original=, date) if target.kind_of?(Range)
+        target
       }
 
       # 日付化
@@ -1187,14 +1193,14 @@ module When
             event_range.overlaped(range).each do |focused_date|
               sort_required = true
               focused_event = event.deep_copy
-              focused_event.role[VALID] = focused_date
+              focused_event.send(:date=, focused_date)
               narrowed_events << focused_event
             end
           else
             narrowed_events << event
           end
         end
-        narrowed_events.sort_by! {|event| event.role[VALID]} if sort_required
+        narrowed_events.sort_by! {|event| event.date} if sort_required
         narrowed_events
       end
 
@@ -1661,6 +1667,22 @@ module When
       attr_reader :order
 
       #
+      # deep copy 時の元イベント
+      #
+      # @return [When::Events::Event]
+      #
+      attr_accessor :original
+      protected :original=
+
+      #
+      # 日付または日付範囲
+      #
+      # @return [When::TM::TemporalPosition or When::Events::Range]
+      #
+      attr_accessor :date
+      private :date=
+
+      #
       # HAS_PART対象の文字列中の{}で囲まれた語に対して yield で指定された処理を行う
       #
       def each_word
@@ -1742,6 +1764,13 @@ module When
               words.each do |word|
                 @statements << ::RDF::Statement(subject, @dataset.resource[predicate], word)
               end
+            when VALID
+              if object.kind_of?(Range)
+                object = object.original
+              elsif object.respond_to?(:to_uri)
+                object = object.to_uri
+              end
+              @statements << ::RDF::Statement(subject, @dataset.resource[predicate], object)
           # when ABSTRACT
           #   @statements << ::RDF::Statement(subject, @dataset.resource[predicate], abstract)
             else
@@ -1765,10 +1794,11 @@ module When
       # @return [When::Events::Event] コピー結果
       #
       def deep_copy
-        result = self.dup
-        result.csv  = @csv.dup
-        result.rdf  = @rdf.dup
-        result.role = @role.dup
+        result          = self.dup
+        result.csv      = @csv.dup
+        result.rdf      = @rdf.dup
+        result.role     = @role.dup
+        result.original = self
         result
       end
 
@@ -1831,6 +1861,8 @@ module When
               definition[:operation].call(self, format == '%s' ? fields.first : format % fields)
             end
         end
+
+        @date = @role[VALID]
       end
 
       private
