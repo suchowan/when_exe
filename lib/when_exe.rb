@@ -61,6 +61,8 @@ module When
     # @option options [Numeric]                     :wikipedia_interval    Wikipedia の連続的な参照を抑制するための遅延時間/秒
     # @option options [Array<String>]               :order                 CalendarEra の検索順序        ([ IRI of When::TM::CalendarEra ])
     # @option options [Hash{String=>Array, String}] :format                strftime で用いる記号の定義   ({ 記号=>[ 書式,項目名 ] or 記号列 })
+    # @option options [false, nil]                  :table_off             高精度テーブル使用の指定 - 使用する
+    # @option options [true]                        :table_off             高精度テーブル使用の指定 - 使用しない
     # @option options [Array<Array>]                :leap_seconds          閏秒の挿入記録                ([ [JD, TAI-UTC, (MJD, OFFSET)] ])
     # @option options [String]                      :base_uri              Base URI for When_exe Resources (Default When::SourceURI)
     # @option options [Hash<String=>String>]        :additional_namespaces User defined namespaces (Default {})
@@ -90,6 +92,7 @@ module When
       TM::Calendar._setup_
       TM::Clock._setup_(options[:local])
       TM::TemporalPosition._setup_(options[:format])
+      CalendarNote::LuniSolarPositions._setup_(options[:table_off])
       V::Event._setup_(options[:until])
       V::Timezone._setup_
       Parts::Timezone._setup_
@@ -109,6 +112,7 @@ module When
       update(TM::CalendarEra._setup_info).
       update(TM::Clock._setup_info).
       update(TM::TemporalPosition._setup_info).
+      update(CalendarNote::LuniSolarPositions._setup_info).
       update(V::Event._setup_info).
       update(TimeStandard._setup_info)
     end
@@ -386,6 +390,7 @@ module When
   end
 
   class CalendarNote
+    autoload :LuniSolarPositions,      'when_exe/ephemeris/notes'
     autoload :SolarTerms,              'when_exe/ephemeris/notes'
     autoload :LunarPhases,             'when_exe/ephemeris/notes'
     autoload :Ephemeris,               'when_exe/ephemeris/notes'

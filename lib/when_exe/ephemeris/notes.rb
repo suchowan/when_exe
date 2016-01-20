@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2016 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -13,6 +13,32 @@ class When::CalendarNote
   # 太陽と月の位置によるイベント
   #
   class LuniSolarPositions < self
+
+    class << self
+
+      # 高精度テーブル使用の指定状態
+      #
+      # @return [Boolean]  true - 使用しない, false,nil - 使用する
+      #
+      attr_accessor :table_off
+
+      #
+      # @param [Boolean] table_off 高精度テーブル使用の指定 true - 使用しない, false,nil - 使用する
+      #
+      # @return [void]
+      #
+      def _setup_(table_off=nil)
+        @table_off = table_off
+      end
+
+      # 設定情報を取得する
+      #
+      # @return [Hash] 設定情報
+      #
+      def _setup_info
+        {:table_off => @table_off}
+      end
+    end
 
     # 座標の分子
     #
@@ -150,7 +176,7 @@ class When::CalendarNote
       @event ||= 'term'
       @num     = (num || @num  ||   0).to_f
       @den     = (den || @den  || 360).to_f
-      @formula = When.Resource(formula || @formula ||'Formula?formula=12S', '_ep:')
+      @formula = When.Resource(formula || @formula || (LuniSolarPositions.table_off ? 'Formula?formula=12S' : 'SolarFormulaWithTable'), '_ep:')
       @delta   = When.Duration(delta   || @delta   || When::TM::IntervalLength.new(@den/360, 'year'))
       @margin  = (margin || @margin    || 1E-8).to_f
       super
@@ -203,7 +229,7 @@ class When::CalendarNote
       @event ||= 'phase'
       @num     = (num || @num  ||  0).to_f
       @den     = (den || @den  || 30).to_f
-      @formula = When.Resource(formula || @formula ||'Formula?formula=1L', '_ep:')
+      @formula = When.Resource(formula || @formula || (LuniSolarPositions.table_off ? 'Formula?formula=1L' : 'LunarFormulaWithTable'), '_ep:')
       @delta   = When.Duration(delta   || @delta   || When::TM::IntervalLength.new(@den/30, 'month'))
       @margin  = (margin || @margin    || 1E-8).to_f
       super

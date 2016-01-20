@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2016 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -25,6 +25,9 @@ module When::Ephemeris
   autoload :Shadow,  'when_exe/ephemeris/moon'
   autoload :V50,     'when_exe/ephemeris/v50'
   autoload :Hindu,   'when_exe/region/indian'
+
+  autoload :SolarFormulaWithTable, 'when_exe/ephemeris/term_table'
+  autoload :LunarFormulaWithTable, 'when_exe/ephemeris/phase_table'
 
   include Math
 
@@ -1772,6 +1775,43 @@ module When::Ephemeris
     #
     def _sun_to_lunation_(cn)
       _true_lunation(root((cn - @sun_0m) / @sun_1m, cn) {|x| _true_sun(x)})
+    end
+  end
+
+  #
+  #  一部表引き
+  #
+  class FormulaWithTable < Formula
+
+    private
+
+    # 周期番号 -> 日時
+    #
+    # @param [Numeric] cn 周期番号
+    # @param [Numeric] time0 日時の初期近似値
+    #
+    # @return [Numeric] ユリウス日
+    #
+    def cn_to_time_(cn, time0=nil)
+      count = ((cn - self.class::CycleBase) * self.class::CycleUnit / 360.0).floor
+      return super unless count >= 0
+      degree = (cn * self.class::CycleUnit) % 360
+      degree = degree.round if (degree - degree.round).abs < 1.5E-8
+      if degree == 360
+        degree = 0
+        count += 1
+      end
+      epoch = self.class::Epoch[degree]
+      return super unless epoch
+      delta = self.class::Delta[degree][count]
+      return super unless delta
+      epoch + count * self.class::CyclePeriod + delta * 1E-9
+    end
+
+    # オブジェクトの正規化
+    def _normalize(args=[], options={})
+      @formula = self.class::FormulaType
+      super
     end
   end
 
