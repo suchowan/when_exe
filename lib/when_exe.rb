@@ -610,9 +610,9 @@ module When
   #
   def strptime(date_time, format, options={})
     h = When::Locale._to_date_time_hash(date_time, format, options[:locale])
-    abbr_y, abbr_m, abbr_d, =
-      options[:abbr].kind_of?(When::TimeValue) ?
-        ((options[:frame]||When::Gregorian) ^ options[:abbr]).cal_date : options[:abbr]
+    frame = options[:frame] ? When.Calendar(options[:frame]) : When::Gregorian
+    abbr_y, abbr_m, abbr_d, = options[:abbr].kind_of?(When::TimeValue) ?
+      (frame ^ options[:abbr]).cal_date : options[:abbr]
     args =  [h[:year] || abbr_y || ::Date.today.year]
     args << (h[:mon]  || abbr_m || 1) if h[:hour] ||  h[:mon]
     args << (h[:mday] || abbr_d || 1) if h[:hour] || (h[:mon] && h[:mday])
@@ -622,8 +622,8 @@ module When
     args << options.dup
     args[-1].delete(:locale)
     args[-1].delete(:abbr)
-    args[-1].update({:parse=>{:residue=>{2=>When.Residue((h[:wday]-1)%7)}}}) if h[:wday]
-    args[-1].update({:clock=>When::TM::Clock.to_hms(h[:offset])})            if h[:offset]
+    args[-1].update({:parse=>{:residue=>{frame.indices.length=>When.Residue((h[:wday]-1)%7)}}}) if h[:wday]
+    args[-1].update({:clock=>When::TM::Clock.to_hms(h[:offset])}) if h[:offset]
     TM::TemporalPosition._temporal_position(*args)
   end
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2016 Takashi SUGA
 
   You may use and/or modify this file according to the license
   described in the LICENSE.txt file included in this archive.
@@ -84,6 +84,7 @@ module MiniTest
       assert_equal(42, When.when?('2011-05-15') % haab)
       h = haab % When.when?('2011-05-15')
       assert_equal(["Sip", 2], [h.label.to_s, h.difference])
+      assert_equal("13.00.03.05.17", When.when?('13.00.03.02.05{Pop}', {:frame=>'LongCount'}).to_s)
 
       # offset 2B
       haab = When.Resource("_co:Mayan?Epoch=2D::Haab'")

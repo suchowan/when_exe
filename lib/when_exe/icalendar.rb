@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2016 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -595,9 +595,10 @@ module When::V
           end
         }
         residue_options = delayed_options[:residue]
+        frame_len       = base.frame.indices.length
         if residue_options
-          event_options['rrule'].update(_byyear(residue_options)) if residue_options[0]
-          event_options['rrule'].update(_byday(residue_options )) if residue_options[2]
+          event_options['rrule'].update(_byyear(residue_options.delete(frame_len-2))) if residue_options[frame_len-2]
+          event_options['rrule'].update(_byday(residue_options.delete(frame_len) )) if residue_options[frame_len]
           delayed_options.delete(:residue)
         end
         if base.precision == When::MONTH && event_options['rrule']['FREQ'] == 'YEARLY'
@@ -620,14 +621,13 @@ module When::V
 
       # オブジェクト変換オプションの遅延適用のBYYEAR要素
       #
-      def _byyear(options)
-        {'BYYEAR'=>_to_ical_hash(When.Residue(options.delete(0)), 'year', 4)}
+      def _byyear(operation)
+        {'BYYEAR'=>_to_ical_hash(When.Residue(operation), 'year', 4)}
       end
 
       # オブジェクト変換オプションの遅延適用のBYDAY要素
       #
-      def _byday(options)
-        operation = options.delete(2)
+      def _byday(operation)
         return {'BYDAY'=>_to_ical_hash(operation, 'day', 11)} if operation.kind_of?(When::Coordinates::Residue)
 
         residues = []

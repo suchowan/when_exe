@@ -372,9 +372,14 @@ module When::TM
           d
         }
 
+        # 繰り返しの起点と間隔
+        base      = element[0].kind_of?(Duration) ? element[1] : element[0]
+        frame_len = (base.respond_to?(:frame) ? base.frame : When::Gregorian).indices.length
+        duration  = _duration_for_repeat(element)
+
         # 意味のある繰り返しのない場合
-        has_residue_options = delayed_options[:residue] && (delayed_options[:residue][0].kind_of?(String) ||
-                                                            delayed_options[:residue][2].kind_of?(String))
+        has_residue_options = delayed_options[:residue] && (delayed_options[:residue][frame_len-2].kind_of?(String) ||
+                                                            delayed_options[:residue][frame_len].kind_of?(String))
         case repeat
         when nil ; return _instance_without_repeat(element).apply_delayed_options(delayed_options) unless has_residue_options
         when 0   ; return []
@@ -382,10 +387,6 @@ module When::TM
           return [element[0]] * repeat if element.length == 1 && element[0].kind_of?(When::TM::Duration) # JIS X0301 5.6.3
           raise ArgumentError, "Duration or TemporalPosition missing" unless element[1] || has_residue_options
         end
-
-        # 繰り返しの起点と間隔
-        base     = element[0].kind_of?(Duration) ? element[1] : element[0]
-        duration = _duration_for_repeat(element)
 
         # 繰り返しのある場合
         if repeat.kind_of?(Integer) && !has_residue_options
@@ -408,7 +409,8 @@ module When::TM
           return duration.set_repeat(true) unless base
 
           # iCalendar の機能を使用する
-          should_limit = base.precision == When::MONTH && !(delayed_options[:residue] && delayed_options[:residue][0])
+          should_limit = base.precision == When::MONTH &&
+                       !(delayed_options[:residue] && delayed_options[:residue][frame_len-2])
           iterator = When::V::Event.iterator_for_ISO8601(base, duration, delayed_options)
           case repeat
           when nil     ; (result=iterator.succ).precision > base.precision && should_limit && base != result ? nil : result
@@ -430,6 +432,7 @@ module When::TM
         options  = TemporalPosition._options(options)
         options[:frame]  ||= 'Gregorian'
         options[:frame]    = When.Resource(options[:frame], '_c:') if options[:frame].kind_of?(String)
+        frame_len = options[:frame].indices.length
         case args[0]
         when String
           options[:era_name]    = When::EncodingConversion.to_internal_encoding(args.shift)
@@ -441,7 +444,7 @@ module When::TM
         # 時間位置の生成
         res   = []
         abbrs = Array(options[:abbr])
-        date  = Array.new(options[:frame].indices.length-1) {
+        date  = Array.new(frame_len-1) {
           element = args.shift
           abbr    = abbrs.shift
           res    << element.to('year') if element.kind_of?(When::Coordinates::Residue)
@@ -458,8 +461,8 @@ module When::TM
           end
         }
         parse = options.delete(:parse)
-        if parse && parse[:residue] && parse[:residue][2]
-          res << parse[:residue][2]
+        if parse && parse[:residue] && parse[:residue][frame_len]
+          res << parse[:residue][frame_len]
         end
         if args.length > 0
           options[:clock] ||= Clock.local_time
@@ -1065,12 +1068,13 @@ module When::TM
     # @return [When::TM::TemporalPosition]
     #
     def apply_delayed_options(options)
-      position = self
+      position  = self
+      frame_len = frame.indices.length
       if options[:residue]
         options[:residue].keys.sort.each do |count|
           options[:residue][count] = When.Residue(options[:residue][count]) unless options[:residue][count].kind_of?(When::Coordinates::Residue)
           residue = options[:residue][count]
-          if count == 0
+          if count == frame_len - 2
             residue   = residue.to('year')
             position &= residue
           else

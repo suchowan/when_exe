@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2016 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -29,7 +29,7 @@ module When
         # @option options [Integer] :extra_year_digits ISO8601拡大表記のための年の構成要素拡大桁数(省略時 1桁)
         # @option options [Integer] :ordinal_date_digits ISO8601拡大表記の年内通日の桁数(省略時 3桁)
         #
-        # @return [Array] format, date, time, clock, era
+        # @return [Array] format, date, time, clock, era, r
         #
         #   format (Symbol, nil)
         #     nil      通常形式
@@ -44,6 +44,8 @@ module When
         #   clock (String)         時間帯
         #
         #   era   (String, Array<String, Integer>) 年号(Integerは0年に対応する通年)
+        #
+        #   r     (Hash<Integer=>When::Coordinates::Residue or String>) 剰余類などの指定
         #
         def _to_array(date_time, options={})
           raise TypeError, "Argument is not ISO 8601 String" unless date_time.kind_of?(String)
