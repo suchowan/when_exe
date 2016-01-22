@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2016 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -820,7 +820,8 @@ module When
       #
       def _normalize(args=[], options={})
         @label            ||= 'Chinese::ChineseSolar'
-        @formula          ||= ['Formula']
+        @formula          ||= (When::CalendarNote::LuniSolarPositions.table_off ? ['Formula'] :
+                                 [When.Resource('_ep:SolarFormulaWithTable'), When.Resource('_ep:LunarFormulaWithTable')])
         @formula            = Array(@formula)
         @formula           *= 2 if @formula.length == 1
         @formula[0]        += (@formula[0] =~ /\?/ ? '&' : '?') + 'formula=12S' if @formula[0].kind_of?(String)
@@ -873,7 +874,8 @@ module When
       #
       def _normalize(args=[], options={})
         @label            ||= 'Chinese::ChineseLuniSolar'
-        @formula          ||= ['Formula']
+        @formula          ||= (When::CalendarNote::LuniSolarPositions.table_off ? ['Formula'] :
+                                 [When.Resource('_ep:SolarFormulaWithTable'), When.Resource('_ep:LunarFormulaWithTable')])
         @formula            = Array(@formula)
         @formula           *= 2 if @formula.length == 1
         @formula[0]        += (@formula[0] =~ /\?/ ? '&' : '?') + 'formula=12S' if @formula[0].kind_of?(String)

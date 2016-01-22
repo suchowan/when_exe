@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2016 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -1325,7 +1325,8 @@ module When::CalendarTypes
     #
     def _normalize(args=[], options={})
       @cycle_offset   ||= -1.5
-      @formula        ||= "Formula?formula=#{@months_in_year||12}S"
+      @formula        ||= (When::CalendarNote::LuniSolarPositions.table_off ?
+                            "Formula?formula=#{@months_in_year||12}S" : 'SolarFormulaWithTable')
       super
     end
  end
@@ -1472,7 +1473,9 @@ module When::CalendarTypes
     # notes        = to_a でデフォルトとして用いる暦注
     #
     def _normalize(args=[], options={})
-      @formula ||= ['Formula?formula=12S', 'Formula?formula=1L']
+      @formula ||= (When::CalendarNote::LuniSolarPositions.table_off ?
+                     ['Formula?formula=12S',  'Formula?formula=1L'] :
+                     ['SolarFormulaWithTable','LunarFormulaWithTable'])
       super
     end
   end
