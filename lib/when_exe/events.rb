@@ -1331,37 +1331,42 @@ module When
         source    = yield(source) if block_given? && operation !~ /SPARQL|CalendarEra/i
         raise IOError, target + ': not ready' unless source
         for_each_record(source, operation) do |row|
-          event = Event.new(self, @events.size+1, row)
-          @events << event
-
-          @role.keys.each do |item|
-            case item
-            when LABEL, REFERENCE
-            when HAS_PART
-              if event.role[HAS_PART].kind_of?(Array)
-                event.role[HAS_PART].each do |word|
-                  @index[HAS_PART][word] << @events.size
+          begin
+            event = Event.new(self, @events.size+1, row)
+            @events << event
+  
+            @role.keys.each do |item|
+              case item
+              when LABEL, REFERENCE
+              when HAS_PART
+                if event.role[HAS_PART].kind_of?(Array)
+                  event.role[HAS_PART].each do |word|
+                    @index[HAS_PART][word] << @events.size
+                  end
+                else
+                  event.each_word do |word|
+                    @index[HAS_PART][word] << @events.size
+                  end
                 end
+              when WHAT_DAY
+                date = event.role[WHAT_DAY]
+                key = [date.class.to_s !~ /\AWhen/ ||
+                       date.frame.kind_of?(When::CalendarTypes::Christian),
+                       date.month * 1, date.day]
+                @index[WHAT_DAY][key] << @events.size
               else
-                event.each_word do |word|
-                  @index[HAS_PART][word] << @events.size
-                end
+                add_index(:role, item)
               end
-            when WHAT_DAY
-              date = event.role[WHAT_DAY]
-              key = [date.class.to_s !~ /\AWhen/ ||
-                     date.frame.kind_of?(When::CalendarTypes::Christian),
-                     date.month * 1, date.day]
-              @index[WHAT_DAY][key] << @events.size
-            else
-              add_index(:role, item)
             end
-          end
-
-          [:rdf, :csv].each do |method|
-            send(method).keys.each do |item|
-              add_index(method, item)
+  
+            [:rdf, :csv].each do |method|
+              send(method).keys.each do |item|
+                add_index(method, item)
+              end
             end
+          rescue => exception
+            puts "#{source}##{@events.size+1}: #{exception}"
+          # puts exception.backtrace
           end
         end
 

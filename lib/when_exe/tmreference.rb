@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2016 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -1746,7 +1746,7 @@ module When::TM
       end
       frame     = epoch.frame
       cal_date  = frame.to_cal_date(sdn)
-      options   = {:frame=>frame}
+      options   = {:frame=>frame, :precision=>date.precision}
       return epoch, CalDate.new(cal_date, options) unless clock
       options[:clock]    = clock
       options[:location] = date.location if date.location

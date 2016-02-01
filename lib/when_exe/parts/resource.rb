@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2016 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -373,9 +373,21 @@ module When::Parts
             end
           end
           case @_pool[iri]
-          when my_mutex; my_mutex.synchronize    {@_pool[iri] = _create_object(iri, path, query, &block) }
-          when Mutex   ; @_pool[iri].synchronize {@_pool[iri]}
-          else         ; @_pool[iri]
+          when my_mutex
+            my_mutex.synchronize do
+              begin
+                @_pool[iri] = _create_object(iri, path, query, &block)
+              rescue => exception
+                @_pool[iri] = nil
+                raise exception
+              end
+            end
+          when Mutex
+            @_pool[iri].synchronize do
+              @_pool[iri]
+            end
+          else
+            @_pool[iri]
           end
         else
           @_pool      ||= {}
