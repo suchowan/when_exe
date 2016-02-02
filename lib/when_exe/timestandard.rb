@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2016 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -414,6 +414,16 @@ module When::TimeStandard
     def localtime_difference
       @localtime_difference ||= When::TM::Duration::DAY * localdate_difference
     end
+
+    # dynamical time を universal time に変換する
+    #
+    # @param [Numeric] time dynamical time
+    #
+    # @return [Numeric] universal time
+    #
+    def dynamical_time_to_universal(time)
+      from_dynamical_time(time) - localtime_difference
+    end
   end
 
   #
@@ -444,6 +454,7 @@ module When::TimeStandard
     def from_dynamical_time(time)
       When::TimeStandard.from_dynamical_time(time)
     end
+    alias :dynamical_time_to_universal :from_dynamical_time
 
     # 当該時刻系の日付を dynamical date に変換する
     #

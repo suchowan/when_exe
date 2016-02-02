@@ -1577,7 +1577,7 @@ module When::Ephemeris
       seed[:precision] = nil
       seed[:clock]   ||= When::TM::Clock.local_time
       t = When::TM::JulianDate._d_to_t(d)
-      seed[:frame].jul_trans(@is_dynamical ? When::TM::JulianDate.dynamical_time(t) :
+      seed[:frame].jul_trans(@is_dynamical ? When::TM::JulianDate.dynamical_time(t, {:time_standard=>seed[:time_standard]}) :
                                              When::TM::JulianDate.universal_time(t), seed)
     end
 

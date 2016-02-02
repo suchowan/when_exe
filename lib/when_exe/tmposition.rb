@@ -841,8 +841,10 @@ module When::TM
       else          ; raise TypeError, "The right operand should be Numeric or Duration"
       end
       return _plus(other) if other.kind_of?(PeriodDuration)
-      @frame.kind_of?(Calendar) ? @frame.jul_trans(JulianDate.dynamical_time(dynamical_time + other.duration), self._attr) :
-                                                   JulianDate.dynamical_time(dynamical_time + other.duration,  self._attr)
+      options = self._attr
+      time    = dynamical_time + other.duration
+      @frame.kind_of?(Calendar) ? @frame.jul_trans(JulianDate.dynamical_time(time, {:time_standard=>options[:time_standard]}), options) :
+                                                   JulianDate.dynamical_time(time,  options)
     rescue RangeError
       (@frame ^ self) + other
     end
@@ -866,8 +868,10 @@ module When::TM
       else          ; raise TypeError, "The right operand should be Numeric, Duration or TemporalPosition"
       end
       return _plus(-other) if other.kind_of?(PeriodDuration)
-      @frame.kind_of?(Calendar) ? @frame.jul_trans(JulianDate.dynamical_time(dynamical_time - other.duration), self._attr) :
-                                                   JulianDate.dynamical_time(dynamical_time - other.duration,  self._attr)
+      options = self._attr
+      time    = dynamical_time - other.duration
+      @frame.kind_of?(Calendar) ? @frame.jul_trans(JulianDate.dynamical_time(time, {:time_standard=>options[:time_standard]}), options) :
+                                                   JulianDate.dynamical_time(time,  options)
     rescue RangeError
       (@frame ^ self) - other
     end

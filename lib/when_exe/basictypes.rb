@@ -167,7 +167,7 @@ module When
             parse.each do |item|
               item[2] ? date_time.gsub!(item[0], item[1]) :
               item[1] ? date_time.sub!( item[0], item[1]) :
-                        date_time.gsub!(When::Locale::NumRExp3) {|digit| When::Locale.k2a_digits(digit, true)}
+                        date_time.gsub!(When::Locale.const_get(item[0])) {|digit| When::Locale.k2a_digits(digit, true)}
             end unless date_time =~ /\{/
           end
           date_time
