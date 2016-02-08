@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2016 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -16,7 +16,7 @@ module When::Parts
   class Timezone
 
     #
-    # When::V::Timezone と Qhwn::Parts::Timezone の抽象基底
+    # When::TM::Clock, When::V::Timezone と Qhwn::Parts::Timezone の抽象基底
     # 
     module Base
       # 標準時間帯の時計
@@ -39,10 +39,13 @@ module When::Parts
       # @return [When::TM::DateAndTime, When::TM::JulianDate]
       #
       def ^(date, options={})
-        date    = When::TM::Position.any_other(date, options)
-        options = date._attr.merge({:clock=>self}).merge(options)
-        return When::TM::JulianDate.dynamical_time(date.dynamical_time, options) unless date.frame.kind_of?(When::TM::Calendar)
-        date.frame.jul_trans(When::TM::JulianDate.dynamical_time(date.dynamical_time), options)
+        date   = When::TM::Position.any_other(date, options)
+        my_opt = date._attr
+        my_opt[:clock]         = self
+        my_opt[:time_standard] = time_standard if respond_to?(:time_standard)
+        my_opt.merge(options)
+        return When::TM::JulianDate.dynamical_time(date.dynamical_time, my_opt) unless date.frame.kind_of?(When::TM::Calendar)
+        date.frame.jul_trans(When::TM::JulianDate.dynamical_time(date.dynamical_time, {:time_standard=>my_opt[:time_standard]}), my_opt)
       end
     end
 

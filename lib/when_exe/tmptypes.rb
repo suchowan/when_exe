@@ -28,7 +28,7 @@ module When::TM
       # @return [When::TM::Coordinate]
       #
       def dynamical_time(dynamical_time, options={})
-        universal_time(When.Resource(options[:time_standard] || 'UniversalTime', '_t:').dynamical_time_to_universal(dynamical_time), options)
+        universal_time(When.Resource(options[:time_standard] || 'UniversalTime', '_t:').from_dynamical_time(dynamical_time), options)
       end
 
       # 他種の時間位置によるオブジェクトの生成

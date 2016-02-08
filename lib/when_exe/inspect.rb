@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2016 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -773,7 +773,7 @@ module When
       # @return [String]
       #
       def _to_uri(date)
-        (date.gsub(/\./, '-').gsub(/%/, '@') + caret_frame).
+        (date.gsub(/\./, '-').sub(/(\d{2}:\d{2}:\d{2})-(\d+)/, '\1.\2').gsub(/%/, '@') + caret_frame).
           gsub(When::Parts::Resource::IRIEncode) {|c| When::Parts::Resource::IRIEncodeTable[c]}
       end
 
@@ -1460,7 +1460,7 @@ module When
       # 出力に使用する clk_time の作成
       def _clk_time_for_inspect(precision)
         return @clk_time unless precision && precision > When::DAY
-        base = self + When::TM::Duration.new(@clk_time.frame._round_value(precision))
+        base = self + When::TM::PeriodDuration.new(0.5, precision)
         base.clk_time.clk_time[When::HOUR] = @clk_time.clk_time[When::HOUR] + 1 unless self.to_i == base.to_i
         return base.clk_time
       end

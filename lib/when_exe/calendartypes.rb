@@ -73,33 +73,6 @@ module When::CalendarTypes
   #
   class LocalTime < UTC
 
-    # 128秒単位の実数による参照事象の時刻
-    #
-    # Fraction time of the reference event
-    #
-    # @param [Integer] sdn 参照事象の通し番号
-    #
-    # @return [Numeric]
-    #
-    #   T00:00:00Z からの参照事象の経過時間 / 128秒
-    #
-    def universal_time(sdn=nil)
-      return super - @time_standard.localtime_difference unless sdn
-      time = When::TM::JulianDate._d_to_t(sdn-0.5)
-      @time_standard.to_dynamical_time(time) - When::TimeStandard.to_dynamical_time(time)
-    end
-
-    # この時法の時刻を128秒単位の実数に変換する
-    #
-    # @param [Array<Numeric>] clk_time
-    # @param [Integer] sdn 参照事象の通し番号(ダミー)
-    #
-    # @return [Numeric]
-    #
-    def to_local_time(clk_time, sdn=nil)
-      super - universal_time(sdn)
-    end
-
     #
     # Zone 名
     #
@@ -107,14 +80,6 @@ module When::CalendarTypes
     #
     def zone
       iri.split('/')[-1]
-    end
-
-    private
-
-    # オブジェクトの正規化
-    def _normalize(args=[], options={})
-      @origin_of_LSC = - @time_standard.localtime_difference / When::TM::Duration::SECOND
-      super
     end
   end
 
