@@ -773,7 +773,7 @@ module When
       # @return [String]
       #
       def _to_uri(date)
-        (date.gsub(/\./, '-').sub(/(\d{2}:\d{2}:\d{2})-(\d+)/, '\1.\2').gsub(/%/, '@') + caret_frame).
+        (date.gsub(/%/, '@').sub(/(\d{2}:\d{2}:\d{2})\.(\d+)/, '\1%2E\2').gsub(/\./, '-') + caret_frame).
           gsub(When::Parts::Resource::IRIEncode) {|c| When::Parts::Resource::IRIEncodeTable[c]}
       end
 

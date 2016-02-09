@@ -224,15 +224,29 @@ module When::TM
       #
       def parse(specification, options={})
         num, *calendars = specification.split(/\^{1,2}/)
-        jdn   = num.sub!(/[.@]/, '.') ? num.to_f : num.to_i
+        jdn  = num.sub!(/[.@]/, '.') ? num.to_f : num.to_i
         case num
         when /MJD/i ; jdn += JDN_of_MJD
         when /CEP/i ; jdn += JDN_of_CEP
-        when /DTB/i ; jdn  = When.Resource('_t:UniversalTime').from_dynamical_date(jdn)
+        when /DTB/i ; jdn  = time_standard(options).from_dynamical_date(jdn)
         end
         frame = calendars.shift || options[:frame]
         return self.new(jdn, options) unless frame
         calendars.unshift(frame).inject(jdn) {|date, calendar| When.Calendar(calendar).jul_trans(date, options)}
+      end
+
+      private
+
+      #
+      # Time Standard を選択する
+      #
+      def time_standard(options)
+        ts   = options[:time_standard]
+        ts ||= options[:clock] unless options[:clock].kind_of?(When::Parts::Timezone)
+        ts ||= '_t:UniversalTime'
+        ts   = When.Resource(ts)
+        ts   = ts.time_standard if ts.kind_of?(When::TM::Clock)
+        ts
       end
     end
 
