@@ -635,8 +635,8 @@ module When
       def _new_month_(m)
         new_month_time = @formula[0].cn_to_time(m + @cycle_offset)
         new_month_date = (new_month_time + 0.5 + @formula[0].long/360.0).floor
-        sunrise_time = @formula[0].sunrise(new_month_date)
-        (sunrise_time <= new_month_time) ? new_month_date : new_month_date-1
+      # sunrise_time = @formula[0].sunrise(new_month_date)
+      # (sunrise_time <= new_month_time) ? new_month_date : new_month_date-1
       end
 
       private
