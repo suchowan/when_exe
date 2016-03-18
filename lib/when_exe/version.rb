@@ -6,7 +6,7 @@
 =end
 
 module When
-  VERSION   = "0.4.5"
+  VERSION   = "0.4.6"
   YEARS     = "(C) 2011-2016"
   AUTHOR    = "Takashi SUGA"
   COPYRIGHT = "#{YEARS} #{AUTHOR}"
