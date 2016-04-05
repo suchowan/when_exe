@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2014 Takashi SUGA
+  Copyright (C) 2014-2016 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -10,10 +10,10 @@ module When
   class BasicTypes::M17n
 
     Dee = [self, [
-      "namespace:[en=http://www.hermetic.ch/cal_stud/]",
+      "namespace:[en=http://calendars.wikia.com/wiki/]",
       "locale:[=en:, ja]",
-      "names:[Dee=en:dee-cecil-calendar.htm, ディー暦=]",
-      "[DeeCecil=en:dee-cecil-calendar.htm, ディー-セシル暦=]"
+      "names:[Dee=en:Dee_calendar, ディー暦=]",
+      "[DeeCecil=en:Dee-Cecil_calendar, ディー-セシル暦=]"
     ]]
   end
 
