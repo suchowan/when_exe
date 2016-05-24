@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2012-2014 Takashi SUGA
+  Copyright (C) 2012-2016 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -13,6 +13,8 @@ module When::Coordinates
   class Kyusei < Residue
 
     StartOfSequence = {-1=>'九星陽遁始め', +1=>'九星陰遁始め'}
+
+    Patch = {2421371=>2421431, 2429771=>2429831, 2463251=>2463191, 2475851=>2475791}
 
     class << self
 
@@ -48,6 +50,7 @@ module When::Coordinates
       #
       def day(date, s_terms)
         thres, delta, sign = _parameters(date, s_terms)
+        delta += 3 if thres == 30
         delta = 8 - delta if sign < 0
         return delta % 9
       end
@@ -79,15 +82,34 @@ module When::Coordinates
       def _parameters(date, s_terms)
         date = When.when?(date.to_cal_date.to_s, {:frame=>date.frame, :clock=>date.frame.time_basis})
 
-        [+90,-90,-270].each do |deg|
-          prev   = s_terms.term(date, [deg,180])                     # 直後および直前の冬至または夏至
-          sign   = s_terms.position(prev)[0] == 270 ? -1 : +1        # 陽遁か?(冬至:-1, 夏至:+1)
-          base   = prev.to_i                                         # 当該の冬至または夏至のユリウス日
-          kanshi = (base + 17) % 60 - 28                             # 最も近い甲子との日数差
-          base  -= kanshi                                            # 当該陰陽遁の始め
-          delta  = date.to_i - base                                  # 始めからの日数
-          thres  = kanshi >= 29 ? 30 : 0                             # 区間の始めの delta (甲午の前後1日以内は甲午折り返し)
-          return [thres, delta, sign] if thres <= delta              # 区間に入れば確定
+        bases = [+450,+270,+90,-90,-270,-450].map { |deg|
+          prev   = s_terms.term(date, [deg,180])              # 直後および直前の冬至または夏至
+          sign   = s_terms.position(prev)[0] == 270 ? -1 : +1 # 陽遁か?(冬至:-1, 夏至:+1)
+          base   = prev.to_i                                  # 当該の冬至または夏至のユリウス日
+          kanshi = (base + 17) % 60 - 28                      # 最も近い甲子との日数差
+          base  -= kanshi                                     # 当該陰陽遁の始めの甲子
+          [(Patch[base] || base), sign]                       # 『暦日大鑑』に合わせる
+        }
+
+        (1...bases.size).each do |i|                          # 区間が短くなりすぎる場合は次と繋げる
+          next unless bases[i-1][0] - bases[i][0] == 120
+          bases[i-1][0] += 60
+          break
+        end
+
+        bases.size.times do |i|
+          base, sign = bases[i]
+          delta  = date.to_i - base                           # 始めからの日数
+          next if delta < 0
+          case (bases[i-1][0] - base)
+          when 180
+            return [ 0, delta, sign]                          # 通常
+          when 240
+            return [30, delta,      sign] if delta >= 30      # 甲午以降
+            return [ 0, delta+180, -sign]                     # 甲午より前
+          else
+            raise ArgumentError, "Invalid solstice interval: #{bases[i-1][0] - base}"
+          end
        end
        raise ArgumentError, "can't find any solstice."
       end
