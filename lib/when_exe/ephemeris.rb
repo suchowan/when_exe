@@ -1983,9 +1983,8 @@ module When::Ephemeris
       end
 
       # 通法
-      @denominator = @year_length.denominator if @year_length.kind_of?(Rational)
-      @denominator = [@denominator||0, @lunation_length.denominator].max if @lunation_length.kind_of?(Rational)
-
+      @denominator   = @denominator.to_i if @denominator
+      @denominator ||= [@year_length, @lunation_length].map {|length| length.kind_of?(Rational) ? length.denominator : 0}.max
       super
     end
   end
