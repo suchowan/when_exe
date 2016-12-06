@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2014-2015 Takashi SUGA
+  Copyright (C) 2014-2016 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -40,7 +40,7 @@ module When
     #
     HankeHenry = [CyclicTableBased, {
       'label'         => 'HankeHenry::HankeHenry',
-      'origin_of_LSC' => 1721061,
+      'origin_of_LSC' => 1721062, # 1721061(Sun) -> 1721062(Mon)
       'indices'       => [
         When.Index('HankeHenry::Month'),
         When::Coordinates::DefaultDayIndex

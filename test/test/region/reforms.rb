@@ -103,7 +103,7 @@ module MiniTest
 
   class HankeHenry < MiniTest::TestCase
     def test_hanke_henry
-      assert_equal(When.when?('2012.1.1').to_i, When.when?('2012.1.1^^HankeHenry').to_i)
+      assert_equal(When.when?('2018.1.1').to_i, When.when?('2018.1.1^^HankeHenry').to_i)
       count = 0
       (2000...2400).each do |year|
         first = When.tm_pos(year, 1, 1)
