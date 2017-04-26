@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2014 Takashi SUGA
+  Copyright (C) 2014-2017 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -29,12 +29,12 @@ class When::CalendarNote
         "names:[day]",
         [When::BasicTypes::M17n,
           "names:[Rokuyo=, 六曜, 六曜=zh:%%<六曜>]",
-          [DayOfWeek, "label:[Taian=,      *大安, 大安]", {'delta'=>6}],
-          [DayOfWeek, "label:[Shakko=,     *赤口, 赤口]", {'delta'=>6}],
-          [DayOfWeek, "label:[Sensho=,     *先勝, 先勝]", {'delta'=>6}],
-          [DayOfWeek, "label:[Tomobiki=,   *友引, 友引]", {'delta'=>6}],
-          [DayOfWeek, "label:[Sembu=,      *先負, 先負]", {'delta'=>6}],
-          [DayOfWeek, "label:[Butsumetsu=, *仏滅, 仏滅]", {'delta'=>6}]
+          [DayOfWeek, "label:[Taian=,      *大安=ja:%%<六曜>#%.<大安>, 大安=ja:%%<六曜>#%.<大安>]", {'delta'=>6}],
+          [DayOfWeek, "label:[Shakko=,     *赤口=ja:%%<六曜>#%.<赤口>, 赤口=ja:%%<六曜>#%.<赤口>]", {'delta'=>6}],
+          [DayOfWeek, "label:[Sensho=,     *先勝=ja:%%<六曜>#%.<先勝>, 先勝=ja:%%<六曜>#%.<先勝>]", {'delta'=>6}],
+          [DayOfWeek, "label:[Tomobiki=,   *友引=ja:%%<六曜>#%.<友引>, 友引=ja:%%<六曜>#%.<友引>]", {'delta'=>6}],
+          [DayOfWeek, "label:[Sembu=,      *先負=ja:%%<六曜>#%.<先負>, 先負=ja:%%<六曜>#%.<先負>]", {'delta'=>6}],
+          [DayOfWeek, "label:[Butsumetsu=, *仏滅=ja:%%<六曜>#%.<仏滅>, 仏滅=zh:%%<佛滅日>]", {'delta'=>6}]
         ]
       ]
     ]]
