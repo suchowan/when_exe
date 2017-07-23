@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2016 Takashi SUGA
+  Copyright (C) 2011-2017 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
 
 module When
   VERSION   = "0.4.6"
-  YEARS     = "(C) 2011-2016"
+  YEARS     = "(C) 2011-2017"
   AUTHOR    = "Takashi SUGA"
   COPYRIGHT = "#{YEARS} #{AUTHOR}"
 

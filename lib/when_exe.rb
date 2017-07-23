@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2016 Takashi SUGA
+  Copyright (C) 2011-2017 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -260,6 +260,7 @@ module When
     autoload :Iranian,                 'when_exe/region/iranian'
     autoload :Bahai,                   'when_exe/region/bahai'
     autoload :Islamic,                 'when_exe/region/islamic'
+    autoload :SaudiArabia,             'when_exe/region/saudi_arabian'
     autoload :Jewish,                  'when_exe/region/jewish'
     autoload :AncientOrient,           'when_exe/region/babylonian'
     autoload :Armenian,                'when_exe/region/armenian'
@@ -339,6 +340,7 @@ module When
     autoload :Bahai,                   'when_exe/region/bahai'
     autoload :TabularIslamic,          'when_exe/region/islamic'
     autoload :EphemerisBasedIslamic,   'when_exe/region/islamic'
+    autoload :UmmalquraSolar,          'when_exe/region/saudi_arabian'
     autoload :Jewish,                  'when_exe/region/jewish'
     autoload :Hebrew,                  'when_exe/region/jewish'
     autoload :Armenian,                'when_exe/region/armenian'

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2017 Takashi SUGA
 
   You may use and/or modify this file according to the license
   described in the LICENSE.txt file included in this archive.
@@ -48,6 +48,16 @@ module MiniTest
           end
         end
       end
+
+      def test_ummalqura_solar
+        date = When.when? '2017.9.23'
+        assert_equal('1396-01-01', (When::UmmalquraSolar ^ date).to_s)
+        399.times do
+          date += When::P1Y
+          assert_equal([1,1], (When::UmmalquraSolar ^ date).cal_date[-2..-1])
+        end
+      end
+
     end
   end
 
