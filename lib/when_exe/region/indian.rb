@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2018 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -16,6 +16,7 @@ module When
       "[IndianNationalSolar=en:Indian_national_calendar, インド国定暦,                         印度國定曆, era:SE=]",
       "[Nanakshahi=en:Nanakshahi_calendar,               ナーナク暦=,                          拿那克曆=]",
       "[RevisedBengali=en:Bengali_calendar,              改訂ベンガル暦=,                      改变孟加拉曆=]",
+      "[VikramSamvat=en:Vikram_Samvat,                   ヴィクラマ暦,                         维克拉姆历]",
       "[HinduSolar=en:Hindu_calendar,                    インド太陽暦=ja:%%<ヒンドゥー暦>,     印度陽曆=]",
       "[HinduLuniSolar=en:Hindu_calendar,                インド太陰太陽暦=ja:%%<ヒンドゥー暦>, 印度陰陽曆=]",
 
@@ -618,6 +619,74 @@ module When
         366 => {'Length'=> [31]*5 + [30]*5 + [31, 30]}
       }
     }]
+
+    #
+    # Vikram Sambat Solar Calendar defined by Table
+    #
+    VikramSambatSolar = [PatternTableBasedSolar, {
+      'label'   =>   'Indian::VikramSamvat',
+      'indices' => [
+          When.Index('Indian::SolarMonth'),
+          When::Coordinates::DefaultDayIndex
+        ],
+      'origin_of_MSC' => 1999,
+      'origin_of_LSC' => 2430463,
+      'epoch_in_CE'   => 1942,
+      'before'        => 'VikramSamvatSolar',
+      'after'         => 'VikramSamvatSolar',
+      'rule_table'=> %w(121210009901	021210009091	112111090900	112210900900)
+    }]
+
+    #
+    # Vikram Samvat Solar Calendar defined by Epehmeris
+    #
+    class VikramSamvatSolar <  EphemerisBased
+
+      # see https://en.wikipedia.org/wiki/Vikram_Samvat
+
+      MonthLength = [30.950, 31.429, 31.638, 31.463, 31.012, 30.428, 29.879, 29.475, 29.310, 29.457, 29.841, 30.377] # unit : day
+      MonthDiff   = [-0.5,   -1.2,   -1.0,   -6.6,   -0.7,   -0.2,    0.0,   +0.5,   +0.7,   +8.0,   +0.3,   -0.1]   # unit : hour
+      year_length = MonthLength.inject(:+)
+      YearLength  = (1_582_237_828 - 4_320_000) / (4_320_000.0)
+      MonthOffset = [0.0] + (0...11).to_a.map {|i| MonthLength[0..i].inject(:+) / year_length * YearLength}
+      YearOffset  = 2430463.78
+
+      # protected
+
+      # 月初の通日
+      #
+      # @param  [Integer] m 通月
+      #
+      # @return [Integer] 月初の通日
+      #
+      def _new_month_(m)
+        yy, mm = m.divmod(12)
+        (YearOffset + (yy - 1999) * YearLength + @month_offset[mm]).floor
+      end
+
+      private
+
+      # オブジェクトの正規化
+      #
+      #    @month_offset = 月初の日時の補正値の配列 / hour
+      #
+      def _normalize(args=[], options={})
+        @label ||= 'Indian::VikramSamvat'
+        @month_offset = (0...12).to_a.map {|mm| MonthOffset[mm] + ((
+            case @month_offset
+            when nil ; MonthDiff
+            when /,/ ; @month_offset.split(',').map {|offset| offset.to_f}
+            else     ; [@month_offset.to_f] * 12
+            end
+          )[mm] || 0) / 24.0
+        }
+        @indices        ||= [
+          When.Index('Indian::SolarMonth'),
+          When::Coordinates::DefaultDayIndex
+        ]
+        super
+      end
+    end
 
     #
     # Hindu Solar Calendar

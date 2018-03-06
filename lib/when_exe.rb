@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2017 Takashi SUGA
+  Copyright (C) 2011-2018 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -325,6 +325,8 @@ module When
     autoload :IndianNationalSolar,     'when_exe/region/indian'
     autoload :Nanakshahi,              'when_exe/region/indian'
     autoload :RevisedBengali,          'when_exe/region/indian'
+    autoload :VikramSambatSolar,       'when_exe/region/indian'
+    autoload :VikramSamvatSolar,       'when_exe/region/indian'
     autoload :HinduLuniSolar,          'when_exe/region/indian'
     autoload :HinduSolar,              'when_exe/region/indian'
     autoload :Jalali,                  'when_exe/region/iranian'
