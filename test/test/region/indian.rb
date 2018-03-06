@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2018 Takashi SUGA
 
   You may use and/or modify this file according to the license
   described in the LICENSE.txt file included in this archive.
@@ -86,5 +86,18 @@ module MiniTest
       date = When.when? '1936-11%3C08-%5E%5eHinduLuniSolar?note=HinduNote&location=(_co:Indian::Chennai)&start_month=5&type=SBSA'
       assert_equal('1936-11<08-', date.to_s)
     end
+
+    def test_vikram_sambat
+      date = When.when? '1942.4.20'
+      mismatches = []
+      961.times do
+        sambat = (When::VikramSambatSolar ^ date).to_s
+        samvat = (When::VikramSamvatSolar ^ date).to_s
+        mismatches << [date.to_s, sambat, samvat] unless sambat == samvat
+        date += When::P1M
+      end
+      assert_equal([%w(1945-11-20 2002-08-06 2002-08-05)], mismatches)
+    end
+
   end
 end

@@ -629,12 +629,12 @@ module When
           When.Index('Indian::SolarMonth'),
           When::Coordinates::DefaultDayIndex
         ],
-      'origin_of_MSC' => 1999,
-      'origin_of_LSC' => 2430463,
-      'epoch_in_CE'   => 1942,
+      'origin_of_MSC' => 2002,
+      'origin_of_LSC' => 2431559,
+      'epoch_in_CE'   => 1945,
       'before'        => 'VikramSamvatSolar',
       'after'         => 'VikramSamvatSolar',
-      'rule_table'=> %w(121210009901	021210009091	112111090900	112210900900)
+      'rule_table'    => %w(112210900900)
     }]
 
     #
