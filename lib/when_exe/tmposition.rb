@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2016 Takashi SUGA
+  Copyright (C) 2011-2018 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -395,11 +395,13 @@ module When::TM
           result = []
           seed   = base
           guard  = (base - When::V::Event.default_until)...(base + When::V::Event.default_until)
+          count = 0
           while result.length < repeat && seed >= guard.first && seed < guard.last
             applied = seed.apply_delayed_options(delayed_options)
             applied = When::Parts::GeometricComplex.new(applied, delayed_options[:duration]) if delayed_options[:duration]
             result << applied if applied
-            seed += duration
+            count += 1
+            seed = base + duration * count
           end
           result.reverse! if duration.sign < 0
           return result
