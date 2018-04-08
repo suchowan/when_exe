@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2016 Takashi SUGA
+  Copyright (C) 2011-2018 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -574,7 +574,7 @@ module When::V
       #
       # @return [When::TM::IntervalLength]
       def default_until
-        @default_until ||= 1000*When::TM::Duration::YEAR
+        @default_until ||= 1000*(When::TM::Duration::YEAR / When::TM::Duration::DAY)
       end
 
       # ISO8601へ埋め込まれた指定に対応する iterator を生成する

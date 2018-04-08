@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2012-2016 Takashi SUGA
+  Copyright (C) 2012-2018 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -798,6 +798,7 @@ class When::CalendarNote
       [ 1,29] => [[1873..1873, When.M17n('JapaneseHoliday::神武天皇即位日')]],
       [ 1,30] => [[1874..1912, When.M17n('JapaneseHoliday::孝明天皇祭')]],
       [ 2,11] => [[1874..1948, When.M17n('JapaneseHoliday::紀元節')], [1967..2100, When.M17n('JapaneseHoliday::建国記念の日')]],
+      [ 2,23] => [[2020..2100, When.M17n('JapaneseHoliday::天皇誕生日')]],
       [ 2,24] => [[1989..1989, When.M17n('JapaneseHoliday::昭和天皇の大喪の礼')]],
       [ 3, 3] => [[1868..1872, When.M17n('JapaneseHoliday::弥生節句')]],
       [ 3, 0] => [[1879..1948, When.M17n('JapaneseHoliday::春季皇霊祭')], [1949..2100, When.M17n('JapaneseHoliday::春分の日')]],
@@ -833,7 +834,7 @@ class When::CalendarNote
       [11,14] => [[1915..1915, When.M17n('JapaneseHoliday::大嘗祭')], [1928..1928, When.M17n('JapaneseHoliday::大嘗祭')]],
       [11,16] => [[1915..1915, When.M17n('JapaneseHoliday::大饗第1日')], [1928..1928, When.M17n('JapaneseHoliday::大饗第1日')]],
       [11,23] => [[1873..1947, When.M17n('JapaneseHoliday::新嘗祭')], [1948..2100, When.M17n('JapaneseHoliday::勤労感謝の日')]],
-      [12,23] => [[1989..2100, When.M17n('JapaneseHoliday::天皇誕生日')]],
+      [12,23] => [[1989..2018, When.M17n('JapaneseHoliday::天皇誕生日')]],
       [12,25] => [[1927..1947, When.M17n('JapaneseHoliday::大正天皇祭')]]
     }
 
