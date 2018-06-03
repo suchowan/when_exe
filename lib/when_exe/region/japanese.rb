@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2016 Takashi SUGA
+  Copyright (C) 2011-2018 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -117,6 +117,7 @@ module When
       "[敬老の日,                     Respect for the Aged Day  ]",
       "[神嘗祭,                       Kan'namesai=              ]",
       "[体育の日,                     Health and Sports Day     ]",
+      "[スポーツの日,                 Sports Day                ]",
       "[春季皇霊祭,                   Vernal Kōreisai=en:K%C5%8Dreisai           ]",
       "[春分の日,                     Vernal Equinox Day                         ]",
       "[秋季皇霊祭,                   Autumnal Kōreisai=en:K%C5%8Dreisai         ]",
