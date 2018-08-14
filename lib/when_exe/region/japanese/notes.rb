@@ -826,6 +826,7 @@ class When::CalendarNote
       [ 9,-3] => [[2003..2100, When.M17n('JapaneseHoliday::敬老の日')]],
       [ 9,17] => [[1874..1878, When.M17n('JapaneseHoliday::神嘗祭')]],
       [ 9, 0] => [[1878..1947, When.M17n('JapaneseHoliday::秋季皇霊祭')], [1948..2100, When.M17n('JapaneseHoliday::秋分の日')]],
+      [10, 2] => [[1929..1929, When.M17n('JapaneseHoliday::皇大神宮遷御当日')]],
       [10,10] => [[1966..1999, When.M17n('JapaneseHoliday::体育の日')]],
       [10,-2] => [[2000..2019, When.M17n('JapaneseHoliday::体育の日')],[2021..2100, When.M17n('JapaneseHoliday::スポーツの日')]],
       [10,17] => [[1879..1947, When.M17n('JapaneseHoliday::神嘗祭')]],

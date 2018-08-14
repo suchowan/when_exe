@@ -140,6 +140,7 @@ module When
       "[弥生節句=ja:%%<上巳>,         Double Third Festival=                     ]",
       "[端午節句=ja:%%<端午>,         Double Fifth Festival=                     ]",
       "[田実節句=ja:%%<八朔>,         Hassaku=                                   ]",
+      "[皇大神宮遷御当日=ja:%%<神宮式年遷宮>,            Rebuilding the Ise Grand Shrine= ]",
       "[皇太子明仁親王の結婚の儀=ja:%%<結婚の儀>,        Prince Akihito's wedding=        ]",
       "[皇太子徳仁親王の結婚の儀=ja:%%<結婚の儀>,        Prince Naruhito's wedding=       ]",
       "[天長節祝日=ja:%%<天皇誕生日>#%.<近世・現代>,     Emperor Taishō's Birth holiday=  ]",
