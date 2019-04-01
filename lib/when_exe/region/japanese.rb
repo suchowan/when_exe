@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2018 Takashi SUGA
+  Copyright (C) 2011-2019 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -107,6 +107,8 @@ module When
       "[天皇誕生日,                   The Emperor's Birthday    ]",
       "[みどりの日,                   Greenery Day              ]",
       "[昭和の日,                     Shōwa Day                 ]",
+      "[退位の日=,                    Day of Abdication=]",
+      "[即位の日=,                    Coronation Day of the new Emperor=]",
       "[憲法記念日,                   Constitution Memorial Day ]",
       "[こどもの日,                   Children's Day (Japan)    ]",
       "[七夕節句=ja:%%<七夕>,         Qixi Festival             ]",
@@ -124,14 +126,14 @@ module When
       "[秋分の日,                     Autumnal Equinox Day                       ]",
       "[明治節,                       The emperor Maiji's Birthday=en:Culture_Day]",
       "[文化の日,                     Culture Day                                ]",
-      "[大嘗祭,                       Enthronement of the Japanese Emperor       ]",
-      "[大饗第1日,                    Enthronement of the Japanese Emperor       ]",
+      "[大嘗祭,                       Enthronement of the Japanese Emperor=      ]",
+      "[大饗第1日,                    Enthronement of the Japanese Emperor=      ]",
       "[新嘗祭,                       Labor Thanksgiving Day                     ]",
       "[勤労感謝の日,                 Labor Thanksgiving Day                     ]",
       "[振替休日,                     Substitute holiday                         ]",
       "[国民の休日,                   National Day Off=                          ]",
-      "[即位の礼,                     Enthronement of the Japanese Emperor       ]",
-      "[即位の礼正殿の儀,             Enthronement of the Japanese Emperor       ]",
+      "[即位の礼,                     Enthronement of the Japanese Emperor=      ]",
+      "[即位の礼正殿の儀=ja:%%<即位の礼>,                Enthronement of the Japanese Emperor=]",
       "[神武天皇祭,                   EmperorJimmu's Death anniversary=          ]",
       "[孝明天皇祭=ja:%%<先帝祭>,     Emperor Kōmei's Death anniversary=         ]",
       "[明治天皇祭=ja:%%<先帝祭>,     Emperor Meiji's Death anniversary=         ]",

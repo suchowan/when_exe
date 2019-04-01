@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2018 Takashi SUGA
+  Copyright (C) 2011-2019 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -533,7 +533,8 @@ module When
         ['[M=,alias:明=ja:%%<明治>]6.01.01', '@CR', '1873-01-01^Gregorian?note=Default'],
         ['[T=,alias:大=ja:%%<大正>]1.07.30', '@A',  '1912-07-30'],
         ['[S=,alias:昭=ja:%%<昭和>]1.12.25', '@A',  '1926-12-25'],
-        ['[H=,alias:平=ja:%%<平成>]1.01.08', '@A',  '1989-01-08']
+        ['[H=,alias:平=ja:%%<平成>]1.01.08', '@A',  '1989-01-08'],
+        ['[R=,alias:令=ja:%%<令和>]1.05.01', '@A',  '2019-05-01']
       ]]
     end
   end

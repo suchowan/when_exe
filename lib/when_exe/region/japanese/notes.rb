@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2012-2018 Takashi SUGA
+  Copyright (C) 2012-2019 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -806,6 +806,8 @@ class When::CalendarNote
       [ 4,10] => [[1959..1959, When.M17n('JapaneseHoliday::皇太子明仁親王の結婚の儀')]],
       [ 4,29] => [[1927..1948, When.M17n('JapaneseHoliday::天長節')], [1949..1988, When.M17n('JapaneseHoliday::天皇誕生日')],
                   [1989..2006, When.M17n('JapaneseHoliday::みどりの日')], [2007..2100, When.M17n('JapaneseHoliday::昭和の日')]],
+      [ 4,30] => [[2019..2019, When.M17n('JapaneseHoliday::退位の日')]],
+      [ 5, 1] => [[2019..2019, When.M17n('JapaneseHoliday::即位の日')]],
       [ 5, 3] => [[1949..2100, When.M17n('JapaneseHoliday::憲法記念日')]],
       [ 5, 4] => [[2007..2100, When.M17n('JapaneseHoliday::みどりの日')]],
       [ 5, 5] => [[1868..1872, When.M17n('JapaneseHoliday::端午節句')], [1949..2100, When.M17n('JapaneseHoliday::こどもの日')]],
@@ -830,6 +832,7 @@ class When::CalendarNote
       [10,10] => [[1966..1999, When.M17n('JapaneseHoliday::体育の日')]],
       [10,-2] => [[2000..2019, When.M17n('JapaneseHoliday::体育の日')],[2021..2100, When.M17n('JapaneseHoliday::スポーツの日')]],
       [10,17] => [[1879..1947, When.M17n('JapaneseHoliday::神嘗祭')]],
+      [10,22] => [[2019..2019, When.M17n('JapaneseHoliday::即位の礼正殿の儀')]],
       [10,31] => [[1913..1926, When.M17n('JapaneseHoliday::天長節祝日')]],
       [11, 3] => [[1873..1911, When.M17n('JapaneseHoliday::天長節')], [1927..1947, When.M17n('JapaneseHoliday::明治節')],
                   [1948..2100, When.M17n('JapaneseHoliday::文化の日')]],
