@@ -133,7 +133,7 @@ module When
       "[振替休日,                     Substitute holiday                         ]",
       "[国民の休日,                   National Day Off=                          ]",
       "[即位の礼,                     Enthronement of the Japanese Emperor=      ]",
-      "[即位の礼正殿の儀=ja:%%<即位の礼>,                Enthronement of the Japanese Emperor=]",
+      "[即位礼正殿の儀,               Enthronement of the Japanese Emperor=]",
       "[神武天皇祭,                   EmperorJimmu's Death anniversary=          ]",
       "[孝明天皇祭=ja:%%<先帝祭>,     Emperor Kōmei's Death anniversary=         ]",
       "[明治天皇祭=ja:%%<先帝祭>,     Emperor Meiji's Death anniversary=         ]",
