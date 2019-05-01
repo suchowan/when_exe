@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2019 Takashi SUGA
 
   You may use and/or modify this file according to the license
   described in the LICENSE.txt file included in this archive.
@@ -175,10 +175,12 @@ module MiniTest::Coordinates
         ["Emperor_Taishō", "https://en.wikipedia.org/wiki/Emperor_Taish%C5%8D"],
         ["昭和天皇", "https://ja.wikipedia.org/wiki/%E6%98%AD%E5%92%8C%E5%A4%A9%E7%9A%87"],
         ["Emperor_Shōwa", "https://en.wikipedia.org/wiki/Emperor_Sh%C5%8Dwa"],
-        ["今上天皇", "https://ja.wikipedia.org/wiki/%E6%98%8E%E4%BB%81"],
-        ["Emperor_Kinjō", "https://en.wikipedia.org/wiki/Akihito"]
+        ["上皇明仁", "https://ja.wikipedia.org/wiki/%E4%B8%8A%E7%9A%87%E6%98%8E%E4%BB%81"],
+        ["Emperor_Emeritus_of_Japan", "https://en.wikipedia.org/wiki/Akihito"],
+        ["今上天皇", "https://ja.wikipedia.org/wiki/%E5%BE%B3%E4%BB%81"],
+        ["Emperor_Kinjō", "https://en.wikipedia.org/wiki/Naruhito"]
       ]
-      ['明治', '大正', '昭和', '平成'].each do |nengo|
+      ['明治', '大正', '昭和', '平成', '令和'].each do |nengo|
         name = When.when?(nengo + '06.01.01').query['name']
          ['ja', 'en'].each do |lang|
            assert_equal(sample.shift, [name.translate(lang), name.reference(lang)])

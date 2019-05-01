@@ -806,7 +806,6 @@ class When::CalendarNote
       [ 4,10] => [[1959..1959, When.M17n('JapaneseHoliday::皇太子明仁親王の結婚の儀')]],
       [ 4,29] => [[1927..1948, When.M17n('JapaneseHoliday::天長節')], [1949..1988, When.M17n('JapaneseHoliday::天皇誕生日')],
                   [1989..2006, When.M17n('JapaneseHoliday::みどりの日')], [2007..2100, When.M17n('JapaneseHoliday::昭和の日')]],
-      [ 4,30] => [[2019..2019, When.M17n('JapaneseHoliday::退位の日')]],
       [ 5, 1] => [[2019..2019, When.M17n('JapaneseHoliday::即位の日')]],
       [ 5, 3] => [[1949..2100, When.M17n('JapaneseHoliday::憲法記念日')]],
       [ 5, 4] => [[2007..2100, When.M17n('JapaneseHoliday::みどりの日')]],

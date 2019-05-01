@@ -335,9 +335,9 @@ module When
       ["[昭和,Shōwa=en:Sh%C5%8Dwa_period,S]1.12.25",    "@A",
 				"name=[昭和天皇,Emperor_Shōwa];1926-12-25"],
       ["[平成,Heisei=en:Heisei_period,H]1.01.08",       "@A",
-				"name=[今上天皇=ja:%%<明仁>,Emperor_Kinjō=en:Akihito];1989-01-08"],
+				"name=[上皇明仁,Emperor_Emeritus_of_Japan=en:Akihito];1989-01-08"],
       ["[令和,Reiwa,R]1.05.01",       "@A",
-				"name=[皇太子徳仁親王=ja:%%<皇太子徳仁親王>,Crown_Prince_Naruhito=en:Naruhito%2C_Crown_Prince_of_Japan];2019-05-01"]
+				"name=[今上天皇=ja:%%<徳仁>,Emperor_Kinjō=en:Naruhito];2019-05-01"]
     ]]
 
     #
