@@ -437,13 +437,13 @@ server:48 ts:dbpedia dbpedia:Marine_Day,
      "海の日"@ja;
    dcq:valid "2020-07-23" .
 
-server:49 ts:dbpedia dbpedia:Sports_Day,
+server:49 ts:dbpedia dbpedia:National_Sports_Day,
      dbpedia_ja:スポーツの日;
    ts:start 2459055;
    ts:until 2459055;
-   dc:source wikipedia:Sports_Day,
+   dc:source wikipedia:National_Sports_Day,
      wikipedia_ja:%E3%82%B9%E3%83%9D%E3%83%BC%E3%83%84%E3%81%AE%E6%97%A5;
-   dcq:abstract "Sports Day",
+   dcq:abstract "National Sports Day",
      "スポーツの日"@ja;
    dcq:valid "2020-07-24" .
 
@@ -627,7 +627,17 @@ server:65 ts:dbpedia dbpedia:Public_holidays_in_Japan,
      "振替休日"@ja;
    dcq:valid "R/1973-09-1{SolarTerms#term180+1&MO}T00+09:00...2100" .
 
-server:66 ts:dbpedia dbpedia:Health_and_Sports_Day,
+server:66 ts:dbpedia dbpedia:Public_holidays_in_Japan,
+     dbpedia_ja:神宮式年遷宮;
+   ts:start 2425887;
+   ts:until 2425887;
+   dc:source wikipedia:Public_holidays_in_Japan,
+     wikipedia_ja:%E7%A5%9E%E5%AE%AE%E5%BC%8F%E5%B9%B4%E9%81%B7%E5%AE%AE;
+   dcq:abstract "Rebuilding the Ise Grand Shrine",
+     "皇大神宮遷御当日"@ja;
+   dcq:valid "1929-10-02" .
+
+server:67 ts:dbpedia dbpedia:Health_and_Sports_Day,
      dbpedia_ja:体育の日;
    ts:start 2439409;
    ts:until 2451544;
@@ -637,7 +647,7 @@ server:66 ts:dbpedia dbpedia:Health_and_Sports_Day,
      "体育の日"@ja;
    dcq:valid "R/1966-10-10...2000" .
 
-server:67 ts:dbpedia dbpedia:Public_holidays_in_Japan,
+server:68 ts:dbpedia dbpedia:Public_holidays_in_Japan,
      dbpedia_ja:振替休日;
    ts:start 2441957;
    ts:until 2451544;
@@ -647,7 +657,7 @@ server:67 ts:dbpedia dbpedia:Public_holidays_in_Japan,
      "振替休日"@ja;
    dcq:valid "R/1973-10-{11&MO}...2000" .
 
-server:68 ts:dbpedia dbpedia:Health_and_Sports_Day,
+server:69 ts:dbpedia dbpedia:Health_and_Sports_Day,
      dbpedia_ja:体育の日;
    ts:start 2451819;
    ts:until 2458849;
@@ -656,16 +666,6 @@ server:68 ts:dbpedia dbpedia:Health_and_Sports_Day,
    dcq:abstract "Health and Sports Day",
      "体育の日"@ja;
    dcq:valid "R/2000-10-{2MO}...2020" .
-
-server:69 ts:dbpedia dbpedia:Sports_Day,
-     dbpedia_ja:スポーツの日;
-   ts:start 2459489;
-   ts:until 2488069;
-   dc:source wikipedia:Sports_Day,
-     wikipedia_ja:%E3%82%B9%E3%83%9D%E3%83%BC%E3%83%84%E3%81%AE%E6%97%A5;
-   dcq:abstract "Sports Day",
-     "スポーツの日"@ja;
-   dcq:valid "R/2021-10-{2MO}...2100" .
 
 server:7 ts:dbpedia dbpedia:Coming_of_Age_Day,
      dbpedia_ja:成人の日;
@@ -677,7 +677,17 @@ server:7 ts:dbpedia dbpedia:Coming_of_Age_Day,
      "成人の日"@ja;
    dcq:valid "R/2000-01-{2MO}...2100" .
 
-server:70 ts:dbpedia dbpedia:Public_holidays_in_Japan,
+server:70 ts:dbpedia dbpedia:National_Sports_Day,
+     dbpedia_ja:スポーツの日;
+   ts:start 2459489;
+   ts:until 2488069;
+   dc:source wikipedia:National_Sports_Day,
+     wikipedia_ja:%E3%82%B9%E3%83%9D%E3%83%BC%E3%83%84%E3%81%AE%E6%97%A5;
+   dcq:abstract "National Sports Day",
+     "スポーツの日"@ja;
+   dcq:valid "R/2021-10-{2MO}...2100" .
+
+server:71 ts:dbpedia dbpedia:Public_holidays_in_Japan,
      dbpedia_ja:神嘗祭;
    ts:start 2407640;
    ts:until 2432551;
@@ -687,17 +697,17 @@ server:70 ts:dbpedia dbpedia:Public_holidays_in_Japan,
      "神嘗祭"@ja;
    dcq:valid "R/1879-10-17...1948" .
 
-server:71 ts:dbpedia dbpedia:Enthronement_of_the_Japanese_Emperor,
-     dbpedia_ja:即位の礼;
+server:72 ts:dbpedia dbpedia:Enthronement_of_the_Japanese_Emperor,
+     dbpedia_ja:即位礼正殿の儀;
    ts:start 2458779;
    ts:until 2458779;
    dc:source wikipedia:Enthronement_of_the_Japanese_Emperor,
-     wikipedia_ja:%E5%8D%B3%E4%BD%8D%E3%81%AE%E7%A4%BC;
+     wikipedia_ja:%E5%8D%B3%E4%BD%8D%E7%A4%BC%E6%AD%A3%E6%AE%BF%E3%81%AE%E5%84%80;
    dcq:abstract "Enthronement of the Japanese Emperor",
      "即位礼正殿の儀"@ja;
    dcq:valid "2019-10-22" .
 
-server:72 ts:dbpedia dbpedia:Public_holidays_in_Japan,
+server:73 ts:dbpedia dbpedia:Public_holidays_in_Japan,
      dbpedia_ja:天皇誕生日;
    ts:start 2420072;
    ts:until 2424881;
@@ -707,7 +717,7 @@ server:72 ts:dbpedia dbpedia:Public_holidays_in_Japan,
      "天長節祝日"@ja;
    dcq:valid "R/1913-10-31...1927" .
 
-server:73 ts:dbpedia dbpedia:Public_holidays_in_Japan,
+server:74 ts:dbpedia dbpedia:Public_holidays_in_Japan,
      dbpedia_ja:天長節;
    ts:start 2405466;
    ts:until 2419402;
@@ -717,7 +727,7 @@ server:73 ts:dbpedia dbpedia:Public_holidays_in_Japan,
      "天長節"@ja;
    dcq:valid "R/1873-11-03...1912" .
 
-server:74 ts:dbpedia dbpedia:Culture_Day,
+server:75 ts:dbpedia dbpedia:Culture_Day,
      dbpedia_ja:明治節;
    ts:start 2425188;
    ts:until 2432551;
@@ -727,7 +737,7 @@ server:74 ts:dbpedia dbpedia:Culture_Day,
      "明治節"@ja;
    dcq:valid "R/1927-11-03...1948" .
 
-server:75 ts:dbpedia dbpedia:Culture_Day,
+server:76 ts:dbpedia dbpedia:Culture_Day,
      dbpedia_ja:文化の日;
    ts:start 2432859;
    ts:until 2488069;
@@ -737,7 +747,7 @@ server:75 ts:dbpedia dbpedia:Culture_Day,
      "文化の日"@ja;
    dcq:valid "R/1948-11-03...2100" .
 
-server:76 ts:dbpedia dbpedia:Public_holidays_in_Japan,
+server:77 ts:dbpedia dbpedia:Public_holidays_in_Japan,
      dbpedia_ja:振替休日;
    ts:start 2441988;
    ts:until 2488069;
@@ -747,7 +757,7 @@ server:76 ts:dbpedia dbpedia:Public_holidays_in_Japan,
      "振替休日"@ja;
    dcq:valid "R/1973-11-{4&MO}...2100" .
 
-server:77 ts:dbpedia dbpedia:Enthronement_of_the_Japanese_Emperor,
+server:78 ts:dbpedia dbpedia:Enthronement_of_the_Japanese_Emperor,
      dbpedia_ja:即位の礼;
    ts:start 2420812;
    ts:until 2420812;
@@ -757,7 +767,7 @@ server:77 ts:dbpedia dbpedia:Enthronement_of_the_Japanese_Emperor,
      "即位の礼"@ja;
    dcq:valid "1915-11-10" .
 
-server:78 ts:dbpedia dbpedia:Enthronement_of_the_Japanese_Emperor,
+server:79 ts:dbpedia dbpedia:Enthronement_of_the_Japanese_Emperor,
      dbpedia_ja:即位の礼;
    ts:start 2425561;
    ts:until 2425561;
@@ -766,16 +776,6 @@ server:78 ts:dbpedia dbpedia:Enthronement_of_the_Japanese_Emperor,
    dcq:abstract "Enthronement of the Japanese Emperor",
      "即位の礼"@ja;
    dcq:valid "1928-11-10" .
-
-server:79 ts:dbpedia dbpedia:Enthronement_of_the_Japanese_Emperor,
-     dbpedia_ja:即位の礼;
-   ts:start 2448208;
-   ts:until 2448208;
-   dc:source wikipedia:Enthronement_of_the_Japanese_Emperor,
-     wikipedia_ja:%E5%8D%B3%E4%BD%8D%E3%81%AE%E7%A4%BC;
-   dcq:abstract "Enthronement of the Japanese Emperor",
-     "即位礼正殿の儀"@ja;
-   dcq:valid "1990-11-12" .
 
 server:8 ts:dbpedia dbpedia:First_Full_Moon_Festival,
      dbpedia_ja:小正月;
@@ -788,6 +788,16 @@ server:8 ts:dbpedia dbpedia:First_Full_Moon_Festival,
    dcq:valid "R/1868-01-15...1873^^Japanese" .
 
 server:80 ts:dbpedia dbpedia:Enthronement_of_the_Japanese_Emperor,
+     dbpedia_ja:即位礼正殿の儀;
+   ts:start 2448208;
+   ts:until 2448208;
+   dc:source wikipedia:Enthronement_of_the_Japanese_Emperor,
+     wikipedia_ja:%E5%8D%B3%E4%BD%8D%E7%A4%BC%E6%AD%A3%E6%AE%BF%E3%81%AE%E5%84%80;
+   dcq:abstract "Enthronement of the Japanese Emperor",
+     "即位礼正殿の儀"@ja;
+   dcq:valid "1990-11-12" .
+
+server:81 ts:dbpedia dbpedia:Enthronement_of_the_Japanese_Emperor,
      dbpedia_ja:大嘗祭;
    ts:start 2420816;
    ts:until 2420816;
@@ -797,7 +807,7 @@ server:80 ts:dbpedia dbpedia:Enthronement_of_the_Japanese_Emperor,
      "大嘗祭"@ja;
    dcq:valid "1915-11-14" .
 
-server:81 ts:dbpedia dbpedia:Enthronement_of_the_Japanese_Emperor,
+server:82 ts:dbpedia dbpedia:Enthronement_of_the_Japanese_Emperor,
      dbpedia_ja:大嘗祭;
    ts:start 2425565;
    ts:until 2425565;
@@ -807,7 +817,7 @@ server:81 ts:dbpedia dbpedia:Enthronement_of_the_Japanese_Emperor,
      "大嘗祭"@ja;
    dcq:valid "1928-11-14" .
 
-server:82 ts:dbpedia dbpedia:Enthronement_of_the_Japanese_Emperor,
+server:83 ts:dbpedia dbpedia:Enthronement_of_the_Japanese_Emperor,
      dbpedia_ja:大饗;
    ts:start 2420818;
    ts:until 2420818;
@@ -817,7 +827,7 @@ server:82 ts:dbpedia dbpedia:Enthronement_of_the_Japanese_Emperor,
      "大饗第1日"@ja;
    dcq:valid "1915-11-16" .
 
-server:83 ts:dbpedia dbpedia:Enthronement_of_the_Japanese_Emperor,
+server:84 ts:dbpedia dbpedia:Enthronement_of_the_Japanese_Emperor,
      dbpedia_ja:大饗;
    ts:start 2425567;
    ts:until 2425567;
@@ -827,7 +837,7 @@ server:83 ts:dbpedia dbpedia:Enthronement_of_the_Japanese_Emperor,
      "大饗第1日"@ja;
    dcq:valid "1928-11-16" .
 
-server:84 ts:dbpedia dbpedia:Labor_Thanksgiving_Day,
+server:85 ts:dbpedia dbpedia:Labor_Thanksgiving_Day,
      dbpedia_ja:新嘗祭;
    ts:start 2405486;
    ts:until 2432551;
@@ -837,7 +847,7 @@ server:84 ts:dbpedia dbpedia:Labor_Thanksgiving_Day,
      "新嘗祭"@ja;
    dcq:valid "R/1873-11-23...1948" .
 
-server:85 ts:dbpedia dbpedia:Labor_Thanksgiving_Day,
+server:86 ts:dbpedia dbpedia:Labor_Thanksgiving_Day,
      dbpedia_ja:勤労感謝の日;
    ts:start 2432879;
    ts:until 2488069;
@@ -847,7 +857,7 @@ server:85 ts:dbpedia dbpedia:Labor_Thanksgiving_Day,
      "勤労感謝の日"@ja;
    dcq:valid "R/1948-11-23...2100" .
 
-server:86 ts:dbpedia dbpedia:Public_holidays_in_Japan,
+server:87 ts:dbpedia dbpedia:Public_holidays_in_Japan,
      dbpedia_ja:振替休日;
    ts:start 2441988;
    ts:until 2488069;
@@ -857,7 +867,7 @@ server:86 ts:dbpedia dbpedia:Public_holidays_in_Japan,
      "振替休日"@ja;
    dcq:valid "R/1973-11-{24&MO}...2100" .
 
-server:87 ts:dbpedia dbpedia:Public_holidays_in_Japan,
+server:88 ts:dbpedia dbpedia:Public_holidays_in_Japan,
      dbpedia_ja:天皇誕生日;
    ts:start 2447884;
    ts:until 2458484;
@@ -867,7 +877,7 @@ server:87 ts:dbpedia dbpedia:Public_holidays_in_Japan,
      "天皇誕生日"@ja;
    dcq:valid "R/1989-12-23...2019" .
 
-server:88 ts:dbpedia dbpedia:Public_holidays_in_Japan,
+server:89 ts:dbpedia dbpedia:Public_holidays_in_Japan,
      dbpedia_ja:振替休日;
    ts:start 2447862;
    ts:until 2458484;
@@ -876,16 +886,6 @@ server:88 ts:dbpedia dbpedia:Public_holidays_in_Japan,
    dcq:abstract "Substitute holiday",
      "振替休日"@ja;
    dcq:valid "R/1989-12-{24&MO}...2019" .
-
-server:89 ts:dbpedia dbpedia:Public_holidays_in_Japan,
-     dbpedia_ja:先帝祭;
-   ts:start 2425240;
-   ts:until 2432551;
-   dc:source wikipedia:Public_holidays_in_Japan,
-     wikipedia_ja:%E5%85%88%E5%B8%9D%E7%A5%AD;
-   dcq:abstract "Emperor Taishō's Death anniversary",
-     "大正天皇祭"@ja;
-   dcq:valid "R/1927-12-25...1948" .
 
 server:9 ts:dbpedia dbpedia:Coming_of_Age_Day,
      dbpedia_ja:成人の日;
@@ -896,3 +896,13 @@ server:9 ts:dbpedia dbpedia:Coming_of_Age_Day,
    dcq:abstract "Coming of Age Day",
      "成人の日"@ja;
    dcq:valid "R/1949-01-15...2000" .
+
+server:90 ts:dbpedia dbpedia:Public_holidays_in_Japan,
+     dbpedia_ja:先帝祭;
+   ts:start 2425240;
+   ts:until 2432551;
+   dc:source wikipedia:Public_holidays_in_Japan,
+     wikipedia_ja:%E5%85%88%E5%B8%9D%E7%A5%AD;
+   dcq:abstract "Emperor Taishō's Death anniversary",
+     "大正天皇祭"@ja;
+   dcq:valid "R/1927-12-25...1948" .
