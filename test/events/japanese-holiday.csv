@@ -13,6 +13,8 @@ R/1874-01-30...1913,孝明天皇祭,先帝祭,Emperor Kōmei's Death anniversary
 R/1874-02-11...1949,紀元節,紀元節,National Foundation Day,National Foundation Day
 R/1967-02-11...2100,建国記念の日,建国記念の日,National Foundation Day,National Foundation Day
 R/1973-02-{12&MO}...2100,振替休日,振替休日,Substitute holiday,Public holidays in Japan
+R/2020-02-23...2100,天皇誕生日,天皇誕生日,The Emperor's Birthday,Public holidays in Japan
+R/2020-02-{24&MO}...2100,振替休日,振替休日,Substitute holiday,Public holidays in Japan
 1989-02-24,昭和天皇の大喪の礼,大喪の礼,Emperor Shōwa's funeral ceremony,Public holidays in Japan
 R/1868-03-03...1873^^Japanese,弥生節句,上巳,Double Third Festival,Public holidays in Japan
 R/1879-03-1{SolarTerms#term0}T00+09:00...1949,春季皇霊祭,春季皇霊祭,Vernal Kōreisai,Kōreisai
@@ -25,6 +27,9 @@ R/1949-04-29...1989,天皇誕生日,天皇誕生日,The Emperor's Birthday,Publi
 R/1989-04-29...2007,みどりの日,みどりの日,Greenery Day,Greenery Day
 R/2007-04-29...2100,昭和の日,昭和の日,Shōwa Day,Shōwa Day
 R/1973-04-{30&MO}...2100,振替休日,振替休日,Substitute holiday,Public holidays in Japan
+2019-04-30,国民の休日,国民の休日,National Day Off,Public holidays in Japan
+2019-05-01,即位の日,即位の日,Coronation Day of the new Emperor,Coronation Day of the new Emperor
+2019-05-02,国民の休日,国民の休日,National Day Off,Public holidays in Japan
 R/1949-05-03...2100,憲法記念日,憲法記念日,Constitution Memorial Day,Constitution Memorial Day
 R/1973-05-{4&MO}...1988,振替休日,振替休日,Substitute holiday,Public holidays in Japan
 R/1988-05-04...2007,国民の休日,国民の休日,National Day Off,Public holidays in Japan
@@ -38,10 +43,15 @@ R/1868-07-07...1873^^Japanese,七夕節句,七夕,Qixi Festival,Qixi Festival
 R/1868-07-15...1873^^Japanese,お盆,お盆,Bon Festival,Bon Festival
 R/1996-07-20...2003,海の日,海の日,Marine Day,Marine Day
 R/1996-07-{21&MO}...2003,振替休日,振替休日,Substitute holiday,Public holidays in Japan
-R/2003-07-{3MO}...2100,海の日,海の日,Marine Day,Marine Day
+R/2003-07-{3MO}...2020,海の日,海の日,Marine Day,Marine Day
+R/2021-07-{3MO}...2100,海の日,海の日,Marine Day,Marine Day
+2020-07-23,海の日,海の日,Marine Day,Marine Day
+2020-07-24,スポーツの日,スポーツの日,Sports Day,Sports Day
 R/1913-07-30...1927,明治天皇祭,先帝祭,Emperor Meiji's Death anniversary,Public holidays in Japan
 R/1868-08-01...1873^^Japanese,田実節句,八朔,Hassaku,Public holidays in Japan
-R/2016-08-11...2100,山の日,山の日,Mountain Day,Public holidays in Japan
+2020-08-10,山の日,山の日,Mountain Day,Public holidays in Japan
+R/2016-08-11...2020,山の日,山の日,Mountain Day,Public holidays in Japan
+R/2021-08-11...2100,山の日,山の日,Mountain Day,Public holidays in Japan
 R/2016-08-{12&MO}...2100,振替休日,振替休日,Substitute holiday,Public holidays in Japan
 R/1913-08-31...1927,天長節,天長節,The Emperor's Birthday,Public holidays in Japan
 R/1868-09-09...1873^^Japanese,重陽節句,重陽節句,Double Ninth Festival,Double Ninth Festival
@@ -55,8 +65,10 @@ R/1948-09-1{SolarTerms#term180}T00+09:00...2100,秋分の日,秋分の日,Autumn
 R/1973-09-1{SolarTerms#term180+1&MO}T00+09:00...2100,振替休日,振替休日,Substitute holiday,Public holidays in Japan
 R/1966-10-10...2000,体育の日,体育の日,Health and Sports Day,Health and Sports Day
 R/1973-10-{11&MO}...2000,振替休日,振替休日,Substitute holiday,Public holidays in Japan
-R/2000-10-{2MO}...2100,体育の日,体育の日,Health and Sports Day,Health and Sports Day
+R/2000-10-{2MO}...2020,体育の日,体育の日,Health and Sports Day,Health and Sports Day
+R/2021-10-{2MO}...2100,スポーツの日,スポーツの日,Sports Day,Sports Day
 R/1879-10-17...1948,神嘗祭,神嘗祭,Kan'namesai,Public holidays in Japan
+2019-10-22,即位礼正殿の儀,即位の礼,Enthronement of the Japanese Emperor,Enthronement of the Japanese Emperor
 R/1913-10-31...1927,天長節祝日,天皇誕生日,Emperor Taishō's Birth holiday,Public holidays in Japan
 R/1873-11-03...1912,天長節,天長節,The Emperor's Birthday,Public holidays in Japan
 R/1927-11-03...1948,明治節,明治節,The emperor Maiji's Birthday,Culture_Day
@@ -64,7 +76,7 @@ R/1948-11-03...2100,文化の日,文化の日,Culture Day,Culture Day
 R/1973-11-{4&MO}...2100,振替休日,振替休日,Substitute holiday,Public holidays in Japan
 1915-11-10,即位の礼,即位の礼,Enthronement of the Japanese Emperor,Enthronement of the Japanese Emperor
 1928-11-10,即位の礼,即位の礼,Enthronement of the Japanese Emperor,Enthronement of the Japanese Emperor
-1990-11-12,即位の礼正殿の儀,即位の礼,Enthronement of the Japanese Emperor,Enthronement of the Japanese Emperor
+1990-11-12,即位礼正殿の儀,即位の礼,Enthronement of the Japanese Emperor,Enthronement of the Japanese Emperor
 1915-11-14,大嘗祭,大嘗祭,Enthronement of the Japanese Emperor,Enthronement of the Japanese Emperor
 1928-11-14,大嘗祭,大嘗祭,Enthronement of the Japanese Emperor,Enthronement of the Japanese Emperor
 1915-11-16,大饗第1日,大饗,Enthronement of the Japanese Emperor,Enthronement of the Japanese Emperor
@@ -72,6 +84,6 @@ R/1973-11-{4&MO}...2100,振替休日,振替休日,Substitute holiday,Public holi
 R/1873-11-23...1948,新嘗祭,新嘗祭,Labor Thanksgiving Day,Labor Thanksgiving Day
 R/1948-11-23...2100,勤労感謝の日,勤労感謝の日,Labor Thanksgiving Day,Labor Thanksgiving Day
 R/1973-11-{24&MO}...2100,振替休日,振替休日,Substitute holiday,Public holidays in Japan
-R/1989-12-23...2100,天皇誕生日,天皇誕生日,The Emperor's Birthday,Public holidays in Japan
-R/1989-12-{24&MO}...2100,振替休日,振替休日,Substitute holiday,Public holidays in Japan
+R/1989-12-23...2019,天皇誕生日,天皇誕生日,The Emperor's Birthday,Public holidays in Japan
+R/1989-12-{24&MO}...2019,振替休日,振替休日,Substitute holiday,Public holidays in Japan
 R/1927-12-25...1948,大正天皇祭,先帝祭,Emperor Taishō's Death anniversary,Public holidays in Japan
