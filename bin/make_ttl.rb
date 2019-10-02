@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2014 Takashi SUGA
+  Copyright (C) 2014-2019 Takashi SUGA
 
   You may use and/or modify this file according to the license
   described in the LICENSE.txt file included in this archive.
@@ -24,7 +24,8 @@ File.open(config['file'], 'w') do |file|
   CONTEXT.each_pair do |key, value|
     file.puts "@prefix #{key}: <#{value}> ."
   end
-  (when?(config['begin'])..when?(config['end'])).each do |date|
+  (config['begin'].to_i..config['end'].to_i).each do |year|
+    date = when?("#{year}^^#{year < 1873 ? 'Japanese' : 'Gregorian?note=Japanese'}")
     graph = RDF::Graph.new <<
       JSON::LD::API.toRdf(date.rdf_graph(
         {'@context'=>CONTEXT, :prefixes=>PREFIXES, :included=>true, :include=>true}))
