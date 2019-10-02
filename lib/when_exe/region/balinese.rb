@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2019 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -135,7 +135,7 @@ module When
     BalineseLuniSolar = [self, [
       "locale:[=en:, ja=ja:, zh=zh:, alias]",
       "period:[BalineseLuniSolar=, バリ・サカ暦=, 峇里陰陽曆=]",
-      ["[SE=, サカ暦=, 塞種紀元=, alias:Balinese_Saka_Era]1887-07<13", '@CE', "1965-07<13^BalineseLuniSolar1965",
+      ["[SE=, サカ暦=, 塞種紀元=, alias:Balinese_Saka_Era]1888-10-01", '@CE', "1966-10-01^BalineseLuniSolar1965",
 							 "1971-07-04^BalineseLuniSolar1971",
 							 "1993-07-08^BalineseLuniSolar1993",
 							 "1999-06<10^BalineseLuniSolar2000",
@@ -198,7 +198,9 @@ module When
                                                                     +1.5 => intercalary_month[3]}, # 閏黒分
                                                           :shift=>+8})
 
-        @origin_of_MSC = 0
+        @origin_of_MSC ||= 0
+
+        @label ||= 'Balinese::BalineseLuniSolar'
 
         @tabular = CyclicTableBased.new({
           'indices'    => [month_index, When::Coordinates::DefaultDayIndex],
