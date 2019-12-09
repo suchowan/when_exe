@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2016 Takashi SUGA
+  Copyright (C) 2011-2019 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -37,7 +37,8 @@ module When
       ['[正元暦=]784.01.01',   '@CR', '784-01-01^ChineseTwin::正元暦',  '807-01-01'],
       ['[宣明暦]822.01.01',    '@CR', '822-01-01^ChineseTwin::宣明暦'],
       ['[崇玄暦=]893.01.01',   '@CR', '893-01-01^ChineseTwin::崇玄暦',  '956-01-01'],
-      ['[授時暦]1281.01.01',   '@CR','1281-01-01^ChineseTwin::授時暦'],
+      ['[古授時暦=]1281.01.01','@CR','1281-01-01^ChineseTwin::古授時暦'],
+      ['[授時暦]1284.01.01',   '@CR','1284-01-01^ChineseTwin::授時暦'],
       ['[大統暦]1368.01.01',   '@CR','1368-01-01^ChineseTwin::大統暦', '1645-01-01']
     ]]
 
@@ -68,7 +69,8 @@ module When
       ['[正元暦=]783.12.26',  '@CR',  '783-12-26^ChineseTwin::正元暦(節月)',  '807-01-11'],
       ['[宣明暦]821.01.01',   '@CR',  '821-01-01^ChineseTwin::宣明暦(節月)'],  # 年の始めに遡って開始(実際は12.27)
       ['[崇玄暦=]892.12.22',  '@CR',  '892-12-22^ChineseTwin::崇玄暦(節月)',  '956-01-15'],
-      ['[授時暦]1280.01.01',  '@CR', '1280-01-01^ChineseTwin::授時暦(節月)'],
+      ['[古授時暦=]1280.01.01','@CR','1280-01-01^ChineseTwin::古授時暦(節月)'],
+      ['[授時暦]1283.12.21',  '@CR', '1283-12-21^ChineseTwin::授時暦(節月)'],
       ['[大統暦]1367.12.24',  '@CR', '1367-12-24^ChineseTwin::大統暦(節月)', '1644-12-24']
     ]]
   end
@@ -101,6 +103,11 @@ module When
         [250...254, 252, [-5_4293_4424,         -0, +1_9292,   +0, -1484]],
         [254.. 336, 336, [          -0, -1111_0000, +2_8100, +325       ]]
       ]
+    }
+
+    _chinese_revision ={
+      'lunation_shift'           => 20.2050,           # 閏應(暦元前経朔から暦元天正冬至までの日数)
+      'anomalistic_month_shift'  => 13.0205            # 転應(暦元前近/遠地点通過から暦元天正冬至までの日数)
     }
 
     ChineseTwin = [{}, When::BasicTypes::M17n, ChineseSolar.twin('ChineseTwin', [
@@ -854,7 +861,7 @@ module When
       ],
 
       [ChineseLuniSolar,
-        'name:[授時暦]',
+        'name:[古授時暦]',
         {'formula'=>['12S', '1L'].map {|f| [
           Ephemeris::ChineseTrueLunation, _chinese_common.merge({
             'formula'                  => f,
@@ -866,9 +873,21 @@ module When
       ],
 
       [ChineseLuniSolar,
+        'name:[授時暦]',
+        {'formula'=>['12S', '1L'].map {|f| [
+          Ephemeris::ChineseTrueLunation, _chinese_common.merge(_chinese_revision).merge({
+            'formula'                  => f,
+            'year_delta'               => 1,   # 冬至年の変化率 / (10^(-6)日/年)
+            'year_span'                => 100  # 冬至年の改訂周期 / 年
+         })]
+        }
+       }
+      ],
+
+      [ChineseLuniSolar,
         'name:[大統暦]',
         {'formula'=>['12S', '1L'].map {|f| [
-          Ephemeris::ChineseTrueLunation, _chinese_common.merge({
+          Ephemeris::ChineseTrueLunation, _chinese_common.merge(_chinese_revision).merge({
             'formula'                  => f,
             'year_delta'               => 0,   # 冬至年の変化率 / (10^(-6)日/年)
             'year_span'                => 1    # 冬至年の改訂周期 / 年
