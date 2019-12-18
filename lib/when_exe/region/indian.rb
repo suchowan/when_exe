@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2018 Takashi SUGA
+  Copyright (C) 2011-2019 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -719,7 +719,7 @@ module When
       def _normalize(args=[], options={})
         @label ||= 'Indian::HinduSolar'
         @type  ||= 'SBS'
-        raise ArgumentError, "Irregal formula: #{@formula}" unless @type.upcase =~ /\A(M|SS|SB)(V|S|B|H|VZ|SZ|BZ|HZ)\z/
+        raise ArgumentError, "Irregal formula: #{@formula}" unless @type.upcase =~ /\A(M|SS|SB)(V|S|B|H|G|N|K|VZ|SZ|BZ|HZ|GZ|NZ|KZ)\z/
 
         @location      ||=  HinduLuniSolar::Location_E[$2] || HinduLuniSolar::Location_F[$1]
         @cycle_offset  ||=  HinduLuniSolar::CycleOffset[$1]
@@ -753,7 +753,7 @@ module When
       Location_E  = {'B'=>'_co:Indian::Dacca', 'BZ'=>'_co:Indian::Dacca', 'H'=>'_co:Iranian::Tehran', 'HZ'=>'_co:Iranian::Tehran'}
       CycleOffset = {'M'=>+23.25/30, 'SS'=>0.0, 'SB'=>0.0}
       HinduStyle = {'A'=>0, 'P'=>1, 'PX'=>2}
-      YearEpoch   = {'V'=>-58,'VZ'=>-57,'S'=>78, 'SZ'=>79, 'B'=> 593, 'BZ'=>594, 'H'=> 621, 'HZ'=> 622}
+      YearEpoch   = {'V'=>-58,'VZ'=>-57,'S'=>78, 'SZ'=>79, 'G'=>318, 'GZ'=>319, 'B'=> 593, 'BZ'=>594, 'H'=> 621, 'HZ'=> 622, 'N'=>801, 'NZ'=>802, 'K'=>824, 'KZ'=>825}
 
       # White / black  month and leap month identification table
 
@@ -862,7 +862,7 @@ module When
       def _normalize(args=[], options={})
         @label ||= 'Indian::HinduLuniSolar'
         @type  ||= 'SBSA'
-        raise ArgumentError, "Irregal formula: #{@formula}" unless @type.upcase =~ /\A(M|SS|SB)(V|S|B|H|VZ|SZ|BZ|HZ)(A|P|PX)\z/
+        raise ArgumentError, "Irregal formula: #{@formula}" unless @type.upcase =~ /\A(M|SS|SB)(V|S|B|H|G|N|K|VZ|SZ|BZ|HZ|GZ|NZ|KZ)(A|P|PX)\z/
 
         @location      ||=  Location_E[$2] || Location_F[$1]
         @cycle_offset  ||=  CycleOffset[$1]
