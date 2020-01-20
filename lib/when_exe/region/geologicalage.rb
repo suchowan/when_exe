@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2020 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -611,15 +611,15 @@ class When::TM::OrdinalReferenceSystem
           [When::TM::OrdinalEra,
             "*epoch:[更新世,Pleistocene]",
             [When::TM::OrdinalEra,
-              "*age:[ゲラシアン,Gelasian]",
+              "*age:[ジェラシアン,Gelasian]",
               "begin:-2_586_000-"
             ],
             [When::TM::OrdinalEra,
-              "*age:[カラブリアン=,Calabrian]",
+              "*age:[カラブリアン,Calabrian]",
               "begin:-1_804_000-"
             ],
             [When::TM::OrdinalEra,
-              "*age:[イオニアン=,Ionian=en_wiki:Middle_Pleistocene]",
+              "*age:[チバニアン,Chibanian=en_wiki:Middle_Pleistocene]",
               "begin:-779_000-"
             ],
             [When::TM::OrdinalEra,

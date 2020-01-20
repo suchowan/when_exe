@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2019 Takashi SUGA
+  Copyright (C) 2011-2020 Takashi SUGA
 
   You may use and/or modify this file according to the license
   described in the LICENSE.txt file included in this archive.
@@ -65,7 +65,7 @@ LIST
       assert_equal('1950-08', When.strptime('1950 Aug', '%Y %B').to_s)
       assert_equal('1950-08-31', When.strptime('1950 Aug 31', '%Y %B %d').to_s)
       assert_equal('2015-01-06T09:18:24+09:00', When.strptime('Tue Jan 6  9:18:24 +09:00 2015', "%A %B %d %H:%M:%S %z %Y").to_s)
-      assert_equal('2019-01-10T09:18:24+09:00', When.strptime("木 1月 6  9:18:24 JST", "%A %B %d %H:%M:%S %z", {:locale=>'ja'}).to_s)
+      assert_equal('2020-01-09T09:18:24+09:00', When.strptime("木 1月 6  9:18:24 JST", "%A %B %d %H:%M:%S %z", {:locale=>'ja'}).to_s)
       assert_raises(ArgumentError) {When.strptime("Thu Jan 6  9:18:24 +09:00 2015", "%A %B %d %H:%M:%S %z %Y", {:invalid=>:raise})}
     end
 
