@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2012-2019 Takashi SUGA
+  Copyright (C) 2012-2020 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -1281,7 +1281,10 @@ class When::CalendarNote
       2397584 => [ 16.0, 0], # 嘉永05(1852).02=16 [ 15.0, 1] 清明 (計算誤差の補正)
 
       2451110 => [210.0, 1], # 平成10(1998).10.23 [209.0, 0] 没
-      2451111 => [211.0, 0]  # 平成10(1998).10.24 [210.0, 1] 霜降 (計算誤差の補正)
+      2451111 => [211.0, 0], # 平成10(1998).10.24 [210.0, 1] 霜降 (計算誤差の補正)
+
+      2459950 => [284.0, 0], # 令和05(2023).01.05 [285.0, 1] 小寒 (計算誤差の補正)
+      2459951 => [285.0, 1]  # 令和05(2023).01.06 [285.0, 0] 没
     }
 
     class << self
