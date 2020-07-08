@@ -55,9 +55,9 @@ LIST
       assert_equal("2001-08-02..2001-09-10", When.when?("2001-08-02/09-10").to_s)
       assert_equal(364, When.when?('20130101/1230').count) if Enumerable.method_defined?(:count)
       assert_equal("1980-02-01", When.when?("800201", {:abbr=>1970}).to_s)
-      # assert_equal(nil, When.TemporalPosition(2011,2,29))
+      # assert_nil(When.TemporalPosition(2011,2,29))
       assert_equal('2011-03-01', When.TemporalPosition(2011,2,29).to_s)
-      assert_equal(nil, When.TemporalPosition(2011,2,29, {:invalid=>:check}))
+      assert_nil(When.TemporalPosition(2011,2,29, {:invalid=>:check}))
       assert_raises(ArgumentError) { When.TemporalPosition(2011,2,29, {:invalid=>:raise}) }
     end
 
@@ -156,7 +156,7 @@ LIST
       assert_equal('平成26(2014).08.21', When.tm_pos('平成', When.Residue('甲午'), 8, When.Residue('甲子')).to_s)
 
       assert_equal('2014-09-06', When.tm_pos(2014, 8, When.Residue('SA:6')).to_s)
-      assert_equal(nil, When.tm_pos(2014, 8, When.Residue('SA:6'), :invalid=>:check))
+      assert_nil(When.tm_pos(2014, 8, When.Residue('SA:6'), :invalid=>:check))
       assert_raises(ArgumentError) {When.tm_pos(2014, 8, When.Residue('SA:6'), :invalid=>:raise)}
     end
 
@@ -173,10 +173,10 @@ LIST
       assert_equal('2015-12-25', When.when?('2015-01-01{Christian#christmas}').to_s)
       assert_equal('2015-09-22T00:00+09:00', When.when?('2015-09-01{SolarTerms#term180-1&TU}T00:00+09:00').to_s)
       assert_equal('2015-05-06', When.when?('2015-05-{06&MO,TU,WE}').to_s)
-      assert_equal(nil, When.when?('2016-05-{06&MO,TU,WE}'))
+      assert_nil(When.when?('2016-05-{06&MO,TU,WE}'))
 
       assert_equal('2015-03-01', When.when?('2015-02-01{5SU}').to_s)
-      assert_equal(nil, When.when?('2015-02-{5SU}'))
+      assert_nil(When.when?('2015-02-{5SU}'))
       assert_equal('2015-02-22', When.when?('2015-02-{-SU}').to_s)
 
       it = When.when?('R/2015-09-01{SolarTerms#term180-1&TU}T00:00+09:00')

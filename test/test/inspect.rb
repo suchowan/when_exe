@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2020 Takashi SUGA
 
   You may use and/or modify this file according to the license
   described in the LICENSE.txt file included in this archive.
@@ -37,7 +37,7 @@ module MiniTest
       clock = When.Clock('+09:00')
       #pp clock.to_s
       assert_equal("+09:00", clock.label.to_s)
-      assert_equal(nil, clock.referenceEvent)
+      assert_nil(clock.referenceEvent)
       assert_equal("T00+09:00", clock.referenceTime.to_s)
       assert_equal("T*15:00:00Z", clock.utcReference.to_s)
     end

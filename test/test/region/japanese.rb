@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2020 Takashi SUGA
 
   You may use and/or modify this file according to the license
   described in the LICENSE.txt file included in this archive.
@@ -208,11 +208,11 @@ module MiniTest
     def test__eclipse
       date = When.when?('貞観4.2.1')
       assert_equal('夜日蝕七分', date.notes({:notes=>'日食'}).value)
-      assert_equal(nil, date.notes({:notes=>'日食', :solar_eclipse=>1}).value)
+      assert_nil(date.notes({:notes=>'日食', :solar_eclipse=>1}).value)
 
       date = When.when?('貞観4.2.15')
       assert_equal('(月蝕ニ分)', date.notes({:notes=>'月食'}).value)
-      assert_equal(nil, date.notes({:notes=>'月食', :lunar_eclipse=>3}).value)
+      assert_nil(date.notes({:notes=>'月食', :lunar_eclipse=>3}).value)
     end
 
     def test_japanese_lunisolar

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2020 Takashi SUGA
 
   You may use and/or modify this file according to the license
   described in the LICENSE.txt file included in this archive.
@@ -171,7 +171,7 @@ module MiniTest
         date, verify = sample
         list = When.when?(date).to_h({:method=>:to_m17n, :locale=>verify[:locale], :prefix=>true})
         [:calendar, :cal_date, :sdn, :clk_time].each do |key|
-          assert_equal(verify[key], list[key])
+          assert_equal([verify[key]], [list[key]])
         end
         verify[:notes].each_index do |i|
           verify[:notes][i].each_index do |k|

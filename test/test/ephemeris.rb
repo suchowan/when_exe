@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2020 Takashi SUGA
 
   You may use and/or modify this file according to the license
   described in the LICENSE.txt file included in this archive.
@@ -59,7 +59,7 @@ module MiniTest::Ephemeris
 
       assert_raises(NoMethodError) { When.when?('2012-11-15').sunrise }
 
-      assert_equal(nil, When.when?('2013-06-21T+09:00', :long=>135, :lat=>70).sunrise)
+      assert_nil(When.when?('2013-06-21T+09:00', :long=>135, :lat=>70).sunrise)
 
       if Object.const_defined?(:TZInfo)
         assert_equal(0, /2012-11-15T06:16/ =~ When.when?('2012-11-15', :tz=>'Asia/Tokyo').sunrise.to_s)

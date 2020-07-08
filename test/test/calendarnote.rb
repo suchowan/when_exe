@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2014 Takashi SUGA
+  Copyright (C) 2014-2020 Takashi SUGA
 
   You may use and/or modify this file according to the license
   described in the LICENSE.txt file included in this archive.
@@ -51,7 +51,7 @@ module MiniTest::CalendarNote
       assert_equal([[{:note=>"干支", :value=>"癸巳(29)", :position=>"共通"}],
                     [{:note=>"干支", :value=>"壬辰(28)", :position=>"共通"}]], notes1.subset(:note=>'干支'))
       assert_equal([[{:note=>"祝祭日", :value=>"秋分の日", :position=>"祝祭日"}]], notes1.subset(:value=>'秋分の日'))
-      assert_equal(nil, notes1.subset(:value=>'春分の日'))
+      assert_nil(notes1.subset(:value=>'春分の日'))
       assert_equal([[nil], [nil], [nil, nil, nil, nil, nil]], notes1.subset({:value=>'春分の日'}, false))
 
       assert_equal([2456558, 2456559, 2456560], all.keys)

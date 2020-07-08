@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2020 Takashi SUGA
 
   You may use and/or modify this file according to the license
   described in the LICENSE.txt file included in this archive.
@@ -395,7 +395,7 @@ LOCALE
       def test__code_space
         assert_equal('zip', Term1.codeSpace)
         assert_equal("ISO", Term2.codeSpace)
-        assert_equal(nil, Term3.codeSpace)
+        assert_nil(Term3.codeSpace)
       end
 
       def test__label

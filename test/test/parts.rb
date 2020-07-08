@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2020 Takashi SUGA
 
   You may use and/or modify this file according to the license
   described in the LICENSE.txt file included in this archive.
@@ -96,8 +96,8 @@ LOCALE
     end
 
     def test__reference
-      assert_equal(nil, Term1.reference('ja_JP'))
-      assert_equal(nil, Term1.reference('en_US'))
+      assert_nil(Term1.reference('ja_JP'))
+      assert_nil(Term1.reference('en_US'))
       assert_equal("https://ja.wikipedia.org/wiki/Getsuyou", Term2.reference('ja_JP'))
       assert_equal("https://en.wikipedia.org/wiki/Monday", Term2.reference('en_US'))
       assert_equal("https://ja.wikipedia.org/wiki/%E6%9C%88%E6%9B%9C%E6%97%A5", Term3.reference('ja_JP'))
@@ -164,14 +164,14 @@ LOCALE
 
       sample  = [false, false, false, false, false]
       complex = When::Parts::GeometricComplex.new(false)
-      assert_equal(nil, complex.exclude_end?)
+      assert_nil(complex.exclude_end?)
       (1..5).each do |i|
         assert_equal(sample.shift, complex.include?(i))
       end
 
       sample  = [true, true, true, true, true]
       complex = When::Parts::GeometricComplex.new(true)
-      assert_equal(nil, complex.exclude_end?)
+      assert_nil(complex.exclude_end?)
       (1..5).each do |i|
         assert_equal(sample.shift, complex.include?(i))
       end
