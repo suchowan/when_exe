@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2020 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -1110,6 +1110,15 @@ module When::Coordinates
       return @trunk.to_s + (@branch==0 ? zero : DL2[@branch])
     end
 
+    # 整数化
+    #   Array の index 値を提供する場合に呼ばれる
+    #
+    # @return [Integer]
+    #
+    def to_i
+      @sum.to_i
+    end
+
     # 強制型変換
     # @private
     def coerce(other)
@@ -1136,19 +1145,6 @@ module When::Coordinates
         @branch = @branch.to_i if (@branch.to_i == @branch.to_f)
         @sum   += @branch      if (@trunk)
       end
-    end
-
-    # その他のメソッド
-    #   When::Coordinates:Pair で定義されていないメソッドは
-    #   処理を @sum (type:Numeric) に委譲する
-    #
-    def method_missing(name, *args, &block)
-      self.class.module_eval %Q{
-        def #{name}(*args, &block)
-          @sum.send("#{name}", *args, &block)
-        end
-      } unless When::Parts::MethodCash.escape(name)
-      @sum.send(name, *args, &block)
     end
   end
 
