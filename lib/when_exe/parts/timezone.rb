@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2016 Takashi SUGA
+  Copyright (C) 2011-2020 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -152,25 +152,26 @@ module When::Parts
       @identifier = identifier
       id, query   = identifier.split('?', 2)
       @timezone   = TZInfo::Timezone.get(id.sub(/\(.+?\)\z/,''))
-      unless TZInfo::TimeOrDateTime.method_defined?(:_to_datetime)
-        if TZInfo::RubyCoreSupport.respond_to?(:datetime_new)
-          TZInfo::TimeOrDateTime.class_eval %Q{
-            alias :_to_datetime :to_datetime
-            ::Rational
-            def to_datetime
-              unless @datetime
-                u = usec
-                s = u == 0 ? sec : Rational(sec * 1000000 + u, 1000000)
-                @datetime = TZInfo::RubyCoreSupport.datetime_new(year, mon, mday, hour, min, s, 0, Date::GREGORIAN)
-              end
-              @datetime
+      unless TZInfo::Timezone.method_defined?(:period_for_utc_by_unix_time)
+        if TZInfo::TimezonePeriod.method_defined?(:utc_start)
+          TZInfo::Timezone.class_eval %Q{
+            def period_for_utc_by_unix_time(time)
+              period_for_utc(time)
             end
           }
         else
-          TZInfo::TimeOrDateTime.class_eval %Q{
-            alias :_to_datetime :to_datetime
-            def to_datetime
-              @datetime ||= DateTime.new(year, mon, mday, hour, min, sec, 0, Date::GREGORIAN)
+          TZInfo::Timezone.class_eval %Q{
+            def period_for_utc_by_unix_time(time)
+              period_for(Time.at(time))
+            end
+          }
+          TZInfo::TimezonePeriod.class_eval %Q{
+            def utc_start
+              starts_at ? starts_at.to_i : nil
+            end
+
+            def utc_end
+              ends_at ? ends_at.to_i : nil
             end
           }
         end
@@ -204,11 +205,11 @@ module When::Parts
         offsets = _offsets((time/When::TM::Duration::SECOND).floor)
         offsets.each do |offset|
           clocks[offset] ||= When::TM::Clock.new(options.merge({:zone=>offset, :tz_prop=>self}))
-          return clocks[offsets[0]] if @timezone.period_for_utc(
+          return clocks[offsets[0]] if @timezone.period_for_utc_by_unix_time(
             (frame.to_universal_time(cal_date, clk_time, clocks[offset])/When::TM::Duration::SECOND).floor).dst?
         end
       end
-      offset = @timezone.period_for_utc((time/When::TM::Duration::SECOND).floor).utc_total_offset
+      offset = @timezone.period_for_utc_by_unix_time((time/When::TM::Duration::SECOND).floor).utc_total_offset
       clocks[offset] || When::TM::Clock.new(options.merge({:zone=>offset, :tz_prop=>self}))
     end
 
@@ -220,9 +221,9 @@ module When::Parts
     private
 
     def _offsets(time)
-      now    = @timezone.period_for_utc(time)
-      past   = @timezone.period_for_utc(now.utc_start-1) if now.utc_start
-      future = @timezone.period_for_utc(now.utc_end)     if now.utc_end
+      now    = @timezone.period_for_utc_by_unix_time(time)
+      past   = @timezone.period_for_utc_by_unix_time(now.utc_start-1) if now.utc_start
+      future = @timezone.period_for_utc_by_unix_time(now.utc_end)     if now.utc_end
       std    = now.utc_offset
       dst    = now.utc_total_offset
       [past, future].each do |period|
