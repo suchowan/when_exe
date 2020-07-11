@@ -152,29 +152,16 @@ module When::Parts
       @identifier = identifier
       id, query   = identifier.split('?', 2)
       @timezone   = TZInfo::Timezone.get(id.sub(/\(.+?\)\z/,''))
-      unless TZInfo::Timezone.method_defined?(:period_for_utc_by_unix_time)
-        if TZInfo::TimezonePeriod.method_defined?(:utc_start)
-          TZInfo::Timezone.class_eval %Q{
-            def period_for_utc_by_unix_time(time)
-              period_for_utc(time)
-            end
-          }
-        else
-          TZInfo::Timezone.class_eval %Q{
-            def period_for_utc_by_unix_time(time)
-              period_for(Time.at(time))
-            end
-          }
-          TZInfo::TimezonePeriod.class_eval %Q{
-            def utc_start
-              starts_at ? starts_at.to_i : nil
-            end
-
-            def utc_end
-              ends_at ? ends_at.to_i : nil
-            end
-          }
-        end
+      unless TZInfo::Timezone.method_defined?(:period_for)
+         TZInfo::Timezone.class_eval %Q{
+          def period_for(time)
+            period_for_utc(Time.at(time).getutc)
+          end
+        }
+        TZInfo::TimezonePeriod.class_eval %Q{
+          alias :starts_at :utc_start
+          alias :ends_at   :utc_end
+        }
       end
       dst, std  = _offsets(Time.now.to_i)
       options   = query ? Hash[*(query.split('&').map {|item| item.split('=',2)}.flatten)] : {}
@@ -205,11 +192,11 @@ module When::Parts
         offsets = _offsets((time/When::TM::Duration::SECOND).floor)
         offsets.each do |offset|
           clocks[offset] ||= When::TM::Clock.new(options.merge({:zone=>offset, :tz_prop=>self}))
-          return clocks[offsets[0]] if @timezone.period_for_utc_by_unix_time(
-            (frame.to_universal_time(cal_date, clk_time, clocks[offset])/When::TM::Duration::SECOND).floor).dst?
+          time_for_offset = frame.to_universal_time(cal_date, clk_time, clocks[offset])
+          return clocks[offsets[0]] if @timezone.period_for(Time.at((time_for_offset/When::TM::Duration::SECOND).floor)).dst?
         end
       end
-      offset = @timezone.period_for_utc_by_unix_time((time/When::TM::Duration::SECOND).floor).utc_total_offset
+      offset = @timezone.period_for(Time.at((time/When::TM::Duration::SECOND).floor)).utc_total_offset
       clocks[offset] || When::TM::Clock.new(options.merge({:zone=>offset, :tz_prop=>self}))
     end
 
@@ -221,9 +208,9 @@ module When::Parts
     private
 
     def _offsets(time)
-      now    = @timezone.period_for_utc_by_unix_time(time)
-      past   = @timezone.period_for_utc_by_unix_time(now.utc_start-1) if now.utc_start
-      future = @timezone.period_for_utc_by_unix_time(now.utc_end)     if now.utc_end
+      now    = @timezone.period_for(Time.at(time))
+      past   = @timezone.period_for(Time.at(now.starts_at.to_time.to_i-1)) if now.starts_at
+      future = @timezone.period_for(        now.ends_at  .to_time        ) if now.ends_at
       std    = now.utc_offset
       dst    = now.utc_total_offset
       [past, future].each do |period|
