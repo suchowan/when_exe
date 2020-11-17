@@ -550,7 +550,7 @@ class When::TM::OrdinalReferenceSystem
             ],
             [When::TM::OrdinalEra,
               "*age:[プリアボニアン,Priabonian]",
-              "begin:-37_800_000-"
+              "begin:-37_710_000-"
             ]
           ],
           [When::TM::OrdinalEra,
