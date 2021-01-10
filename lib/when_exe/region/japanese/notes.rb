@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2012-2020 Takashi SUGA
+  Copyright (C) 2012-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -814,13 +814,15 @@ class When::CalendarNote
       [ 7, 7] => [[1868..1872, When.M17n('JapaneseHoliday::七夕節句')]],
       [ 7,15] => [[1868..1872, When.M17n('JapaneseHoliday::お盆')]],
       [ 7,20] => [[1996..2002, When.M17n('JapaneseHoliday::海の日')]],
-      [ 7,23] => [[2020..2020, When.M17n('JapaneseHoliday::海の日')]],
-      [ 7,-3] => [[2003..2019, When.M17n('JapaneseHoliday::海の日')],[2021..2100, When.M17n('JapaneseHoliday::海の日')]],
+      [ 7,22] => [[2021..2021, When.M17n('JapaneseHoliday::海の日')]],
+      [ 7,23] => [[2020..2020, When.M17n('JapaneseHoliday::海の日')],[2021..2021, When.M17n('JapaneseHoliday::スポーツの日')]],
+      [ 7,-3] => [[2003..2019, When.M17n('JapaneseHoliday::海の日')],[2022..2100, When.M17n('JapaneseHoliday::海の日')]],
       [ 7,24] => [[2020..2020, When.M17n('JapaneseHoliday::スポーツの日')]],
       [ 7,30] => [[1913..1926, When.M17n('JapaneseHoliday::明治天皇祭')]],
       [ 8, 1] => [[1868..1872, When.M17n('JapaneseHoliday::田実節句')]],
+      [ 8, 8] => [[2021..2021, When.M17n('JapaneseHoliday::山の日')]],
       [ 8,10] => [[2020..2020, When.M17n('JapaneseHoliday::山の日')]],
-      [ 8,11] => [[2016..2019, When.M17n('JapaneseHoliday::山の日')],[2021..2100, When.M17n('JapaneseHoliday::山の日')]],
+      [ 8,11] => [[2016..2019, When.M17n('JapaneseHoliday::山の日')],[2022..2100, When.M17n('JapaneseHoliday::山の日')]],
       [ 8,31] => [[1913..1926, When.M17n('JapaneseHoliday::天長節')]],
       [ 9, 9] => [[1868..1872, When.M17n('JapaneseHoliday::重陽節句')]],
       [ 9,15] => [[1966..2002, When.M17n('JapaneseHoliday::敬老の日')]],
@@ -829,7 +831,7 @@ class When::CalendarNote
       [ 9, 0] => [[1878..1947, When.M17n('JapaneseHoliday::秋季皇霊祭')], [1948..2100, When.M17n('JapaneseHoliday::秋分の日')]],
       [10, 2] => [[1929..1929, When.M17n('JapaneseHoliday::皇大神宮遷御当日')]],
       [10,10] => [[1966..1999, When.M17n('JapaneseHoliday::体育の日')]],
-      [10,-2] => [[2000..2019, When.M17n('JapaneseHoliday::体育の日')],[2021..2100, When.M17n('JapaneseHoliday::スポーツの日')]],
+      [10,-2] => [[2000..2019, When.M17n('JapaneseHoliday::体育の日')],[2022..2100, When.M17n('JapaneseHoliday::スポーツの日')]],
       [10,17] => [[1879..1947, When.M17n('JapaneseHoliday::神嘗祭')]],
       [10,22] => [[2019..2019, When.M17n('JapaneseHoliday::即位礼正殿の儀')]],
       [10,31] => [[1913..1926, When.M17n('JapaneseHoliday::天長節祝日')]],

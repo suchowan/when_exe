@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2019 Takashi SUGA
+  Copyright (C) 2011-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -405,7 +405,7 @@ module When
       ["[鈴木善幸]1.07.17",				"@A", "1980-07-17"],
       ["[中曽根康弘]1.11.27",				"@A", "1982-11-27"],
       ["[竹下登]1.11.06",				"@A", "1987-11-06",
-      	 "name=[今上天皇=ja:%%<明仁>,Emperor_Kinjō=en:Akihito];1989-01-08", ""],
+      	 "name=[上皇明仁,Emperor_Emeritus_of_Japan=en:Akihito];1989-01-08", ""],
       ["[宇野宗佑]1.06.03",				"@A", "1989-06-03"],
       ["[海部俊樹]1.08.10",				"@A", "1989-08-10"],
       ["[宮沢喜一]1.11.05",				"@A", "1991-11-05"],
@@ -422,7 +422,9 @@ module When
       ["[鳩山由紀夫]1.09.16",				"@A", "2009-09-16"],
       ["[菅直人]1.06.08",				"@A", "2010-06-08"],
       ["[野田佳彦]1.09.02",				"@A", "2011-09-02"],
-      ["[安倍晋三･再=ja:%%<安倍晋三>]1.12.26",		"@A", "2012-12-26"]
+      ["[安倍晋三･再=ja:%%<安倍晋三>]1.12.26",		"@A", "2012-12-26",
+        "name=[今上天皇=ja:%%<徳仁>,Emperor_Kinjō=en:Naruhito];2019-05-01", ""],
+      ["[菅義偉]1.09.16",				"@A", "2020-09-16"]
     ]]
   end
 end
