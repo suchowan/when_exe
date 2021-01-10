@@ -44,14 +44,18 @@ R/1868-07-15...1873^^Japanese,お盆,お盆,Bon Festival,Bon Festival
 R/1996-07-20...2003,海の日,海の日,Marine Day,Marine Day
 R/1996-07-{21&MO}...2003,振替休日,振替休日,Substitute holiday,Public holidays in Japan
 R/2003-07-{3MO}...2020,海の日,海の日,Marine Day,Marine Day
-R/2021-07-{3MO}...2100,海の日,海の日,Marine Day,Marine Day
+R/2022-07-{3MO}...2100,海の日,海の日,Marine Day,Marine Day
+2021-07-22,海の日,海の日,Marine Day,Marine Day
 2020-07-23,海の日,海の日,Marine Day,Marine Day
+2021-07-23,スポーツの日,スポーツの日,National Sports Day,National Sports Day
 2020-07-24,スポーツの日,スポーツの日,National Sports Day,National Sports Day
 R/1913-07-30...1927,明治天皇祭,先帝祭,Emperor Meiji's Death anniversary,Public holidays in Japan
 R/1868-08-01...1873^^Japanese,田実節句,八朔,Hassaku,Public holidays in Japan
+2021-08-08,山の日,山の日,Mountain Day,Public holidays in Japan
+2021-08-09,振替休日,振替休日,Substitute holiday,Public holidays in Japan
 2020-08-10,山の日,山の日,Mountain Day,Public holidays in Japan
 R/2016-08-11...2020,山の日,山の日,Mountain Day,Public holidays in Japan
-R/2021-08-11...2100,山の日,山の日,Mountain Day,Public holidays in Japan
+R/2022-08-11...2100,山の日,山の日,Mountain Day,Public holidays in Japan
 R/2016-08-{12&MO}...2100,振替休日,振替休日,Substitute holiday,Public holidays in Japan
 R/1913-08-31...1927,天長節,天長節,The Emperor's Birthday,Public holidays in Japan
 R/1868-09-09...1873^^Japanese,重陽節句,重陽節句,Double Ninth Festival,Double Ninth Festival
@@ -67,7 +71,7 @@ R/1973-09-1{SolarTerms#term180+1&MO}T00+09:00...2100,振替休日,振替休日,S
 R/1966-10-10...2000,体育の日,体育の日,Health and Sports Day,Health and Sports Day
 R/1973-10-{11&MO}...2000,振替休日,振替休日,Substitute holiday,Public holidays in Japan
 R/2000-10-{2MO}...2020,体育の日,体育の日,Health and Sports Day,Health and Sports Day
-R/2021-10-{2MO}...2100,スポーツの日,スポーツの日,National Sports Day,National Sports Day
+R/2022-10-{2MO}...2100,スポーツの日,スポーツの日,National Sports Day,National Sports Day
 R/1879-10-17...1948,神嘗祭,神嘗祭,Kan'namesai,Public holidays in Japan
 2019-10-22,即位礼正殿の儀,即位礼正殿の儀,Enthronement of the Japanese Emperor,Enthronement of the Japanese Emperor
 R/1913-10-31...1927,天長節祝日,天皇誕生日,Emperor Taishō's Birth holiday,Public holidays in Japan
