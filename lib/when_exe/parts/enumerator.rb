@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2020 Takashi SUGA
+  Copyright (C) 2011-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -221,7 +221,7 @@ module When::Parts
         loop do
           @current = _succ
           break unless @current
-          next if (@current == :next)
+          next if (:next == @current)
           @current = GeometricComplex.new(@current, @duration) if @duration
           next if _exclude(@current)
           case @direction
@@ -355,7 +355,7 @@ module When::Parts
         list = (0...list.size).to_a.map {|i| [list[i], i]}.sort.map {|e| e[0]}
         prev = nil
         list.delete_if do |x|
-          if (x == prev)
+          if (prev == x)
             true
           else
             prev = x

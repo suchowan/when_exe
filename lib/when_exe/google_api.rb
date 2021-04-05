@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2015 Takashi SUGA
+  Copyright (C) 2015-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -8,7 +8,8 @@
 #
 # GoogleAPI の Calendar API v3 への対応
 #
-#   see {Google Calendar API Reference https://developers.google.com/google-apps/calendar/v3/reference/}
+#   see {Ruby Quickstart https://developers.google.com/calendar/quickstart/ruby}
+#   see {Simple REST client for version V3 of the Calendar API https://googleapis.dev/ruby/google-apis-calendar_v3/v0.1.0/}
 #
 module When::GoogleAPI
 
@@ -17,15 +18,9 @@ module When::GoogleAPI
   #
   class Calendar
 
-    # APIClient のインスタンス
-    #
-    # @return [Google::APIClient]
-    #
-    attr_reader :client
-
     # Calendar API のインスタンス
     #
-    # @return [Google::APIClient::API]
+    # @return [Google::Apis::CalendarV3::CalendarService]
     #
     attr_reader :service
 
@@ -45,24 +40,19 @@ module When::GoogleAPI
       #
       # GoogleAPI の Calendar を生成する
       #
-      # @param [Google::APIClient] client
-      # @param [Google::APIClient::API] service
+      # @param [Google::Apis::CalendarV3::CalendarService] service
       # @param [String] calendar_id
       #
-      def list(client, service, calendar_id)
+      def list(service, calendar_id)
         events = []
-        result = client.execute({:api_method => service.events.list,
-                                 :parameters => {'calendarId' => calendar_id}})
+        result = service.list_events(calendar_id)
         loop do
-          events += result.data.items.map {|event| event.to_hash}
-          page_token = result.data.next_page_token
+          events += result.items.map {|event| event.to_h}
+          page_token = result.next_page_token
           break unless page_token
-          result = client.execute({:api_method => service.events.list,
-                                   :parameters => {'calendarId' => calendar_id,
-                                                   'pageToken'  => page_token}})
+          result = service.list_events(calendar_id, page_token: page_token)
         end
         calendar = new(events)
-        calendar.instance_variable_set(:@client, client)
         calendar.instance_variable_set(:@service, service)
         calendar.instance_variable_set(:@calendar_id, calendar_id)
         calendar
@@ -87,7 +77,7 @@ module When::GoogleAPI
     #
     def initialize(events)
       @events = events.map {|event|
-        next nil unless event['status'] == 'confirmed'
+        next nil unless event[:status] == 'confirmed'
         When::V::Event.new(event)
       }.compact
     end
@@ -114,15 +104,18 @@ class When::V::Event
       iprops = {}
       gprops.each_pair do |key, value|
         case key
-        when 'summary'
-          iprops['summary'] = value
-        when 'start', 'end'
+        when :start, :end
           date  = 'VALUE=DATE'
-          date += '-TIME' if value.key?('dateTime')
-          date += ';TZID=' + value['timeZone'] if value.key?('timeZone')
-          date += ':' + (value['date'] || value['dateTime'])
-          iprops['dt' + key] = date
-        when 'recurrence'
+          if value.key?(:date)
+            date += ':' + value[:date].strftime('%Y%m%d')
+          else
+            date += '-TIME'
+            date += ':' + value[:date_time].strftime('%Y%m%dT%H%M%S')
+            date += value[:date_time].strftime('%z') unless value[:time_zone]
+          end
+          date.sub!(':', ";TZID=#{value[:time_zone]}:") if value.key?(:time_zone)
+          iprops['dt' + key.to_s] = date
+        when :recurrence
           value.map do |line|
             tag, rule = line.split(':', 2)
             tag.downcase!
@@ -132,8 +125,10 @@ class When::V::Event
               iprops[tag] = rule
             end
           end
-        when 'iCalUID'
+        when :i_cal_uid
           iprops['uid'] = value
+        when Symbol
+          iprops[key.to_s] = value
         end
       end
       iprops
@@ -144,7 +139,7 @@ class When::V::Event
 
   # Hash からの属性読み込み
   def _parse_from_code(options)
-    if options.key?('start')
+    if options.key?(:start)
       @google_api_props = options
       options = self.class.gcal2ical(options)
     end
