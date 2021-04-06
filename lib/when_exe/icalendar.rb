@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2018 Takashi SUGA
+  Copyright (C) 2011-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -1047,13 +1047,13 @@ module When::V
       super
 
       @child.each do |prop|
-        @dtstart = prop.dtstart if (@dtstart==nil || prop.dtstart < @dtstart)
+        @dtstart = prop.dtstart if (@dtstart.nil? || prop.dtstart < @dtstart)
         @dtstop  = prop.dtstop  unless (prop.dtstop.kind_of?(When::TimeValue) &&
                                         @dtstop.kind_of?(When::TimeValue)     &&
                                         prop.dtstop <= @dtstop)
         [prop.tzoffsetfrom, prop.tzoffsetto].each do |tz|
-          @daylight = tz if (@daylight==nil || tz.universal_time < @daylight.universal_time)
-          @standard = tz if (@standard==nil || tz.universal_time > @standard.universal_time)
+          @daylight = tz if (@daylight.nil? || tz.universal_time < @daylight.universal_time)
+          @standard = tz if (@standard.nil? || tz.universal_time > @standard.universal_time)
         end
       end
       @tz_difference = @standard.universal_time - @daylight.universal_time
@@ -1107,7 +1107,7 @@ module When::V
         date = prop.enum_for(current_time, direction, 1).succ
         if (date)
           diff = (date.universal_time - current_time).abs
-          if (minimum == nil || minimum > diff)
+          if (minimum.nil? || minimum > diff)
             event   = date 
             minimum = diff
           end
@@ -1402,7 +1402,7 @@ module When::V
         if (dtstart && dtstart.has_time?)
           ['HOUR', 'MINUTE', 'SECOND'].each do |part|
             by_part = 'BY' + part
-            if (rule[by_part]==nil && freq_index && freq_index < PostFreqIndex[by_part])
+            if (rule[by_part].nil? && freq_index && freq_index < PostFreqIndex[by_part])
               base = dtstart[PostFreqIndex[by_part]]
               rule[by_part] = Logic.const_get(part.capitalize).new(by_part, base) unless (base == 0)
             end
@@ -1604,7 +1604,7 @@ module When::V
               nth, spec, period = ord
               shift = (period[PostFreqIndex[@by_part]] != 0)
               raise ArgumentError, "n*e+/-s format not permitted" if (nth || shift) && @freq_index >= When::DAY
-              if (nth==nil || nth>0)
+              if (nth.nil? || nth>0)
                 enum = @ref.enum_for(lower_bound, :forward, {:event=>spec})
               else
                 enum = @ref.enum_for(higher_bound, :reverse, {:event=>spec})

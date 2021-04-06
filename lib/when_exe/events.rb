@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-    Copyright (C) 2015-2016 Takashi SUGA
+    Copyright (C) 2015-2021 Takashi SUGA
 
     You may use and/or modify this file according to the license
     described in the LICENSE.txt file included in this archive.
@@ -1440,7 +1440,7 @@ module When
         when /(out|no)\s*header\s*(\((\d+)\))?/i
           @limit = $3.to_i if $3
           csv_row_vs_label([])
-          open(source,'r') do |io|
+          ::URI.send(:open, source,'r') do |io|
             CSV.parse(io.read) do |row|
               yield(row)
               break if @limit && @events.size >= @limit
@@ -1448,7 +1448,7 @@ module When
           end
         when /header\s*(\((\d+)\))?/i
           @limit = $2.to_i if $2
-          open(source,'r') do |io|
+          ::URI.send(:open, source,'r') do |io|
             CSV.parse(io.read) do |row|
               if @row_vs_label
                 yield(row)
@@ -1478,7 +1478,7 @@ module When
           @limit = $3.to_i if $3
           rexp = Regexp.compile($1)
           csv_row_vs_label([])
-          open(source, 'r') do |file|
+          ::URI.send(:open, source, 'r') do |file|
             file.read.gsub(/[\r\n]/,'').scan(rexp) do
               yield((1...$~.size).to_a.map {|i| $~[i]})
             end

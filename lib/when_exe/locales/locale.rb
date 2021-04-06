@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -370,7 +370,7 @@ module When
         contents = nil
         begin
           OpenURI
-          source   = open(path, 'r'+mode, {:ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE})
+          source   = URI.send(:open, path, 'r'+mode, {:ssl_verify_mode => OpenSSL::SSL::VERIFY_NONE})
           contents = source.read
         ensure
           @wikipedia_last_access = Time.now.to_f

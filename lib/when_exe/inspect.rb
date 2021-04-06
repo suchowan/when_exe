@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2016 Takashi SUGA
+  Copyright (C) 2011-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -603,7 +603,7 @@ module When
         form_options[:method] = :to_m17n unless form_options.key?(:method)
         persistence = options.delete(:persistence) if options.kind_of?(Hash)
         retrieved   = When::CalendarNote::NotesContainer.retrieve(persistence, self.to_i)
-        return retrieved unless retrieved == false
+        return retrieved if retrieved
         When::CalendarNote::NotesContainer.register(_m17n_form(_notes(options), form_options), persistence, self.to_i)
       end
 

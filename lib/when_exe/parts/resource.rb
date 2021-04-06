@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2016 Takashi SUGA
+  Copyright (C) 2011-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -558,7 +558,7 @@ module When::Parts
           raise IOError, path + ': not ready' unless real_path
           args  = [real_path, "1".respond_to?(:force_encoding) ? 'r:utf-8' : 'r']
           args << {:ssl_verify_mode=>OpenSSL::SSL::VERIFY_NONE} if real_path =~ /\Ahttps:/
-          open(*args) do |file|
+          URI.send(:open,*args) do |file|
             resource = file.read
             case resource[0..5].upcase
             when 'BEGIN:'

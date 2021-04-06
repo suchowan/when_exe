@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2016 Takashi SUGA
+  Copyright (C) 2011-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -178,7 +178,7 @@ module When::TM
     # @return [When::TM::JulianDate]
     #
     def date_trans(cal_date, time=nil, options={})
-      time = cal_date.clk_time if ((time == nil) && cal_date.kind_of?(DateAndTime))
+      time = cal_date.clk_time if (time.nil? && cal_date.kind_of?(DateAndTime))
       frac = (time) ? time.universal_time : 0.0
       jdn  = to_julian_date(cal_date.cal_date)
       return JulianDate.universal_time((jdn - JulianDate::JD19700101) * Duration::DAY + frac, options)
@@ -1556,7 +1556,7 @@ module When::TM
         end
         @reference_date = epoch.frame.jul_trans(When.when?(jdn), {:frame=>epoch.frame})
         j_date = @reference_date.cal_date
-      elsif (@reference_date == nil)
+      elsif @reference_date.nil?
         @reference_date = epochs[0].dup
         j_date = @reference_date.cal_date
       end

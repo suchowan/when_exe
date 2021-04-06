@@ -221,7 +221,7 @@ module When::Parts
         loop do
           @current = _succ
           break unless @current
-          next if (:next == @current)
+          next if (@current == :next)
           @current = GeometricComplex.new(@current, @duration) if @duration
           next if _exclude(@current)
           case @direction
@@ -313,7 +313,7 @@ module When::Parts
         end
       end
       previous    = @processed._include?(value)
-      @processed |= value if previous == false
+      @processed |= value unless previous
       registered  = (previous==value) ? previous : value
       registered  = registered.first if registered.kind_of?(GeometricComplex)
       registered.events ||=[]
@@ -355,7 +355,7 @@ module When::Parts
         list = (0...list.size).to_a.map {|i| [list[i], i]}.sort.map {|e| e[0]}
         prev = nil
         list.delete_if do |x|
-          if (prev == x)
+          if (x == prev)
             true
           else
             prev = x

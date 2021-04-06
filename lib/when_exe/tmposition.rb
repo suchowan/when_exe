@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2018 Takashi SUGA
+  Copyright (C) 2011-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -960,7 +960,7 @@ module When::TM
     #
     def <=>(other)
       other = other.first if other.kind_of?(Range)
-      return universal_time <=> other if other.kind_of?(Numeric)
+      return universal_time <=> other unless other.respond_to?(:indeterminated_position)
 
       [self.indeterminated_position, other.indeterminated_position].each do |position|
         prec = SYSTEM if [TimeValue::Min, TimeValue::Max].include?(position)

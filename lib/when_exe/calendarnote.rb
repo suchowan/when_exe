@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2017 Takashi SUGA
+  Copyright (C) 2011-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -108,7 +108,7 @@ module When
       #
       # @return [Array] ハッシュ要素からなる配列(元の構造が配列であった場合)
       #
-      # @note 引数 symbol が Symbol でも String でもない場合は添え字とみなして元の配列の要素を取り出す
+      # @note 引数 symbol が Integer の場合は添え字とみなして元の配列の要素を取り出す
       #
       def value(compact=true, symbol=:value)
         if kind_of?(Hash) && !key?(:note)
@@ -119,12 +119,8 @@ module When
           end
         else
           # Non-Persistent NotesContainer
-          case symbol
-          when Symbol, String
-            sliced = _dig(self) {|target| target.fetch(symbol, nil)}
-          else 
-            return _bless(slice(symbol))
-          end
+          return _bless(slice(symbol)) if symbol.kind_of?(Integer)
+          sliced = _dig(self) {|target| target.fetch(symbol, nil)}
         end
         sliced = _bless(sliced)
         compact ? sliced.simplify : sliced
@@ -329,7 +325,7 @@ module When
     def notes(date, options={})
       dates, indices, notes, persistence, conditions, options = _parse_note(date, options)
       retrieved = NotesContainer.retrieve(persistence, date.to_i)
-      return retrieved unless retrieved == false
+      return retrieved if retrieved
       NotesContainer.register(indices.map {|i|
         next [] unless i <= date.precision
         _note_values(dates, notes[i-1], _all_keys[i-1], _elements[i-1]) do |dates, focused_notes, notes_hash|

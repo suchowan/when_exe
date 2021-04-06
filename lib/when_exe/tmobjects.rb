@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -1285,7 +1285,7 @@ module When::TM
     #   @param [Range] range 生成する桁の範囲
     #
     def initialize(*args)
-      @options = (args[-1].kind_of?(Hash)) ? (args.pop.reject {|key,value| value == nil}) : {}
+      @options = (args[-1].kind_of?(Hash)) ? (args.pop.reject {|key,value| value.nil?}) : {}
       if args[0].kind_of?(Numeric)
         _initialize_by_unit(*args)
       else
