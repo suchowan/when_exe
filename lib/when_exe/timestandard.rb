@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2020 Takashi SUGA
+  Copyright (C) 2011-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -84,7 +84,7 @@ module When::TimeStandard
       @leap_seconds  =
         if leap_seconds.kind_of?(String)
           OpenURI
-          open(leap_seconds) do |file|
+          URI.send(:open, leap_seconds) do |file|
             file.read.split(/[\n\r]+/).map { |line|
               line.split(/[^\d.]+/)[3..6].map {|d| d.to_f}
             }.reverse
@@ -111,7 +111,7 @@ module When::TimeStandard
     # 処理系が閏秒を無視しているか否か
     # @private
     def _is_systemtime_universal?
-      @is_systemtime_universal = ((Time.utc(1976).to_i - Time.utc(1975).to_i) % 86400 == 0) if @is_systemtime_universal == nil
+      @is_systemtime_universal = ((Time.utc(1976).to_i - Time.utc(1975).to_i) % 86400 == 0) if @is_systemtime_universal.nil?
       @is_systemtime_universal
     end
 

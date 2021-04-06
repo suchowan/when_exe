@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2017 Takashi SUGA
+  Copyright (C) 2011-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -329,7 +329,7 @@ module When
     def notes(date, options={})
       dates, indices, notes, persistence, conditions, options = _parse_note(date, options)
       retrieved = NotesContainer.retrieve(persistence, date.to_i)
-      return retrieved unless retrieved == false
+      return retrieved if retrieved
       NotesContainer.register(indices.map {|i|
         next [] unless i <= date.precision
         _note_values(dates, notes[i-1], _all_keys[i-1], _elements[i-1]) do |dates, focused_notes, notes_hash|
