@@ -1160,9 +1160,9 @@ module When
                             edge_included(first, range.send(method), :to_f))
                end
              end
-           elsif @index.key?(SPATIAL)
-             list << @index[SPATIAL][options['location']]
-           end
+          elsif @index.key?(SPATIAL)
+            list << @index[SPATIAL][options['location']]
+          end
         end
 
         # グラフ

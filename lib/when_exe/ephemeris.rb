@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2016 Takashi SUGA
+  Copyright (C) 2011-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -1959,7 +1959,7 @@ module When::Ephemeris
         @year_epoch      = @year_epoch.to_f
       else
         @year_epoch      = 0
-        @year_epoch      = @longitude_shift -_mean_sun_(@epoch_shift).to_i
+        @year_epoch      = @longitude_shift - _mean_sun_(@epoch_shift).to_i
       end
       @cycle_precision ||= 1.0E-8
       @cycle_precision   = @cycle_precision.to_f
@@ -1973,7 +1973,7 @@ module When::Ephemeris
           @month_epoch   = @month_epoch.to_f
         else
           @month_epoch   = 0
-          @month_epoch   = @longitude_shift -_mean_moon_(@epoch_shift).to_i
+          @month_epoch   = @longitude_shift - _mean_moon_(@epoch_shift).to_i
         end
         extend LunarMethod
       else

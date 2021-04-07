@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2016 Takashi SUGA
+  Copyright (C) 2011-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -109,7 +109,6 @@ module When
           # extended date & time format (JIS X0301)
           when  /\A((.+::)?(\[[^\]]+\]|[^-+\d{]+))(([-+*&%@!>=<?\dW.\(\)]|\{.+?\})+)?(?:(T([:*=.,\d]+)?)([A-Z]+(\?.+)?|[-+][:\d]+)?)?\z/
             era, parent, child, d, v, t, time, clock = $~[1..8]
-            d0 = d
             d, r = _split_residue(d, options[:abbr]) if d =~ /\{/
             format, date, era = Date._to_array_extended_X0301(d, era, options)
             era ||= options[:era_name] if d =~ /\./

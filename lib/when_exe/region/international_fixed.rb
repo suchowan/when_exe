@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2014-2015 Takashi SUGA
+  Copyright (C) 2014-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -87,8 +87,8 @@ module When
          When::Coordinates::DefaultDayIndex
         ],
       'rule_table'       => {
-        365  => {'Length'=>[28]*12 + [29]},
-        366  => {'Length'=>[28]* 5 + [29] + [28] *6 + [29]}
+        365  => {'Length'=>[28] * 12 + [29]},
+        366  => {'Length'=>[28] *  5 + [29] + [28] * 6 + [29]}
       },
       'note'   => 'InternationalFixedWeek'
     }]

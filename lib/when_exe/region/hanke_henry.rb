@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2014-2016 Takashi SUGA
+  Copyright (C) 2014-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -49,8 +49,8 @@ module When
         'T'  => {'Rule'  =>(2000...2400).to_a.map {|year|
                   [When.tm_pos(year,1,1), When.tm_pos(year,12,31)].map {|date| date.to_i % 7}.include?(3) ? 371 : 364
                 }},
-        364  => {'Length'=>[30,30,31]*4},
-        371  => {'Length'=>[30,30,31]*4 +[7]}
+        364  => {'Length'=>[30,30,31] * 4},
+        371  => {'Length'=>[30,30,31] * 4 + [7]}
       }
     }]
   end

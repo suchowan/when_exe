@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2020 Takashi SUGA
+  Copyright (C) 2011-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -933,8 +933,8 @@ module When::Coordinates
           when nil
             form  += c
           else
-            suffix = DL2[m17ns[i ? i.to_i : index]*0]  || s if s
-            form  += t + ({nil=>'', '%'=>'%%'}[suffix] || suffix)
+            suffix = DL2[m17ns[i ? i.to_i : index] * 0]  || s if s
+            form  += t + ({nil=>'', '%'=>'%%'}[suffix]   || suffix)
             index += t.length - t.gsub(/\*/,'').length + 1
           end
           form
@@ -947,14 +947,14 @@ module When::Coordinates
     #
     # @return [Numeric] 年番号,月番号,日番号など暦要素の幹となる部分
     #
-    attr_accessor :trunk
+    attr_reader :trunk
 
     #
     # 暦要素の枝
     #
     # @return [Numeric] 暦要素のうち(閏であるかなど)幹で表現しきれない枝の部分
     #
-    attr_accessor :branch
+    attr_reader :branch
 
     #
     # 暦要素の幹と枝の和

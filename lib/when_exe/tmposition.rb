@@ -554,7 +554,7 @@ module When::TM
         options.delete(:abbr)
         z2  = When.Clock(options[:clock]) if z && options[:clock]
         z ||= options[:clock]
-        z   = When.Clock(z) if z =~ /\A[A-Z]+\z/
+        z   = When.Clock(z) if z.kind_of?(String) && z =~ /\A[A-Z]+\z/
 
         unless d
           # ClockTime

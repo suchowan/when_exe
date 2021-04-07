@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2014-2016 Takashi SUGA
+  Copyright (C) 2014-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -379,6 +379,7 @@ module When
     # namespace を prefix にコンパクト化する
     #
     def compact_namespace_to_prefix(source, prefixes, context=nil)
+      return source.map {|element| compact_namespace_to_prefix(element, prefixes, context)} if source.kind_of?(Array)
       return source unless prefixes
       prefixes.each_pair do |key, value|
         Array(value).each do |namespace|
@@ -574,7 +575,14 @@ module When
           value =_value_str(note[:note], note[:value])
         end
         id    = compact_namespace_to_prefix(value, options[:prefixes], context)
-        hash[compact_namespace_to_prefix(_note_str(note[:note]), options[:prefixes], context)] = (id == value && id !~ /:\/\//) ? id : {'@id'=>id}
+        if id.kind_of?(Array)
+          (0...id.length).each do |i|
+            id[i] = {'@id'=>id[i]} unless id[i] == value[i] && id[i] !~ /:\/\//
+          end
+        else
+          id = {'@id'=>id} unless id == value && id !~ /:\/\//
+        end
+        hash[compact_namespace_to_prefix(_note_str(note[:note]), options[:prefixes], context)] = id
       end
       hash
     end

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2012-2014 Takashi SUGA
+  Copyright (C) 2012-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license
   described in the LICENSE.txt file included in this archive.
@@ -212,12 +212,12 @@ module MiniTest
           ["*", 17, 18, 19, 20, 21, 22, 23],
           ["*", 24, 25, 26, 27, 28, 29, 30],
           ["*", 31, "*", "*", "*", "*", "*", "*"]]]]],
-        date.year_included('Sunday') {|d,b|
-          case b
-          when When::YEAR  ; d[When::YEAR]
-          when When::MONTH ; d[When::MONTH]
-          when When::DAY   ; d[When::DAY]
-          else       ; '*'
+         date.year_included('Sunday') {|d,b|
+           case b
+           when When::YEAR  ; d[When::YEAR]
+           when When::MONTH ; d[When::MONTH]
+           when When::DAY   ; d[When::DAY]
+           else       ; '*'
          end
         }
       )

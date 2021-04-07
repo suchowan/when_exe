@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -161,8 +161,8 @@ module When
     World =  [SolarYearTableBased, {
       'label'   => 'World',
       'rule_table'       => {
-        365  => {'Length'=>[31,30,30]*3 + [31,30,31]},
-        366  => {'Length'=>[31,30,30,31,30,31] *2}
+        365  => {'Length'=>[31,30,30] * 3 + [31,30,31]},
+        366  => {'Length'=>[31,30,30,31,30,31] * 2}
       },
       'note'   => 'WorldWeek'
     }]

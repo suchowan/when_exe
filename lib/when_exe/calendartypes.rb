@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2016 Takashi SUGA
+  Copyright (C) 2011-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -419,7 +419,7 @@ module When::CalendarTypes
 
       # mean month length
       if @entry_key
-        ::Rational
+        Rational
         @mean_month = Rational(@rule_table[@entry_key]['Days'], @rule_table[@entry_key]['Months'])
         @mean_year  = Rational(@rule_table[@entry_key]['Days'], @rule_table[@entry_key]['Years' ])
       end
@@ -609,7 +609,7 @@ module When::CalendarTypes
         difference.each_pair do |year, pattern|
           offset = year - hash['origin_of_MSC']
           hash['rule_table'][offset] =
-           if pattern.kind_of?(Hash)
+            if pattern.kind_of?(Hash)
               rule = hash['rule_table'][offset].dup
               pattern.each_pair do |key,value|
                 raise ArgumentError, "Can't patch \"#{rule}\" by {#{key}=>#{value}} at #{year}" unless rule.sub!(key,value)
@@ -1294,7 +1294,7 @@ module When::CalendarTypes
                             "Formula?formula=#{@months_in_year||12}S" : 'SolarFormulaWithTable')
       super
     end
- end
+  end
 
   # 月日の配当が月の位相によって決定される純太陰暦
   #
