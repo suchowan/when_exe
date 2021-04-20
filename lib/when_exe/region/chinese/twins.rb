@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2019 Takashi SUGA
+  Copyright (C) 2011-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -108,6 +108,21 @@ module When
     _chinese_revision ={
       'lunation_shift'           => 20.2050,           # 閏應(暦元前経朔から暦元天正冬至までの日数)
       'anomalistic_month_shift'  => 13.0205            # 転應(暦元前近/遠地点通過から暦元天正冬至までの日数)
+    }
+
+    _chinese_uighur ={
+      'day_epoch'                => 2182717.1106,      # 暦元天正冬至のユリウス日
+      'year_epoch'               => 1264,              # 暦元の西暦年
+      'year_length'              => 365.2436,          # 暦元の冬至年 / 日
+      'lunation_length'          => 29.5306,           # 朔実(朔望月)
+      'lunation_shift'           => 12.6549,           # 閏應(暦元前経朔から暦元天正冬至までの日数)
+      'anomalistic_month_length' => 27.5546,           # 転終(近点月)
+      'anomalistic_month_shift'  => 23.2836,           # 転終應(暦元雨水前近地点通過から暦元雨水前経朔までの日数)
+      'anomaly_method'           => 'u',               # (経朔-定朔)の計算方法(u:Chinese-UIghur)
+      'lunar_unit'               =>  27.5546 / 248,    # 太陰遅速計算用招差法定数の時間の単位(限)
+      'solar_weight'             => 0,                 # (経朔-定朔)の計算で用いる実行差での太陽盈縮の重み(0:非考慮,1:考慮)
+      's'                        => [],                # 太陽盈縮計算用招差法定数
+      'm'                        => []                 # 太陰遅速計算用招差法定数
     }
 
     ChineseTwin = [{}, When::BasicTypes::M17n, ChineseSolar.twin('ChineseTwin', [
@@ -856,6 +871,18 @@ module When
               [ 2900.6066,-293]  #   28日
             ]
          }]
+        }
+       }
+      ],
+
+      [ChineseLuniSolar,
+        'name:[キタイ暦]',
+        {'formula'=>['12S', '1L'].map {|f| [
+          Ephemeris::ChineseTrueLunation, _chinese_uighur.merge({
+            'formula'                  => f,
+            'year_delta'               => 0,   # 冬至年の変化率 / (10^(-6)日/年)
+            'year_span'                => 1    # 冬至年の改訂周期 / 年
+         })]
         }
        }
       ],

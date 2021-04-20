@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2016 Takashi SUGA
+  Copyright (C) 2011-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -634,6 +634,28 @@ module When
             return next_diff if (next_diff - diff).abs < @anomaly_precision
             diff = next_diff
           end 
+        end
+
+        # 経朔 - 定朔 ( U 方式 - Chinese-Uighur)
+        def _anomaly_u(mean_lunation, year, solar_unit, mean_motion)
+
+          # 遅速差(月の中心差) / (日 / 1_0000)
+          @approx_anomalistic_month_length ||= (@anomalistic_month_length / @lunar_unit) / 9
+          l_lunar = mean_lunation - @year_length / 6 # 暦元を雨水に変更
+          l_lunar = (l_lunar + @anomalistic_month_shift - @anomalistic_month_length * 13 *
+                    (l_lunar / @year_length).floor) % @approx_anomalistic_month_length
+          sign, angle = (l_lunar * 9).divmod(124)
+          angle = angle.floor
+          lunar_anomaly = angle * (124 - angle)
+          lunar_anomaly = -lunar_anomaly unless sign == 1
+
+          # 盈縮差(太陽の中心差) / (日 / 1_0000)
+          l_solar = mean_lunation % @year_length
+          sign, angle = l_solar.floor.divmod(182)
+          solar_anomaly = (angle * (182 - angle) * 2.0 / 9).floor
+          solar_anomaly = -solar_anomaly unless sign == 1
+
+          (solar_anomaly + lunar_anomaly)/10000.0 - 0.25
         end
 
         # 中心差およびその時間微分
