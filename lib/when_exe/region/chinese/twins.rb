@@ -876,7 +876,7 @@ module When
       ],
 
       [ChineseLuniSolar,
-        'name:[キタイ暦]',
+        'name:[キタイ暦=https://www2.nao.ac.jp/~mitsurusoma/gendai5/26_suga.pdf]',
         {'formula'=>['12S', '1L'].map {|f| [
           Ephemeris::ChineseTrueLunation, _chinese_uighur.merge({
             'formula'                  => f,
