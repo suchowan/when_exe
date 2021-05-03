@@ -655,7 +655,7 @@ module When
           solar_anomaly = (angle * (182 - angle) * 2.0 / 9).floor
           solar_anomaly = -solar_anomaly unless sign == 1
 
-          (solar_anomaly + lunar_anomaly)/10000.0 - 0.25
+          (solar_anomaly + lunar_anomaly) / 10000.0
         end
 
         # 中心差およびその時間微分
@@ -685,8 +685,8 @@ module When
           @anomaly_precision        = (@anomaly_precision || 1.0E-5).to_f # c 方式 での収束判定誤差 / 日
           @solar_weight             = (@solar_weight      || 0     ).to_i # (経朔-定朔)の計算で用いる実行差での太陽盈縮の重み(0:非考慮,1:考慮)
           @lunar_unit               =  @lunar_unit.to_f                   # 太陰遅速計算用招差法定数の時間の単位(限)
-          @m                        =  _rissei_j(@m)                      # 太陰遅速計算用招差法定数
-          @s                        =  _rissei_j(@s)                      # 太陽盈縮計算用招差法定数
+          @m                        =  _rissei_j(@m) if @m                # 太陰遅速計算用招差法定数
+          @s                        =  _rissei_j(@s) if @s                # 太陽盈縮計算用招差法定数
         end
 
         # 招差法用の表の生成

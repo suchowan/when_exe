@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2013-2014 Takashi SUGA
+  Copyright (C) 2013-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -35,22 +35,22 @@ module When
     # #- は『韓國年暦大典』(1987年版)の中国-朝鮮差分が取り消されたもの
     # #! は全勇勳「朝鮮における時憲曆の受容過程とその思想的背景」で言及された年(最終的には差分でない)
 
-  Korean = PatternTableBasedLuniSolar.join([
-    PatternTableBasedLuniSolar,
-    {
-      'indices'=>  ChineseIndices,
-      'before' => 'ChineseTwin::太初暦',
-      'after'  => 'ChineseLuniSolar?time_basis=+09',
-      'note'   => 'Chinese',
-    },
-    ['Chinese_103',  -60.. 263],             # 前漢～蜀漢(太初暦・四分暦)
-    ['Chinese0239',  264.. 444],             # 三国・南朝(景初暦)
-    ['Chinese0445',  445.. 589],             # 南朝(元嘉暦・大明暦)
-    ['Chinese0523',  590.. 946],             # 隋・唐～五代前期(大業暦～調元暦)
-    ['Chinese0956',  947..1279],             # 五代後期～南宋(調元暦～本天暦)
-    ['Chinese0939', 1280..1653],             # 元・明・南明(重修大明暦・授時暦・大統暦)
-    ['Chinese1645', 1654..1911]],            # 清(時憲暦)
-    {
+    Korean = PatternTableBasedLuniSolar.join([
+      PatternTableBasedLuniSolar,
+      {
+        'indices'=>  ChineseIndices,
+        'before' => 'ChineseTwin::太初暦',
+        'after'  => 'ChineseLuniSolar?time_basis=+09',
+        'note'   => 'Chinese',
+      },
+      ['Chinese_103',  -60.. 263],             # 前漢～蜀漢(太初暦・四分暦)
+      ['Chinese0239',  264.. 444],             # 三国・南朝(景初暦)
+      ['Chinese0445',  445.. 589],             # 南朝(元嘉暦・大明暦)
+      ['Chinese0523',  590.. 946],             # 隋・唐～五代前期(大業暦～調元暦)
+      ['Chinese0956',  947..1279],             # 五代後期～南宋(調元暦～本天暦)
+      ['Chinese0939', 1280..1653],             # 元・明・南明(重修大明暦・授時暦・大統暦)
+      ['Chinese1645', 1654..1911]],            # 清(時憲暦)
+      {
        -26 => {'aB'   => 'Ab'  },            # ベースとする中国暦日表の違い
        240 => {'Hi'   => 'hI'  },            # 四分・景初・乾象暦いずれにも不一致
 

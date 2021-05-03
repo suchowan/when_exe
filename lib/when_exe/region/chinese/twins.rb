@@ -118,11 +118,9 @@ module When
       'lunation_shift'           => 12.6549,           # 閏應(暦元前経朔から暦元天正冬至までの日数)
       'anomalistic_month_length' => 27.5546,           # 転終(近点月)
       'anomalistic_month_shift'  => 23.2836,           # 転終應(暦元雨水前近地点通過から暦元雨水前経朔までの日数)
-      'anomaly_method'           => 'u',               # (経朔-定朔)の計算方法(u:Chinese-UIghur)
+      'anomaly_method'           => 'u',               # (経朔-定朔)の計算方法(u:Chinese-Uighur)
       'lunar_unit'               =>  27.5546 / 248,    # 太陰遅速計算用招差法定数の時間の単位(限)
       'solar_weight'             => 0,                 # (経朔-定朔)の計算で用いる実行差での太陽盈縮の重み(0:非考慮,1:考慮)
-      's'                        => [],                # 太陽盈縮計算用招差法定数
-      'm'                        => []                 # 太陰遅速計算用招差法定数
     }
 
     ChineseTwin = [{}, When::BasicTypes::M17n, ChineseSolar.twin('ChineseTwin', [
@@ -877,6 +875,7 @@ module When
 
       [ChineseLuniSolar,
         'name:[キタイ暦=https://www2.nao.ac.jp/~mitsurusoma/gendai5/26_suga.pdf]',
+        'time_basis:+00,+#{P:06}',
         {'formula'=>['12S', '1L'].map {|f| [
           Ephemeris::ChineseTrueLunation, _chinese_uighur.merge({
             'formula'                  => f,
