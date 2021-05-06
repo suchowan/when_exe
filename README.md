@@ -3,7 +3,7 @@ when_exe - A multicultural and multilingualized calendar library
 
 [![Gem Version](https://badge.fury.io/rb/when_exe.svg)](http://badge.fury.io/rb/when_exe)
 
-[when_exe](http://rubygems.org/gems/when_exe) is a multicultural and multilingualized calendar library based on [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601), [ISO 19108](http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=26013), [RFC 5545(iCalendar)](http://tools.ietf.org/html/rfc5545) and [RFC6350](http://tools.ietf.org/html/rfc6350). [JSON-LD](http://www.w3.org/TR/json-ld/) formats for TemporalPosition and TemporalReferenceSystem are available.
+[when_exe](http://rubygems.org/gems/when_exe) is a multicultural and multilingualized calendar library based on [ISO 8601:2004](https://en.wikipedia.org/wiki/ISO_8601), [ISO 19108](http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=26013), [RFC 5545(iCalendar)](http://tools.ietf.org/html/rfc5545) and [RFC6350](http://tools.ietf.org/html/rfc6350). [JSON-LD](http://www.w3.org/TR/json-ld/) formats for TemporalPosition and TemporalReferenceSystem are available.
 
 [<img alt='Architecture' title='display this figure at actual size' src='https://raw.githubusercontent.com/suchowan/when_exe/f7bb8b51259f0c1653c6c37b3ce20bd2a6ab7914/architecture.png' width='637' height='408'/>](https://raw.githubusercontent.com/suchowan/when_exe/f7bb8b51259f0c1653c6c37b3ce20bd2a6ab7914/architecture.png)
 
@@ -44,9 +44,9 @@ For further detail, please refer to the [when_exe Wiki](http://www2u.biglobe.ne.
 License
 -------
 
-This beta version's license is limited. Please see [LICENSE.txt](https://github.com/suchowan/when_exe/blob/master/LICENSE.txt) for details.
+This beta version's license is the MIT license. Please see [LICENSE.txt](https://github.com/suchowan/when_exe/blob/master/LICENSE.txt).
 
-Data sets [TemporalPositionDataSet](http://hosi.org/tp.rdf) and [TemporalReferenceSystemDataSet](http://hosi.org/When.rdf) should be used according to [CC-BY-ND](http://creativecommons.org/licenses/by-nd/4.0/) license.
+Data sets [TemporalPositionDataSet](http://hosi.org/tp.rdf) and [TemporalReferenceSystemDataSet](http://hosi.org/When.rdf) should be used according to [CC-BY](http://creativecommons.org/licenses/by/4.0/) license.
 
 
 Source Code
@@ -142,34 +142,18 @@ Example Usage
     #  retrieve JSON, JSON-LD, Turtle response from http://hosi.org:3000 (when_exe demonstration web server)
     # (Notation3, RDF/XML, N-Triples and XML formats are also available.)
     require 'open-uri'
-    open('http://hosi.org:3000/Date/2014-04-20.json') do |json|
+    URI.open('http://hosi.org:3000/Date/2014-04-20.json') do |json|
       puts json.read #=> newlines and blanks are inserted for readability.
        # {"frame"    : "http://hosi.org/When/CalendarTypes/Gregorian",
        #  "precision": 0,
        #  "location" : "http://hosi.org/When/Coordinates/Spatial?long=139.4441E&lat=35.3916N&alt=0.0",
        #  "sdn"      : 2456768,
        #  "calendar" : ["http://hosi.org/When/CalendarTypes/Gregorian"],
-       #  "notes"    : [[{"note":"Month","value":"April"}],
-       #                [{"note":"Week","value":"Sunday(6)"}]],
-       #  "clock"    : "Asia/Tokyo+09:00",
-       #  "clk_time" : [2456768,0,0,0],
-       #  "dynamical": 1397919667.184082,
-       #  "universal": 1397919600.0,
+       # <..snip..>
        #  "cal_date" : [2014,4,20]}
     end
     
-    open('http://hosi.org/tp/2014-04-20.json') do |json| # redirected from http://hosi.org to http://hosi.org:3000
-      puts json.read #=> newlines and blanks are inserted for readability.
-       # {"frame"    : "http://hosi.org/When/CalendarTypes/Gregorian",
-       #  "precision": 0,
-       #  "sdn"      : 2456768,
-       #  "calendar" : ["http://hosi.org/When/CalendarTypes/Gregorian"],
-       #  "notes"    : [[{"note":"Month","value":"April"}],
-       #               [{"note":"Week","value":"Sunday(6)"}]],
-       #  "cal_date" : [2014,4,20]}
-    end
-    
-    open('http://hosi.org/tp/2014-04-20.jsonld') do |jsonld| # redirected from http://hosi.org to http://hosi.org:3000
+    URI.open('http://hosi.org/tp/2014-04-20.jsonld') do |jsonld| # redirected from http://hosi.org to http://hosi.org:3000
       puts jsonld.read #=> newlines and blanks are inserted for readability.
        # {"@context":
        #    {"xsd" :"http://www.w3.org/2001/XMLSchema",
@@ -196,7 +180,7 @@ Example Usage
        # }
     end
     
-    open('http://hosi.org/tp/2014-04-20.ttl') do |ttl| # redirected from http://hosi.org to http://hosi.org:3000
+    URI.open('http://hosi.org/tp/2014-04-20.ttl') do |ttl| # redirected from http://hosi.org to http://hosi.org:3000
       puts ttl.read
        # @prefix Week: <http://hosi.org/When/Coordinates/Common::Week::> .
        # @prefix day: <http://hosi.org/When/CalendarNote/Christian/Notes::day::> .
@@ -216,7 +200,7 @@ Example Usage
        #    ts:sdn 2456768 .
     end
     
-    open('http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge.ttl') do |ttl| # redirected from http://hosi.org to http://hosi.org:3000
+    URI.open('http://hosi.org/When/TM/OrdinalReferenceSystem/GeologicalAge.ttl') do |ttl| # redirected from http://hosi.org to http://hosi.org:3000
       puts ttl.read
        # @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
        # @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -296,42 +280,3 @@ Example Usage
     p When.when?('TZID=America/New_York:1997-10-26T02:30') #=> 1997-10-26T02:30-05:00
     p When.when?('TZID=America/New_York:1997-10-26T03:30') #=> 1997-10-26T03:30-05:00
     
-    #
-    # Google Calendar ------------------------------
-    #  https://rubygems.org/gems/google-api-client is required for this section's operations.
-    #  Please install google-api-client and add authorization file 'google-api.yaml' before operation.
-    
-    require 'google/api_client'
-    require 'yaml'
-    oauth_yaml = YAML.load_file('google-api.yaml')
-    client = Google::APIClient.new(:application_name => 'when_exe',
-                                   :application_version => When::VERSION)
-    client.authorization.client_id = oauth_yaml['client_id']
-    client.authorization.client_secret = oauth_yaml['client_secret']
-    client.authorization.scope = oauth_yaml['scope']
-    client.authorization.refresh_token = oauth_yaml['refresh_token']
-    client.authorization.access_token = oauth_yaml['access_token']
-    service = client.discovered_api('calendar', 'v3')
-    calendar = When::GoogleAPI::Calendar.list(client, service,
-                     'en.japanese#holiday@group.v.calendar.google.com')
-    calendar.enum_for(When.when?('20150101/1231')).each do |date|
-      p [date, date.events[0].summary] #=>
-    # [2015-01-01, "New Year's Day"]
-    # [2015-01-12, "Coming of Age Day"]
-    # [2015-02-11, "National Foundation Day"]
-    # [2015-03-21, "Spring Equinox"]
-    # [2015-04-29, "Shōwa Day"]
-    # [2015-05-03, "Constitution Memorial Day"]
-    # [2015-05-04, "Greenery Day"]
-    # [2015-05-05, "Children's Day"]
-    # [2015-05-06, "Constitution Memorial Day observed"]
-    # [2015-07-20, "Sea Day"]
-    # [2015-09-21, "Respect for the Aged Day"]
-    # [2015-09-22, "Bridge Public holiday"]
-    # [2015-09-23, "Autumn Equinox"]
-    # [2015-10-12, "Sports Day"]
-    # [2015-11-03, "Culture Day"]
-    # [2015-11-23, "Labor Thanksgiving Day"]
-    # [2015-12-23, "Emperor's Birthday"]
-    end
-
