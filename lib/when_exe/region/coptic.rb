@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -18,7 +18,7 @@ module When
       "[Ptolemaic=en:Ptolemaic_dynasty,  プトレマイオス朝,                   托勒密王朝   ]",
 
       # Remarks
-      '[based on Chris Bennett "Egyptian Dates" (Retrieved 2014-06-29)=http://www.tyndalehouse.com/Egypt/ptolemies/chron/egyptian/chron_eg_intro.htm,' +
+      '[based on Chris Bennett "Egyptian Dates" (Retrieved 2014-06-29)=http://web.archive.org/web/20170703103134/http%3a//www.tyndalehouse.com/Egypt/ptolemies/chron/egyptian/chron_eg_intro.htm,' +
        '典拠 - Chris Bennett "Egyptian Dates" (2014-06-29 閲覧)=]',
 
       [self,
@@ -90,7 +90,7 @@ module When
     }]
 
     #
-    # Egyptian Calendar based on Chris Bennett, http://www.tyndalehouse.com/Egypt/ptolemies/chron/babylonian/chron_bab_intro_fr.htm
+    # Egyptian Calendar based on Chris Bennett, http://web.archive.org/web/20180915004521/http://www.tyndalehouse.com/egypt/ptolemies/chron/babylonian/chron_bab_intro_fr.htm
     #
     Ptolemaic =  [CyclicTableBased, {
       'label'         => 'Coptic::Ptolemaic',

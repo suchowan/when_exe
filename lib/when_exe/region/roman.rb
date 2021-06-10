@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -14,7 +14,7 @@ module When
       "names:[Roman=en:Roman_calendar, ローマ暦, 羅馬曆]",
 
       # Remarks
-      '[based on Chris Bennett "Roman Dates" (Retrieved 2013-05-13)=http://www.tyndalehouse.com/Egypt/ptolemies/chron/roman/chron_rom_intro_fr.htm,' +
+      '[based on Chris Bennett "Roman Dates" (Retrieved 2013-05-13)=http://web.archive.org/web/20181012124137/http%3a//www.tyndalehouse.com/egypt/ptolemies/chron/roman/chron_rom_intro_fr.htm,' +
        '典拠 - Chris Bennett "Roman Dates" (2013-05-13 閲覧)=]',
 
       [self, # ..CE-44 / ..BCE45
@@ -106,7 +106,7 @@ module When
                 "8-01-01^JulianC", "476-09-04"]
     ]]
 
-    # From Chris Bennett, http://www.tyndalehouse.com/Egypt/ptolemies/chron/roman/chron_rom_intro_fr.htm
+    # From Chris Bennett, http://web.archive.org/web/20181012124137/http://www.tyndalehouse.com/egypt/ptolemies/chron/roman/chron_rom_intro_fr.htm
     Roman = [self, [
       "locale:[=en:, ja=ja:, zh=zh:, alias]",
       "period:[Roman=en:Roman_calendar, ローマ暦, 羅馬曆]",
@@ -166,7 +166,7 @@ module When
       'note'    => 'Roman'
     }]
 
-    # From Chris Bennett, http://www.tyndalehouse.com/Egypt/ptolemies/chron/roman/chron_rom_intro_fr.htm
+    # From Chris Bennett, http://web.archive.org/web/20181012124137/http://www.tyndalehouse.com/egypt/ptolemies/chron/roman/chron_rom_intro_fr.htm
     #
     # Roman Calendar BCE262-(CE60)-CE480
     #

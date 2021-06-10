@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2014-2015 Takashi SUGA
+  Copyright (C) 2014-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -68,7 +68,7 @@ module When
     #
     #  Ancient Orient Dates
     #
-    # From Chris Bennett, http://www.tyndalehouse.com/Egypt/ptolemies/chron/babylonian/chron_bab_intro_fr.htm
+    # From Chris Bennett, http://web.archive.org/web/20180915004521/http://www.tyndalehouse.com/egypt/ptolemies/chron/babylonian/chron_bab_intro_fr.htm
     #
 
     # Chris Bennett -330..-29
