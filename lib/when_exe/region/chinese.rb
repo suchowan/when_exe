@@ -470,10 +470,17 @@ module When
           def _shift_s(year); year-1 end
         end
 
-        # 寛政暦?
+        # 寛政暦
         module D
-          def _shift_l(year); 5 + year.div(10) * 10 end
+          def _shift_l(year); year.div(10) * 10 end
           alias :_shift_s :_shift_l
+
+          def _winter_solstice_(year)
+            decade, year_in_decade = year.divmod(10)
+            decade_floor = 10 *  decade      * (@year_length - (decade - 1) * 10 * @year_delta)
+            decade_ceil  = 10 * (decade + 1) * (@year_length -  decade      * 10 * @year_delta)
+            decade_floor + (decade_ceil - decade_floor) * year_in_decade / 10
+          end
         end
 
         # 暦元天正冬至から当該年の天正冬至までの日数
@@ -775,7 +782,7 @@ module When
         if self.kind_of?(JujiMethods)
           case @year_span
           when 0,1; extend JujiMethods::Y
-        # when 10 ; extend JujiMethods::D
+          when 10 ; extend JujiMethods::D
           else    ; extend JujiMethods::C
           end
         end
