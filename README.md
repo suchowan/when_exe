@@ -3,7 +3,7 @@ when_exe - A multicultural and multilingualized calendar library
 
 [![Gem Version](https://badge.fury.io/rb/when_exe.svg)](http://badge.fury.io/rb/when_exe)
 
-[when_exe](http://rubygems.org/gems/when_exe) is a multicultural and multilingualized calendar library based on [ISO 8601:2004](https://en.wikipedia.org/wiki/ISO_8601), [ISO 19108](http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=26013), [RFC 5545(iCalendar)](http://tools.ietf.org/html/rfc5545) and [RFC6350](http://tools.ietf.org/html/rfc6350). [JSON-LD](http://www.w3.org/TR/json-ld/) formats for TemporalPosition and TemporalReferenceSystem are available.
+[when_exe](https://rubygems.org/gems/when_exe) is a multicultural and multilingualized calendar library based on [ISO 8601:2004](https://en.wikipedia.org/wiki/ISO_8601), [ISO 19108](http://www.iso.org/iso/home/store/catalogue_tc/catalogue_detail.htm?csnumber=26013), [RFC 5545(iCalendar)](http://tools.ietf.org/html/rfc5545) and [RFC6350](http://tools.ietf.org/html/rfc6350). [JSON-LD](http://www.w3.org/TR/json-ld/) formats for TemporalPosition and TemporalReferenceSystem are available.
 
 [<img alt='Architecture' title='display this figure at actual size' src='https://raw.githubusercontent.com/suchowan/when_exe/f7bb8b51259f0c1653c6c37b3ce20bd2a6ab7914/architecture.png' width='637' height='408'/>](https://raw.githubusercontent.com/suchowan/when_exe/f7bb8b51259f0c1653c6c37b3ce20bd2a6ab7914/architecture.png)
 
@@ -18,7 +18,7 @@ The when_exe gem can be installed by running:
 Web Server
 ----------
 
-Web server for when_exe demonstration is available on [hosi.org](http://hosi.org) ( or mirror site [hosi-org.herokuapp.com](http://hosi-org.herokuapp.com) ).
+The Web server for when_exe demonstration is available on [hosi.org](http://hosi.org).
 
 You can see examples of [When.exe Standard Representation](http://www.asahi-net.or.jp/~dd6t-sg/when_rdoc/when_en.html#label-8) and Reference System IRI at the top-left corner of Date frame.
 
@@ -30,11 +30,11 @@ SPARQL endpoint is [hosi.org/japan/sparql](http://hosi.org/japan/sparql).
 Documentation
 -------------
 
-API documentation for when_exe is available on [RubyDoc.info](http://rubydoc.info/gems/when_exe) or [here](http://www2u.biglobe.ne.jp/~suchowan/when_exe/frames.html).
+API documentation for when_exe is available on [RubyDoc.info](https://rubydoc.info/gems/when_exe) or [here](http://www2u.biglobe.ne.jp/~suchowan/when_exe/frames.html).
 
-Available calendars and clocks are defined as subclasses of TM_Calendar and TM_Clock or using definition tables in [CalendarTypes namespace](http://rubydoc.info/gems/when_exe/When/CalendarTypes).
+Available calendars and clocks are defined as subclasses of TM_Calendar and TM_Clock or using definition tables in [CalendarTypes namespace](https://rubydoc.info/gems/when_exe/When/CalendarTypes).
 
-Available calendar eras are defined using definition tables in [CalendarEra namespace](http://rubydoc.info/gems/when_exe/When/TM/CalendarEra).
+Available calendar eras are defined using definition tables in [CalendarEra namespace](https://rubydoc.info/gems/when_exe/When/TM/CalendarEra).
 
 Whole TemporalReferenceSystem resources are listed in the [Resource Dictionary](http://www2u.biglobe.ne.jp/~suchowan/ResourceDictionary.html).
 

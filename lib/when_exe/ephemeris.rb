@@ -1303,6 +1303,8 @@ module When::Ephemeris
     #  [ 負 - 見えない ]
     #
     # @note 満月に近い場合は考慮されていません。主に新月の初見の確認に用います。
+    #       Dr. Mohammad Ilyas“A Modern Guide to Astronomical Calculations of Islamic Calendar, Times & Qibla”(1984) p.99
+    #       see {https://suchowan.at.webry.info/201303/article_10.html 2013-03-10 EphemerisBasedIslamic}
     #
     def moon_visibility(t)
       sun  = When.Resource('_ep:Sun')
