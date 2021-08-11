@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2014 Takashi SUGA
+  Copyright (C) 2011-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -13,7 +13,7 @@ class When::TM::CalendarEra
   NihonKoki = [self, [
     "locale:[=ja:, en=en:, alias]",
     "area:[日本]",
-    ["[皇紀=ja:%%<神武天皇即位紀元>]1",		"@A",	"-659-01-01^JapaneseTwin::平朔儀鳳暦"],
+    ["[皇紀=ja:%%<神武天皇即位紀元>]0",		"@A",	"-660-01-01^JapaneseTwin::平朔儀鳳暦"],
     ["[皇紀=ja:%%<神武天皇即位紀元>]1114",	"@CR",	"0454-01-01^Japanese"],
     ["[皇紀=ja:%%<神武天皇即位紀元>]2533",	"@CR",	"1873-01-01^Gregorian"]
   ]]
@@ -24,7 +24,7 @@ class When::TM::CalendarEra
   NihonShoki = [self, [
     "locale:[=ja:, en=en:, alias]",
     "period:[日本(日本書紀)=ja:%%<日本書紀>, (Nihon_Shoki)=en:Nihon_Shoki]",
-    ["[<神武>=ja:%%<神武天皇>]1",	"@A",	"name=[神武=ja:%%<神武天皇>];-659-01-01^JapaneseTwin::平朔儀鳳暦"],
+    ["[<神武>=ja:%%<神武天皇>]0",	"@A",	"name=[神武=ja:%%<神武天皇>];-660-01-01^JapaneseTwin::平朔儀鳳暦"],
     ["[<綏靖>=ja:%%<綏靖天皇>]1",	"@A",	"name=[綏靖=ja:%%<綏靖天皇>];-580-01-08"],
     ["[<安寧>=ja:%%<安寧天皇>]0",	"@A",	"name=[安寧=ja:%%<安寧天皇>];-548-07-03"],
     ["[<懿徳>=ja:%%<懿徳天皇>]1",	"@A",	"name=[懿徳=ja:%%<懿徳天皇>];-509-02-04"],
