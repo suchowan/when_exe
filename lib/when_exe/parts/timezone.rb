@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2020 Takashi SUGA
+  Copyright (C) 2011-2021 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -16,7 +16,7 @@ module When::Parts
   class Timezone
 
     #
-    # When::TM::Clock, When::V::Timezone と Qhwn::Parts::Timezone の抽象基底
+    # When::TM::Clock, When::V::Timezone と When::Parts::Timezone の抽象基底
     # 
     module Base
       # 標準時間帯の時計
