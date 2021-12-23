@@ -393,12 +393,11 @@ module When
         object = When::BasicTypes::M17n.new(word)
 
         # location
-        if contents =~ /tools\.wmflabs\.org\/geohack\/geohack\.php\?.+?params=(.+?[NS])_(.+?[EW])/
+        if contents =~ /<span class="latitude">((\d+)°(\d+)′((\d+)″)?)([NS])<\/span>\s*?<span class="longitude">((\d+)°(\d+)′((\d+)″)?)([EW])<\/span>/
           location = {
-            :label => object
-          }
-          location[:lat], location[:long] = $~[1..2].map {|pos|
-            pos.gsub(/_(\d)[._]/, '_0\1_').sub('.', '_').sub('_', '.').gsub('_', '')
+            :label => object,
+            :lat  => "%d.%02d%02d%s" % [$~[2].to_i, $~[3].to_i, $~[ 5].to_i, $~[ 6]],
+            :long => "%d.%02d%02d%s" % [$~[8].to_i, $~[9].to_i, $~[11].to_i, $~[12]]
           }
           object = When::Coordinates::Spatial.new(location)
         end
