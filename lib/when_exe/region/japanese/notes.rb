@@ -1284,16 +1284,11 @@ class When::CalendarNote
 
       2451110 => [210.0, 1], # 平成10(1998).10.23 [209.0, 0] 没
       2451111 => [211.0, 0], # 平成10(1998).10.24 [210.0, 1] 霜降 (計算誤差の補正)
-
-      2459950 => [284.0, 0], # 令和05(2023).01.05 [285.0, 1] 小寒 (計算誤差の補正)
-      2459951 => [285.0, 1], # 令和05(2023).01.06 [285.0, 0] 没
-
-      2460651 => [254.0, 0], # 令和06(2024).12.06 [255.0, 1] 大雪 (計算誤差の補正)
-      2460652 => [255.0, 1], # 令和06(2024).12.07 [255.0, 0] 没
-
-      2461031 => [269.0, 0], # 令和07(2025).12.21 [270.0, 1] 冬至 (計算誤差の補正)
-      2461032 => [270.0, 1]  # 令和07(2025).12.22 [270.0, 0] 没
     }
+
+    # 七十二候と土用入りの太陽黄経
+    # @private
+    LNotes = ((0...72).to_a.map {|t| 5 * t} + (0...4).to_a.map {|q| 90 * q + 27}).sort
 
     class << self
       # テスト用の属性
@@ -1306,10 +1301,15 @@ class When::CalendarNote
         date  = When.when?(dates.o_date.to_cal_date.to_s,
                   {:frame=>dates.o_date.frame,
                    :clock=>dates.s_date.frame._time_basis[0]})
+        date_without_era = date.without_era
         patch = (@patch || Patch)[date.to_i] unless dates.o_date.frame.respond_to?(:twin) &&
                                                     dates.o_date.frame.twin
-        date_without_era = date.without_era
-        longitude, motsu = patch ? patch : dates.cal4note.s_terms.position(date)
+        if patch
+          longitude, motsu = patch
+        else
+          longitude, motsu = dates.cal4note.s_terms.position(date)
+          longitude -=  1 if dates.year >= 1844 && motsu == 2 && LNotes.include?(longitude - 1)
+        end
 
         # 三伏 - 庚
         #
