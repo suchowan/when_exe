@@ -19,13 +19,13 @@ server:1 ts:dbpedia dbpedia:Public_holidays_in_Japan,
 
 server:10 ts:dbpedia dbpedia:Public_holidays_in_Japan,
      dbpedia_ja:振替休日;
-   ts:start 2441684;
+   ts:start 2442049;
    ts:until 2451544;
    dc:source wikipedia:Public_holidays_in_Japan,
      wikipedia_ja:%E6%8C%AF%E6%9B%BF%E4%BC%91%E6%97%A5;
    dcq:abstract "Substitute holiday",
      "振替休日"@ja;
-   dcq:valid "R/1973-01-{16&MO}...2000" .
+   dcq:valid "R/1974-01-{16&MO}...2000" .
 
 server:11 ts:dbpedia dbpedia:National_Foundation_Day,
      dbpedia_ja:紀元節;
@@ -69,13 +69,13 @@ server:14 ts:dbpedia dbpedia:National_Foundation_Day,
 
 server:15 ts:dbpedia dbpedia:Public_holidays_in_Japan,
      dbpedia_ja:振替休日;
-   ts:start 2441715;
+   ts:start 2442080;
    ts:until 2488069;
    dc:source wikipedia:Public_holidays_in_Japan,
      wikipedia_ja:%E6%8C%AF%E6%9B%BF%E4%BC%91%E6%97%A5;
    dcq:abstract "Substitute holiday",
      "振替休日"@ja;
-   dcq:valid "R/1973-02-{12&MO}...2100" .
+   dcq:valid "R/1974-02-{12&MO}...2100" .
 
 server:16 ts:dbpedia dbpedia:Public_holidays_in_Japan,
      dbpedia_ja:天皇誕生日;
@@ -149,13 +149,13 @@ server:21 ts:dbpedia dbpedia:Vernal_Equinox_Day,
 
 server:22 ts:dbpedia dbpedia:Public_holidays_in_Japan,
      dbpedia_ja:振替休日;
-   ts:start 2441743;
+   ts:start 2442108;
    ts:until 2488069;
    dc:source wikipedia:Public_holidays_in_Japan,
      wikipedia_ja:%E6%8C%AF%E6%9B%BF%E4%BC%91%E6%97%A5;
    dcq:abstract "Substitute holiday",
      "振替休日"@ja;
-   dcq:valid "R/1973-03-1{SolarTerms#term0+1&MO}T00+09:00...2100" .
+   dcq:valid "R/1974-03-1{SolarTerms#term0+1&MO}T00+09:00...2100" .
 
 server:23 ts:dbpedia dbpedia:Public_holidays_in_Japan,
      dbpedia_ja:神武天皇祭;
@@ -339,13 +339,13 @@ server:39 ts:dbpedia dbpedia:Public_holidays_in_Japan,
 
 server:4 ts:dbpedia dbpedia:Public_holidays_in_Japan,
      dbpedia_ja:振替休日;
-   ts:start 2441684;
+   ts:start 2442049;
    ts:until 2488069;
    dc:source wikipedia:Public_holidays_in_Japan,
      wikipedia_ja:%E6%8C%AF%E6%9B%BF%E4%BC%91%E6%97%A5;
    dcq:abstract "Substitute holiday",
      "振替休日"@ja;
-   dcq:valid "R/1973-01-{2&MO}...2100" .
+   dcq:valid "R/1974-01-{2&MO}...2100" .
 
 server:40 ts:dbpedia dbpedia:Public_holidays_in_Japan,
      dbpedia_ja:振替休日;
