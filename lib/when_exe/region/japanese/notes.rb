@@ -895,7 +895,7 @@ class When::CalendarNote
 
         # 「振替休日」制定以前
         note = _note(list, y, m, d)
-        return note if note || y < 1973
+        return note if note || y < 1973 || (y == 1973 && m < 4)
 
         # 「振替休日」制定以降
         case date.to_i % 7
