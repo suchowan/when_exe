@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2021 Takashi SUGA
+  Copyright (C) 2011-2022 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -972,6 +972,14 @@ module When::Coordinates
     attr_reader :sum
 
     #
+    # Hash の key
+    #  内容が同一であれば同一値を返す
+    #
+    # @return [Integer]
+    #
+    attr_reader :hash
+
+    #
     # trunk の更新
     #
     # @param [Numeric] trunk 新しい trunk
@@ -1145,6 +1153,7 @@ module When::Coordinates
         @branch = @branch.to_i if (@branch.to_i == @branch.to_f)
         @sum   += @branch      if (@trunk)
       end
+      @hash = [self.class, @trunk, @branch].hash
     end
   end
 
