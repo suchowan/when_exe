@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2014-2015 Takashi SUGA
+  Copyright (C) 2014-2022 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -11,7 +11,7 @@ module When
 
     VanishingLeprechaun = [self, [
       "locale:[=en:, ja]",
-      "names:[VanishingLeprechaun=http://suchowan.at.webry.info/201110/article_12.html, 消える小妖精=]"
+      "names:[VanishingLeprechaun=https://suchowan.seesaa.net/article/201110article_12.html, 消える小妖精=]"
     ]]
   end
 

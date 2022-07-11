@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2021 Takashi SUGA
+  Copyright (C) 2011-2022 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -1304,7 +1304,7 @@ module When::Ephemeris
     #
     # @note 満月に近い場合は考慮されていません。主に新月の初見の確認に用います。
     #       Dr. Mohammad Ilyas“A Modern Guide to Astronomical Calculations of Islamic Calendar, Times & Qibla”(1984) p.99
-    #       see {https://suchowan.at.webry.info/201303/article_10.html 2013-03-10 EphemerisBasedIslamic}
+    #       see {https://suchowan.seesaa.net/article/201303article_10.html 2013-03-10 EphemerisBasedIslamic}
     #
     def moon_visibility(t)
       sun  = When.Resource('_ep:Sun')

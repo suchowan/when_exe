@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2019 Takashi SUGA
+  Copyright (C) 2011-2022 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -15,7 +15,7 @@ module When
 
       # Remarks
       "[典拠 - 科研22520700=," +
-      "*based on Research Project 22520700=http://suchowan.at.webry.info/201401/article_25.html]",
+      "*based on Research Project 22520700=https://suchowan.seesaa.net/article/201401article_25.html]",
 
       [self,
         "names:[月の名前=ja:%%<月_(暦)>, month name=en:Month, zh:該月的名稱=, *alias:Month]",
