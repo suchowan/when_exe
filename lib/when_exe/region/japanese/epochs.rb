@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2021 Takashi SUGA
+  Copyright (C) 2011-2022 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -424,7 +424,8 @@ module When
       ["[野田佳彦]1.09.02",				"@A", "2011-09-02"],
       ["[安倍晋三･再=ja:%%<安倍晋三>]1.12.26",		"@A", "2012-12-26",
         "name=[今上天皇=ja:%%<徳仁>,Emperor_Kinjō=en:Naruhito];2019-05-01", ""],
-      ["[菅義偉]1.09.16",				"@A", "2020-09-16"]
+      ["[菅義偉]1.09.16",				"@A", "2020-09-16"],
+      ["[岸田文雄]1.10.04",				"@A", "2021-10-04"]
     ]]
   end
 end
