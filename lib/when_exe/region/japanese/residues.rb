@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2012-2016 Takashi SUGA
+  Copyright (C) 2012-2023 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -84,7 +84,7 @@ module When::Coordinates
 
         bases = [+450,+270,+90,-90,-270,-450].map { |deg|
           prev   = s_terms.term(date, [deg,180])              # 直後および直前の冬至または夏至
-          sign   = s_terms.position(prev)[0] == 270 ? -1 : +1 # 陽遁か?(冬至:-1, 夏至:+1)
+          sign   = s_terms.position(prev)[0] > 180 ? -1 : +1  # 陽遁か?(冬至:-1, 夏至:+1)
           base   = prev.to_i                                  # 当該の冬至または夏至のユリウス日
           kanshi = (base + 17) % 60 - 28                      # 最も近い甲子との日数差
           base  -= kanshi                                     # 当該陰陽遁の始めの甲子
