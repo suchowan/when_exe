@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2013-2021 Takashi SUGA
+  Copyright (C) 2013-2023 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -201,7 +201,7 @@ module When
 	["[<三斤王>]1",				"@A",	"name=[三斤王];477"],					# 朝鮮史では末年に？
 	["[<東城王>]1",				"@A",	"name=[東城王];479"],
 	["[<武寧王>]1",				"@A",	"name=[武寧王];501"],
-	["[<聖王>=ja:%%<聖王_(百済)>]1",	"@A",	   "name=[聖王=ja:%%<聖王_(百済)];523.05.07"],		# 武寧王墓誌による
+	["[<聖王>=ja:%%<聖王_(百済)>]1",	"@A",	   "name=[聖王=ja:%%<聖王_(百済)>];523.05.07"],		# 武寧王墓誌による
 	["[<威徳王>=ja:%%<威徳王_(百済)>]1",	"@A", "name=[威徳王=ja:%%<威徳王_(百済)>];554"],
 	["[<恵王>=ja:%%<恵王_(百済)>]1",	"@A",	  "name=[恵王=ja:%%<恵王_(百済)>];598"],
 	["[<法王>=ja:%%<法王_(百済)>]1",	"@A",	  "name=[法王=ja:%%<法王_(百済)>];599"],
