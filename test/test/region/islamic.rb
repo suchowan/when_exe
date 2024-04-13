@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2017 Takashi SUGA
+  Copyright (C) 2011-2024 Takashi SUGA
 
   You may use and/or modify this file according to the license
   described in the LICENSE.txt file included in this archive.
@@ -55,6 +55,18 @@ module MiniTest
         399.times do
           date += When::P1Y
           assert_equal([1,1], (When::UmmalquraSolar ^ date).cal_date[-2..-1])
+        end
+      end
+
+      def test_ummalqura_lunar
+        lc = When.Calendar("EphemerisBasedLunar?time_basis=+24:00")
+        uc = When.Calendar("UmmalquraLunar?time_basis=+00:00")
+
+        date = When.when?('1435-1-1', :frame=>lc)
+
+        400.times do
+          assert_equal(date.to_s, (uc ^ date).to_s)
+          date += When::P1M
         end
       end
 

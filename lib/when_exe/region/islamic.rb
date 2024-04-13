@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2015 Takashi SUGA
+  Copyright (C) 2011-2024 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -13,6 +13,7 @@ module When
       "names:[Islamic=en:Islamic_calendar, イスラーム暦=ja:%%<ヒジュラ暦>, 伊斯蘭曆]",
       "[TabularIslamic=en:Islamic_calendar, イスラーム暦(30年周期)=ja:%%<ヒジュラ暦>, 伊斯蘭曆]",
       "[EphemerisBasedIslamic=en:Islamic_calendar, イスラーム暦=ja:%%<ヒジュラ暦>, 伊斯蘭曆]",
+      "[UmmalquraLunar=https://webspace.science.uu.nl/~gent0113/islam/ummalqura.htm, サウジアラビア太陰暦=, 沙特阿拉伯太陰曆, era:AH=]",
 
       [self,
         "names:[month name=en:Month, 月の名前=ja:%%<月_(暦)>, 該月的名稱=, *alias:Month=]",
@@ -64,7 +65,7 @@ module When
 
     # 月日の配当が新月の初見によって決定される純太陰暦
     #
-    #   Calendar based on the first visibilty of new moon
+    #   Pure lunar calendar based on the first visibilty of new moon
     #
     class EphemerisBasedIslamic < EphemerisBasedLunar
 
@@ -91,6 +92,40 @@ module When
       #
       def _normalize(args=[], options={})
         @label        ||= 'Islamic::EphemerisBasedIslamic'
+        @indices      ||= [
+          When.Index('Islamic::Month', {:unit =>12}),
+          When::Coordinates::DefaultDayIndex
+        ]
+        super
+      end
+    end
+
+    # 天文学的朔を含む日を晦日とする純太陰暦
+    #
+    #   Pure lunar calendar with the day containing the new moon as the new month's eve
+    #
+    class UmmalquraLunar < EphemerisBasedLunar
+
+      #protected
+
+      # 月初の通日
+      #
+      # @param  [Integer] m 通月
+      #
+      # @return [Integer] 月初の通日
+      #
+      def _new_month_(m)
+        return super + 1
+      end
+
+      private
+
+      # オブジェクトの正規化
+      #    @label          = 暦法名
+      #    @cycle_offset   = Goldstein Number に対する暦元の補正
+      #
+      def _normalize(args=[], options={})
+        @label        ||= 'Islamic::UmmalquraLunar'
         @indices      ||= [
           When.Index('Islamic::Month', {:unit =>12}),
           When::Coordinates::DefaultDayIndex
