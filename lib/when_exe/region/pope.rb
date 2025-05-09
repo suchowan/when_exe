@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2013-2015 Takashi SUGA
+  Copyright (C) 2013-2025 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -291,7 +291,8 @@ module When
 	["Iohannes_Paulus_I1.08.26",	"@A", "1978.08.26"], # ～1978.09.29
 	["Iohannes_Paulus_II1.10.16",	"@A", "1978.10.16"], # ～2005.04.02
 	["Benedictus_XVI1.04.19",	"@A", "2005.04.19"], # ～2013.02.28
-	["Franciscus1.03.13",		"@A", "2013.03.13"]  # 現職
+	["Franciscus1.03.13",		"@A", "2013.03.13"], # ～2025.04.21
+	["Leo_XIV1.05.08",		"@A", "2025.05.08"]  # 現職
     ]]
   end
 end
