@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2014-2015 Takashi SUGA
+  Copyright (C) 2014-2025 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -13,7 +13,8 @@ module When::Coordinates
     "names:[Russia, ロシア]",
     [Spatial, "long:37.3756E", "lat:55.4508N", "label:[Moscow,           モスクワ            ]"],
     [Spatial, "long:30.18E",   "lat:59.57N",   "label:[Saint_Petersburg, サンクトペテルブルク]"],
-    [Spatial,"long:131.55E",   "lat:43.07N",   "label:[Vladivostok,      ウラジオストク      ]"]
+    [Spatial,"long:131.55E",   "lat:43.07N",   "label:[Vladivostok,      ウラジオストク      ]"],
+    [Spatial,"long:150.48E",   "lat:59.34N",   "label:[Magadan,          マガダン            ]"]
   ]]
 end
 
