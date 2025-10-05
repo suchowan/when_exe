@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 =begin
-  Copyright (C) 2011-2021 Takashi SUGA
+  Copyright (C) 2011-2025 Takashi SUGA
 
   You may use and/or modify this file according to the license described in the LICENSE.txt file included in this archive.
 =end
@@ -874,7 +874,7 @@ module When
       ],
 
       [ChineseLuniSolar,
-        'name:[キタイ暦=https://www2.nao.ac.jp/~mitsurusoma/gendai5/26_suga.pdf]',
+        'name:[キタイ暦=https://web.archive.org/web/20191214104351/https://www2.nao.ac.jp/~mitsurusoma/gendai5/26_suga.pdf]',
         'time_basis:+00,+#{P:06}',
         {'formula'=>['12S', '1L'].map {|f| [
           Ephemeris::ChineseTrueLunation, _chinese_uighur.merge({
