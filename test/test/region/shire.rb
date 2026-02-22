@@ -6,9 +6,9 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest
+module Minitest
 
-  class Shire < MiniTest::TestCase
+  class Shire < Minitest::Test
     def test_shire
       date = When.when? '2001.1.1^^Shire?time_basis=+09:00'
       [["2001-01-01", 2451901],

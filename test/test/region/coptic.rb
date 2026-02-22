@@ -6,9 +6,9 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest
+module Minitest
 
-  class Coptic < MiniTest::TestCase
+  class Coptic < Minitest::Test
     def test__coptic
       julian    = When.Calendar('Julian')
       gregorian = When.Calendar('Gregorian')

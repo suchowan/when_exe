@@ -6,9 +6,9 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest
+module Minitest
 
-  class Swedish < MiniTest::TestCase
+  class Swedish < Minitest::Test
     def test__swedish_date
 
       dates = []

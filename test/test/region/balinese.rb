@@ -6,9 +6,9 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest
+module Minitest
 
-  class Balenese< MiniTest::TestCase
+  class Balenese< Minitest::Test
     def test_balinese_note
       note   = When::CalendarNote('Balinese')
       b_date = When::Calendar('BalineseLuniSolar2003') ^ When.when?('2012-6-19')

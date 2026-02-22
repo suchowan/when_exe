@@ -6,9 +6,9 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest
+module Minitest
 
-  class Japanese < MiniTest::TestCase
+  class Japanese < Minitest::Test
 
     include When::CalendarNote::Japanese::Index
     Masks = MD廿四節気|MD七十二候|MD六十卦|MD没|MD往亡

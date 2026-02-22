@@ -6,8 +6,8 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest::TM
-  class GeologicalAge < MiniTest::TestCase
+module Minitest::TM
+  class GeologicalAge < Minitest::Test
     def test__geological_age
       age = When.Resource('_tm:OrdinalReferenceSystem/GeologicalAge')
       assert_equal("-2500000000", age['Archean::Neoarchean'].end.to_s)

@@ -6,24 +6,24 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest::TM
+module Minitest::TM
 
 #
 # (5.3) Temporal Reference System Package
 #
 #
 
-  class ReferenceSystem < MiniTest::TestCase
+  class ReferenceSystem < Minitest::Test
     def test_nothing
     end
   end
 
-  class OrdinalReferenceSystem < MiniTest::TestCase
+  class OrdinalReferenceSystem < Minitest::Test
     def test_nothing
     end
   end
 
-  class Calendar < MiniTest::TestCase
+  class Calendar < Minitest::Test
     def test__jul_trans
       gc = When.Calendar('Gregorian')
       assert_equal("1858-11-16", (gc ^ 2400000).to_s)
@@ -38,7 +38,7 @@ module MiniTest::TM
     end
   end
 
-  class Clock < MiniTest::TestCase
+  class Clock < Minitest::Test
     def test__clock_trans
       obj1 = When.when?("20100928T234512.33-0600^^Gregorian")
       assert_equal("2010-09-29T14:45:12.33+09:00", (When.Clock("+0900") ^ obj1).to_s)
@@ -49,17 +49,17 @@ module MiniTest::TM
     end
   end
 
-  class CoordinateSystem < MiniTest::TestCase
+  class CoordinateSystem < Minitest::Test
     def test_nothing
     end
   end
 
-  class OrdinalEra < MiniTest::TestCase
+  class OrdinalEra < Minitest::Test
     def test_nothing
     end
   end
 
-  class CalendarEra < MiniTest::TestCase
+  class CalendarEra < Minitest::Test
     def test__pool
       era = When.Resource('_e:ModernJapanese')
       assert_equal([true, false, true, false],

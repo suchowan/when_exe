@@ -6,9 +6,9 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest::CalendarNote
+module Minitest::CalendarNote
 
-  class NotesContainer < MiniTest::TestCase
+  class NotesContainer < Minitest::Test
 
     def test__lunar_phases
       assert_equal([[{:note=>"月相", :value=>"朔(-233/3040)", :position=>"中段"}]],

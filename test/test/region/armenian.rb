@@ -6,9 +6,9 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest
+module Minitest
 
-  class Armenian < MiniTest::TestCase
+  class Armenian < Minitest::Test
     def test__armenian
       date = When.when?('1-1-1^^Armenian')
       assert_equal(["0001-01-01", "0552-07-11"], [date.to_s, (When::Julian ^ date).to_s])

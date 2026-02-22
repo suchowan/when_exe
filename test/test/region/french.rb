@@ -6,9 +6,9 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest
+module Minitest
 
-  class FrenchRepublican < MiniTest::TestCase
+  class FrenchRepublican < Minitest::Test
     def test__french_republican
       date = When.when? '1.1.1^^FrenchRepublican'
       [["0001-01-01", 2375840],

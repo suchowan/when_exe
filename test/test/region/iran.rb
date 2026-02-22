@@ -6,9 +6,9 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest
+module Minitest
 
-  class Iranian < MiniTest::TestCase
+  class Iranian < Minitest::Test
     def test__iranian
       date = When.when? 'AP1391.1.1'
       [["Iranian::AH1391.01.01", 2456007], # (2012)

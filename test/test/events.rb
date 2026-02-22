@@ -6,9 +6,9 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest::CalendarTypes
+module Minitest::CalendarTypes
 
-  class DataSet < MiniTest::TestCase
+  class DataSet < Minitest::Test
     if (RUBY_VERSION.split('.').map {|v| v.to_i} <=> [1,9]) >= 0
       def test__dataset
         datasets = When.Resource('events/test-history-dataset.csv')

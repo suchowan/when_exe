@@ -6,9 +6,9 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest
+module Minitest
 
-  class M17n < MiniTest::TestCase
+  class M17n < Minitest::Test
 
     First = [
       ["Calendar", "Calendar", nil],

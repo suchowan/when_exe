@@ -6,54 +6,54 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest::TM
+module Minitest::TM
 
 #
 # (5.2) Temporal Objects Package
 #
 #
 
-  class Separation < MiniTest::TestCase
+  class Separation < Minitest::Test
     def test_nothing
     end
   end
 
-  class Order < MiniTest::TestCase
+  class Order < Minitest::Test
     def test_nothing
     end
   end
 
-  class RelativePosition < MiniTest::TestCase
+  class RelativePosition < Minitest::Test
     def test_nothing
     end
   end
 
-  class Object < MiniTest::TestCase
+  class Object < Minitest::Test
     def test_nothing
     end
   end
 
-  class Complex < MiniTest::TestCase
+  class Complex < Minitest::Test
     def test_nothing
     end
   end
 
-  class TopologicalComplex < MiniTest::TestCase
+  class TopologicalComplex < Minitest::Test
     def test_nothing
     end
   end
 
-  class Primitive < MiniTest::TestCase
+  class Primitive < Minitest::Test
     def test_nothing
     end
   end
 
-  class GeometricPrimitive < MiniTest::TestCase
+  class GeometricPrimitive < Minitest::Test
     def test_nothing
     end
   end
 
-  class Instant < MiniTest::TestCase
+  class Instant < Minitest::Test
 
     include When::TM::RelativePosition
 
@@ -98,7 +98,7 @@ module MiniTest::TM
     end
   end
 
-  class Period < MiniTest::TestCase
+  class Period < Minitest::Test
 
     include When::TM::RelativePosition
 
@@ -212,22 +212,22 @@ module MiniTest::TM
     end
   end
 
-  class TopologicalPrimitive < MiniTest::TestCase
+  class TopologicalPrimitive < Minitest::Test
     def test_nothing
     end
   end
 
-  class Node < MiniTest::TestCase
+  class Node < Minitest::Test
     def test_nothing
     end
   end
 
-  class Edge < MiniTest::TestCase
+  class Edge < Minitest::Test
     def test_nothing
     end
   end
 
-  class Duration < MiniTest::TestCase
+  class Duration < Minitest::Test
     def test__duration_constructors
        assert_equal(    1,       When::TM::Duration.new(1).duration)
        assert_equal(    1.0/128, When::TM::Duration.second(1).duration)
@@ -291,7 +291,7 @@ module MiniTest::TM
     end
   end
 
-  class PeriodDuration < MiniTest::TestCase
+  class PeriodDuration < Minitest::Test
     def test__period_duration
       period = When.Duration('P2Y3M4D')
       [[-2, 2], [-1, 3], [0, 4]].each do |sample|
@@ -366,7 +366,7 @@ module MiniTest::TM
     end
   end
 
-  class IntervalLength < MiniTest::TestCase
+  class IntervalLength < Minitest::Test
     def test__interval_length
       [
        ['7E-3s',      7,  3, 10, 'second', '7E-3s'      ],

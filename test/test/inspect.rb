@@ -6,9 +6,9 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest
+module Minitest
 
-  class Inspect < MiniTest::TestCase
+  class Inspect < Minitest::Test
 
     def test__strftime_1
       ns     = 'ISO, jwiki=https://ja.wikipedia.org/wiki/, ewiki=https://en.wikipedia.org/wiki/'

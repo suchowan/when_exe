@@ -6,9 +6,9 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest::LinkedData
+module Minitest::LinkedData
 
-  class Resouece < MiniTest::TestCase
+  class Resouece < Minitest::Test
 
     Dates = {
       'HinduLuniSolar?note=HinduNoteDetailed&location=(_co:Indian::Ujjain)&start_month=5&type=SBSA(1936-10%3C10-)' => {"@context"=>

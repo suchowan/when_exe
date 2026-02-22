@@ -6,9 +6,9 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest
+module Minitest
 
-  class Discordian < MiniTest::TestCase
+  class Discordian < Minitest::Test
     def test_discordian
       date = When.when? '2001.1.1'
       400.times do |i|

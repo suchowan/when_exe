@@ -6,9 +6,9 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest
+module Minitest
 
-  class Yerm < MiniTest::TestCase
+  class Yerm < Minitest::Test
     Abbrs    = [[], 21, [21,14], [21,14, 5]]
     Crecents = %w<
       -1(02(03(04

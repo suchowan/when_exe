@@ -6,8 +6,8 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest::Ephemeris
-  class Sun < MiniTest::TestCase
+module Minitest::Ephemeris
+  class Sun < Minitest::Test
     def test_nothing
     end
   end
