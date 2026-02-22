@@ -6,26 +6,26 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest::TM
+module Minitest::TM
 
 #
 # (5.4) Temporal Position Package
 #
 #
 
-  class IndeterminateValue < MiniTest::TestCase
+  class IndeterminateValue < Minitest::Test
     def test_nothing
     end
   end
 
-  class Position < MiniTest::TestCase
+  class Position < Minitest::Test
     def test__forward
        pos = When::TM::Position.new('2013-11-12')
        assert_equal(2456609, pos.to_i)
     end
   end
 
-  class TemporalPosition < MiniTest::TestCase
+  class TemporalPosition < Minitest::Test
     def test__instance
       [["19800203T234512.33+0900",       "1980-02-03T23:45:12.33+09:00"],
        ["19800203T234512.33Z",           "1980-02-03T23:45:12.33Z"],
@@ -82,27 +82,27 @@ LIST
     end
   end
 
-  class Coordinate < MiniTest::TestCase
+  class Coordinate < Minitest::Test
     def test_nothing
     end
   end
 
-  class JulianDate < MiniTest::TestCase
+  class JulianDate < Minitest::Test
     def test_nothing
     end
   end
 
-  class OrdinalPosition < MiniTest::TestCase
+  class OrdinalPosition < Minitest::Test
     def test_nothing
     end
   end
 
-  class ClockTime < MiniTest::TestCase
+  class ClockTime < Minitest::Test
     def test_nothing
     end
   end
 
-  class CalDate < MiniTest::TestCase
+  class CalDate < Minitest::Test
     def test__floor
       date4 = When.when?("19820606^^Julian")
       [[-2, "1982"],
@@ -270,7 +270,7 @@ LIST
     end
   end
 
-  class DateAndTime < MiniTest::TestCase
+  class DateAndTime < Minitest::Test
     def test__caret
       week = When.Resource("_co:Residue?divisor=7")
       date = When.TemporalPosition(2010,11,30, 6, 30)

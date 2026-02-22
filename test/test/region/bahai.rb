@@ -6,9 +6,9 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest
+module Minitest
 
-  class Bahai < MiniTest::TestCase
+  class Bahai < Minitest::Test
     def test_bahai
       date = When.when? '1.9.1.1.1^^Bahai?location=(_co:Iranian::Tehran)'
       [["01.09.01.01.01", "1996-03-20", 2450163],

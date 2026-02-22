@@ -6,25 +6,25 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest::Ephemeris
+module Minitest::Ephemeris
 
-  class Ephemeris < MiniTest::TestCase
+  class Ephemeris < Minitest::Test
     def test_nothing
     end
   end
 
-  class CelestialObject < MiniTest::TestCase
+  class CelestialObject < Minitest::Test
     def test_nothing
     end
   end
 
-  class Star < MiniTest::TestCase
+  class Star < Minitest::Test
 
     def test_nothing
     end
 
     # 恒星
-    class Fixed < MiniTest::TestCase
+    class Fixed < Minitest::Test
       def test__access_hr
         polaris = When::Resource('_sc:HR0424')
         assert_equal("Alp UMi", polaris.bayer_name)
@@ -32,29 +32,29 @@ module MiniTest::Ephemeris
     end
 
     # 春分点
-    class Vernal < MiniTest::TestCase
+    class Vernal < Minitest::Test
       def test_nothing
       end
     end
 
     # 北極
-    class Pole < MiniTest::TestCase
+    class Pole < Minitest::Test
       def test_nothing
       end
     end
   end
 
-  class Planet < MiniTest::TestCase
+  class Planet < Minitest::Test
     def test_nothing
     end
   end
 
-  class Coords < MiniTest::TestCase
+  class Coords < Minitest::Test
     def test_nothing
     end
   end
 
-  class Formula < MiniTest::TestCase
+  class Formula < Minitest::Test
     def test__sunrise
 
       assert_raises(NoMethodError) { When.when?('2012-11-15').sunrise }
@@ -94,7 +94,7 @@ module MiniTest::Ephemeris
   end
 
   if Object.const_defined?(:TZInfo)
-    class Note < MiniTest::TestCase
+    class Note < Minitest::Test
       def test__tide
 
         sample = [%w(2013-10-02T02:58+09:00 _n:Ephemeris/Notes::day::Tide::Low_Tide),

@@ -6,14 +6,14 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest:V
+module Minitest:V
 
-  class Root < MiniTest::TestCase
+  class Root < Minitest::Test
     def test_nothing
     end
   end
 
-  class Calendar < MiniTest::TestCase
+  class Calendar < Minitest::Test
     def test__each
       When::TM::Clock.local_time = When.Clock("+0900")
       cal = When.Resource("examples/JapanHolidays.ics")
@@ -95,7 +95,7 @@ module MiniTest:V
     end
   end
 
-  class Event < MiniTest::TestCase
+  class Event < Minitest::Test
     def test__event
       When::TM::Clock.local_time = When.Clock("+0900")
       event = When::V::Event.new({
@@ -452,12 +452,12 @@ module MiniTest:V
     end
   end
 
-  class Alarm < MiniTest::TestCase
+  class Alarm < Minitest::Test
     def test_nothing
     end
   end
 
-  class Todo < MiniTest::TestCase
+  class Todo < Minitest::Test
     def test__todo
       When::TM::Clock.local_time = When.Clock("+0900")
       event = When::V::Todo.new({
@@ -485,12 +485,12 @@ module MiniTest:V
     end
   end
 
-  class Journal < MiniTest::TestCase
+  class Journal < Minitest::Test
     def test_nothing
     end
   end
 
-  class Freebusy < MiniTest::TestCase
+  class Freebusy < Minitest::Test
     def test__freebusy     # RFC 5545 [Page 101]
       sample = [
         "1997-03-08T16:00:00Z...1997-03-08T19:00:00Z",
@@ -503,7 +503,7 @@ module MiniTest:V
     end
   end
 
-  class TimezoneProperty < MiniTest::TestCase
+  class TimezoneProperty < Minitest::Test
     def test__tz_change
       ic = When.Resource("examples/USA-DST.ics?C=New_York&Z=E&D=04&DZ=06&S=05&SZ=07")
       tz = When::V::Timezone["America/New_York"]
@@ -611,17 +611,17 @@ module MiniTest:V
     end
   end
 
-  class Standard < MiniTest::TestCase
+  class Standard < Minitest::Test
     def test_nothing
     end
   end
 
-  class Daylight < MiniTest::TestCase
+  class Daylight < Minitest::Test
     def test_nothing
     end
   end
 
-  class Timezone < MiniTest::TestCase
+  class Timezone < Minitest::Test
     def test__neighbor_event_date
       When.Resource("examples/USA-DST.ics?C=New_York&Z=E&D=04&DZ=06&S=05&SZ=07")
       tz = When::V::Timezone["America/New_York"]
@@ -818,62 +818,62 @@ module MiniTest:V
       end
     end
 
-    class Enumerator < MiniTest::TestCase
+    class Enumerator < Minitest::Test
 
       def test_nothing
       end
 
-      class Step < MiniTest::TestCase
+      class Step < Minitest::Test
         def test_nothing
         end
       end
 
-      class Logic < MiniTest::TestCase
+      class Logic < Minitest::Test
 
         def test_nothing
         end
 
-        class Enumerator < MiniTest::TestCase
+        class Enumerator < Minitest::Test
           def test_nothing
           end
         end
 
-        class Month < MiniTest::TestCase
+        class Month < Minitest::Test
           def test_nothing
           end
         end
 
-        class Weekno < MiniTest::TestCase
+        class Weekno < Minitest::Test
           def test_nothing
           end
         end
 
-        class Yearday < MiniTest::TestCase
+        class Yearday < Minitest::Test
           def test_nothing
           end
         end
 
-        class Monthday < MiniTest::TestCase
+        class Monthday < Minitest::Test
           def test_nothing
           end
         end
 
-        class Weekday < MiniTest::TestCase
+        class Weekday < Minitest::Test
           def test_nothing
           end
         end
 
-        class Hour < MiniTest::TestCase
+        class Hour < Minitest::Test
           def test_nothing
           end
         end
 
-        class Minute < MiniTest::TestCase
+        class Minute < Minitest::Test
           def test_nothing
           end
         end
 
-        class Second < MiniTest::TestCase
+        class Second < Minitest::Test
           def test_nothing
           end
         end

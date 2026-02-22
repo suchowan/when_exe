@@ -6,9 +6,9 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest::TimeStandard
+module Minitest::TimeStandard
 
-  class UniversalTime < MiniTest::TestCase
+  class UniversalTime < Minitest::Test
     def view(time)
       return time unless time.instance_of?(When::Coordinates::LeapSeconds)
       return [time.trunk, time.branch, time.second]

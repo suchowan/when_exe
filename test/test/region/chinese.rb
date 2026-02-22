@@ -6,9 +6,9 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest
+module Minitest
 
-  class Chinese < MiniTest::TestCase
+  class Chinese < Minitest::Test
     def test_chinese_table
       assert_equal({1677=>{"iJ"=>"Ij"},
                     1698=>{"jK"=>"Jk"},

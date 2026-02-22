@@ -6,20 +6,20 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest::CalendarTypes
+module Minitest::CalendarTypes
 
-  class UTC < MiniTest::TestCase
+  class UTC < Minitest::Test
     def test__utc
       assert_equal("+00:00", When::UTC.tzname[0].to_s)
     end
   end
 
-  class TableBased < MiniTest::TestCase
+  class TableBased < Minitest::Test
     def test_nothing
     end
   end
 
-  class PatternTableBasedLuniSolar < MiniTest::TestCase
+  class PatternTableBasedLuniSolar < Minitest::Test
     def test__japanese
 
       frame = When.Resource('Japanese', '_c:')
@@ -44,7 +44,7 @@ module MiniTest::CalendarTypes
     end
   end
 
-  class CyclicTableBased < MiniTest::TestCase
+  class CyclicTableBased < Minitest::Test
     def test__islamic
       frame = When.Resource('_c:TabularIslamic')
       date = When.when?('00010101^TabularIslamic')
@@ -54,7 +54,7 @@ module MiniTest::CalendarTypes
     end
   end
 
-  class SolarTerms < MiniTest::TestCase
+  class SolarTerms < Minitest::Test
 
     Sample = %w(2013-03-20 2013-06-21 2013-09-23 2013-12-22
                 2014-03-21 2014-06-21 2014-09-23 2014-12-22

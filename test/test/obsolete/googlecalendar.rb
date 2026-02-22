@@ -6,9 +6,9 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest
+module Minitest
 
-  class GoogleCalendar < MiniTest::TestCase
+  class GoogleCalendar < Minitest::Test
 
     config = ::When.config
     ACCOUNT, PASSWORD = config['@'] if config.key?('@')
@@ -171,8 +171,8 @@ RECURRENCE
         end
 
         new_event = gcal.create_event
-        new_event.title = "MiniTest Event"
-        new_event.desc  = "MiniTest Event Description"
+        new_event.title = "Minitest Event"
+        new_event.desc  = "Minitest Event Description"
         new_event.where = "America/New_York"
         #new_event.st =  Time.mktime(YEAR.to_i, 3, 21, 12, 0, 0)
         #new_event.en =  Time.mktime(YEAR.to_i, 3, 22, 13, 0, 0)

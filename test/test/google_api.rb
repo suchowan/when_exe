@@ -20,9 +20,9 @@ if FileTest.exist?("token.yaml")
   require "googleauth/stores/file_token_store"
 end
 
-module MiniTest
+module Minitest
 
-  class GoogleAPI < MiniTest::TestCase
+  class GoogleAPI < Minitest::Test
 
     HOLIDAYS = [
       ["2021-01-01", "New Year's Day"],

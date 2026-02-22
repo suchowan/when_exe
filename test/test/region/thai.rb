@@ -6,9 +6,9 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest
+module Minitest
 
-  class Thai < MiniTest::TestCase
+  class Thai < Minitest::Test
     def test_thai_date
 
       date = When.Resource('_c:ThaiP') ^ When.when?('2011-05-16')

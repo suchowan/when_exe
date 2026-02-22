@@ -6,9 +6,9 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest
+module Minitest
 
-  class World < MiniTest::TestCase
+  class World < Minitest::Test
     def test_world
       date = When.when? '2001.1.1'
       400.times do
@@ -18,7 +18,7 @@ module MiniTest
     end
   end
 
-  class Positivist < MiniTest::TestCase
+  class Positivist < Minitest::Test
     def test_positivist
       date = When.when? '2001.1.1'
       400.times do |i|
@@ -28,7 +28,7 @@ module MiniTest
     end
   end
 
-  class InternationalFixed < MiniTest::TestCase
+  class InternationalFixed < Minitest::Test
     def test_international_fixed
       date = When.when? '2001.1.1'
       400.times do |i|
@@ -38,7 +38,7 @@ module MiniTest
     end
   end
 
-  class Tranquility < MiniTest::TestCase
+  class Tranquility < Minitest::Test
     def test_tranquility
       date = When.when? '1969.7.21'
       400.times do |i|
@@ -48,7 +48,7 @@ module MiniTest
     end
   end
 
-  class WorldSeason < MiniTest::TestCase
+  class WorldSeason < Minitest::Test
     def test_world_season
       date = When.when? '2000.12.21'
       400.times do |i|
@@ -58,7 +58,7 @@ module MiniTest
     end
   end
 
-  class Pax < MiniTest::TestCase
+  class Pax < Minitest::Test
     def test_pax
 
       samples = [
@@ -101,7 +101,7 @@ module MiniTest
     end
   end
 
-  class HankeHenry < MiniTest::TestCase
+  class HankeHenry < Minitest::Test
     def test_hanke_henry
       assert_equal(When.when?('2018.1.1').to_i, When.when?('2018.1.1^^HankeHenry').to_i)
       count = 0

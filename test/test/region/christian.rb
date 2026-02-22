@@ -6,9 +6,9 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest
+module Minitest
 
-  class ChristianVariation < MiniTest::TestCase
+  class ChristianVariation < Minitest::Test
 
     def verify_built_in_date(calendar, start, length)
       date = Date.new(start, 1, 1)
@@ -94,7 +94,7 @@ module MiniTest
     end
   end
 
-  class Civil < MiniTest::TestCase
+  class Civil < Minitest::Test
     def test__border
       frame = When.Calendar('Civil?reform=1752-9-14&border=0-3-25(1753)0-1-1')
       assert_equal("1641=03-24", (frame ^ When.when?('1642-4-3')  ).to_s)

@@ -6,10 +6,10 @@
   described in the LICENSE.txt file included in this archive.
 =end
 
-module MiniTest
+module Minitest
 
   module CalendarTypes
-    class Islamic < MiniTest::TestCase
+    class Islamic < Minitest::Test
 
       Sample = [
         ["1435-01-01", 2456602],["1435-02-01", 2456632],["1435-03-01", 2456661],["1435-04-01", 2456691],
